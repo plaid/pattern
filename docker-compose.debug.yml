@@ -1,0 +1,34 @@
+# this file overrides docker-compose.yml. the should be run together, e.g.
+#   docker-compose -f docker-compose.yml -f docker-compose.debug.yml up
+
+version: "3.4"
+
+volumes:
+  client_node_modules:
+  server_node_modules:
+
+services:
+  server:
+    build: ./server
+    image: plaidinc/pattern-server:debug
+    command: ["npm", "run", "debug"]
+    volumes:
+      - ./server:/opt/server
+      - server_node_modules:/opt/server/node_modules
+    ports:
+      - 5000:5000
+      - 9229:9229
+
+  ngrok:
+    build: ./ngrok
+    image: plaidinc/pattern-ngrok:debug
+
+  client:
+    build: ./client
+    image: plaidinc/pattern-client:debug
+    volumes:
+      - ./client:/opt/client
+      - client_node_modules:/opt/client/node_modules
+    ports:
+      - 3000:3000
+      - 35729:35729

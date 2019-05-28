@@ -1,0 +1,58 @@
+version: "3.4"
+
+x-common-variables: &common-variables
+  POSTGRES_USER: postgres
+  POSTGRES_PASSWORD: password
+
+volumes:
+  pg_sandbox_data:
+  pg_development_data:
+
+services:
+  db:
+    image: postgres:11.2
+    volumes:
+      - ./database/init:/docker-entrypoint-initdb.d
+      - "pg_${PLAID_ENV}_data:/var/lib/postgresql/data"
+    ports:
+      - 5432:5432
+    environment: *common-variables
+
+  server:
+    build: ./server
+    image: plaidinc/pattern-server:1.0.0
+    ports:
+      - 5000:5000
+    environment:
+      <<: *common-variables
+      PLAID_CLIENT_ID:
+      PLAID_PUBLIC_KEY:
+      PLAID_SECRET_SANDBOX:
+      PLAID_SECRET_DEVELOPMENT:
+      PLAID_ENV:
+      PORT: 5000
+      DB_PORT: 5432
+      DB_HOST_NAME: db
+    depends_on:
+      - db
+
+  ngrok:
+    build: ./ngrok
+    image: plaidinc/pattern-ngrok:1.0.0
+    command: ["ngrok", "http", "server:5000"]
+    ports:
+      - 4040:4040
+    depends_on:
+      - server
+
+  client:
+    build: ./client
+    image: plaidinc/pattern-client:1.0.0
+    ports:
+      - 3000:3000
+    environment:
+      REACT_APP_PLAID_ENV: ${PLAID_ENV}
+      REACT_APP_PLAID_PUBLIC_KEY: ${PLAID_PUBLIC_KEY}
+      REACT_APP_SERVER_PORT: 5000
+    depends_on:
+      - server

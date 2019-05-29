@@ -15,8 +15,8 @@ This is a reference application demonstrating an end-to-end [Plaid][plaid] integ
 
 1. Clone the repo.
     ```shell
-    git clone https://github.plaid.com/plaid/open-pfm.git
-    cd open-pfm
+    git clone https://github.com/plaid/pattern.git
+    cd pattern
     ```
 1. Create the `.env` file.
     ```shell

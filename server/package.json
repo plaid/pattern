@@ -1,6 +1,6 @@
 {
   "name": "server",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "private": true,
   "scripts": {
     "start": "node index.js",
@@ -18,7 +18,7 @@
     "morgan": "~1.9.0",
     "node-fetch": "^2.3.0",
     "pg": "^7.9.0",
-    "plaid": "^3.1.2",
+    "plaid": "^4.0.0",
     "socket.io": "^2.2.0"
   },
   "devDependencies": {

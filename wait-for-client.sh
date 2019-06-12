@@ -10,9 +10,11 @@ do
 done
 
 # print message
-echo
-echo "The client is ready!"
-echo "Open localhost:3000 in your browser to view the client."
-echo "Run 'make logs' to view the service logs."
-echo "Run 'make stop' to stop the docker containers."
-echo "Run 'make help' to view other available commands."
+cat <<EOF
+
+The client is ready!
+Open localhost:3000 in your browser to view the client.
+Run 'make logs' to view the service logs.
+Run 'make stop' to stop the docker containers.
+Run 'make help' to view other available commands.
+EOF

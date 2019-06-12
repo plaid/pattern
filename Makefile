@@ -16,7 +16,7 @@ help:
 	@echo '  make <target>'
 	@echo ''
 	@echo 'Targets:'
-	@awk '/^[a-zA-Z\-\_0-9]+:/ { \
+	@awk '/^[a-zA-Z_0-9-]+:/ { \
 		helpMessage = match(lastLine, /^## (.*)/); \
 		if (helpMessage) { \
 			helpCommand = substr($$1, 0, index($$1, ":")-1); \
@@ -59,13 +59,11 @@ logs:
 ## Stop the services
 stop:
 	docker-compose down
-	docker volume rm $(current_dir)_client_node_modules || true
-	docker volume rm $(current_dir)_server_node_modules || true
+	docker volume rm $(current_dir)_{client,server}_node_modules 2>/dev/null || true
 
 ## Clear the sandbox and development databases
 clear-db: stop
-	docker volume rm $(current_dir)_pg_sandbox_data || true
-	docker volume rm $(current_dir)_pg_development_data || true
+	docker volume rm $(current_dir)_pg_{sandbox,development}_data 2>/dev/null || true
 
 $(envfile):
 	@echo "Error: .env file does not exist! See the README for instructions."

@@ -18,7 +18,7 @@ const Banner = ({ initialSubheading }) => {
   const successText =
     'Success! You can explore account and transaction details for the linked item';
 
-  const subdeadingText = initialSubheading ? initialText : successText;
+  const subheadingText = initialSubheading ? initialText : successText;
   return (
     <div id="banner" className="bottom-border-content">
       <h4>{PLAID_ENV} User</h4>
@@ -34,7 +34,7 @@ const Banner = ({ initialSubheading }) => {
         </a>
       </div>
       <p id="intro" className="everpresent-content__subheading">
-        {subdeadingText}
+        {subheadingText}
       </p>
     </div>
   );

@@ -14,7 +14,7 @@ Plaid does not prevent item duplication. It is entirely possible for a user to c
 
 ### Using webhooks to update transaction data.
 
-Plaid uses [webhooks][transactions-webhooks] to notify you whenever there are new transactions associated with an Item. This allows you to make a call to Plaid's transactions endpoint only when there are new transactions available, rather than polling for them. For an example of this, see the [transactions webhook handler][transactions-handler].
+Plaid uses [webhooks][transactions-webhooks] to notify you whenever there are new transactions associated with an item. This allows you to make a call to Plaid's transactions endpoint only when there are new transactions available, rather than polling for them. For an example of this, see the [transactions webhook handler][transactions-handler].
 
 For webhooks to work, the server must be publicly accessible on the internet. For development purposes, this application uses [ngrok][ngrok-readme] to accomplish that.
 

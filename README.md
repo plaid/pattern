@@ -1,4 +1,4 @@
-# Plaid Pattern
+# Plaid Pattern (Beta)
 
 ![Plaid Pattern client][client-img]
 

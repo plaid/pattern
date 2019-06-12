@@ -28,7 +28,7 @@ export default function LinkButton({
   const { linkHandlers, getLinkHandler } = useLink();
 
   const isPrimary = primary ? 'button--is-primary' : '';
-  const classlist = altClasses !== undefined ? altClasses : '';
+  const classlist = altClasses !== null ? altClasses : '';
 
   useEffect(() => {
     getLinkHandler({ userId, itemId });

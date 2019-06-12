@@ -25,14 +25,14 @@ echo "done"
 # update client package files
 echo -n "client/package*.json ... "
 cd client
-npm version $version >/dev/null 2>&1
+npm version $version &>/dev/null
 cd ..
 echo "done"
 
 # update server package files
 echo -n "server/package*.json ... "
 cd server
-npm version $version >/dev/null 2>&1
+npm version $version &>/dev/null
 cd ..
 echo "done"
 

@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import PropTypes from 'prop-types';
-import onClickOutside from 'react-onclickoutside';
 import { IconDots, Button, LinkButton } from '.';
+import { useOnClickOutside } from '../hooks';
 
 const propTypes = {
   handleDelete: PropTypes.func.isRequired,
@@ -23,19 +23,23 @@ export function MoreDetails({
   itemId,
 }) {
   const [menuShown, setmenuShown] = useState(false);
-
-  MoreDetails.handleClickOutside = () => setmenuShown(false);
+  const refToButton = useRef();
+  const refToMenu = useOnClickOutside({
+    callback: () => setmenuShown(false),
+    ignoreRef: refToButton,
+  });
 
   return (
     <div className="more-details">
       <button
+        ref={refToButton}
         className="more-details__icon"
         onClick={() => setmenuShown(current => !current)}
       >
         <IconDots />
       </button>
       {menuShown && (
-        <div className="more-details__button-group">
+        <div className="more-details__button-group" ref={refToMenu}>
           {setBadStateShown && (
             <Button
               altClasses="more-details_button"
@@ -66,8 +70,4 @@ export function MoreDetails({
 MoreDetails.propTypes = propTypes;
 MoreDetails.defaultProps = defaultProps;
 
-const clickOutsideConfig = {
-  handleClickOutside: () => MoreDetails.handleClickOutside,
-};
-
-export default onClickOutside(MoreDetails, clickOutsideConfig);
+export default MoreDetails;

@@ -12,8 +12,7 @@ const {
   deleteUsers,
   retrieveItemsByUser,
   retrieveTransactionsByUserId,
-  retrieveUserByUserId,
-  retrieveAccessTokensByUserId,
+  retrieveUserById,
 } = require('../db/queries');
 const { asyncWrapper } = require('../middleware');
 const {
@@ -56,8 +55,7 @@ router.post(
     // prevent duplicates
     if (usernameExists)
       throw new Boom('Username already exists', { statusCode: 409 });
-    await createUser(username);
-    const newUser = await retrieveUserByUsername(username);
+    const newUser = await createUser(username);
     res.json(sanitizeUsers(newUser));
   })
 );
@@ -72,7 +70,7 @@ router.get(
   '/:userId',
   asyncWrapper(async (req, res) => {
     const { userId } = req.params;
-    const user = await retrieveUserByUserId(userId);
+    const user = await retrieveUserById(userId);
     res.json(sanitizeUsers(user));
   })
 );
@@ -137,8 +135,10 @@ router.delete(
     // access any data that was associated with the Item.
 
     // @TODO wrap promise in a try catch block once proper error handling introduced
-    const plaidAccessTokens = await retrieveAccessTokensByUserId(userId);
-    await Promise.all(plaidAccessTokens.map(t => plaid.removeItem(t)));
+    const items = await retrieveItemsByUser(userId);
+    await Promise.all(
+      items.map(({ plaid_access_token: token }) => plaid.removeItem(token))
+    );
 
     // delete from the db
     await deleteUsers(userId);

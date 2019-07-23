@@ -50,7 +50,6 @@ const sanitizeItems = items =>
   sanitizeWith(items, [
     'id',
     'user_id',
-    'plaid_item_id',
     'plaid_institution_id',
     'status',
     'created_at',

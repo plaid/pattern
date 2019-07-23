@@ -2,7 +2,7 @@
  * @file Defines the queries for the accounts table/view.
  */
 
-const { retrieveItemId } = require('./items');
+const { retrieveItemByPlaidItemId } = require('./items');
 const db = require('../');
 
 /**
@@ -10,9 +10,10 @@ const db = require('../');
  *
  * @param {string} plaidItemId the Plaid ID of the item.
  * @param {Object[]} accounts an array of accounts.
+ * @returns {Object[]} an array of new accounts.
  */
 const createAccounts = async (plaidItemId, accounts) => {
-  const itemId = await retrieveItemId(plaidItemId);
+  const { id: itemId } = await retrieveItemByPlaidItemId(plaidItemId);
   const pendingQueries = accounts.map(async account => {
     const {
       account_id: aid,
@@ -29,6 +30,7 @@ const createAccounts = async (plaidItemId, accounts) => {
       type,
     } = account;
     const query = {
+      // RETURNING is a Postgres-specific clause that returns a list of the inserted items.
       text: `
         INSERT INTO accounts_table
           (
@@ -51,6 +53,8 @@ const createAccounts = async (plaidItemId, accounts) => {
         DO UPDATE SET
           current_balance = $6,
           available_balance = $7
+        RETURNING
+          *
       `,
       values: [
         itemId,
@@ -66,26 +70,27 @@ const createAccounts = async (plaidItemId, accounts) => {
         subtype,
       ],
     };
-    await db.query(query);
+    const { rows } = await db.query(query);
+    return rows[0];
   });
-  await Promise.all(pendingQueries);
+  const newAccounts = await Promise.all(pendingQueries);
+  return newAccounts;
 };
 
 /**
- * Retrieves the account ID for a single account.
+ * Retrieves the account associated with a Plaid account ID.
  *
  * @param {string} plaidAccountId the Plaid ID of the account.
- * @returns {number} the account ID.
+ * @returns {Object} a single account.
  */
-const retrieveAccountId = async plaidAccountId => {
+const retrieveAccountByPlaidAccountId = async plaidAccountId => {
   const query = {
-    text: 'SELECT (id) FROM accounts WHERE plaid_account_id = $1',
+    text: 'SELECT * FROM accounts WHERE plaid_account_id = $1',
     values: [plaidAccountId],
   };
   const { rows } = await db.query(query);
   // since Plaid account IDs are unique, this query will never return more than one row.
-  const accountId = rows[0].id;
-  return accountId;
+  return rows[0];
 };
 
 /**
@@ -120,7 +125,7 @@ const retrieveAccountsByUserId = async userId => {
 
 module.exports = {
   createAccounts,
-  retrieveAccountId,
+  retrieveAccountByPlaidAccountId,
   retrieveAccountsByItemId,
   retrieveAccountsByUserId,
 };

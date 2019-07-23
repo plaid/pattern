@@ -1,4 +1,5 @@
--- updates the updated_at timestamp
+-- This trigger updates the value in the updated_at column. It is used in the tables below to log
+-- when a row was last updated.
 
 CREATE OR REPLACE FUNCTION trigger_set_timestamp()
 RETURNS TRIGGER AS $$
@@ -8,7 +9,10 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
--- Users
+
+-- USERS
+-- This table is used to store the users of our application. The view returns the same data as the
+-- table, we're just creating it to follow the pattern used in other tables.
 
 CREATE TABLE users_table
 (
@@ -34,8 +38,10 @@ AS
     users_table;
 
 
--- Items
--- https://plaid.com/docs/#item-schema
+-- ITEMS
+-- This table is used to store the items associated with each user. The view returns the same data
+-- as the table, we're just using both to maintain consistency with our other tables. For more info
+-- on the Plaid Item schema, see the docs page: https://plaid.com/docs/#item-schema
 
 CREATE TABLE items_table
 (
@@ -69,8 +75,10 @@ AS
     items_table;
 
 
--- Accounts
--- https://plaid.com/docs/#account-schema
+-- ACCOUNTS
+-- This table is used to store the accounts associated with each item. The view returns all the
+-- data from the accounts table and some data from the items view. For more info on the Plaid
+-- Accounts schema, see the docs page:  https://plaid.com/docs/#account-schema
 
 CREATE TABLE accounts_table
 (
@@ -119,8 +127,10 @@ AS
     LEFT JOIN items i ON i.id = a.item_id;
 
 
--- Transactions
--- https://plaid.com/docs/#transaction-schema
+-- TRANSACTIONS
+-- This table is used to store the transactions associated with each account. The view returns all
+-- the data from the transactions table and some data from the accounts view. For more info on the
+-- Plaid Transactions schema, see the docs page: https://plaid.com/docs/#transaction-schema
 
 CREATE TABLE transactions_table
 (
@@ -172,3 +182,35 @@ AS
   FROM
     transactions_table t
     LEFT JOIN accounts a ON t.account_id = a.id;
+
+
+-- The link_events_table is used to log responses from the Plaid API for client requests to the
+-- Plaid Link client. This information is useful for troubleshooting.
+
+CREATE TABLE link_events_table
+(
+  id SERIAL PRIMARY KEY,
+  type text NOT NULL,
+  user_id integer,
+  link_session_id text NOT NULL,
+  request_id text UNIQUE,
+  error_type text,
+  error_code text,
+  created_at timestamptz default now()
+);
+
+
+-- The plaid_api_events_table is used to log responses from the Plaid API for server requests to
+-- the Plaid client. This information is useful for troubleshooting.
+
+CREATE TABLE plaid_api_events_table
+(
+  id SERIAL PRIMARY KEY,
+  item_id integer,
+  plaid_method text NOT NULL,
+  arguments text,
+  request_id text UNIQUE,
+  error_type text,
+  error_code text,
+  created_at timestamptz default now()
+);

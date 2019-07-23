@@ -15,30 +15,37 @@ export default function Sockets() {
   useEffect(() => {
     socket.current = io(`localhost:${REACT_APP_SERVER_PORT}`);
 
-    socket.current.on('DEFAULT_UPDATE', ({ message, itemId } = {}) =>
-      console.log(message, itemId)
-    );
+    socket.current.on('DEFAULT_UPDATE', ({ itemId } = {}) => {
+      const msg = `New Webhook Event: Item ${itemId}: New Transactions Received`;
+      console.log(msg);
+      toast(msg);
+    });
 
-    socket.current.on('TRANSACTIONS_REMOVED', ({ message, itemId } = {}) =>
-      console.log(message, itemId)
-    );
+    socket.current.on('TRANSACTIONS_REMOVED', ({ itemId } = {}) => {
+      const msg = `New Webhook Event: Item ${itemId}: Transactions Removed`;
+      console.log(msg);
+      toast(msg);
+    });
 
-    socket.current.on('INITIAL_UPDATE', ({ message, itemId } = {}) => {
-      console.log(message);
-      toast('New Webhook Event:\nInitial Transactions Received');
+    socket.current.on('INITIAL_UPDATE', ({ itemId } = {}) => {
+      const msg = `New Webhook Event: Item ${itemId}: Initial Transactions Received`;
+      console.log(msg);
+      toast(msg);
       getAccountsByItem(itemId);
       getTransactionsByItem(itemId);
     });
 
-    socket.current.on('HISTORICAL_UPDATE', ({ message, itemId } = {}) => {
-      console.log(message);
-      toast('New Webhook Event:\nHistorical Transactions Received');
+    socket.current.on('HISTORICAL_UPDATE', ({ itemId } = {}) => {
+      const msg = `New Webhook Event: Item ${itemId}: Historical Transactions Received`;
+      console.log(msg);
+      toast(msg);
       getTransactionsByItem(itemId, true);
     });
 
-    socket.current.on('ERROR', ({ message, itemId, errorCode } = {}) => {
-      console.log(message);
-      toast.error(`New Webhook Event:\nItem Error ${errorCode}`);
+    socket.current.on('ERROR', ({ itemId, errorCode } = {}) => {
+      const msg = `New Webhook Event: Item ${itemId}: Item Error ${errorCode}`;
+      console.error(msg);
+      toast.error(msg);
       getItemById(itemId, true);
     });
 

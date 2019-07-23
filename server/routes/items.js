@@ -5,8 +5,7 @@
 const express = require('express');
 const Boom = require('@hapi/boom');
 const {
-  retrieveAccessTokenByItemId,
-  retrieveItemsById,
+  retrieveItemById,
   retrieveItemByPlaidInstitutionId,
   retrieveAccountsByItemId,
   retrieveTransactionsByItemId,
@@ -54,8 +53,13 @@ router.post(
       item_id: itemId,
       access_token: accessToken,
     } = await plaid.exchangePublicToken(publicToken);
-    await createItem(institutionId, accessToken, itemId, userId);
-    res.json({});
+    const newItem = await createItem(
+      institutionId,
+      accessToken,
+      itemId,
+      userId
+    );
+    res.json(sanitizeItems(newItem));
   })
 );
 
@@ -69,8 +73,8 @@ router.get(
   '/:itemId',
   asyncWrapper(async (req, res) => {
     const { itemId } = req.params;
-    const items = await retrieveItemsById(itemId);
-    res.json(sanitizeItems(items));
+    const item = await retrieveItemById(itemId);
+    res.json(sanitizeItems(item));
   })
 );
 
@@ -97,8 +101,8 @@ router.put(
         );
       }
       await updateItemStatus(itemId, status);
-      const items = await retrieveItemsById(itemId);
-      res.json(sanitizeItems(items));
+      const item = await retrieveItemById(itemId);
+      res.json(sanitizeItems(item));
     } else {
       throw new Boom('You must provide updated item information.', {
         statusCode: 400,
@@ -120,7 +124,7 @@ router.delete(
   '/:itemId',
   asyncWrapper(async (req, res) => {
     const { itemId } = req.params;
-    const accessToken = await retrieveAccessTokenByItemId(itemId);
+    const { plaid_access_token: accessToken } = await retrieveItemById(itemId);
     /* eslint-disable camelcase */
     const { removed, status_code } = await plaid.removeItem(accessToken);
 
@@ -177,8 +181,7 @@ router.post(
   '/sandbox/item/reset_login',
   asyncWrapper(async (req, res) => {
     const { itemId } = req.body;
-    const items = await retrieveItemsById(itemId);
-    const { plaid_access_token: accessToken } = items[0];
+    const { plaid_access_token: accessToken } = await retrieveItemById(itemId);
     const resetResponse = await plaid.resetLogin(accessToken);
     res.json(resetResponse);
   })
@@ -194,7 +197,7 @@ router.post(
   '/:itemId/public_token',
   asyncWrapper(async (req, res) => {
     const { itemId } = req.params;
-    const accessToken = await retrieveAccessTokenByItemId(itemId);
+    const { plaid_access_token: accessToken } = await retrieveItemById(itemId);
     const publicToken = await plaid.createPublicToken(accessToken);
     res.send(publicToken);
   })

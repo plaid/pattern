@@ -2,7 +2,7 @@
  * @file Defines the queries for the transactions table.
  */
 
-const { retrieveAccountId } = require('./accounts');
+const { retrieveAccountByPlaidAccountId } = require('./accounts');
 const db = require('../');
 
 /**
@@ -26,7 +26,9 @@ const createTransactions = async transactions => {
       pending,
       account_owner: accountOwner,
     } = transaction;
-    const accountId = await retrieveAccountId(plaidAccountId);
+    const { id: accountId } = await retrieveAccountByPlaidAccountId(
+      plaidAccountId
+    );
     const [category, subcategory] = categories;
     try {
       const query = {

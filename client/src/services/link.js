@@ -1,6 +1,5 @@
 import React, {
   useContext,
-  useState,
   useMemo,
   useEffect,
   useCallback,
@@ -8,7 +7,12 @@ import React, {
   useRef,
 } from 'react';
 
-import { exchangeToken, getPublicToken, setItemState } from './api';
+import {
+  exchangeToken,
+  getPublicToken,
+  setItemState,
+  postLinkEvent,
+} from './api';
 import { useWebhooks, useItems } from '.';
 
 const PLAID_ENV = process.env.REACT_APP_PLAID_ENV;
@@ -31,7 +35,6 @@ const types = {
  * and fetch instances of Link.
  */
 export function LinkProvider(props) {
-  const [webhook, setWebhook] = useState();
   const [linkHandlers, dispatch] = useReducer(reducer, {
     byUser: {},
     byItem: {},
@@ -51,10 +54,6 @@ export function LinkProvider(props) {
   useEffect(() => {
     getWebhooksUrl();
   }, [getWebhooksUrl]);
-
-  useEffect(() => {
-    setWebhook(webhooksUrl || null);
-  }, [webhooksUrl]);
 
   /**
    * @desc Creates a new instance of Link for a given User or Item. For more details on
@@ -88,9 +87,16 @@ export function LinkProvider(props) {
               dispatch([types.LINK_LOADED, { id: userId }]);
             }
           },
-          onSuccess: async (publicToken, { institution, accounts }) => {
-            logEvent('onSuccess', { institution, accounts });
-
+          onSuccess: async (
+            publicToken,
+            { institution, accounts, link_session_id }
+          ) => {
+            logEvent('onSuccess', { institution, accounts, link_session_id });
+            await postLinkEvent({
+              userId,
+              link_session_id,
+              type: 'success',
+            });
             if (isUpdate) {
               await setItemState(itemId, 'good');
               getItemById(itemId, true);
@@ -103,9 +109,28 @@ export function LinkProvider(props) {
               window.location.href = `/user/${userId}/items`;
             }
           },
+          onExit: async (
+            error,
+            { institution, link_session_id, request_id }
+          ) => {
+            logEvent('onExit', {
+              error,
+              institution,
+              link_session_id,
+              request_id,
+            });
+            const eventError = error || {};
+            await postLinkEvent({
+              userId,
+              link_session_id,
+              request_id,
+              type: 'exit',
+              ...eventError,
+            });
+          },
           product: ['transactions'],
           // Add the webhook parameter only if the endpoint is available
-          ...(webhook && { webhook }),
+          ...(webhooksUrl && { webhook: webhooksUrl }),
           ...(token && { token }),
         });
 
@@ -116,7 +141,7 @@ export function LinkProvider(props) {
         }
       }
     },
-    [webhook, getItemsByUser, getItemById, webhooksFetched]
+    [webhooksUrl, getItemsByUser, getItemById, webhooksFetched]
   );
 
   /**

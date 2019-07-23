@@ -235,23 +235,24 @@ Item overview
 }
 
 .item-card__column-1 {
-  width: 17%;
+  width: 20%;
+  display: flex;
+  float: left;
+  align-items: center;
+}
+
+.item-card__column-2 {
+  width: 45%;
   float: left;
   margin-top: 8px;
 }
 
-.bank-name {
-  width: 20%;
-  display: flex;
-  align-items: center;
-}
-
-.item-card__column {
-  width: 43%;
+.item-card__column-3 {
+  width: 15%;
   float: left;
 }
 
-.item-card__column-2 {
+.item-card__column-4 {
   width: 20%;
   float: left;
 }

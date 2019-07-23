@@ -1,4 +1,4 @@
-# Plaid Pattern (Beta)
+# Plaid Pattern
 
 ![Plaid Pattern client][client-img]
 
@@ -8,7 +8,7 @@ This is a reference application demonstrating an end-to-end [Plaid][plaid] integ
 
 ## Requirements
 
--   [Docker][docker] Version 2.0.0.3 (31259) or higher, installed and running
+-   [Docker][docker] Version 2.0.0.3 (31259) or higher, installed, running, and signed in
 -   [Plaid API keys][plaid-keys] - [sign up][plaid-signup] for a free Sandbox account if you don't already have one
 
 ## Getting Started
@@ -38,8 +38,16 @@ This is a reference application demonstrating an end-to-end [Plaid][plaid] integ
 All available commands can be seen by calling `make help`.
 
 ## Architecture
+As a modern full-stack application, Pattern consists of multiple services handling different segments of the stack:
 
-For more information about the individual services, see the readmes for the [client][client-readme], [database][database-readme], and [server][server-readme].
+- [`database`][database-readme] runs a [PostgreSQL][postgres] database
+- [`server`][server-readme] runs an application back-end server using [NodeJS] and [Express]
+- [`client`][client-readme] runs a [React]-based single-page web frontend
+- [`ngrok`][ngrok-readme] exposes a [ngrok] tunnel from your local machine to the Internet to receive webhooks
+
+We use [Docker Compose][docker-compose] to orchestrate these services. As such, each individual service has its own Dockerfile, which Docker Compose reads when bringing up the services.
+
+For more information about the individual services, see their readmes, linked in the list above.
 
 ## Troubleshooting
 
@@ -59,7 +67,12 @@ See [`docs/troubleshooting.md`][troubleshooting].
 [client-img]: docs/pattern_screenshot.png
 [client-readme]: client/README.md
 [database-readme]: database/README.md
-[docker]: https://www.docker.com/products/docker-desktop
+[docker]: https://docs.docker.com/
+[docker-compose]: https://docs.docker.com/compose/
+[express]: https://expressjs.com/
+[ngrok]: https://ngrok.com/
+[ngrok-readme]: ngrok/README.md
+[nodejs]: https://nodejs.org/en/
 [plaid]: https://plaid.com
 [plaid-docs]: https://plaid.com/docs/
 [plaid-help]: https://support.plaid.com/hc/en-us
@@ -67,5 +80,7 @@ See [`docs/troubleshooting.md`][troubleshooting].
 [plaid-quickstart]: https://plaid.com/docs/quickstart/
 [plaid-signup]: https://dashboard.plaid.com/signup
 [plaid-support-ticket]: https://dashboard.plaid.com/support/new
+[postgres]: https://www.postgresql.org/
+[react]: http://reactjs.org/
 [server-readme]: server/README.md
 [troubleshooting]: docs/troubleshooting.md

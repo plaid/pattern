@@ -3,7 +3,10 @@
  * https://plaid.com/docs/#item-webhooks
  */
 
-const { updateItemStatus, retrieveItemId } = require('../db/queries');
+const {
+  updateItemStatus,
+  retrieveItemByPlaidItemId,
+} = require('../db/queries');
 
 /**
  * Handles Item errors received from item webhooks. When an error is received
@@ -17,7 +20,7 @@ const itemErrorHandler = async (plaidItemId, error) => {
   const { error_code: errorCode } = error;
   switch (errorCode) {
     case 'ITEM_LOGIN_REQUIRED': {
-      const itemId = await retrieveItemId(plaidItemId);
+      const { id: itemId } = await retrieveItemByPlaidItemId(plaidItemId);
       await updateItemStatus(itemId, 'bad');
       break;
     }
@@ -56,21 +59,12 @@ const itemsHandler = async (requestBody, io) => {
     error,
   } = requestBody;
 
-  const message = (additionalInfo, type = 'WEBHOOK') =>
-    `${type}: ITEMS: ${webhookCode}: Plaid item id ${plaidItemId}: ${additionalInfo}`;
-
-  // websocket is emitted to the client-side as a webhook is received from Plaid
-  const emitSocket = (additionalInfo, itemId, errorCode) => {
-    io.emit(webhookCode, {
-      message: message(additionalInfo, 'WEBSOCKETS'),
-      itemId,
-      errorCode,
-    });
-  };
-
   const serverLogAndEmitSocket = (additionalInfo, itemId, errorCode) => {
-    console.log(message(additionalInfo));
-    if (webhookCode) emitSocket(additionalInfo, itemId, errorCode);
+    console.log(
+      `WEBHOOK: ITEMS: ${webhookCode}: Plaid item id ${plaidItemId}: ${additionalInfo}`
+    );
+    // use websocket to notify the client that a webhook has been received and handled
+    if (webhookCode) io.emit(webhookCode, { itemId, errorCode });
   };
 
   switch (webhookCode) {
@@ -79,7 +73,7 @@ const itemsHandler = async (requestBody, io) => {
       break;
     case 'ERROR': {
       itemErrorHandler(plaidItemId, error);
-      const itemId = await retrieveItemId(plaidItemId);
+      const { id: itemId } = await retrieveItemByPlaidItemId(plaidItemId);
       serverLogAndEmitSocket(
         `ERROR: ${error.error_code}: ${error.error_message}`,
         itemId,

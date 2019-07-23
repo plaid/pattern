@@ -26,7 +26,7 @@ export const getItemsByUser = userId => api.get(`/users/${userId}/items`);
 export const deleteItemById = id => api.delete(`/items/${id}`);
 export const setItemState = (itemId, status) =>
   api.put(`items/${itemId}`, { status });
-// This endoint is only availble in the sandbox enviornment
+// This endpoint is only availble in the sandbox enviornment
 export const setItemToBadState = itemId =>
   api.post('/items/sandbox/item/reset_login', { itemId });
 
@@ -37,8 +37,6 @@ export const getAccountsByItem = itemId => api.get(`/items/${itemId}/accounts`);
 export const getAccountsByUser = userId => api.get(`/users/${userId}/accounts`);
 
 // transactions
-// export const getTransactionsByAccount = accountId =>
-//   api.get(`/accounts/${accountId}/transactions`);
 export const getTransactionsByAccount = accountId =>
   api.get(`/accounts/${accountId}/transactions`);
 export const getTransactionsByItem = itemId =>
@@ -50,10 +48,11 @@ export const getTransactionsByUser = userId =>
 export const getInstitutionById = instId => api.get(`/institutions/${instId}`);
 
 // misc
+export const postLinkEvent = event => api.post(`/link-event`, event);
 export const getWebhookUrl = async () => {
   try {
-    const res = await fetch('/services/ngrok');
-    const { url: urlBase } = await res.json();
+    const { data } = await api.get('/services/ngrok');
+    const { url: urlBase } = data;
 
     return {
       data: urlBase ? `${urlBase}/services/webhook` : '',
@@ -70,30 +69,20 @@ export const exchangeToken = async (
   accounts,
   userId
 ) => {
-  const res = await fetch('/items', {
-    method: 'POST',
-    headers: {
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
+  try {
+    const { data } = await api.post('/items', {
       publicToken,
       institutionId: institution.institution_id,
       userId,
       accounts,
-    }),
-  });
-
-  const resJson = await res.json();
-
-  if (res.status === 409) {
-    const errorMsg = `${institution.name} already linked.`;
-    console.error(errorMsg);
-    toast.error(errorMsg);
-  } else if (resJson.error) {
-    console.error(resJson.error);
-    toast.error(`Error linking ${institution.name}`);
+    });
+    return data;
+  } catch (err) {
+    const { response } = err;
+    if (response && response.status === 409) {
+      toast.error(`${institution.name} already linked.`);
+    } else {
+      toast.error(`Error linking ${institution.name}`);
+    }
   }
-
-  return resJson;
 };

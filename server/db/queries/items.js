@@ -11,6 +11,7 @@ const db = require('../');
  * @param {string} plaidAccessToken the Plaid access token of the item.
  * @param {string} plaidItemId the Plaid ID of the item.
  * @param {number} userId the ID of the user.
+ * @returns {Object} the new item.
  */
 const createItem = async (
   plaidInstitutionId,
@@ -22,49 +23,51 @@ const createItem = async (
   // We know the status is good.
   const status = 'good';
   const query = {
+    // RETURNING is a Postgres-specific clause that returns a list of the inserted items.
     text: `
       INSERT INTO items_table
         (user_id, plaid_access_token, plaid_item_id, plaid_institution_id, status)
       VALUES
-        ($1, $2, $3, $4, $5);
+        ($1, $2, $3, $4, $5)
+      RETURNING
+        *;
     `,
     values: [userId, plaidAccessToken, plaidItemId, plaidInstitutionId, status],
   };
-  await db.query(query);
-};
-
-/**
- * Retrieves the Plaid access token for an item.
- *
- * @param {string} plaidItemId the Plaid ID of the item.
- * @returns {string} the Plaid access token.
- */
-const retrieveAccessTokenByPlaidItemId = async plaidItemId => {
-  const query = {
-    text: 'SELECT plaid_access_token FROM items WHERE plaid_item_id = $1;',
-    values: [plaidItemId],
-  };
   const { rows } = await db.query(query);
-  // since Plaid item IDs are unique, this query will never return more than one row.
-  const accessToken = rows[0].plaid_access_token;
-  return accessToken;
+  return rows[0];
 };
 
 /**
- * Retrieves the Plaid access token for an item.
+ * Retrieves a single item.
  *
- * @param {string} itemId  of the item.
- * @returns {string} the Plaid access token.
+ * @param {number} itemId the ID of the item.
+ * @returns {Object} an item.
  */
-const retrieveAccessTokenByItemId = async itemId => {
+const retrieveItemById = async itemId => {
   const query = {
-    text: 'SELECT plaid_access_token FROM items WHERE id = $1;',
+    text: 'SELECT * FROM items WHERE id = $1',
     values: [itemId],
   };
   const { rows } = await db.query(query);
-  // since Plaid item IDs are unique, this query will never return more than one row.
-  const accessToken = rows[0].plaid_access_token;
-  return accessToken;
+  // since item IDs are unique, this query will never return more than one row.
+  return rows[0];
+};
+
+/**
+ * Retrieves a single item.
+ *
+ * @param {string} accessToken the Plaid access token of the item.
+ * @returns {Object} the item.
+ */
+const retrieveItemByPlaidAccessToken = async accessToken => {
+  const query = {
+    text: 'SELECT * FROM items WHERE plaid_access_token = $1',
+    values: [accessToken],
+  };
+  const { rows: existingItems } = await db.query(query);
+  // Access tokens are unique, so this will return at most one item.
+  return existingItems[0];
 };
 
 /**
@@ -85,32 +88,19 @@ const retrieveItemByPlaidInstitutionId = async (plaidInstitutionId, userId) => {
 };
 
 /**
- * Retrieves the item ID for a single item.
+ * Retrieves a single item.
  *
  * @param {string} plaidItemId the Plaid ID of the item.
- * @returns {number} the item ID.
+ * @returns {Object} an item.
  */
-const retrieveItemId = async plaidItemId => {
-  const query = 'SELECT (id) FROM items WHERE plaid_item_id = $1';
-  const { rows } = await db.query(query, [plaidItemId]);
-  // since Plaid item IDs are unique, this query will never return more than one row.
-  const itemId = rows[0].id;
-  return itemId;
-};
-
-/**
- * Retrieves all stored items for a given item ID.
- *
- * @param {number} itemId the ID of the item.
- * @returns {Object[]} Array of 1 item.
- */
-const retrieveItemsById = async itemId => {
+const retrieveItemByPlaidItemId = async plaidItemId => {
   const query = {
-    text: 'SELECT * FROM items WHERE id = $1',
-    values: [itemId],
+    text: 'SELECT * FROM items WHERE plaid_item_id = $1',
+    values: [plaidItemId],
   };
-  const { rows: items } = await db.query(query);
-  return items;
+  const { rows } = await db.query(query);
+  // since Plaid item IDs are unique, this query will never return more than one row.
+  return rows[0];
 };
 
 /**
@@ -143,12 +133,13 @@ const updateItemStatus = async (itemId, status) => {
 };
 
 /**
- * Removes item, related accounts and transactions.
- * @param {string[]} itemId the Plaid IDs of the transactions.
+ * Removes a single item. The database will also remove related accounts and transactions.
+ *
+ * @param {string} itemId the id of the item.
  */
 const deleteItem = async itemId => {
   const query = {
-    text: `DELETE FROM items_table i WHERE i.id = $1`,
+    text: `DELETE FROM items_table WHERE id = $1`,
     values: [itemId],
   };
   await db.query(query);
@@ -157,11 +148,10 @@ const deleteItem = async itemId => {
 module.exports = {
   createItem,
   deleteItem,
-  retrieveAccessTokenByPlaidItemId,
-  retrieveAccessTokenByItemId,
+  retrieveItemById,
+  retrieveItemByPlaidAccessToken,
   retrieveItemByPlaidInstitutionId,
-  retrieveItemId,
-  retrieveItemsById,
+  retrieveItemByPlaidItemId,
   retrieveItemsByUser,
   updateItemStatus,
 };

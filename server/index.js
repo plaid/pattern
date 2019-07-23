@@ -15,6 +15,7 @@ const {
   accountsRouter,
   institutionsRouter,
   serviceRouter,
+  linkEventsRouter,
   unhandledRouter,
 } = require('./routes');
 
@@ -56,6 +57,7 @@ app.use('/items', itemsRouter);
 app.use('/accounts', accountsRouter);
 app.use('/institutions', institutionsRouter);
 app.use('/services', serviceRouter);
+app.use('/link-event', linkEventsRouter);
 app.use('*', unhandledRouter);
 
 // Error handling has to sit at the bottom of the stack.

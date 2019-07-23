@@ -20,8 +20,8 @@ export function WebhooksProvider(props) {
     if (!pendingRequest.current && (refresh || !hasBeenFetched.current)) {
       pendingRequest.current = true;
       const { data } = await apiGetWebhooksUrl();
-      await setWebhooksUrl(data);
-      await setFetchedAsState(true);
+      setWebhooksUrl(data);
+      setFetchedAsState(true);
       pendingRequest.current = false;
       hasBeenFetched.current = true;
     }

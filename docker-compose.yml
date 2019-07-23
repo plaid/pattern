@@ -20,7 +20,7 @@ services:
 
   server:
     build: ./server
-    image: plaidinc/pattern-server:1.0.2
+    image: plaidinc/pattern-server:1.0.3
     ports:
       - 5000:5000
     environment:
@@ -38,7 +38,7 @@ services:
 
   ngrok:
     build: ./ngrok
-    image: plaidinc/pattern-ngrok:1.0.2
+    image: plaidinc/pattern-ngrok:1.0.3
     command: ["ngrok", "http", "server:5000"]
     ports:
       - 4040:4040
@@ -47,7 +47,7 @@ services:
 
   client:
     build: ./client
-    image: plaidinc/pattern-client:1.0.2
+    image: plaidinc/pattern-client:1.0.3
     ports:
       - 3000:3000
     environment:

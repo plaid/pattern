@@ -4,21 +4,21 @@
 
 const {
   createAccounts,
-  retrieveAccountId,
+  retrieveAccountByPlaidAccountId,
   retrieveAccountsByItemId,
   retrieveAccountsByUserId,
 } = require('./accounts');
 const {
   createItem,
   deleteItem,
-  retrieveAccessTokenByPlaidItemId,
-  retrieveAccessTokenByItemId,
+  retrieveItemById,
+  retrieveItemByPlaidAccessToken,
   retrieveItemByPlaidInstitutionId,
-  retrieveItemId,
-  retrieveItemsById,
+  retrieveItemByPlaidItemId,
   retrieveItemsByUser,
   updateItemStatus,
 } = require('./items');
+const { createPlaidApiEvent } = require('./plaidApiEvents');
 const {
   createTransactions,
   retrieveTransactionsByAccountId,
@@ -31,27 +31,28 @@ const {
   createUser,
   deleteUsers,
   retrieveUsers,
-  retrieveAccessTokensByUserId,
-  retrieveUserByUserId,
+  retrieveUserById,
   retrieveUserByUsername,
 } = require('./users');
+const { createLinkEvent } = require('./linkEvents');
 
 module.exports = {
   // accounts
   createAccounts,
-  retrieveAccountId,
+  retrieveAccountByPlaidAccountId,
   retrieveAccountsByItemId,
   retrieveAccountsByUserId,
   // items
   createItem,
   deleteItem,
-  retrieveAccessTokenByPlaidItemId,
-  retrieveAccessTokenByItemId,
+  retrieveItemById,
+  retrieveItemByPlaidAccessToken,
   retrieveItemByPlaidInstitutionId,
-  retrieveItemId,
-  retrieveItemsById,
+  retrieveItemByPlaidItemId,
   retrieveItemsByUser,
   updateItemStatus,
+  // plaid api events
+  createPlaidApiEvent,
   // transactions
   createTransactions,
   retrieveTransactionsByAccountId,
@@ -62,8 +63,9 @@ module.exports = {
   // users
   createUser,
   deleteUsers,
-  retrieveUserByUserId,
+  retrieveUserById,
   retrieveUserByUsername,
-  retrieveAccessTokensByUserId,
   retrieveUsers,
+  // link events
+  createLinkEvent,
 };

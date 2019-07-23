@@ -6,8 +6,7 @@
 const moment = require('moment');
 const plaid = require('../plaid');
 const {
-  retrieveAccessTokenByPlaidItemId,
-  retrieveItemId,
+  retrieveItemByPlaidItemId,
   createAccounts,
   createTransactions,
   deleteTransactions,
@@ -28,7 +27,9 @@ const fetchTransactions = async (plaidItemId, startDate, endDate) => {
 
   try {
     // get the access token based on the plaid item id
-    const accessToken = await retrieveAccessTokenByPlaidItemId(plaidItemId);
+    const { plaid_access_token: accessToken } = await retrieveItemByPlaidItemId(
+      plaidItemId
+    );
 
     let offset = 0;
     let transactionsToFetch = true;
@@ -139,20 +140,12 @@ const handleTransactionsWebhook = async (requestBody, io) => {
     removed_transactions: removedTransactions,
   } = requestBody;
 
-  const message = (additionalInfo, type = 'WEBHOOK') =>
-    `${type}: TRANSACTIONS: ${webhookCode}: Plaid item id ${plaidItemId}: ${additionalInfo}`;
-
-  // websocket is emitted to the client-side as a webhook is received from Plaid
-  const emitSocket = (additionalInfo, itemId) => {
-    io.emit(webhookCode, {
-      message: message(additionalInfo, 'WEBSOCKETS'),
-      itemId,
-    });
-  };
-
   const serverLogAndEmitSocket = (additionalInfo, itemId) => {
-    console.log(message(additionalInfo));
-    if (webhookCode) emitSocket(additionalInfo, itemId);
+    console.log(
+      `WEBHOOK: TRANSACTIONS: ${webhookCode}: Plaid_item_id ${plaidItemId}: ${additionalInfo}`
+    );
+    // use websocket to notify the client that a webhook has been received and handled
+    if (webhookCode) io.emit(webhookCode, { itemId });
   };
 
   switch (webhookCode) {
@@ -164,7 +157,7 @@ const handleTransactionsWebhook = async (requestBody, io) => {
         .format('YYYY-MM-DD');
       const endDate = moment().format('YYYY-MM-DD');
       await handleTransactionsUpdate(plaidItemId, startDate, endDate);
-      const itemId = await retrieveItemId(plaidItemId);
+      const { id: itemId } = await retrieveItemByPlaidItemId(plaidItemId);
       serverLogAndEmitSocket(`${newTransactions} transactions to add.`, itemId);
       break;
     }
@@ -176,7 +169,7 @@ const handleTransactionsWebhook = async (requestBody, io) => {
         .format('YYYY-MM-DD');
       const endDate = moment().format('YYYY-MM-DD');
       await handleTransactionsUpdate(plaidItemId, startDate, endDate);
-      const itemId = await retrieveItemId(plaidItemId);
+      const { id: itemId } = await retrieveItemByPlaidItemId(plaidItemId);
       serverLogAndEmitSocket(`${newTransactions} transactions to add.`, itemId);
       break;
     }
@@ -189,7 +182,7 @@ const handleTransactionsWebhook = async (requestBody, io) => {
         .format('YYYY-MM-DD');
       const endDate = moment().format('YYYY-MM-DD');
       await handleTransactionsUpdate(plaidItemId, startDate, endDate);
-      const itemId = await retrieveItemId(plaidItemId);
+      const { id: itemId } = await retrieveItemByPlaidItemId(plaidItemId);
       serverLogAndEmitSocket(`${newTransactions} transactions to add.`, itemId);
       break;
     }
@@ -197,7 +190,7 @@ const handleTransactionsWebhook = async (requestBody, io) => {
       // Fired when posted transaction(s) for an Item are deleted. The deleted transaction IDs
       // are included in the webhook payload.
       await deleteTransactions(removedTransactions);
-      const itemId = await retrieveItemId(plaidItemId);
+      const { id: itemId } = await retrieveItemByPlaidItemId(plaidItemId);
       serverLogAndEmitSocket(
         `${removedTransactions.length} transactions to remove.`,
         itemId

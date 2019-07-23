@@ -69,7 +69,7 @@ const ItemList = ({ match }) => {
               >
                 items
               </a>
-              . Click on an item, to view the accounts within.
+              . Click on an item to view its associated accounts.
             </p>
           )}
         </div>

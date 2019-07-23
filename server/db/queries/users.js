@@ -8,13 +8,16 @@ const db = require('../');
  * Creates a single user.
  *
  * @param {string} username the username of the user.
+ * @returns {Object} the new user.
  */
 const createUser = async username => {
   const query = {
-    text: 'INSERT INTO users_table (username) VALUES ($1);',
+    // RETURNING is a Postgres-specific clause that returns a list of the inserted items.
+    text: 'INSERT INTO users_table (username) VALUES ($1) RETURNING *;',
     values: [username],
   };
-  await db.query(query);
+  const { rows } = await db.query(query);
+  return rows[0];
 };
 
 /**
@@ -33,23 +36,23 @@ const deleteUsers = async userId => {
 };
 
 /**
- * Retrieves users with a given user ID.
+ * Retrieves a single user.
  *
  * @param {number} userId the ID of the user.
- * @returns {Object[]} an array of users.
+ * @returns {Object} a user.
  */
-const retrieveUserByUserId = async userId => {
+const retrieveUserById = async userId => {
   const query = {
     text: 'SELECT * FROM users WHERE id = $1',
     values: [userId],
   };
-  const { rows: user } = await db.query(query);
-  return user;
+  const { rows } = await db.query(query);
+  // since the user IDs are unique, this query will return at most one result.
+  return rows[0];
 };
 
 /**
- * Retrieves a single user by username.
- *
+ * Retrieves a single user.
  *
  * @param {string} username the username to search for.
  * @returns {Object} a single user.
@@ -77,26 +80,10 @@ const retrieveUsers = async () => {
   return users;
 };
 
-/**
- * Retrieves the Plaid access tokens for an item.
- *
- * @param {number} userId the userId to get plaid access tokens for.
- * @returns {string[]} an array of Plaid access tokens.
- */
-const retrieveAccessTokensByUserId = async userId => {
-  const query = {
-    text: 'SELECT plaid_access_token FROM items WHERE user_id = $1;',
-    values: [userId],
-  };
-  const { rows } = await db.query(query);
-  return rows.map(r => r.plaid_access_token);
-};
-
 module.exports = {
   createUser,
   deleteUsers,
-  retrieveUserByUserId,
+  retrieveUserById,
   retrieveUserByUsername,
   retrieveUsers,
-  retrieveAccessTokensByUserId,
 };

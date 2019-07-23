@@ -30,7 +30,7 @@ const ItemCard = ({ item, userId }) => {
     formatLogoSrc,
   } = useInstitutions();
 
-  const { id, plaid_institution_id, plaid_item_id, status } = item;
+  const { id, plaid_institution_id, status } = item;
   const isSandbox = PLAID_ENV === 'sandbox';
   const isGoodState = status === 'good';
 
@@ -60,7 +60,7 @@ const ItemCard = ({ item, userId }) => {
           className="item-card__clickable"
           onClick={() => setShowAccounts(current => !current)}
         >
-          <div className="item-card__column-1 bank-name">
+          <div className="item-card__column-1">
             <img
               className="item-card__img"
               src={formatLogoSrc(institution.logo)}
@@ -68,18 +68,18 @@ const ItemCard = ({ item, userId }) => {
             />
             <p>{institution && institution.name}</p>
           </div>
-          <div className="item-card__column-1">
+          <div className="item-card__column-2">
             {isGoodState ? (
               <div className="item-card__status">Updated</div>
             ) : (
               <div className="item-card__status bad">Login Required</div>
             )}
           </div>
-          <div className="item-card__column">
+          <div className="item-card__column-3">
             <h3 className="heading">ITEM_ID</h3>
-            <p className="value">{plaid_item_id}</p>
+            <p className="value">{id}</p>
           </div>
-          <div className="item-card__column-2">
+          <div className="item-card__column-4">
             <h3 className="heading">LAST_UPDATED</h3>
             <p className="value">{diffBetweenCurrentTime(item.updated_at)}</p>
           </div>

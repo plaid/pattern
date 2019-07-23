@@ -20,14 +20,13 @@ export default function Landing({ users }) {
         <div className="landing__column">
           <h3 className="heading">STEP 1</h3>
           <p className="value landing__value">
-            Select or add a user from the list below, and click the Link an item
-            button below to connect{' '}
+            Add a user, and click the "Link an Item" button below to connect{' '}
             <a
               href="https://plaid.com/docs/quickstart/#item-overview"
               target="_blank"
               rel="noopener noreferrer"
             >
-              items
+              Items
             </a>{' '}
             from the user.
           </p>

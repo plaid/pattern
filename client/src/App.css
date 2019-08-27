@@ -82,6 +82,11 @@ shared styles
   background: var(--white);
 }
 
+.toast__link {
+  color: var(--white);
+  text-decoration: underline;
+}
+
 .Toastify__toast--error.toast__background {
   background: var(--red);
 }

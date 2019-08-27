@@ -1,5 +1,8 @@
 import axios from 'axios';
+import React from 'react';
 import { toast } from 'react-toastify';
+
+import { DuplicateItemToastMessage } from '../components';
 
 const baseURL = '/';
 
@@ -80,7 +83,9 @@ export const exchangeToken = async (
   } catch (err) {
     const { response } = err;
     if (response && response.status === 409) {
-      toast.error(`${institution.name} already linked.`);
+      toast.error(
+        <DuplicateItemToastMessage institutionName={institution.name} />
+      );
     } else {
       toast.error(`Error linking ${institution.name}`);
     }

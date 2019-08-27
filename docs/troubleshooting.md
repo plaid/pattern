@@ -19,7 +19,7 @@ Error: Error retrieving info for public key.
 
 ## I get a 409 error when linking a duplicate institution for the same user
 
-By default, Plaid Link will let a user link to the same institution multiple times. Some developers prefer disallowing duplicate account linkages because duplicate connections still come at an additional cost. Plaid Pattern has implemented server logic such that duplicate account linkages are prohibited. [Section of code](https://github.com/plaid/pattern/blob/master/server/routes/items.js#L41) that explains the same.
+Plaid Pattern has implemented server logic such that duplicate account linkages are prohibited. See [preventing item duplication](https://github.com/plaid/pattern/tree/master/server#preventing-item-duplication) section for more information.
 
 ## I can't access the Plaid Development environment API.\*\*
 

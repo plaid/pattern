@@ -5,7 +5,7 @@ const DuplicateItemToastMessage = ({ institutionName }) => (
     <div>{`${institutionName} already linked.`}</div>
     <a
       className="toast__link"
-      href="https://github.com/plaid/pattern/blob/master/server/routes/items.js#L41"
+      href="https://github.com/plaid/pattern/tree/master/server#preventing-item-duplication"
       target="_blank"
       rel="noopener noreferrer"
     >

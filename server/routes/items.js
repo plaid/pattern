@@ -38,9 +38,7 @@ router.post(
   asyncWrapper(async (req, res) => {
     const { publicToken, institutionId, userId } = req.body;
 
-    /* Plaid Link allows for 1 unique user to link same institution multiple times.
-       Prevent duplicate items for the same institution per user as 
-       duplicate connections come at an additional cost. */
+    // prevent duplicate items for the same institution per user.
     const existingItem = await retrieveItemByPlaidInstitutionId(
       institutionId,
       userId

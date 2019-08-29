@@ -33,7 +33,7 @@ const AddUserForm = ({ hideForm }) => {
               type="text"
               name="username"
               required="required"
-              autocomplete="off"
+              autoComplete="off"
               value={username}
               placeholder="New user name"
               onChange={e => setUsername(e.target.value)}

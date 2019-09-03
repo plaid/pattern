@@ -8,10 +8,12 @@ This is a reference application demonstrating an end-to-end [Plaid][plaid] integ
 
 ## Requirements
 
--   [Docker][docker] Version 2.0.0.3 (31259) or higher, installed, running, and signed in
+-   [Docker][docker] Version 2.0.0.3 (31259) or higher, installed, running, and signed in. If you're on **Windows**, check out [this link][wsl] to get set up in WSL.
 -   [Plaid API keys][plaid-keys] - [sign up][plaid-signup] for a free Sandbox account if you don't already have one
 
 ## Getting Started
+
+Note: We recommend running these commands in a unix terminal. Windows users can use a [WSL][wsl] terminal to access libraries like `make`.
 
 1. Clone the repo.
     ```shell
@@ -38,12 +40,13 @@ This is a reference application demonstrating an end-to-end [Plaid][plaid] integ
 All available commands can be seen by calling `make help`.
 
 ## Architecture
+
 As a modern full-stack application, Pattern consists of multiple services handling different segments of the stack:
 
-- [`database`][database-readme] runs a [PostgreSQL][postgres] database
-- [`server`][server-readme] runs an application back-end server using [NodeJS] and [Express]
-- [`client`][client-readme] runs a [React]-based single-page web frontend
-- [`ngrok`][ngrok-readme] exposes a [ngrok] tunnel from your local machine to the Internet to receive webhooks
+-   [`database`][database-readme] runs a [PostgreSQL][postgres] database
+-   [`server`][server-readme] runs an application back-end server using [NodeJS] and [Express]
+-   [`client`][client-readme] runs a [React]-based single-page web frontend
+-   [`ngrok`][ngrok-readme] exposes a [ngrok] tunnel from your local machine to the Internet to receive webhooks
 
 We use [Docker Compose][docker-compose] to orchestrate these services. As such, each individual service has its own Dockerfile, which Docker Compose reads when bringing up the services.
 
@@ -84,3 +87,4 @@ See [`docs/troubleshooting.md`][troubleshooting].
 [react]: http://reactjs.org/
 [server-readme]: server/README.md
 [troubleshooting]: docs/troubleshooting.md
+[wsl]: https://nickjanetakis.com/blog/setting-up-docker-for-windows-and-wsl-to-work-flawlessly

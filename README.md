@@ -8,10 +8,12 @@ This is a reference application demonstrating an end-to-end [Plaid][plaid] integ
 
 ## Requirements
 
--   [Docker][docker] Version 2.0.0.3 (31259) or higher, installed, running, and signed in. If you're on **Windows**, check out [this link](https://nickjanetakis.com/blog/setting-up-docker-for-windows-and-wsl-to-work-flawlessly) to get set up in WSL.
+-   [Docker][docker] Version 2.0.0.3 (31259) or higher, installed, running, and signed in. If you're on **Windows**, check out [this link][wsl] to get set up in WSL.
 -   [Plaid API keys][plaid-keys] - [sign up][plaid-signup] for a free Sandbox account if you don't already have one
 
 ## Getting Started
+
+Note: We recommend running these commands in a unix terminal. Windows users can use a [WSL][wsl] terminal to access libraries like `make`.
 
 1. Clone the repo.
     ```shell
@@ -85,3 +87,4 @@ See [`docs/troubleshooting.md`][troubleshooting].
 [react]: http://reactjs.org/
 [server-readme]: server/README.md
 [troubleshooting]: docs/troubleshooting.md
+[wsl]: https://nickjanetakis.com/blog/setting-up-docker-for-windows-and-wsl-to-work-flawlessly

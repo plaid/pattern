@@ -192,7 +192,7 @@ CREATE TABLE link_events_table
   id SERIAL PRIMARY KEY,
   type text NOT NULL,
   user_id integer,
-  link_session_id text NOT NULL,
+  link_session_id text,
   request_id text UNIQUE,
   error_type text,
   error_code text,

@@ -135,7 +135,6 @@ export function LinkProvider(props) {
    */
   const getLinkHandler = useCallback(
     ({ userId, itemId } = {}) => {
-      console.log('user1', userId, 'item1', itemId);
       if ((itemId && !hasRequested.current.byItem[itemId]) || (userId && !hasRequested.current.byUser[userId])) {
         createLinkHandler({itemId, userId});
       }

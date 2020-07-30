@@ -1,5 +1,5 @@
 import React from 'react';
-import { withRouter, Route, Switch } from 'react-router-dom';
+import { Route, Switch, withRouter } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.min.css';
 
@@ -10,7 +10,6 @@ import { ItemsProvider } from './services/items';
 import { LinkProvider } from './services/link';
 import { TransactionsProvider } from './services/transactions';
 import { UsersProvider } from './services/users';
-import { WebhooksProvider } from './services/webhooks';
 import './App.css';
 
 function App() {
@@ -24,25 +23,23 @@ function App() {
 
   return (
     <div className="App">
-      <WebhooksProvider>
-        <InstitutionsProvider>
-          <ItemsProvider>
-            <LinkProvider>
-              <AccountsProvider>
-                <TransactionsProvider>
-                  <UsersProvider>
-                    <Sockets />
-                    <Switch>
-                      <Route exact path="/" component={Landing} />
-                      <Route path="/user/:userId/items" component={ItemList} />
-                    </Switch>
-                  </UsersProvider>
-                </TransactionsProvider>
-              </AccountsProvider>
-            </LinkProvider>
-          </ItemsProvider>
-        </InstitutionsProvider>
-      </WebhooksProvider>
+      <InstitutionsProvider>
+        <ItemsProvider>
+          <LinkProvider>
+            <AccountsProvider>
+              <TransactionsProvider>
+                <UsersProvider>
+                  <Sockets />
+                  <Switch>
+                    <Route exact path="/" component={Landing} />
+                    <Route path="/user/:userId/items" component={ItemList} />
+                  </Switch>
+                </UsersProvider>
+              </TransactionsProvider>
+            </AccountsProvider>
+          </LinkProvider>
+        </ItemsProvider>
+      </InstitutionsProvider>
     </div>
   );
 }

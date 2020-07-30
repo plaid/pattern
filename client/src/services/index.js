@@ -1,5 +1,4 @@
 export { default as api } from './api';
-export { default as useWebhooks } from './webhooks';
 export { default as useUsers } from './users';
 export { default as useItems } from './items';
 export { default as useAccounts } from './accounts';

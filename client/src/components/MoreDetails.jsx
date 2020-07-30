@@ -28,7 +28,6 @@ export function MoreDetails({
     callback: () => setmenuShown(false),
     ignoreRef: refToButton,
   });
-  console.log('detail', userId, itemId, 'updateShown', updateShown);
   return (
     <div className="more-details">
       <button

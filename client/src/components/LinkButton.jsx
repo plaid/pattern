@@ -24,14 +24,12 @@ export default function LinkButton({
   altClasses,
   primary,
 }) {
-  console.log('linKButtonItemId', itemId, userId);
   const [linkInstance, setLinkInstance] = useState({});
   const { linkHandlers, getLinkHandler } = useLink();
 
   const isPrimary = primary ? 'button--is-primary' : '';
   const classlist = altClasses !== null ? altClasses : '';
 
-  console.log('a', userId, 'b', itemId);
   useEffect(() => {
     getLinkHandler({ userId, itemId });
   }, [userId, itemId, getLinkHandler]);

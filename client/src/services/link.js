@@ -9,11 +9,10 @@ import React, {
 import {
   exchangeToken,
   getLinkToken,
-  getPublicToken,
   postLinkEvent,
   setItemState,
 } from './api';
-import { useItems, useWebhooks } from '.';
+import { useItems } from '.';
 
 const PLAID_ENV = process.env.REACT_APP_PLAID_ENV;
 

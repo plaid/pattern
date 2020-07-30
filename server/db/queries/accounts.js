@@ -73,8 +73,7 @@ const createAccounts = async (plaidItemId, accounts) => {
     const { rows } = await db.query(query);
     return rows[0];
   });
-  const newAccounts = await Promise.all(pendingQueries);
-  return newAccounts;
+  return await Promise.all(pendingQueries);
 };
 
 /**

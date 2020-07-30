@@ -34,6 +34,10 @@ export const setItemToBadState = itemId =>
   api.post('/items/sandbox/item/reset_login', { itemId });
 
 export const getPublicToken = id => api.post(`items/${id}/public_token`);
+export const getLinkToken = ({userId, itemId}) => api.post(`/link-token`, {
+  userId,
+  itemId
+});
 
 // accounts
 export const getAccountsByItem = itemId => api.get(`/items/${itemId}/accounts`);
@@ -52,19 +56,6 @@ export const getInstitutionById = instId => api.get(`/institutions/${instId}`);
 
 // misc
 export const postLinkEvent = event => api.post(`/link-event`, event);
-export const getWebhookUrl = async () => {
-  try {
-    const { data } = await api.get('/services/ngrok');
-    const { url: urlBase } = data;
-
-    return {
-      data: urlBase ? `${urlBase}/services/webhook` : '',
-    };
-  } catch (err) {
-    console.error('Error fetching webhook url');
-    return { data: null };
-  }
-};
 
 export const exchangeToken = async (
   publicToken,

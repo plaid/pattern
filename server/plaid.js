@@ -15,7 +15,6 @@ const {
 const {
   PLAID_CLIENT_ID,
   PLAID_ENV,
-  PLAID_PUBLIC_KEY,
   PLAID_SECRET_DEVELOPMENT,
   PLAID_SECRET_SANDBOX,
 } = process.env;
@@ -91,6 +90,7 @@ const clientMethodLoggingFns = {
   getInstitutionById: noAccessTokenLogger,
   searchInstitutionsByName: noAccessTokenLogger,
   getCategories: noAccessTokenLogger,
+  createLinkToken: noAccessTokenLogger,
   // remaining methods are only available in the sandbox environment
   resetLogin: defaultLogger,
   sandboxItemFireWebhook: defaultLogger,
@@ -101,13 +101,12 @@ const clientMethodLoggingFns = {
 class PlaidClientWrapper {
   constructor() {
     // Initialize the Plaid client.
-    this.client = new plaid.Client(
-      PLAID_CLIENT_ID,
-      PLAID_SECRET,
-      PLAID_PUBLIC_KEY,
-      plaid.environments[PLAID_ENV],
-      OPTIONS
-    );
+    this.client = new plaid.Client({
+      clientID: PLAID_CLIENT_ID,
+      secret: PLAID_SECRET,
+      env: plaid.environments[PLAID_ENV],
+      options: OPTIONS,
+    });
 
     // Wrap the Plaid client methods to add a logging function.
     forEach(clientMethodLoggingFns, (logFn, method) => {

@@ -43,7 +43,7 @@ const months = [
  */
 export function formatDate(timestamp) {
   if (timestamp) {
-    //slice will return the first 10 char(date)of timestamp
+    // slice will return the first 10 char(date)of timestamp
     // coming in as: 2019-05-07T15:41:30.520Z
     const [y, m, d] = timestamp.slice(0, 10).split('-');
     return `${months[+m]} ${d}, ${y}`;

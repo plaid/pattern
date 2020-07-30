@@ -28,8 +28,7 @@ help:
 
 ## Start the services
 start: $(envfile) $(clear_db_after_schema_change)
-	@echo "Pulling images from Docker Hub (this may take a few minutes)"
-	docker-compose pull
+	docker-compose build
 	@echo "Starting Docker services"
 	docker-compose up --detach
 	./wait-for-client.sh

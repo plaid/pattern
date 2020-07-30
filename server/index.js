@@ -16,6 +16,7 @@ const {
   institutionsRouter,
   serviceRouter,
   linkEventsRouter,
+  linkTokensRouter,
   unhandledRouter,
 } = require('./routes');
 
@@ -58,6 +59,7 @@ app.use('/accounts', accountsRouter);
 app.use('/institutions', institutionsRouter);
 app.use('/services', serviceRouter);
 app.use('/link-event', linkEventsRouter);
+app.use('/link-token', linkTokensRouter);
 app.use('*', unhandledRouter);
 
 // Error handling has to sit at the bottom of the stack.

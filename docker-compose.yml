@@ -26,7 +26,6 @@ services:
     environment:
       <<: *common-variables
       PLAID_CLIENT_ID:
-      PLAID_PUBLIC_KEY:
       PLAID_SECRET_SANDBOX:
       PLAID_SECRET_DEVELOPMENT:
       PLAID_ENV:
@@ -52,7 +51,6 @@ services:
       - 3000:3000
     environment:
       REACT_APP_PLAID_ENV: ${PLAID_ENV}
-      REACT_APP_PLAID_PUBLIC_KEY: ${PLAID_PUBLIC_KEY}
       REACT_APP_SERVER_PORT: 5000
     depends_on:
       - server

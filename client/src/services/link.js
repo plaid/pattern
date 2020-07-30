@@ -53,71 +53,89 @@ export function LinkProvider(props) {
     async ({ userId, itemId }) => {
       const isUpdate = itemId != null;
 
-      const linkTokenRes = await getLinkToken({ itemId, userId });
       if (isUpdate) {
         hasRequested.current.byItem[itemId] = true;
       } else {
         hasRequested.current.byUser[userId] = true;
       }
-
-      const handler = await window.Plaid.create({
+      let handler;
+      const base = {
         apiVersion: 'v2',
         clientName: 'Pattern',
         env: PLAID_ENV,
-        token: linkTokenRes.data.link_token,
-        onEvent: logEvent,
-        onLoad: () => {
-          logEvent('onLoad', {});
-          if (isUpdate) {
-            dispatch([types.LINK_UPDATE_MODE_LOADED, {id: itemId}]);
-          } else {
-            dispatch([types.LINK_LOADED, {id: userId}]);
-          }
-        },
-        onSuccess: async (
-          publicToken,
-          {institution, accounts, link_session_id}
-        ) => {
-          logEvent('onSuccess', {institution, accounts, link_session_id});
-          await postLinkEvent({
-            userId,
-            link_session_id,
-            type: 'success',
-          });
-          if (isUpdate) {
-            await setItemState(itemId, 'good');
-            getItemById(itemId, true);
-          } else {
-            await exchangeToken(publicToken, institution, accounts, userId);
-            getItemsByUser(userId, true);
-          }
-
-          if (window.location.pathname === '/') {
-            window.location.href = `/user/${userId}/items`;
-          }
-        },
-        onExit: async (
-          error,
-          {institution, link_session_id, request_id}
-        ) => {
-          logEvent('onExit', {
-            error,
-            institution,
-            link_session_id,
-            request_id,
-          });
-          const eventError = error || {};
-          await postLinkEvent({
-            userId,
-            link_session_id,
-            request_id,
-            type: 'exit',
-            ...eventError,
-          });
-        },
         product: ['transactions'],
-      });
+      };
+      const onLoad = () => {
+        logEvent('onLoad', {});
+        if (isUpdate) {
+          dispatch([types.LINK_UPDATE_MODE_LOADED, {id: itemId}]);
+        } else {
+          dispatch([types.LINK_LOADED, {id: userId}]);
+        }
+      };
+      const onSuccess = async (
+        publicToken,
+        {institution, accounts, link_session_id}
+      ) => {
+        logEvent('onSuccess', {institution, accounts, link_session_id});
+        await postLinkEvent({
+          userId,
+          link_session_id,
+          type: 'success',
+        });
+        if (isUpdate) {
+          await setItemState(itemId, 'good');
+          getItemById(itemId, true);
+        } else {
+          await exchangeToken(publicToken, institution, accounts, userId);
+          getItemsByUser(userId, true);
+        }
 
+        if (window.location.pathname === '/') {
+          window.location.href = `/user/${userId}/items`;
+        }
+      };
+      const onExit = async (
+        error,
+        {institution, link_session_id, request_id}
+      ) => {
+        logEvent('onExit', {
+          error,
+          institution,
+          link_session_id,
+          request_id,
+        });
+        const eventError = error || {};
+        await postLinkEvent({
+          userId,
+          link_session_id,
+          request_id,
+          type: 'exit',
+          ...eventError,
+        });
+        if (error != null && error.error_code === 'INVALID_LINK_TOKEN') {
+          // gets rid of the old iframe
+          handler.destroy();
+          await initializeLink();
+        }
+      };
+      const baseConfigs = {
+        ...base,
+        onEvent: logEvent,
+        onLoad: onLoad,
+        onSuccess: onSuccess,
+        onExit: onExit,
+      };
+
+      const initializeLink = async () => {
+        const linkTokenResponse = await getLinkToken({itemId, userId});
+        handler = await window.Plaid.create({
+          ...baseConfigs,
+          token: await linkTokenResponse.data.link_token,
+        });
+      }
+
+      await  initializeLink();
       if (isUpdate) {
         dispatch([types.LINK_UPDATE_MODE_CREATED, {id: itemId, handler}]);
       } else {

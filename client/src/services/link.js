@@ -1,19 +1,18 @@
 import React, {
+  useCallback,
   useContext,
   useMemo,
-  useEffect,
-  useCallback,
   useReducer,
   useRef,
 } from 'react';
 
 import {
   exchangeToken,
-  getPublicToken,
-  setItemState,
+  getLinkToken,
   postLinkEvent,
+  setItemState,
 } from './api';
-import { useWebhooks, useItems } from '.';
+import { useItems } from '.';
 
 const PLAID_ENV = process.env.REACT_APP_PLAID_ENV;
 
@@ -44,16 +43,7 @@ export function LinkProvider(props) {
     byItem: {},
   });
 
-  const {
-    webhooksUrl,
-    getWebhooksUrl,
-    hasBeenFetched: webhooksFetched,
-  } = useWebhooks();
   const { getItemsByUser, getItemById } = useItems();
-
-  useEffect(() => {
-    getWebhooksUrl();
-  }, [getWebhooksUrl]);
 
   /**
    * @desc Creates a new instance of Link for a given User or Item. For more details on
@@ -61,87 +51,99 @@ export function LinkProvider(props) {
    */
   const createLinkHandler = useCallback(
     async ({ userId, itemId }) => {
-      if (webhooksFetched) {
-        const isUpdate = !!itemId;
-        let token;
+      const isUpdate = itemId != null;
 
-        if (isUpdate) {
-          hasRequested.current.byItem[itemId] = true;
-          const res = await getPublicToken(itemId);
-          token = res.data.public_token;
-        } else {
-          hasRequested.current.byUser[userId] = true;
-        }
-
-        const handler = await window.Plaid.create({
-          apiVersion: 'v2',
-          clientName: 'Pattern',
-          env: PLAID_ENV,
-          key: process.env.REACT_APP_PLAID_PUBLIC_KEY,
-          onEvent: logEvent,
-          onLoad: () => {
-            logEvent('onLoad', {});
-            if (isUpdate) {
-              dispatch([types.LINK_UPDATE_MODE_LOADED, { id: itemId }]);
-            } else {
-              dispatch([types.LINK_LOADED, { id: userId }]);
-            }
-          },
-          onSuccess: async (
-            publicToken,
-            { institution, accounts, link_session_id }
-          ) => {
-            logEvent('onSuccess', { institution, accounts, link_session_id });
-            await postLinkEvent({
-              userId,
-              link_session_id,
-              type: 'success',
-            });
-            if (isUpdate) {
-              await setItemState(itemId, 'good');
-              getItemById(itemId, true);
-            } else {
-              await exchangeToken(publicToken, institution, accounts, userId);
-              getItemsByUser(userId, true);
-            }
-
-            if (window.location.pathname === '/') {
-              window.location.href = `/user/${userId}/items`;
-            }
-          },
-          onExit: async (
-            error,
-            { institution, link_session_id, request_id }
-          ) => {
-            logEvent('onExit', {
-              error,
-              institution,
-              link_session_id,
-              request_id,
-            });
-            const eventError = error || {};
-            await postLinkEvent({
-              userId,
-              link_session_id,
-              request_id,
-              type: 'exit',
-              ...eventError,
-            });
-          },
-          product: ['transactions'],
-          // Add the webhook parameter only if the endpoint is available
-          ...(webhooksUrl && { webhook: webhooksUrl }),
-          ...(token && { token }),
-        });
-
-        if (isUpdate) {
-          dispatch([types.LINK_UPDATE_MODE_CREATED, { id: itemId, handler }]);
-        } else {
-          dispatch([types.LINK_CREATED, { id: userId, handler }]);
-        }
+      if (isUpdate) {
+        hasRequested.current.byItem[itemId] = true;
+      } else {
+        hasRequested.current.byUser[userId] = true;
       }
+      let handler;
+      const base = {
+        apiVersion: 'v2',
+        clientName: 'Pattern',
+        env: PLAID_ENV,
+        product: ['transactions'],
+      };
+      const onLoad = () => {
+        logEvent('onLoad', {});
+        if (isUpdate) {
+          dispatch([types.LINK_UPDATE_MODE_LOADED, {id: itemId}]);
+        } else {
+          dispatch([types.LINK_LOADED, {id: userId}]);
+        }
+      };
+      const onSuccess = async (
+        publicToken,
+        {institution, accounts, link_session_id}
+      ) => {
+        logEvent('onSuccess', {institution, accounts, link_session_id});
+        await postLinkEvent({
+          userId,
+          link_session_id,
+          type: 'success',
+        });
+        if (isUpdate) {
+          await setItemState(itemId, 'good');
+          getItemById(itemId, true);
+        } else {
+          await exchangeToken(publicToken, institution, accounts, userId);
+          getItemsByUser(userId, true);
+        }
+
+        if (window.location.pathname === '/') {
+          window.location.href = `/user/${userId}/items`;
+        }
+      };
+      const onExit = async (
+        error,
+        {institution, link_session_id, request_id}
+      ) => {
+        logEvent('onExit', {
+          error,
+          institution,
+          link_session_id,
+          request_id,
+        });
+        const eventError = error || {};
+        await postLinkEvent({
+          userId,
+          link_session_id,
+          request_id,
+          type: 'exit',
+          ...eventError,
+        });
+        if (error != null && error.error_code === 'INVALID_LINK_TOKEN') {
+          // gets rid of the old iframe
+          handler.destroy();
+          await initializeLink();
+        }
+      };
+      const baseConfigs = {
+        ...base,
+        onEvent: logEvent,
+        onLoad: onLoad,
+        onSuccess: onSuccess,
+        onExit: onExit,
+      };
+
+      const initializeLink = async () => {
+        const linkTokenResponse = await getLinkToken({itemId, userId});
+        handler = await window.Plaid.create({
+          ...baseConfigs,
+          token: await linkTokenResponse.data.link_token,
+        });
+      }
+
+      await  initializeLink();
+      if (isUpdate) {
+        dispatch([types.LINK_UPDATE_MODE_CREATED, {id: itemId, handler}]);
+      } else {
+        dispatch([types.LINK_CREATED, {id: userId, handler}]);
+      }
+
     },
-    [webhooksUrl, getItemsByUser, getItemById, webhooksFetched]
+    [getItemsByUser, getItemById]
   );
 
   /**
@@ -151,10 +153,8 @@ export function LinkProvider(props) {
    */
   const getLinkHandler = useCallback(
     ({ userId, itemId } = {}) => {
-      if (itemId && !hasRequested.current.byItem[itemId]) {
-        createLinkHandler({ itemId });
-      } else if (userId && !hasRequested.current.byUser[userId]) {
-        createLinkHandler({ userId });
+      if ((itemId && !hasRequested.current.byItem[itemId]) || (userId && !hasRequested.current.byUser[userId])) {
+        createLinkHandler({itemId, userId});
       }
     },
     [createLinkHandler]

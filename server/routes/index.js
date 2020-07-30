@@ -9,6 +9,7 @@ const institutionsRouter = require('./institutions');
 const serviceRouter = require('./services');
 const linkEventsRouter = require('./linkEvents');
 const unhandledRouter = require('./unhandled');
+const linkTokensRouter = require('./linkTokens');
 
 module.exports = {
   usersRouter,
@@ -17,5 +18,6 @@ module.exports = {
   institutionsRouter,
   serviceRouter,
   linkEventsRouter,
+  linkTokensRouter,
   unhandledRouter,
 };

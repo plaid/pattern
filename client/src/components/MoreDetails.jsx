@@ -28,7 +28,6 @@ export function MoreDetails({
     callback: () => setmenuShown(false),
     ignoreRef: refToButton,
   });
-
   return (
     <div className="more-details">
       <button
@@ -49,7 +48,7 @@ export function MoreDetails({
           )}
           {updateShown && (
             <LinkButton
-              userid={userId}
+              userId={userId}
               itemId={itemId}
               altClasses="more-details_button"
             >

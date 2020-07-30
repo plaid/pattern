@@ -187,20 +187,4 @@ router.post(
   })
 );
 
-/**
- * Creates a public_token for an item. Used to initialize Link in update mode.
- *
- * @param {string} itemId the ID of the item.
- * @return {Object} the response from the Plaid API.
- */
-router.post(
-  '/:itemId/public_token',
-  asyncWrapper(async (req, res) => {
-    const { itemId } = req.params;
-    const { plaid_access_token: accessToken } = await retrieveItemById(itemId);
-    const publicToken = await plaid.createPublicToken(accessToken);
-    res.send(publicToken);
-  })
-);
-
 module.exports = router;

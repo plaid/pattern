@@ -152,11 +152,9 @@ const handleTransactionsWebhook = async (requestBody, io) => {
     case 'INITIAL_UPDATE': {
       // Fired when an Item's initial transaction pull is completed.
       // Note: The default pull is 30 days.
-      const startDate = moment()
-        .subtract(30, 'days')
-        .format('YYYY-MM-DD');
+      const startDate = moment().subtract(30, 'days').format('YYYY-MM-DD');
       const endDate = moment().format('YYYY-MM-DD');
-      await handleTransactionsUpdate(plaidItemId, startDate, endDate);
+      await (plaidItemId, startDate, endDate);
       const { id: itemId } = await retrieveItemByPlaidItemId(plaidItemId);
       serverLogAndEmitSocket(`${newTransactions} transactions to add.`, itemId);
       break;
@@ -164,9 +162,7 @@ const handleTransactionsWebhook = async (requestBody, io) => {
     case 'HISTORICAL_UPDATE': {
       // Fired when an Item's historical transaction pull is completed. Plaid fetches as much
       // data as is available from the financial institution.
-      const startDate = moment()
-        .subtract(2, 'years')
-        .format('YYYY-MM-DD');
+      const startDate = moment().subtract(2, 'years').format('YYYY-MM-DD');
       const endDate = moment().format('YYYY-MM-DD');
       await handleTransactionsUpdate(plaidItemId, startDate, endDate);
       const { id: itemId } = await retrieveItemByPlaidItemId(plaidItemId);
@@ -177,9 +173,7 @@ const handleTransactionsWebhook = async (requestBody, io) => {
       // Fired when new transaction data is available as Plaid performs its regular updates of
       // the Item. Since transactions may take several days to post, we'll fetch 14 days worth of
       // transactions from Plaid and reconcile them with the transactions we already have stored.
-      const startDate = moment()
-        .subtract(14, 'days')
-        .format('YYYY-MM-DD');
+      const startDate = moment().subtract(14, 'days').format('YYYY-MM-DD');
       const endDate = moment().format('YYYY-MM-DD');
       await handleTransactionsUpdate(plaidItemId, startDate, endDate);
       const { id: itemId } = await retrieveItemByPlaidItemId(plaidItemId);

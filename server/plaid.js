@@ -3,7 +3,7 @@
  */
 
 const forEach = require('lodash/forEach');
-const plaid = require('plaid');
+const { Configuration, PlaidApi, PlaidEnvironments } = require('plaid');
 
 const {
   createPlaidApiEvent,
@@ -90,7 +90,8 @@ const clientMethodLoggingFns = {
   getInstitutionById: noAccessTokenLogger,
   searchInstitutionsByName: noAccessTokenLogger,
   getCategories: noAccessTokenLogger,
-  createLinkToken: noAccessTokenLogger,
+  // createLinkToken: noAccessTokenLogger,
+  linkTokenCreate: noAccessTokenLogger,
   // remaining methods are only available in the sandbox environment
   resetLogin: defaultLogger,
   sandboxItemFireWebhook: defaultLogger,
@@ -101,12 +102,19 @@ const clientMethodLoggingFns = {
 class PlaidClientWrapper {
   constructor() {
     // Initialize the Plaid client.
-    this.client = new plaid.Client({
-      clientID: PLAID_CLIENT_ID,
-      secret: PLAID_SECRET,
-      env: plaid.environments[PLAID_ENV],
-      options: OPTIONS,
+
+    const configuration = new Configuration({
+      basePath: PlaidEnvironments[PLAID_ENV],
+      baseOptions: {
+        headers: {
+          'PLAID-CLIENT-ID': PLAID_CLIENT_ID,
+          'PLAID-SECRET': PLAID_SECRET,
+          'Plaid-Version': '2020-09-14',
+        },
+      },
     });
+
+    this.client = new PlaidApi(configuration);
 
     // Wrap the Plaid client methods to add a logging function.
     forEach(clientMethodLoggingFns, (logFn, method) => {

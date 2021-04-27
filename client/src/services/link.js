@@ -68,16 +68,16 @@ export function LinkProvider(props) {
       const onLoad = () => {
         logEvent('onLoad', {});
         if (isUpdate) {
-          dispatch([types.LINK_UPDATE_MODE_LOADED, {id: itemId}]);
+          dispatch([types.LINK_UPDATE_MODE_LOADED, { id: itemId }]);
         } else {
-          dispatch([types.LINK_LOADED, {id: userId}]);
+          dispatch([types.LINK_LOADED, { id: userId }]);
         }
       };
       const onSuccess = async (
         publicToken,
-        {institution, accounts, link_session_id}
+        { institution, accounts, link_session_id }
       ) => {
-        logEvent('onSuccess', {institution, accounts, link_session_id});
+        logEvent('onSuccess', { institution, accounts, link_session_id });
         await postLinkEvent({
           userId,
           link_session_id,
@@ -97,7 +97,7 @@ export function LinkProvider(props) {
       };
       const onExit = async (
         error,
-        {institution, link_session_id, request_id}
+        { institution, link_session_id, request_id }
       ) => {
         logEvent('onExit', {
           error,
@@ -128,20 +128,19 @@ export function LinkProvider(props) {
       };
 
       const initializeLink = async () => {
-        const linkTokenResponse = await getLinkToken({itemId, userId});
+        const linkTokenResponse = await getLinkToken({ itemId, userId });
         handler = await window.Plaid.create({
           ...baseConfigs,
           token: await linkTokenResponse.data.link_token,
         });
-      }
+      };
 
-      await  initializeLink();
+      await initializeLink();
       if (isUpdate) {
-        dispatch([types.LINK_UPDATE_MODE_CREATED, {id: itemId, handler}]);
+        dispatch([types.LINK_UPDATE_MODE_CREATED, { id: itemId, handler }]);
       } else {
-        dispatch([types.LINK_CREATED, {id: userId, handler}]);
+        dispatch([types.LINK_CREATED, { id: userId, handler }]);
       }
-
     },
     [getItemsByUser, getItemById]
   );
@@ -153,8 +152,11 @@ export function LinkProvider(props) {
    */
   const getLinkHandler = useCallback(
     ({ userId, itemId } = {}) => {
-      if ((itemId && !hasRequested.current.byItem[itemId]) || (userId && !hasRequested.current.byUser[userId])) {
-        createLinkHandler({itemId, userId});
+      if (
+        (itemId && !hasRequested.current.byItem[itemId]) ||
+        (userId && !hasRequested.current.byUser[userId])
+      ) {
+        createLinkHandler({ itemId, userId });
       }
     },
     [createLinkHandler]

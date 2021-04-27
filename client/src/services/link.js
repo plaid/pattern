@@ -77,6 +77,7 @@ export function LinkProvider(props) {
         publicToken,
         { institution, accounts, link_session_id }
       ) => {
+        console.log('YAY! success!!!');
         logEvent('onSuccess', { institution, accounts, link_session_id });
         await postLinkEvent({
           userId,
@@ -87,6 +88,7 @@ export function LinkProvider(props) {
           await setItemState(itemId, 'good');
           getItemById(itemId, true);
         } else {
+          console.log('calling exchange...');
           await exchangeToken(publicToken, institution, accounts, userId);
           getItemsByUser(userId, true);
         }

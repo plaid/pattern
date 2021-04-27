@@ -26,6 +26,7 @@ export default function LinkButton({
 }) {
   const [linkInstance, setLinkInstance] = useState({});
   const { linkHandlers, getLinkHandler } = useLink();
+  console.log('link instance', linkInstance);
 
   const isPrimary = primary ? 'button--is-primary' : '';
   const classlist = altClasses !== null ? altClasses : '';

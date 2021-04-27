@@ -52,11 +52,8 @@ router.post(
       };
 
       const createResponse = await plaid.linkTokenCreate(linkTokenParams);
-      console.log("i'm in the try block", createResponse.data);
       res.json(createResponse.data);
     } catch (err) {
-      console.log("i'm in the catch block", err.response);
-      console.log('error while fetching client token', err.response);
       prettyPrintResponse(err);
       return response.json(formatError(err.response));
       // throw err;

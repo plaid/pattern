@@ -49,10 +49,11 @@ router.post(
       });
 
     // exchange the public token for a private token and store the item.
-    const {
-      item_id: itemId,
-      access_token: accessToken,
-    } = await plaid.itemPublicTokenExchange(publicToken);
+    const tokenResponse = await plaid.itemPublicTokenExchange({
+      public_token: publicToken,
+    });
+    const accessToken = tokenResponse.data.access_token;
+    const itemId = tokenResponse.data.item_id;
     const newItem = await createItem(
       institutionId,
       accessToken,

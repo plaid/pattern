@@ -52,7 +52,7 @@ router.post(
     const {
       item_id: itemId,
       access_token: accessToken,
-    } = await plaid.exchangePublicToken(publicToken);
+    } = await plaid.itemPublicTokenExchange(publicToken);
     const newItem = await createItem(
       institutionId,
       accessToken,

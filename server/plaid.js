@@ -67,7 +67,8 @@ const noAccessTokenLogger = async (
 // All available Plaid client methods as of v4.1.0 mapped to their appropriate logging functions.
 const clientMethodLoggingFns = {
   createPublicToken: defaultLogger,
-  exchangePublicToken: noAccessTokenLogger,
+  // exchangePublicToken: noAccessTokenLogger,
+  itemPublicTokenExchange: noAccessTokenLogger,
   createProcessorToken: defaultLogger,
   invalidateAccessToken: defaultLogger,
   updateAccessTokenVersion: defaultLogger,

@@ -30,7 +30,6 @@ const fetchTransactions = async (plaidItemId, startDate, endDate) => {
     const { plaid_access_token: accessToken } = await retrieveItemByPlaidItemId(
       plaidItemId
     );
-    const transRequst = {};
     let offset = 0;
     let transactionsToFetch = true;
     let resultData = { transactions: [], accounts: [] };
@@ -52,7 +51,7 @@ const fetchTransactions = async (plaidItemId, startDate, endDate) => {
       const accounts = response.data.accounts;
 
       resultData = {
-        transactions: transactions,
+        transactions: [...resultData.transactions, ...transactions],
         accounts,
       };
 

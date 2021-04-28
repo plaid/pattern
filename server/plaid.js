@@ -38,7 +38,7 @@ const OPTIONS = { clientApp: 'Plaid-Pattern' };
  * @param {Object} response the response from the Plaid client.
  */
 const defaultLogger = async (clientMethod, clientMethodArgs, response) => {
-  const accessToken = clientMethodArgs[0];
+  const accessToken = clientMethodArgs[0].access_token;
   const { id: itemId } = await retrieveItemByPlaidAccessToken(accessToken);
   await createPlaidApiEvent(itemId, clientMethod, clientMethodArgs, response);
 };
@@ -72,7 +72,8 @@ const clientMethodLoggingFns = {
   createProcessorToken: defaultLogger,
   invalidateAccessToken: defaultLogger,
   updateAccessTokenVersion: defaultLogger,
-  removeItem: defaultLogger,
+  // removeItem: defaultLogger,
+  itemRemove: defaultLogger,
   getItem: defaultLogger,
   updateItemWebhook: defaultLogger,
   getAccounts: defaultLogger,

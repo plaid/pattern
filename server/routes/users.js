@@ -137,7 +137,9 @@ router.delete(
     // @TODO wrap promise in a try catch block once proper error handling introduced
     const items = await retrieveItemsByUser(userId);
     await Promise.all(
-      items.map(({ plaid_access_token: token }) => plaid.removeItem(token))
+      items.map(({ plaid_access_token: token }) =>
+        plaid.itemRemove({ access_token: token })
+      )
     );
 
     // delete from the db

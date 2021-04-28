@@ -127,7 +127,9 @@ router.delete(
     const { itemId } = req.params;
     const { plaid_access_token: accessToken } = await retrieveItemById(itemId);
     /* eslint-disable camelcase */
-    const { removed, status_code } = await plaid.removeItem(accessToken);
+    const { removed, status_code } = await plaid.itemRemove({
+      access_token: accessToken,
+    });
 
     if (!removed)
       throw new Boom('Item could not be removed in the Plaid API.', {

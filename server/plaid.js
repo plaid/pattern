@@ -96,7 +96,8 @@ const clientMethodLoggingFns = {
   getCategories: noAccessTokenLogger,
   linkTokenCreate: noAccessTokenLogger,
   // remaining methods are only available in the sandbox environment
-  resetLogin: defaultLogger,
+  // resetLogin: defaultLogger,
+  sandboxItemResetLogin: defaultLogger,
   sandboxItemFireWebhook: defaultLogger,
   sandboxPublicTokenCreate: noAccessTokenLogger,
 };

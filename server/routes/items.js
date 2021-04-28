@@ -126,16 +126,22 @@ router.delete(
   asyncWrapper(async (req, res) => {
     const { itemId } = req.params;
     const { plaid_access_token: accessToken } = await retrieveItemById(itemId);
+    console.log(accessToken);
     /* eslint-disable camelcase */
-    const { removed, status_code } = await plaid.itemRemove({
-      access_token: accessToken,
-    });
-
-    if (!removed)
-      throw new Boom('Item could not be removed in the Plaid API.', {
-        statusCode: status_code,
+    try {
+      const response = await plaid.itemRemove({
+        access_token: accessToken,
       });
-
+      console.log("here's the response: ", response);
+      const removed = response.data.removed;
+      const status_code = response.data.status_code;
+    } catch (error) {
+      // if (!removed)
+      //   throw new Boom('Item could not be removed in the Plaid API.', {
+      //     statusCode: status_code,
+      //   });
+      console.log(error.response);
+    }
     await deleteItem(itemId);
     res.sendStatus(204);
   })
@@ -185,8 +191,10 @@ router.post(
   asyncWrapper(async (req, res) => {
     const { itemId } = req.body;
     const { plaid_access_token: accessToken } = await retrieveItemById(itemId);
-    const resetResponse = await plaid.resetLogin(accessToken);
-    res.json(resetResponse);
+    const resetResponse = await plaid.sandboxItemResetLogin({
+      access_token: accessToken,
+    });
+    res.json(resetResponse.data);
   })
 );
 

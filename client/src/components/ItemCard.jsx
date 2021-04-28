@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
+import Note from 'plaid-threads/Note';
 
 import { AccountCard, MoreDetails } from '.';
 import {
@@ -70,9 +71,13 @@ const ItemCard = ({ item, userId }) => {
           </div>
           <div className="item-card__column-2">
             {isGoodState ? (
-              <div className="item-card__status">Updated</div>
+              <Note info solid className="item-card__status">
+                Updated
+              </Note>
             ) : (
-              <div className="item-card__status bad">Login Required</div>
+              <Note error solid className="item-card__status bad">
+                Login Required
+              </Note>
             )}
           </div>
           <div className="item-card__column-3">

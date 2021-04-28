@@ -27,6 +27,7 @@ const Button = ({ primary, action, disabled, text, altClasses }) => {
       className={`button ${isPrimary} ${classlist}`}
       onClick={action}
       disabled={disabled}
+      centered
     >
       {text}
     </PlaidButton>

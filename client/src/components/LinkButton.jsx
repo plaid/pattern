@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import propTypes from 'prop-types';
+import Button from 'plaid-threads/Button';
 
 import { useLink } from '../services';
 
@@ -44,7 +45,8 @@ export default function LinkButton({
   }, [linkHandlers, itemId, userId]);
 
   return (
-    <button
+    <Button
+      centered
       className={`button ${isPrimary} ${classlist}`}
       disabled={!linkInstance.isReady}
       onClick={() => {
@@ -52,6 +54,6 @@ export default function LinkButton({
       }}
     >
       {children}
-    </button>
+    </Button>
   );
 }

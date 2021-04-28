@@ -1,4 +1,5 @@
 import React from 'react';
+import Button from 'plaid-threads/Button';
 
 import { useBoolean } from '../hooks';
 import { useUsers } from '../services';
@@ -16,9 +17,13 @@ const UserList = () => {
         <h2 className="user-list-heading">
           {`${allUsers.length} ${pluralize('User', allUsers.length)}`}
         </h2>
-        <button className="button button--is-primary" onClick={toggleForm}>
+        <Button
+          className="button button--is-primary"
+          onClick={toggleForm}
+          centered
+        >
           Add a New User
-        </button>
+        </Button>
       </div>
       {/* @TODO handle prevention of duplicate username */}
       {isAdding && <AddUserForm hideForm={hideForm} />}

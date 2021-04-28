@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import { Router as BrowserRouter } from 'react-router-dom';
 import { createBrowserHistory } from 'history';
 
-import './index.css';
+import './index.scss';
 import App from './App';
 
 const history = createBrowserHistory();

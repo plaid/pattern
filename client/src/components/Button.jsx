@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import PlaidButton from 'plaid-threads/Button';
 
 const propTypes = {
   action: PropTypes.func,
@@ -22,13 +23,13 @@ const Button = ({ primary, action, disabled, text, altClasses }) => {
   const isPrimary = primary ? 'button--is-primary' : '';
   const classlist = altClasses !== undefined ? altClasses : '';
   return (
-    <button
+    <PlaidButton
       className={`button ${isPrimary} ${classlist}`}
       onClick={action}
       disabled={disabled}
     >
       {text}
-    </button>
+    </PlaidButton>
   );
 };
 

@@ -4,35 +4,20 @@ $threads-font-path: '~plaid-threads/fonts';
 
 /*
 
-Color Constants
-
-*/
-:root {
-  --white: #ffffff;
-  --light-grey: #f7f9fb;
-  --mid-grey: #e3e9ef;
-  --slate: #527084;
-  --light-slate: #8ba7bd;
-  --mid-blue: #174f7c;
-  --dark-blue: #033156;
-  --red: #f44e66;
-}
-
-/*
 
 Base
 
 */
 
 body {
-  background: var(--white);
+  background: $white;
 }
 
 .App {
   max-width: 1050px;
   margin-right: auto;
   margin-left: auto;
-  padding: 80px 40px;
+  padding: 10 * $unit 5 * $unit;
 }
 
 /*
@@ -43,7 +28,7 @@ shared styles
 .bottom-border-content {
   overflow: hidden;
   border-bottom-width: 1px;
-  border-bottom-color: var(--mid-grey);
+  border-bottom-color: $black200;
   border-bottom-style: solid;
   margin-bottom: 30px;
   padding-bottom: 30px;
@@ -51,11 +36,11 @@ shared styles
 
 .box {
   border-width: 1px;
-  border-color: var(--mid-grey);
+  border-color: $black200;
   border-style: solid;
   border-radius: 4px;
-  margin-bottom: 24px;
-  box-shadow: 0 2px 4px 0 rgba(19, 49, 69, 0.2);
+  margin-bottom: 3 * $unit;
+  box-shadow: $shadow-xsmall;
 }
 
 .card {
@@ -67,7 +52,7 @@ shared styles
 .heading {
   font-weight: bold;
   text-transform: uppercase;
-  font-size: 12px;
+  font-size: 1.2rem;
   margin-bottom: 0;
 }
 
@@ -83,31 +68,31 @@ shared styles
 }
 
 .toast__background {
-  background: var(--white);
+  background: $white;
 }
 
 .toast__link {
-  color: var(--white);
+  color: $white;
   text-decoration: underline;
 }
 
 .Toastify__toast--error.toast__background {
-  background: var(--red);
+  background: $red800;
 }
 
 .toast__body {
-  color: var(--mid-blue);
-  font-size: 16px;
+  color: $blue900;
+  font-size: 12 * $unit;
   white-space: pre-line;
   padding-left: 10px;
 }
 
 .Toastify__toast--error > .toast__body {
-  color: var(--white);
+  color: $white;
 }
 
 .icon-dots > ellipse {
-  fill: var(--mid-blue);
+  fill: $blue900;
 }
 
 /*
@@ -116,14 +101,14 @@ Content at the top of the view
 
 */
 .everpresent-content__heading {
-  margin-bottom: 16px;
+  margin-bottom: 2 * $unit;
 }
 
 .everpresent-content__subheading {
-  font-size: 24px;
+  font-size: 3 * $unit;
   font-weight: 300;
   color: var(--slate);
-  line-height: 32px;
+  line-height: 4 * $unit;
   margin-bottom: 0;
 }
 
@@ -232,7 +217,7 @@ Item overview
 .item-card {
   padding: 0 20px 0 0;
   background-color: var(--light-grey);
-  border-bottom: 1px solid var(--mid-grey);
+  border-bottom: 1px solid $black200;
 }
 .item-card:hover {
   cursor: pointer;
@@ -253,7 +238,7 @@ Item overview
 .item-card__column-2 {
   width: 45%;
   float: left;
-  margin-top: 8px;
+  margin-top: $unit;
 }
 
 .item-card__column-3 {
@@ -267,14 +252,14 @@ Item overview
 }
 
 .item-card__img {
-  height: 32px;
+  height: 4 * $unit;
   padding-right: 1rem;
 }
 
 // .item-card__status {
 //   box-sizing: border-box;
 //   height: 33px;
-//   width: 124px;
+//   width: 13*$unit;
 //   border: 1px solid #92dec4;
 //   border-radius: 4px;
 //   background-color: #e7faf4;
@@ -293,11 +278,11 @@ Item overview
 // }
 
 .item-card__column:nth-child(1) {
-  padding-right: 8px;
+  padding-right: $unit;
 }
 
 .item-card__column:nth-child(2) {
-  padding-left: 8px;
+  padding-left: $unit;
 }
 
 /*
@@ -306,11 +291,10 @@ Account row
 
 */
 .account-data-row {
-  border-bottom: 1px solid var(--mid-grey);
-  padding-top: 24px;
-  padding-bottom: 24px;
-  padding-left: 24px;
-  padding-right: 24px;
+  border-bottom: 1px solid $black200;
+  padding: 3 * $unit;
+  display: grid;
+  grid-template-columns: 3fr 1fr;
 }
 
 .account-data-row:after {
@@ -320,26 +304,26 @@ Account row
 }
 
 .account-data-row__name {
-  font-size: 16px;
-  line-height: 32px;
+  font-size: 2 * $unit;
+  line-height: 4 * $unit;
   display: inline-block;
   font-weight: 500;
   color: var(--dark-blue);
 }
 
-.account-data-row__left {
-  width: 75%;
-  float: left;
-}
+// .account-data-row__left {
+//   width: 75%;
+//   float: left;
+// }
 
-.account-data-row__right {
-  width: 25%;
-  float: left;
-}
+// .account-data-row__right {
+//   width: 25%;
+//   float: left;
+// }
 
 .transaction-button {
   width: 80%;
-  height: 40px;
+  height: 5 * $unit;
 }
 
 /*
@@ -354,7 +338,7 @@ Add User Form
 }
 
 .add-user__heading {
-  font-size: 16px;
+  font-size: 2 * $unit;
   padding-bottom: 0.5rem;
 }
 
@@ -375,10 +359,10 @@ Add User Form
 }
 
 .user-add__input {
-  height: 48px;
-  font-size: 16px;
+  height: 6 * $unit;
+  font-size: 2 * $unit;
   border-radius: 4px;
-  padding-left: 8px;
+  padding-left: $unit;
 }
 
 .add-user__column-3 {
@@ -389,8 +373,8 @@ Add User Form
 }
 
 .add-user__button {
-  height: 40px;
-  width: 140px;
+  height: 5 * $unit;
+  width: 18 * $unit;
   line-height: 6px;
   margin: 0.25rem 0.5rem;
 }
@@ -401,29 +385,29 @@ transactions-table
 
 */
 .transactions {
-  border-bottom: 1px solid var(--mid-grey);
+  border-bottom: 1px solid $black200;
 }
 
 .transactions-table {
-  padding: 0 24px;
+  padding: 0 3 * $unit;
 }
 
 .transactions-table th {
-  font-size: 16px;
+  font-size: 2 * $unit;
   font-weight: 600;
-  color: var(--mid-blue);
-  padding-top: 16px;
-  padding-bottom: 16px;
+  color: $blue900;
+  padding-top: 2 * $unit;
+  padding-bottom: 2 * $unit;
 }
 
 .transactions-table thead tr {
-  border-bottom-color: var(--mid-grey);
+  border-bottom-color: $black200;
   border-bottom-style: solid;
   border-bottom-width: 1px;
 }
 
 .transactions-body {
-  height: 500px;
+  height: 63 * $unit;
   overflow-y: auto;
   overflow-x: hidden;
 }
@@ -467,10 +451,10 @@ More Details
   right: 0px;
   width: 160px;
   z-index: 100;
-  // background-color: var(--white);
+  // background-color: $white;
   background-color: transparent;
-  border-radius: 8px;
-  box-shadow: 0 10px 20px 0 rgba(3, 49, 86, 0.2);
+  border-radius: $unit;
+  box-shadow: $shadow-medium;
 }
 
 .more-details_button {
@@ -478,17 +462,16 @@ More Details
   border-radius: 0;
   // color: var(--dark-blue);
   text-align: left;
-  width: 50px !important;
-  min-width: 50px;
+  min-width: 100%;
   // color: black;
 }
 
 .more-details_button:first-child {
-  border-top-left-radius: 8px;
-  border-top-right-radius: 8px;
+  border-top-left-radius: $unit;
+  border-top-right-radius: $unit;
 }
 
 .more-details_button:last-child {
-  border-bottom-left-radius: 8px;
-  border-bottom-right-radius: 8px;
+  border-bottom-left-radius: $unit;
+  border-bottom-right-radius: $unit;
 }

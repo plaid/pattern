@@ -48,7 +48,7 @@ router.post(
         country_codes: ['US'],
         language: 'en',
         webhook: httpTunnel.public_url + '/services/webhook',
-        // access_token: accessToken,
+        access_token: accessToken,
       };
 
       const createResponse = await plaid.linkTokenCreate(linkTokenParams);

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import propTypes from 'prop-types';
 import Button from 'plaid-threads/Button';
+import { usePlaidLink } from 'react-plaid-link';
 
 import { useLink } from '../services';
 
@@ -25,33 +26,39 @@ export default function LinkButton({
   altClasses,
   primary,
 }) {
-  const [linkInstance, setLinkInstance] = useState({});
-  const { linkHandlers, getLinkHandler } = useLink();
+  const [configs, setConfigs] = useState({});
+  const { linkConfigs, getLinkConfigs } = useLink();
   console.log('link instance', linkInstance);
 
   const isPrimary = primary ? 'button--is-primary' : '';
   const classlist = altClasses !== null ? altClasses : '';
 
+  const { open, ready } = usePlaidLink(configs);
+
   useEffect(() => {
-    getLinkHandler({ userId, itemId });
-  }, [userId, itemId, getLinkHandler]);
+    getLinkConfigs({ userId, itemId });
+  }, [userId, itemId, getLinkConfigs]);
 
   useEffect(() => {
     if (itemId) {
-      setLinkInstance(linkHandlers.byItem[itemId] || {});
+      setConfigs(linkConfigs.byItem || {});
     } else {
-      setLinkInstance(linkHandlers.byUser[userId] || {});
+      setConfigs(linkConfigs.byUser || {});
     }
-  }, [linkHandlers, itemId, userId]);
+  }, [linkConfigs, itemId, userId]);
+
+  useEffect(() => {
+    if (ready) {
+      open();
+    }
+  }, [ready, open, isOauth]);
 
   return (
     <Button
       centered
       className={`button ${isPrimary} ${classlist}`}
       disabled={!linkInstance.isReady}
-      onClick={() => {
-        linkInstance.handler.open();
-      }}
+      onClick={() => open()}
     >
       {children}
     </Button>

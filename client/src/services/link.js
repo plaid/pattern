@@ -34,7 +34,7 @@ const types = {
  * and fetch instances of Link.
  */
 export function LinkProvider(props) {
-  const [linkHandlers, dispatch] = useReducer(reducer, {
+  const [linkConfigs, dispatch] = useReducer(reducer, {
     byUser: {},
     byItem: {},
   });
@@ -49,7 +49,7 @@ export function LinkProvider(props) {
    * @desc Creates a new instance of Link for a given User or Item. For more details on
    * the configuration object see https://plaid.com/docs/#parameter-reference
    */
-  const createLinkHandler = useCallback(
+  const createLinkConfig = useCallback(
     async ({ userId, itemId }) => {
       const isUpdate = itemId != null;
 
@@ -58,7 +58,7 @@ export function LinkProvider(props) {
       } else {
         hasRequested.current.byUser[userId] = true;
       }
-      let handler;
+      let config;
       const base = {
         apiVersion: 'v2',
         clientName: 'Pattern',
@@ -151,7 +151,7 @@ export function LinkProvider(props) {
    * The handler creation will be bypassed if an instance of Link already exists for
    * that User or Item.
    */
-  const getLinkHandler = useCallback(
+  const getLinkConfigs = useCallback(
     ({ userId, itemId } = {}) => {
       if (
         (itemId && !hasRequested.current.byItem[itemId]) ||

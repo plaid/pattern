@@ -18,7 +18,7 @@ const UserList = () => {
           {`${allUsers.length} ${pluralize('User', allUsers.length)}`}
         </h2>
         <Button
-          className="button button--is-primary"
+          className="button button--is-primary addUser"
           onClick={toggleForm}
           centered
         >

@@ -146,6 +146,9 @@ UserList
   color: $color-text-dark;
 }
 
+.addUser:focus {
+  box-shadow: none;
+}
 /*
 
 UserCard
@@ -303,6 +306,10 @@ Account row
   height: 5 * $unit;
   min-width: 10 * $unit;
 }
+
+// .transaction-button:focus {
+//   box-shadow: none;
+// }
 
 /*
 

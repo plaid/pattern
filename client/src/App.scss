@@ -54,12 +54,14 @@ shared styles
   text-transform: uppercase;
   font-size: 1.2rem;
   margin-bottom: 0;
+  color: $black1000;
 }
 
 .header {
   display: flex;
   justify-content: space-between;
   margin-bottom: 20px;
+  color: $color-text-dark;
 }
 
 .value {
@@ -100,16 +102,21 @@ shared styles
 Content at the top of the view
 
 */
+
+.user {
+  color: $color-text-dark;
+}
 .everpresent-content__heading {
   margin-bottom: 2 * $unit;
+  color: $color-text-dark;
 }
 
 .everpresent-content__subheading {
   font-size: 3 * $unit;
   font-weight: 300;
-  color: var(--slate);
   line-height: 4 * $unit;
   margin-bottom: 0;
+  color: $color-text-dark;
 }
 
 /*
@@ -126,7 +133,6 @@ Landing overview
 .landing__value {
   overflow-x: hidden;
   padding-right: 1rem;
-  color: var(--slate);
 }
 
 /*
@@ -137,6 +143,7 @@ UserList
 
 .user-list-heading {
   font-weight: normal;
+  color: $color-text-dark;
 }
 
 /*
@@ -181,11 +188,14 @@ UserCard
 }
 
 .user-card__link {
-  color: var(--light-slate);
   font-weight: 500;
   font-size: 14px;
   text-align: center;
   margin-top: 5px;
+}
+
+.button--is-primary {
+  min-width: 10 * $unit;
 }
 
 /*
@@ -197,7 +207,6 @@ Item overview
 .back-to-user__link {
   font-size: 12px;
   font-weight: 600;
-  color: var(--dark-blue);
 }
 
 .item__header {
@@ -209,14 +218,15 @@ Item overview
 .item__header-heading {
   margin-bottom: 1rem;
   font-weight: normal;
+  color: $color-text-dark;
 }
 .item__header-subheading {
-  color: var(--slate);
+  color: $color-text-dark;
 }
 
 .item-card {
   padding: 0 20px 0 0;
-  background-color: var(--light-grey);
+  background-color: $black100;
   border-bottom: 1px solid $black200;
 }
 .item-card:hover {
@@ -256,27 +266,6 @@ Item overview
   padding-right: 1rem;
 }
 
-// .item-card__status {
-//   box-sizing: border-box;
-//   height: 33px;
-//   width: 13*$unit;
-//   border: 1px solid #92dec4;
-//   border-radius: 4px;
-//   background-color: #e7faf4;
-//   box-shadow: 0 0 2px 0 rgba(0, 178, 118, 0.4);
-//   text-align: center;
-//   line-height: 30px;
-//   letter-spacing: 1px;
-//   font-weight: bold;
-//   font-size: 12px;
-// }
-
-// .bad {
-//   border: 1px solid #de9792;
-//   background-color: #fae8e7;
-//   box-shadow: 0 0 2px 0 rgba(178, 27, 0, 0.4);
-// }
-
 .item-card__column:nth-child(1) {
   padding-right: $unit;
 }
@@ -308,22 +297,11 @@ Account row
   line-height: 4 * $unit;
   display: inline-block;
   font-weight: 500;
-  color: var(--dark-blue);
 }
 
-// .account-data-row__left {
-//   width: 75%;
-//   float: left;
-// }
-
-// .account-data-row__right {
-//   width: 25%;
-//   float: left;
-// }
-
 .transaction-button {
-  width: 80%;
   height: 5 * $unit;
+  min-width: 10 * $unit;
 }
 
 /*
@@ -344,7 +322,6 @@ Add User Form
 
 .add-user__value {
   font-size: 14px;
-  color: var(--slate);
 }
 
 .add-user__column-2 {
@@ -374,7 +351,7 @@ Add User Form
 
 .add-user__button {
   height: 5 * $unit;
-  width: 18 * $unit;
+  min-width: 10 * $unit;
   line-height: 6px;
   margin: 0.25rem 0.5rem;
 }
@@ -395,9 +372,9 @@ transactions-table
 .transactions-table th {
   font-size: 2 * $unit;
   font-weight: 600;
-  color: $blue900;
   padding-top: 2 * $unit;
   padding-bottom: 2 * $unit;
+  color: $color-text-dark;
 }
 
 .transactions-table thead tr {
@@ -451,19 +428,15 @@ More Details
   right: 0px;
   width: 160px;
   z-index: 100;
-  // background-color: $white;
   background-color: transparent;
   border-radius: $unit;
   box-shadow: $shadow-medium;
 }
 
 .more-details_button {
-  // background-color: transparent;
   border-radius: 0;
-  // color: var(--dark-blue);
   text-align: left;
   min-width: 100%;
-  // color: black;
 }
 
 .more-details_button:first-child {

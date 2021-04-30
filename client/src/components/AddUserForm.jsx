@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import Button from 'plaid-threads/Button';
+import TextInput from 'plaid-threads/TextInput';
 
 import { useUsers } from '../services';
 
@@ -27,7 +29,7 @@ const AddUserForm = ({ hideForm }) => {
             <label className="heading user-add__label" htmlFor="username">
               User_Name
             </label>
-            <input
+            <TextInput
               id="username"
               className="user-add__input"
               type="text"
@@ -40,19 +42,21 @@ const AddUserForm = ({ hideForm }) => {
             />
           </div>
           <div className="add-user__column-3">
-            <button
+            <Button
               className="button button--is-primary add-user__button"
               type="submit"
+              centered
             >
               Add User
-            </button>
-            <button
+            </Button>
+            <Button
               className="button add-user__button"
               type="cancel"
               onClick={hideForm}
+              centered
             >
               Cancel
-            </button>
+            </Button>
           </div>
         </div>
       </form>

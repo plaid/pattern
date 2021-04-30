@@ -157,10 +157,8 @@ const handleTransactionsWebhook = async (requestBody, io) => {
       const startDate = moment().subtract(30, 'days').format('YYYY-MM-DD');
       const endDate = moment().format('YYYY-MM-DD');
       await handleTransactionsUpdate(plaidItemId, startDate, endDate);
-      console.log('here i am inside the initial update, after fetching');
       const response = await retrieveItemByPlaidItemId(plaidItemId);
       const itemId = response.id;
-      console.log('after the fetching: itemId: ', itemId);
       serverLogAndEmitSocket(`${newTransactions} transactions to add.`, itemId);
       break;
     }
@@ -172,7 +170,6 @@ const handleTransactionsWebhook = async (requestBody, io) => {
       await handleTransactionsUpdate(plaidItemId, startDate, endDate);
       const response = await retrieveItemByPlaidItemId(plaidItemId);
       const itemId = response.id;
-      console.log('after the fetching: itemId: ', itemId);
       serverLogAndEmitSocket(`${newTransactions} transactions to add.`, itemId);
       break;
     }

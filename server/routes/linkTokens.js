@@ -50,7 +50,7 @@ router.post(
         webhook: httpTunnel.public_url + '/services/webhook',
         access_token: accessToken,
       };
-
+      console.log('params: ', linkTokenParams);
       const createResponse = await plaid.linkTokenCreate(linkTokenParams);
       res.json(createResponse.data);
     } catch (err) {

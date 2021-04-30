@@ -22,7 +22,7 @@ const Banner = ({ initialSubheading }) => {
   const subheadingText = initialSubheading ? initialText : successText;
   return (
     <div id="banner" className="bottom-border-content">
-      <h4>{PLAID_ENV} User</h4>
+      <h4 className="user">{PLAID_ENV} User</h4>
       <div className="header">
         <h1 className="everpresent-content__heading">Plaid Pattern</h1>
         <Button

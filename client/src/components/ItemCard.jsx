@@ -71,11 +71,11 @@ const ItemCard = ({ item, userId }) => {
           </div>
           <div className="item-card__column-2">
             {isGoodState ? (
-              <Note info solid className="item-card__status">
+              <Note info solid>
                 Updated
               </Note>
             ) : (
-              <Note error solid className="item-card__status bad">
+              <Note error solid>
                 Login Required
               </Note>
             )}

@@ -143,9 +143,9 @@ export function LinkProvider(props) {
     const linkToken = await linkTokenResponse.data.link_token;
     console.log('here it is: ', linkTokenResponse.data.link_token);
     if (isUpdate) {
-      dispatch([types.LINK_UPDATE_MODE_CREATED, { id: itemId, linkToken }]);
+      dispatch([types.LINK_UPDATE_MODE_CREATED, { itemId, linkToken }]);
     } else {
-      dispatch([types.LINK_CREATED, { id: userId, linkToken }]);
+      dispatch([types.LINK_CREATED, { userId, linkToken }]);
     }
     console.log('and afterwards too: ', linkTokenResponse.data.link_token);
     console.log(linkHandlers);
@@ -183,7 +183,7 @@ export function LinkProvider(props) {
 /**
  * @desc Handles updates to the Link state as dictated by dispatched actions.
  */
-function reducer(state, [type, { id, linkToken, config }]) {
+function reducer(state, [type, { id, linkToken }]) {
   switch (type) {
     case types.LINK_CREATED:
       return {
@@ -192,8 +192,8 @@ function reducer(state, [type, { id, linkToken, config }]) {
           ...state.byUser,
           [id]: {
             ...state.byUser[id],
-            linkToken,
           },
+          linkToken: linkToken,
         },
       };
     case types.LINK_UPDATE_MODE_CREATED:
@@ -203,8 +203,8 @@ function reducer(state, [type, { id, linkToken, config }]) {
           ...state.byItem,
           [id]: {
             ...state.byItem[id],
-            linkToken,
           },
+          linkToken: linkToken,
         },
       };
     case types.LINK_LOADED:

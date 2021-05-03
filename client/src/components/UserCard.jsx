@@ -14,12 +14,13 @@ const propTypes = {
 const UserCard = ({ user }) => {
   const [numOfItems, setNumOfItems] = useState(0);
   const { itemsByUser, getItemsByUser } = useItems();
-  const { generateLinkToken, linkToken } = useLink();
+  const { generateLinkToken, linkHandlers } = useLink();
 
   const { deleteUserById } = useUsers();
   const item = {};
   const itemID = null;
-
+  const linkToken = linkHandlers.byUser.linkToken;
+  console.log('inside userCard: ', linkHandlers);
   // update data store with the user's items
   useEffect(() => {
     getItemsByUser(user.id, itemID);

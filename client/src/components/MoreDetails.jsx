@@ -1,7 +1,8 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { IconDots, Button, LinkButton } from '.';
 import { useOnClickOutside } from '../hooks';
+import { useItems, useUsers, useLink } from '../services';
 
 const propTypes = {
   handleDelete: PropTypes.func.isRequired,
@@ -24,10 +25,27 @@ export function MoreDetails({
 }) {
   const [menuShown, setmenuShown] = useState(false);
   const refToButton = useRef();
+  const { generateLinkConfigs, linkConfigs } = useLink();
+  const [linkToken, setLinkToken] = useState(null);
+  const [callbacks, setCallbacks] = useState(null);
   const refToMenu = useOnClickOutside({
     callback: () => setmenuShown(false),
     ignoreRef: refToButton,
   });
+
+  // get link configs from link context
+  useEffect(() => {
+    generateLinkConfigs(userId, itemId);
+  }, [generateLinkConfigs, itemId]);
+
+  // set linkToken and callbacks from configs from link context
+  useEffect(() => {
+    if (linkConfigs.byItem[itemId]) {
+      setLinkToken(linkConfigs.byItem[itemId].linkToken);
+      setCallbacks(linkConfigs.byItem[itemId].callbacks);
+    }
+  }, [linkConfigs]);
+
   return (
     <div className="more-details">
       <button
@@ -46,10 +64,12 @@ export function MoreDetails({
               text="Reset Login"
             />
           )}
-          {updateShown && (
+          {updateShown && linkToken != null && callbacks != null && (
             <LinkButton
               userId={userId}
               itemId={itemId}
+              linkToken={linkToken}
+              callbacks={callbacks}
               altClasses="more-details_button"
             >
               Update Login

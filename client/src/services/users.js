@@ -72,6 +72,7 @@ export function UsersProvider(props) {
       hasRequested.current.all = true;
       const { data: payload } = await apiGetUsers();
       dispatch([types.SUCCESSFUL_GET, payload]);
+      console.log(payload);
     }
   }, []);
 

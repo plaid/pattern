@@ -15,7 +15,6 @@ import {
 import { useItems } from '.';
 
 const PLAID_ENV = process.env.REACT_APP_PLAID_ENV;
-
 const LinkContext = React.createContext();
 
 /**
@@ -27,6 +26,8 @@ const types = {
   // LINK_CREATION_FAILED: 2,
   LINK_LOADED: 3,
   LINK_UPDATE_MODE_LOADED: 4,
+  SET_LINK_TOKEN: 5,
+  SET_CONFIG: 6,
 };
 
 /**
@@ -34,7 +35,7 @@ const types = {
  * and fetch instances of Link.
  */
 export function LinkProvider(props) {
-  const [linkConfigs, dispatch] = useReducer(reducer, {
+  const [linkHandlers, dispatch] = useReducer(reducer, {
     byUser: {},
     byItem: {},
   });
@@ -49,7 +50,7 @@ export function LinkProvider(props) {
    * @desc Creates a new instance of Link for a given User or Item. For more details on
    * the configuration object see https://plaid.com/docs/#parameter-reference
    */
-  const createLinkConfig = useCallback(
+  const createConfig = useCallback(
     async ({ userId, itemId }) => {
       const isUpdate = itemId != null;
 
@@ -87,7 +88,6 @@ export function LinkProvider(props) {
           await setItemState(itemId, 'good');
           getItemById(itemId, true);
         } else {
-          console.log('calling exchange...');
           await exchangeToken(publicToken, institution, accounts, userId);
           getItemsByUser(userId, true);
         }
@@ -96,6 +96,7 @@ export function LinkProvider(props) {
           window.location.href = `/user/${userId}/items`;
         }
       };
+
       const onExit = async (
         error,
         { institution, link_session_id, request_id }
@@ -116,59 +117,64 @@ export function LinkProvider(props) {
         });
         if (error != null && error.error_code === 'INVALID_LINK_TOKEN') {
           // gets rid of the old iframe
-          handler.destroy();
-          await initializeLink();
+          // handler.destroy();
+          // await initializeLink();
         }
       };
-      const baseConfigs = {
-        ...base,
-        onEvent: logEvent,
-        onLoad: onLoad,
+      const baseConfig = {
         onSuccess: onSuccess,
+        onLoad: onLoad,
         onExit: onExit,
+        onEvent: logEvent,
       };
 
-      const initializeLink = async () => {
-        const linkTokenResponse = await getLinkToken({ itemId, userId });
-        handler = await window.Plaid.create({
-          ...baseConfigs,
-          token: await linkTokenResponse.data.link_token,
-        });
-      };
-
-      await initializeLink();
       if (isUpdate) {
-        dispatch([types.LINK_UPDATE_MODE_CREATED, { id: itemId, handler }]);
+        dispatch([types.LINK_UPDATE_MODE_CREATED, { id: itemId, config }]);
       } else {
-        dispatch([types.LINK_CREATED, { id: userId, handler }]);
+        dispatch([types.LINK_CREATED, { id: userId, config }]);
       }
     },
     [getItemsByUser, getItemById]
   );
+
+  const generateLinkToken = useCallback(async ({ itemId, userId }) => {
+    const isUpdate = itemId != null;
+    const linkTokenResponse = await getLinkToken({ itemId, userId });
+    const linkToken = await linkTokenResponse.data.link_token;
+    console.log('here it is: ', linkTokenResponse.data.link_token);
+    if (isUpdate) {
+      dispatch([types.LINK_UPDATE_MODE_CREATED, { id: itemId, linkToken }]);
+    } else {
+      dispatch([types.LINK_CREATED, { id: userId, linkToken }]);
+    }
+    console.log('and afterwards too: ', linkTokenResponse.data.link_token);
+    console.log(linkHandlers);
+  }, []);
 
   /**
    * @desc Requests a Link handler.
    * The handler creation will be bypassed if an instance of Link already exists for
    * that User or Item.
    */
-  const getLinkConfigs = useCallback(
+  const getConfig = useCallback(
     ({ userId, itemId } = {}) => {
       if (
         (itemId && !hasRequested.current.byItem[itemId]) ||
         (userId && !hasRequested.current.byUser[userId])
       ) {
-        createLinkHandler({ itemId, userId });
+        createConfig({ itemId, userId });
       }
     },
-    [createLinkHandler]
+    [createConfig]
   );
 
   const value = useMemo(
     () => ({
+      getConfig,
+      generateLinkToken,
       linkHandlers,
-      getLinkHandler,
     }),
-    [linkHandlers, getLinkHandler]
+    [getConfig, linkHandlers, generateLinkToken]
   );
 
   return <LinkContext.Provider value={value} {...props} />;
@@ -177,7 +183,7 @@ export function LinkProvider(props) {
 /**
  * @desc Handles updates to the Link state as dictated by dispatched actions.
  */
-function reducer(state, [type, { id, handler }]) {
+function reducer(state, [type, { id, linkToken, config }]) {
   switch (type) {
     case types.LINK_CREATED:
       return {
@@ -186,7 +192,7 @@ function reducer(state, [type, { id, handler }]) {
           ...state.byUser,
           [id]: {
             ...state.byUser[id],
-            handler,
+            linkToken,
           },
         },
       };
@@ -197,7 +203,7 @@ function reducer(state, [type, { id, handler }]) {
           ...state.byItem,
           [id]: {
             ...state.byItem[id],
-            handler,
+            linkToken,
           },
         },
       };
@@ -226,7 +232,7 @@ function reducer(state, [type, { id, handler }]) {
     default:
       console.warn('unknown action: ', {
         type,
-        payload: { id, handler },
+        payload: { id, linkToken },
       });
       return state;
   }

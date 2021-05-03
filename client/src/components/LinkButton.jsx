@@ -1,15 +1,24 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import propTypes from 'prop-types';
 import Button from 'plaid-threads/Button';
 import { usePlaidLink } from 'react-plaid-link';
 
 import { useLink } from '../services';
 
+import {
+  exchangeToken,
+  getLinkToken,
+  postLinkEvent,
+  setItemState,
+} from '../services/api';
+import { useItems } from '../services';
+
 LinkButton.propTypes = {
   userId: propTypes.number,
   itemId: propTypes.number,
   altClasses: propTypes.string,
   primary: propTypes.bool,
+  linkToken: propTypes.string,
 };
 
 LinkButton.defaultProps = {
@@ -17,6 +26,7 @@ LinkButton.defaultProps = {
   itemId: null,
   altClasses: null,
   primary: false,
+  linkToken: null,
 };
 
 export default function LinkButton({
@@ -25,40 +35,57 @@ export default function LinkButton({
   itemId,
   altClasses,
   primary,
+  linkToken,
 }) {
-  const [configs, setConfigs] = useState({});
-  const { linkConfigs, getLinkConfigs } = useLink();
-  console.log('link instance', linkInstance);
+  const { config, getConfig } = useLink();
+  // const { getItemsByUser, getItemById } = useItems();
 
   const isPrimary = primary ? 'button--is-primary' : '';
   const classlist = altClasses !== null ? altClasses : '';
+  function logEvent(eventName, extra) {
+    console.log(`Link Event: ${eventName}`, extra);
+  }
+  // const onSuccess = async (
+  //   publicToken,
+  //   { institution, accounts, link_session_id }
+  // ) => {
+  //   logEvent('onSuccess', { institution, accounts, link_session_id });
+  //   await postLinkEvent({
+  //     userId,
+  //     link_session_id,
+  //     type: 'success',
+  //   });
+  //   // if (isUpdate) {
+  //   //   await setItemState(itemId, 'good');
+  //   //   getItemById(itemId, true);
+  //   // } else {
+  //   await exchangeToken(publicToken, institution, accounts, userId);
+  //   getItemsByUser(userId, true);
+  //   // }
 
-  const { open, ready } = usePlaidLink(configs);
+  //   if (window.location.pathname === '/') {
+  //     window.location.href = `/user/${userId}/items`;
+  //   }
+  // };
+  const linkConfig = {
+    ...config,
+    token: linkToken,
+  };
+
+  const { open, ready } = usePlaidLink(linkConfig);
 
   useEffect(() => {
-    getLinkConfigs({ userId, itemId });
-  }, [userId, itemId, getLinkConfigs]);
-
-  useEffect(() => {
-    if (itemId) {
-      setConfigs(linkConfigs.byItem || {});
-    } else {
-      setConfigs(linkConfigs.byUser || {});
-    }
-  }, [linkConfigs, itemId, userId]);
-
-  useEffect(() => {
-    if (ready) {
-      open();
-    }
-  }, [ready, open, isOauth]);
+    getConfig({ userId, itemId });
+  }, [userId, itemId, getConfig]);
 
   return (
     <Button
       centered
       className={`button ${isPrimary} ${classlist}`}
-      disabled={!linkInstance.isReady}
-      onClick={() => open()}
+      disabled={!ready}
+      onClick={() => {
+        open();
+      }}
     >
       {children}
     </Button>

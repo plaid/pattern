@@ -73,9 +73,9 @@ const ItemList = ({ match }) => {
             </p>
           )}
         </div>
-        <LinkButton primary userId={userId}>
+        {/* <LinkButton primary userId={userId}>
           Add Another Item
-        </LinkButton>
+        </LinkButton> */}
       </div>
       {items.map(item => (
         <div key={item.id}>

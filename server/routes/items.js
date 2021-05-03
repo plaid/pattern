@@ -37,7 +37,6 @@ router.post(
   '/',
   asyncWrapper(async (req, res) => {
     const { publicToken, institutionId, userId } = req.body;
-    console.log('in the items.js: ', publicToken, userId, institutionId);
     // prevent duplicate items for the same institution per user.
     const existingItem = await retrieveItemByPlaidInstitutionId(
       institutionId,
@@ -49,17 +48,18 @@ router.post(
       });
 
     // exchange the public token for a private token and store the item.
-    const {
-      item_id: itemId,
-      access_token: accessToken,
-    } = await plaid.itemPublicTokenExchange({ publicToken: publicToken });
+    const response = await plaid.itemPublicTokenExchange({
+      public_token: publicToken,
+    });
+    const accessToken = response.data.access_token;
+    const itemId = response.data.item_id;
     const newItem = await createItem(
       institutionId,
       accessToken,
       itemId,
       userId
     );
-    res.json(sanitizeItems(newItem.data));
+    res.json(sanitizeItems(newItem));
   })
 );
 

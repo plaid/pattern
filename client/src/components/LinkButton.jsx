@@ -27,6 +27,7 @@ LinkButton.defaultProps = {
   altClasses: null,
   primary: false,
   linkToken: null,
+  config: null,
 };
 
 export default function LinkButton({
@@ -36,47 +37,42 @@ export default function LinkButton({
   altClasses,
   primary,
   linkToken,
+  config,
 }) {
-  const { config, getConfig } = useLink();
-  // const { getItemsByUser, getItemById } = useItems();
+  const { getItemsByUser, getItemById } = useItems();
 
   const isPrimary = primary ? 'button--is-primary' : '';
   const classlist = altClasses !== null ? altClasses : '';
   function logEvent(eventName, extra) {
     console.log(`Link Event: ${eventName}`, extra);
   }
-  // const onSuccess = async (
-  //   publicToken,
-  //   { institution, accounts, link_session_id }
-  // ) => {
-  //   logEvent('onSuccess', { institution, accounts, link_session_id });
-  //   await postLinkEvent({
-  //     userId,
-  //     link_session_id,
-  //     type: 'success',
-  //   });
-  //   // if (isUpdate) {
-  //   //   await setItemState(itemId, 'good');
-  //   //   getItemById(itemId, true);
-  //   // } else {
-  //   await exchangeToken(publicToken, institution, accounts, userId);
-  //   getItemsByUser(userId, true);
-  //   // }
 
-  //   if (window.location.pathname === '/') {
-  //     window.location.href = `/user/${userId}/items`;
-  //   }
-  // };
+  const onSuccess = async (
+    publicToken,
+    { institution, accounts, link_session_id }
+  ) => {
+    logEvent('onSuccess', { institution, accounts, link_session_id });
+    await postLinkEvent({
+      userId,
+      link_session_id,
+      type: 'success',
+    });
+
+    await exchangeToken(publicToken, institution, accounts, userId);
+    getItemsByUser(userId, true);
+
+    if (window.location.pathname === '/') {
+      window.location.href = `/user/${userId}/items`;
+    }
+  };
+
   const linkConfig = {
     ...config,
+    onSuccess: onSuccess,
     token: linkToken,
   };
 
   const { open, ready } = usePlaidLink(linkConfig);
-
-  useEffect(() => {
-    getConfig({ userId, itemId });
-  }, [userId, itemId, getConfig]);
 
   return (
     <Button

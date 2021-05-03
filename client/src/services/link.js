@@ -28,6 +28,7 @@ const types = {
   LINK_UPDATE_MODE_LOADED: 4,
   SET_LINK_TOKEN: 5,
   SET_CONFIG: 6,
+  SET_CONFIG_UPDATE_MODE: 7,
 };
 
 /**
@@ -121,31 +122,113 @@ export function LinkProvider(props) {
           // await initializeLink();
         }
       };
-      const baseConfig = {
-        onSuccess: onSuccess,
+      config = {
         onLoad: onLoad,
         onExit: onExit,
         onEvent: logEvent,
       };
 
+      const linkTokenResponse = await getLinkToken({ itemId, userId });
+      const linkToken = await linkTokenResponse.data.link_token;
       if (isUpdate) {
-        dispatch([types.LINK_UPDATE_MODE_CREATED, { id: itemId, config }]);
+        dispatch([
+          types.LINK_UPDATE_MODE_CREATED,
+          { id: itemId, linkToken, config },
+        ]);
       } else {
-        dispatch([types.LINK_CREATED, { id: userId, config }]);
+        dispatch([types.LINK_CREATED, { id: userId, linkToken, config }]);
+      }
+
+      if (isUpdate) {
+        dispatch([types.SET_CONFIG_UPDATE_MODE, { id: itemId, config }]);
+      } else {
+        dispatch([types.SET_CONFIG, { id: userId, config }]);
       }
     },
     [getItemsByUser, getItemById]
   );
 
-  const generateLinkToken = useCallback(async ({ itemId, userId }) => {
+  const generateLinkToken = useCallback(async (userId, itemId) => {
+    console.log('userId: ', userId);
     const isUpdate = itemId != null;
     const linkTokenResponse = await getLinkToken({ itemId, userId });
     const linkToken = await linkTokenResponse.data.link_token;
     console.log('here it is: ', linkTokenResponse.data.link_token);
+
+    let config;
+    const base = {
+      apiVersion: 'v2',
+      clientName: 'Pattern',
+      env: PLAID_ENV,
+      product: ['transactions'],
+    };
+    const onLoad = () => {
+      logEvent('onLoad', {});
+      if (isUpdate) {
+        dispatch([types.LINK_UPDATE_MODE_LOADED, { id: itemId }]);
+      } else {
+        dispatch([types.LINK_LOADED, { id: userId }]);
+      }
+    };
+    const onSuccess = async (
+      publicToken,
+      { institution, accounts, link_session_id }
+    ) => {
+      logEvent('onSuccess', { institution, accounts, link_session_id });
+      await postLinkEvent({
+        userId,
+        link_session_id,
+        type: 'success',
+      });
+      if (isUpdate) {
+        await setItemState(itemId, 'good');
+        getItemById(itemId, true);
+      } else {
+        await exchangeToken(publicToken, institution, accounts, userId);
+        getItemsByUser(userId, true);
+      }
+
+      if (window.location.pathname === '/') {
+        window.location.href = `/user/${userId}/items`;
+      }
+    };
+
+    const onExit = async (
+      error,
+      { institution, link_session_id, request_id }
+    ) => {
+      logEvent('onExit', {
+        error,
+        institution,
+        link_session_id,
+        request_id,
+      });
+      const eventError = error || {};
+      await postLinkEvent({
+        userId,
+        link_session_id,
+        request_id,
+        type: 'exit',
+        ...eventError,
+      });
+      if (error != null && error.error_code === 'INVALID_LINK_TOKEN') {
+        // gets rid of the old iframe
+        // handler.destroy();
+        // await initializeLink();
+      }
+    };
+    config = {
+      onLoad: onLoad,
+      onExit: onExit,
+      onEvent: logEvent,
+    };
     if (isUpdate) {
-      dispatch([types.LINK_UPDATE_MODE_CREATED, { itemId, linkToken }]);
+      dispatch([
+        types.LINK_UPDATE_MODE_CREATED,
+        { id: itemId, linkToken, config },
+      ]);
     } else {
-      dispatch([types.LINK_CREATED, { userId, linkToken }]);
+      dispatch([types.LINK_CREATED, { id: userId, linkToken, config }]);
     }
     console.log('and afterwards too: ', linkTokenResponse.data.link_token);
     console.log(linkHandlers);
@@ -183,7 +266,7 @@ export function LinkProvider(props) {
 /**
  * @desc Handles updates to the Link state as dictated by dispatched actions.
  */
-function reducer(state, [type, { id, linkToken }]) {
+function reducer(state, [type, { id, linkToken, config }]) {
   switch (type) {
     case types.LINK_CREATED:
       return {
@@ -192,8 +275,9 @@ function reducer(state, [type, { id, linkToken }]) {
           ...state.byUser,
           [id]: {
             ...state.byUser[id],
+            linkToken,
+            config,
           },
-          linkToken: linkToken,
         },
       };
     case types.LINK_UPDATE_MODE_CREATED:
@@ -203,8 +287,31 @@ function reducer(state, [type, { id, linkToken }]) {
           ...state.byItem,
           [id]: {
             ...state.byItem[id],
+            linkToken,
+            config,
           },
-          linkToken: linkToken,
+        },
+      };
+    case types.SET_CONFIG:
+      return {
+        ...state,
+        byUser: {
+          ...state.byUser,
+          [id]: {
+            ...state.byUser[id],
+            config,
+          },
+        },
+      };
+    case types.SET_CONFIG_UPDATE_MODE:
+      return {
+        ...state,
+        byItem: {
+          ...state.byItem,
+          [id]: {
+            ...state.byItem[id],
+            config,
+          },
         },
       };
     case types.LINK_LOADED:

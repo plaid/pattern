@@ -14,13 +14,16 @@ const propTypes = {
 const UserCard = ({ user }) => {
   const [numOfItems, setNumOfItems] = useState(0);
   const { itemsByUser, getItemsByUser } = useItems();
-  const { generateLinkToken, linkHandlers } = useLink();
-
+  const { generateLinkToken, linkHandlers, getConfig } = useLink();
+  const [linkToken, setLinkToken] = useState(null);
+  const [config, setConfig] = useState(null);
   const { deleteUserById } = useUsers();
-  const item = {};
   const itemID = null;
-  const linkToken = linkHandlers.byUser.linkToken;
-  console.log('inside userCard: ', linkHandlers);
+  const currentId = linkHandlers.byUser[user.id.toString()];
+  console.log(linkHandlers);
+
+  // link_token = currentId['linkToken'];
+
   // update data store with the user's items
   useEffect(() => {
     getItemsByUser(user.id, itemID);
@@ -32,10 +35,17 @@ const UserCard = ({ user }) => {
     itemsByUser[user.id] && setNumOfItems(itemsByUser[user.id].length);
   }, [itemsByUser, user.id]);
 
+  useEffect(() => {
+    for (let prop in linkHandlers.byUser[user.id.toString()]) {
+      setLinkToken(linkHandlers.byUser[user.id].linkToken);
+      setConfig(linkHandlers.byUser[user.id].config);
+    }
+  }, [linkHandlers]);
+
   const handleDeleteUser = () => {
     deleteUserById(user.id);
   };
-  console.log('here i am: ', linkToken);
+  console.log('here i am: ', linkToken, config);
   return (
     <div className="box user-card__box">
       <div className="card user-card">
@@ -43,8 +53,13 @@ const UserCard = ({ user }) => {
           <UserDetails user={user} />
         </div>
         <div className="user-card__button-group">
-          {linkToken != null && (
-            <LinkButton linkToken={linkToken} primary userId={user.id}>
+          {linkToken != null && config != null && (
+            <LinkButton
+              linkToken={linkToken}
+              primary
+              userId={user.id}
+              config={config}
+            >
               Link an Item
             </LinkButton>
           )}

@@ -37,7 +37,7 @@ router.post(
   '/',
   asyncWrapper(async (req, res) => {
     const { publicToken, institutionId, userId } = req.body;
-
+    console.log('in the items.js: ', publicToken, userId, institutionId);
     // prevent duplicate items for the same institution per user.
     const existingItem = await retrieveItemByPlaidInstitutionId(
       institutionId,
@@ -49,18 +49,17 @@ router.post(
       });
 
     // exchange the public token for a private token and store the item.
-    const tokenResponse = await plaid.itemPublicTokenExchange({
-      public_token: publicToken,
-    });
-    const accessToken = tokenResponse.data.access_token;
-    const itemId = tokenResponse.data.item_id;
+    const {
+      item_id: itemId,
+      access_token: accessToken,
+    } = await plaid.itemPublicTokenExchange({ publicToken: publicToken });
     const newItem = await createItem(
       institutionId,
       accessToken,
       itemId,
       userId
     );
-    res.json(sanitizeItems(newItem));
+    res.json(sanitizeItems(newItem.data));
   })
 );
 
@@ -126,7 +125,6 @@ router.delete(
   asyncWrapper(async (req, res) => {
     const { itemId } = req.params;
     const { plaid_access_token: accessToken } = await retrieveItemById(itemId);
-    console.log(accessToken);
     /* eslint-disable camelcase */
     try {
       const response = await plaid.itemRemove({
@@ -143,6 +141,7 @@ router.delete(
       console.log(error.response);
     }
     await deleteItem(itemId);
+
     res.sendStatus(204);
   })
 );
@@ -191,10 +190,8 @@ router.post(
   asyncWrapper(async (req, res) => {
     const { itemId } = req.body;
     const { plaid_access_token: accessToken } = await retrieveItemById(itemId);
-    const resetResponse = await plaid.sandboxItemResetLogin({
-      access_token: accessToken,
-    });
-    res.json(resetResponse.data);
+    const resetResponse = await plaid.resetLogin(accessToken);
+    res.json(resetResponse);
   })
 );
 

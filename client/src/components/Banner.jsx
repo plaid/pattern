@@ -20,6 +20,7 @@ const Banner = ({ initialSubheading }) => {
     'Success! You can explore account and transaction details for the linked item';
 
   const subheadingText = initialSubheading ? initialText : successText;
+
   return (
     <div id="banner" className="bottom-border-content">
       <h4 className="user">{PLAID_ENV} User</h4>

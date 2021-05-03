@@ -27,7 +27,7 @@ LinkButton.defaultProps = {
   altClasses: null,
   primary: false,
   linkToken: null,
-  config: null,
+  callbacks: null,
 };
 
 export default function LinkButton({
@@ -37,7 +37,7 @@ export default function LinkButton({
   altClasses,
   primary,
   linkToken,
-  config,
+  callbacks,
 }) {
   const { getItemsByUser, getItemById } = useItems();
 
@@ -67,8 +67,7 @@ export default function LinkButton({
   };
 
   const linkConfig = {
-    ...config,
-    onSuccess: onSuccess,
+    ...callbacks,
     token: linkToken,
   };
 

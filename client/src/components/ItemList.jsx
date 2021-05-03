@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import sortBy from 'lodash/sortBy';
 
-import { useItems, useAccounts, useUsers } from '../services';
+import { useItems, useAccounts, useUsers, useLink } from '../services';
 import { pluralize } from '../util';
 import ItemCard from './ItemCard';
 import { Banner, LinkButton, UserDetails } from '.';
@@ -14,6 +14,10 @@ const ItemList = ({ match }) => {
   const { usersById, getUserById } = useUsers();
   const { itemsByUser, getItemsByUser } = useItems();
   const { getAccountsByUser } = useAccounts();
+  const { generateLinkConfigs, linkConfigs } = useLink();
+  const [linkToken, setLinkToken] = useState(null);
+  const [callbacks, setCallbacks] = useState(null);
+  const itemId = null;
 
   const userId = Number(match.params.userId);
 
@@ -47,6 +51,19 @@ const ItemList = ({ match }) => {
     getAccountsByUser(userId);
   }, [getAccountsByUser, userId]);
 
+  // get linkToken and configs for Link
+  useEffect(() => {
+    generateLinkConfigs(userId, itemId);
+  }, [generateLinkConfigs, userId]);
+
+  //set link token and configs for Link
+  useEffect(() => {
+    if (linkConfigs.byUser[userId]) {
+      setLinkToken(linkConfigs.byUser[userId].linkToken);
+      setCallbacks(linkConfigs.byUser[userId].callbacks);
+    }
+  }, [linkConfigs]);
+  console.log('in userlist: ', linkToken, callbacks);
   return (
     <div>
       <Link to={`/`} className="back-to-user__link">{`< BACK TO USERS`}</Link>
@@ -73,9 +90,16 @@ const ItemList = ({ match }) => {
             </p>
           )}
         </div>
-        {/* <LinkButton primary userId={userId}>
-          Add Another Item
-        </LinkButton> */}
+        {linkToken != null && callbacks != null && (
+          <LinkButton
+            linkToken={linkToken}
+            primary
+            userId={user.id}
+            callbacks={callbacks}
+          >
+            Add Another Item
+          </LinkButton>
+        )}
       </div>
       {items.map(item => (
         <div key={item.id}>

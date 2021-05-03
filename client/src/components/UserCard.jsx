@@ -14,20 +14,15 @@ const propTypes = {
 const UserCard = ({ user }) => {
   const [numOfItems, setNumOfItems] = useState(0);
   const { itemsByUser, getItemsByUser } = useItems();
-  const { generateLinkToken, linkHandlers, getConfig } = useLink();
+  const { generateLinkConfigs, linkConfigs } = useLink();
   const [linkToken, setLinkToken] = useState(null);
-  const [config, setConfig] = useState(null);
+  const [callbacks, setCallbacks] = useState(null);
   const { deleteUserById } = useUsers();
   const itemID = null;
-  const currentId = linkHandlers.byUser[user.id.toString()];
-  console.log(linkHandlers);
-
-  // link_token = currentId['linkToken'];
 
   // update data store with the user's items
   useEffect(() => {
     getItemsByUser(user.id, itemID);
-    generateLinkToken(user.id, itemID);
   }, [getItemsByUser, user.id]);
 
   // update no of items from data store
@@ -35,17 +30,22 @@ const UserCard = ({ user }) => {
     itemsByUser[user.id] && setNumOfItems(itemsByUser[user.id].length);
   }, [itemsByUser, user.id]);
 
+  // update data store with the user's items
   useEffect(() => {
-    for (let prop in linkHandlers.byUser[user.id.toString()]) {
-      setLinkToken(linkHandlers.byUser[user.id].linkToken);
-      setConfig(linkHandlers.byUser[user.id].config);
+    generateLinkConfigs(user.id, itemID);
+  }, [getItemsByUser, user.id]);
+
+  useEffect(() => {
+    if (linkConfigs.byUser[user.id]) {
+      setLinkToken(linkConfigs.byUser[user.id].linkToken);
+      setCallbacks(linkConfigs.byUser[user.id].callbacks);
     }
-  }, [linkHandlers]);
+  }, [linkConfigs]);
 
   const handleDeleteUser = () => {
     deleteUserById(user.id);
   };
-  console.log('here i am: ', linkToken, config);
+  console.log('here i am: ', linkToken, callbacks);
   return (
     <div className="box user-card__box">
       <div className="card user-card">
@@ -53,12 +53,12 @@ const UserCard = ({ user }) => {
           <UserDetails user={user} />
         </div>
         <div className="user-card__button-group">
-          {linkToken != null && config != null && (
+          {linkToken != null && callbacks != null && (
             <LinkButton
               linkToken={linkToken}
               primary
               userId={user.id}
-              config={config}
+              callbacks={callbacks}
             >
               Link an Item
             </LinkButton>

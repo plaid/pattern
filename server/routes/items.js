@@ -190,8 +190,10 @@ router.post(
   asyncWrapper(async (req, res) => {
     const { itemId } = req.body;
     const { plaid_access_token: accessToken } = await retrieveItemById(itemId);
-    const resetResponse = await plaid.resetLogin(accessToken);
-    res.json(resetResponse);
+    const resetResponse = await plaid.sandboxItemResetLogin({
+      access_token: accessToken,
+    });
+    res.json(resetResponse.data);
   })
 );
 

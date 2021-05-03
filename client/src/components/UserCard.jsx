@@ -18,11 +18,11 @@ const UserCard = ({ user }) => {
   const [linkToken, setLinkToken] = useState(null);
   const [callbacks, setCallbacks] = useState(null);
   const { deleteUserById } = useUsers();
-  const itemID = null;
+  const itemId = null;
 
   // update data store with the user's items
   useEffect(() => {
-    getItemsByUser(user.id, itemID);
+    getItemsByUser(user.id, itemId);
   }, [getItemsByUser, user.id]);
 
   // update no of items from data store
@@ -30,11 +30,12 @@ const UserCard = ({ user }) => {
     itemsByUser[user.id] && setNumOfItems(itemsByUser[user.id].length);
   }, [itemsByUser, user.id]);
 
-  // update data store with the user's items
+  // get link configs from link context
   useEffect(() => {
-    generateLinkConfigs(user.id, itemID);
+    generateLinkConfigs(user.id, itemId);
   }, [getItemsByUser, user.id]);
 
+  // set linkToken and callbacks from configs from link context
   useEffect(() => {
     if (linkConfigs.byUser[user.id]) {
       setLinkToken(linkConfigs.byUser[user.id].linkToken);

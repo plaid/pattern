@@ -93,7 +93,7 @@ export function LinkProvider(props) {
         ...eventError,
       });
       if (error != null && error.error_code === 'INVALID_LINK_TOKEN') {
-        await generateLinkConfigs();
+        await generateLinkConfigs(userId, itemId);
       }
     };
 

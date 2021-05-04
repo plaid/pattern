@@ -47,25 +47,6 @@ export default function LinkButton({
     console.log(`Link Event: ${eventName}`, extra);
   }
 
-  const onSuccess = async (
-    publicToken,
-    { institution, accounts, link_session_id }
-  ) => {
-    logEvent('onSuccess', { institution, accounts, link_session_id });
-    await postLinkEvent({
-      userId,
-      link_session_id,
-      type: 'success',
-    });
-
-    await exchangeToken(publicToken, institution, accounts, userId);
-    getItemsByUser(userId, true);
-
-    if (window.location.pathname === '/') {
-      window.location.href = `/user/${userId}/items`;
-    }
-  };
-
   const linkConfig = {
     ...callbacks,
     token: linkToken,

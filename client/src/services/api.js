@@ -31,7 +31,6 @@ export const setItemState = (itemId, status) =>
   api.put(`items/${itemId}`, { status });
 // This endpoint is only availble in the sandbox enviornment
 export const setItemToBadState = itemId => {
-  console.log("I'm setting this to a bad state");
   api.post('/items/sandbox/item/reset_login', { itemId });
 };
 

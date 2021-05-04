@@ -186,10 +186,6 @@ UserCard
   align-items: center;
 }
 
-.user-card__button {
-  margin-bottom: 0.75rem;
-}
-
 .user-card__link {
   font-weight: 500;
   font-size: 14px;
@@ -301,15 +297,6 @@ Account row
   display: inline-block;
   font-weight: 500;
 }
-
-.transaction-button {
-  height: 5 * $unit;
-  min-width: 10 * $unit;
-}
-
-// .transaction-button:focus {
-//   box-shadow: none;
-// }
 
 /*
 

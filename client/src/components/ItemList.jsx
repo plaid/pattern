@@ -10,7 +10,6 @@ import { Banner, LinkButton, UserDetails } from '.';
 const ItemList = ({ match }) => {
   const [user, setUser] = useState({});
   const [items, setItems] = useState([]);
-
   const { usersById, getUserById } = useUsers();
   const { itemsByUser, getItemsByUser } = useItems();
   const { getAccountsByUser } = useAccounts();
@@ -63,7 +62,6 @@ const ItemList = ({ match }) => {
       setCallbacks(linkConfigs.byUser[userId].callbacks);
     }
   }, [linkConfigs]);
-  console.log('in userlist: ', linkToken, callbacks);
   return (
     <div>
       <Link to={`/`} className="back-to-user__link">{`< BACK TO USERS`}</Link>

@@ -3,7 +3,6 @@ export { default as AddUserForm } from './AddUserForm';
 export { default as Banner } from './Banner';
 export { default as Button } from './Button';
 export { default as DuplicateItemToastMessage } from './DuplicateItemToast';
-export { default as IconDots } from './IconDots';
 export { default as ItemCard } from './ItemCard';
 export { default as ItemList } from './ItemList';
 export { default as Landing } from './Landing';

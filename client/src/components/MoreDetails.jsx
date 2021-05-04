@@ -4,6 +4,8 @@ import { IconDots, Button, LinkButton } from '.';
 import { useOnClickOutside } from '../hooks';
 import { useLink } from '../services';
 import Menu from 'plaid-threads/Icons/MenuS1';
+import IconButton from 'plaid-threads/IconButton';
+import Dropdown from 'plaid-threads/Dropdown';
 
 const propTypes = {
   handleDelete: PropTypes.func.isRequired,
@@ -34,6 +36,8 @@ export function MoreDetails({
     ignoreRef: refToButton,
   });
 
+  const [isOpen, setIsOpen] = useState(false);
+
   // get link configs from link context
   useEffect(() => {
     generateLinkConfigs(userId, itemId);
@@ -49,43 +53,50 @@ export function MoreDetails({
 
   return (
     <div className="more-details">
-      <button
-        ref={refToButton}
-        className="more-details__icon"
-        onClick={() => setmenuShown(current => !current)}
-      >
-        <div style={{ maxWidth: 50, maxHeight: 50, zoom: 2 }}>
-          <dl
-            style={{
-              alignItems: 'center',
-              columns: 2,
-              display: 'flex',
-              margin: 0,
-            }}
-          >
-            <dd
-              style={{
-                alignItems: 'center',
-                display: 'flex',
-                margin: 0,
-                padding: '0 24px 0 8px',
-              }}
-            >
-              <Menu className="menu" />
-            </dd>
-          </dl>
-        </div>
-      </button>
-      {menuShown && (
-        <div className="more-details__button-group" ref={refToMenu}>
-          {setBadStateShown && (
+      {setBadStateShown && (
+        <Dropdown
+          isOpen={isOpen}
+          target={
+            <IconButton
+              ref={refToButton}
+              accessibilityLabel="Navigation"
+              icon={<Menu />}
+              onClick={() => setIsOpen(!isOpen)}
+            />
+          }
+        >
+          {/* {setBadStateShown && ( */}
+          <div>
             <Button
               altClasses="more-details_button"
               action={handleSetBadState}
               text="Reset Login"
+              moreDetails={true}
             />
-          )}
-          {updateShown && linkToken != null && callbacks != null && (
+          </div>
+          <div>
+            <Button
+              altClasses="more-details_button"
+              text="Remove"
+              action={handleDelete}
+            />
+          </div>
+        </Dropdown>
+      )}
+      {updateShown && linkToken != null && callbacks != null && (
+        <Dropdown
+          isOpen={isOpen}
+          target={
+            <IconButton
+              ref={refToButton}
+              accessibilityLabel="Navigation"
+              icon={<Menu />}
+              onClick={() => setIsOpen(!isOpen)}
+            />
+          }
+        >
+          {/* {setBadStateShown && ( */}
+          <div>
             <LinkButton
               userId={userId}
               itemId={itemId}
@@ -95,13 +106,15 @@ export function MoreDetails({
             >
               Update Login
             </LinkButton>
-          )}
-          <Button
-            altClasses="more-details_button"
-            text="Remove"
-            action={handleDelete}
-          />
-        </div>
+          </div>
+          <div>
+            <Button
+              altClasses="more-details_button"
+              text="Remove"
+              action={handleDelete}
+            />
+          </div>
+        </Dropdown>
       )}
     </div>
   );

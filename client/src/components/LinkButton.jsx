@@ -9,6 +9,8 @@ LinkButton.propTypes = {
   altClasses: propTypes.string,
   primary: propTypes.bool,
   linkToken: propTypes.string,
+  callbacks: propTypes.object,
+  seconodary: propTypes.bool,
 };
 
 LinkButton.defaultProps = {
@@ -16,6 +18,7 @@ LinkButton.defaultProps = {
   primary: false,
   linkToken: null,
   callbacks: null,
+  secondary: false,
 };
 
 export default function LinkButton({
@@ -24,6 +27,7 @@ export default function LinkButton({
   primary,
   linkToken,
   callbacks,
+  secondary,
 }) {
   const isPrimary = primary ? 'button--is-primary' : '';
   const classlist = altClasses !== null ? altClasses : '';
@@ -37,7 +41,8 @@ export default function LinkButton({
 
   return (
     <Button
-      centered
+      secondary={secondary}
+      // centered
       className={`button ${isPrimary} ${classlist}`}
       disabled={!ready}
       onClick={() => {

@@ -1,10 +1,4 @@
-import React, {
-  useCallback,
-  useContext,
-  useMemo,
-  useReducer,
-  useRef,
-} from 'react';
+import React, { useCallback, useContext, useMemo, useReducer } from 'react';
 
 import {
   exchangeToken,
@@ -33,10 +27,6 @@ export function LinkProvider(props) {
     byUser: {},
     byItem: {},
   });
-  // const hasRequested = useRef({
-  //   byUser: {},
-  //   byItem: {},
-  // });
 
   const { getItemsByUser, getItemById } = useItems();
 

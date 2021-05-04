@@ -2,7 +2,8 @@ import React, { useState, useRef, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { IconDots, Button, LinkButton } from '.';
 import { useOnClickOutside } from '../hooks';
-import { useItems, useUsers, useLink } from '../services';
+import { useLink } from '../services';
+import Menu from 'plaid-threads/Icons/MenuS1';
 
 const propTypes = {
   handleDelete: PropTypes.func.isRequired,
@@ -53,7 +54,27 @@ export function MoreDetails({
         className="more-details__icon"
         onClick={() => setmenuShown(current => !current)}
       >
-        <IconDots />
+        <div style={{ maxWidth: 50, maxHeight: 50, zoom: 2 }}>
+          <dl
+            style={{
+              alignItems: 'center',
+              columns: 2,
+              display: 'flex',
+              margin: 0,
+            }}
+          >
+            <dd
+              style={{
+                alignItems: 'center',
+                display: 'flex',
+                margin: 0,
+                padding: '0 24px 0 8px',
+              }}
+            >
+              <Menu className="menu" />
+            </dd>
+          </dl>
+        </div>
       </button>
       {menuShown && (
         <div className="more-details__button-group" ref={refToMenu}>

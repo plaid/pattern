@@ -374,6 +374,7 @@ transactions-table
 
 .transactions-table {
   padding: 0 3 * $unit;
+  width: 100%;
 }
 
 .transactions-table th {
@@ -388,12 +389,14 @@ transactions-table
   border-bottom-color: $black200;
   border-bottom-style: solid;
   border-bottom-width: 1px;
+  text-align: left;
 }
 
 .transactions-body {
   height: 63 * $unit;
   overflow-y: auto;
   overflow-x: hidden;
+  text-align: left;
 }
 
 .table-name {
@@ -428,6 +431,7 @@ More Details
 .more-details__icon {
   padding: 0px;
   background: transparent;
+  border: none;
 }
 
 .more-details__button-group {

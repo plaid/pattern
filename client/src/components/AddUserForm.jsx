@@ -42,19 +42,10 @@ const AddUserForm = ({ hideForm }) => {
             />
           </div>
           <div className="add-user__column-3">
-            <Button
-              className="button button--is-primary add-user__button"
-              type="submit"
-              centered
-            >
+            <Button inline type="submit">
               Add User
             </Button>
-            <Button
-              className="button add-user__button"
-              type="cancel"
-              onClick={hideForm}
-              centered
-            >
+            <Button inline type="cancel" onClick={hideForm}>
               Cancel
             </Button>
           </div>

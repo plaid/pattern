@@ -17,11 +17,7 @@ const UserList = () => {
         <h2 className="user-list-heading">
           {`${allUsers.length} ${pluralize('User', allUsers.length)}`}
         </h2>
-        <Button
-          className="button button--is-primary addUser"
-          onClick={toggleForm}
-          centered
-        >
+        <Button onClick={toggleForm} centered inline>
           Add a New User
         </Button>
       </div>

@@ -58,7 +58,6 @@ const UserCard = ({ user }) => {
             {linkToken != null && callbacks != null && (
               <LinkButton
                 linkToken={linkToken}
-                primary
                 userId={user.id}
                 callbacks={callbacks}
               >
@@ -71,12 +70,7 @@ const UserCard = ({ user }) => {
               </Link>
             )}
           </div>
-          <Button
-            className="button--is-primary"
-            onClick={handleDeleteUser}
-            centered
-            userCard={true}
-          >
+          <Button onClick={handleDeleteUser} centered userCard={true} inline>
             {' '}
             Remove user{' '}
           </Button>

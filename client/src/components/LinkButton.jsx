@@ -6,34 +6,18 @@ import { usePlaidLink } from 'react-plaid-link';
 import { useItems } from '../services';
 
 LinkButton.propTypes = {
-  altClasses: propTypes.string,
-  primary: propTypes.bool,
   linkToken: propTypes.string,
   callbacks: propTypes.object,
-  seconodary: propTypes.bool,
   update: propTypes.bool,
 };
 
 LinkButton.defaultProps = {
-  altClasses: null,
-  primary: false,
   linkToken: null,
   callbacks: null,
-  secondary: false,
   update: false,
 };
 
-export default function LinkButton({
-  children,
-  altClasses,
-  primary,
-  linkToken,
-  callbacks,
-  update,
-}) {
-  const isPrimary = primary ? 'button--is-primary' : '';
-  const classlist = altClasses !== null ? altClasses : '';
-
+export default function LinkButton({ children, linkToken, callbacks, update }) {
   const linkConfig = {
     ...callbacks,
     token: linkToken,
@@ -46,7 +30,7 @@ export default function LinkButton({
       {!update && (
         <Button
           centered
-          className={`button ${isPrimary} ${classlist}`}
+          inline
           disabled={!ready}
           onClick={() => {
             open();
@@ -57,7 +41,6 @@ export default function LinkButton({
       )}
       {update && (
         <div
-          className={`button ${isPrimary} ${classlist}`}
           disabled={!ready}
           onClick={() => {
             open();

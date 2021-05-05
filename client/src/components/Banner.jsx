@@ -30,7 +30,7 @@ const Banner = ({ initialSubheading }) => {
           href="https://docs.google.com/forms/d/e/1FAIpQLSfF4Xev5w9RPGr7fNkSHjmtE_dj0ELuHRbDexQ7Tg2xoo6tQg/viewform"
           target="_blank"
           rel="noopener noreferrer"
-          className="button button--is-primary"
+          inline
           centered
         >
           Send Feedback

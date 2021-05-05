@@ -146,9 +146,6 @@ UserList
   color: $color-text-dark;
 }
 
-.addUser:focus {
-  box-shadow: none;
-}
 /*
 
 UserCard
@@ -197,10 +194,6 @@ UserCard
   font-size: 14px;
   text-align: center;
   margin-top: 5px;
-}
-
-.button--is-primary {
-  min-width: 10 * $unit;
 }
 
 /*

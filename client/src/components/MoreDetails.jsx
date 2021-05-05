@@ -13,6 +13,7 @@ const propTypes = {
 };
 
 const defaultProps = {
+  updateShown: false,
   handleUpdate: () => {},
   setBadStateShown: false,
   handleSetBadState: () => {},
@@ -20,6 +21,7 @@ const defaultProps = {
 
 export function MoreDetails({
   handleDelete,
+  updateShown,
   setBadStateShown,
   handleSetBadState,
   userId,
@@ -52,13 +54,12 @@ export function MoreDetails({
 
   const linkChoice = setBadStateShown ? (
     <Action action={handleSetBadState} text="Reset Login" />
-  ) : linkToken != null && callbacks != null ? (
+  ) : updateShown && linkToken != null && callbacks != null ? (
     <LinkButton
       userId={userId}
       itemId={itemId}
       linkToken={linkToken}
       callbacks={callbacks}
-      altClasses="more-details_button"
       update={true}
     >
       Update Login

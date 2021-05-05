@@ -91,7 +91,6 @@ const ItemList = ({ match }) => {
         {linkToken != null && callbacks != null && (
           <LinkButton
             linkToken={linkToken}
-            primary
             userId={user.id}
             callbacks={callbacks}
           >

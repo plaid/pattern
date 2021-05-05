@@ -3,34 +3,16 @@ import PropTypes from 'prop-types';
 
 const propTypes = {
   action: PropTypes.func,
-  altClasses: PropTypes.string,
   text: PropTypes.string.isRequired,
-  primary: PropTypes.bool,
-  type: PropTypes.string,
-  disabled: PropTypes.bool,
 };
 
 const defaultProps = {
   action: null,
-  altClasses: null,
-  type: 'action',
-  disabled: false,
-  primary: false,
+  text: '',
 };
 
-const Action = ({ primary, action, disabled, text, altClasses }) => {
-  const isPrimary = primary ? 'button--is-primary' : '';
-  const classlist = altClasses !== undefined ? altClasses : '';
-  return (
-    <div
-      className={`action ${isPrimary} ${classlist}`}
-      onClick={action}
-      disabled={disabled}
-      centered
-    >
-      {text}
-    </div>
-  );
+const Action = ({ action, text }) => {
+  return <div onClick={action}>{text}</div>;
 };
 
 Action.propTypes = propTypes;

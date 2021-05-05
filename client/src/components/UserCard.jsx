@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
+import Button from 'plaid-threads/Button';
 
 import { UserDetails, MoreDetails } from '.';
 import { useItems, useUsers, useLink } from '../services';
@@ -46,31 +47,40 @@ const UserCard = ({ user }) => {
   const handleDeleteUser = () => {
     deleteUserById(user.id);
   };
-  console.log('here i am: ', linkToken, callbacks);
   return (
     <div className="box user-card__box">
       <div className="card user-card">
         <div className="user-card__detail">
           <UserDetails user={user} />
         </div>
-        <div className="user-card__button-group">
-          {linkToken != null && callbacks != null && (
-            <LinkButton
-              linkToken={linkToken}
-              primary
-              userId={user.id}
-              callbacks={callbacks}
-            >
-              Link an Item
-            </LinkButton>
-          )}
-          {!!numOfItems && (
-            <Link className="user-card__link" to={`/user/${user.id}/items`}>
-              {`View ${numOfItems} Linked ${pluralize('Item', numOfItems)}`}
-            </Link>
-          )}
+        <div className="user-card__right">
+          <div className="user-card__link__button">
+            {linkToken != null && callbacks != null && (
+              <LinkButton
+                linkToken={linkToken}
+                primary
+                userId={user.id}
+                callbacks={callbacks}
+              >
+                Link an Item
+              </LinkButton>
+            )}
+            {!!numOfItems && (
+              <Link className="user-card__link" to={`/user/${user.id}/items`}>
+                {`View ${numOfItems} Linked ${pluralize('Item', numOfItems)}`}
+              </Link>
+            )}
+          </div>
+          <Button
+            className="button--is-primary"
+            onClick={handleDeleteUser}
+            centered
+            userCard={true}
+          >
+            {' '}
+            Remove user{' '}
+          </Button>
         </div>
-        <MoreDetails handleDelete={handleDeleteUser} />
       </div>
     </div>
   );

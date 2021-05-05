@@ -158,7 +158,10 @@ UserCard
 .user-card__box {
   box-shadow: 0 10px 20px 0 rgba(3, 49, 86, 0.2);
 }
-
+.user-card {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+}
 .user-card__detail {
   padding-right: 10rem;
   width: 80%;
@@ -179,8 +182,11 @@ UserCard
   float: left;
 }
 
-.user-card__button-group {
-  width: 20%;
+.user-card__right {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+.user-card__link__button {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -419,30 +425,4 @@ More Details
   padding: 0px;
   background: transparent;
   border: none;
-}
-
-.more-details__button-group {
-  position: absolute;
-  right: 0px;
-  width: 160px;
-  z-index: 100;
-  background-color: transparent;
-  border-radius: $unit;
-  box-shadow: $shadow-medium;
-}
-
-.more-details_button {
-  border-radius: 0;
-  text-align: left;
-  min-width: 100%;
-}
-
-.more-details_button:first-child {
-  border-top-left-radius: $unit;
-  border-top-right-radius: $unit;
-}
-
-.more-details_button:last-child {
-  border-bottom-left-radius: $unit;
-  border-bottom-right-radius: $unit;
 }

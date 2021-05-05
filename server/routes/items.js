@@ -130,15 +130,13 @@ router.delete(
       const response = await plaid.itemRemove({
         access_token: accessToken,
       });
-      console.log("here's the response: ", response);
       const removed = response.data.removed;
       const status_code = response.data.status_code;
     } catch (error) {
-      // if (!removed)
-      //   throw new Boom('Item could not be removed in the Plaid API.', {
-      //     statusCode: status_code,
-      //   });
-      console.log(error.response);
+      if (!removed)
+        throw new Boom('Item could not be removed in the Plaid API.', {
+          statusCode: status_code,
+        });
     }
     await deleteItem(itemId);
 

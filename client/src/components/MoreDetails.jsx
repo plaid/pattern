@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { IconDots, Button, LinkButton } from '.';
+import { Button, LinkButton } from '.';
 import { useOnClickOutside } from '../hooks';
 import { useLink } from '../services';
 import Menu from 'plaid-threads/Icons/MenuS1';
@@ -12,7 +12,6 @@ const propTypes = {
 };
 
 const defaultProps = {
-  updateShown: false,
   handleUpdate: () => {},
   setBadStateShown: false,
   handleSetBadState: () => {},
@@ -20,7 +19,6 @@ const defaultProps = {
 
 export function MoreDetails({
   handleDelete,
-  updateShown,
   setBadStateShown,
   handleSetBadState,
   userId,
@@ -32,11 +30,11 @@ export function MoreDetails({
   const [linkToken, setLinkToken] = useState(null);
   const [callbacks, setCallbacks] = useState(null);
   const refToMenu = useOnClickOutside({
-    callback: () => setmenuShown(false),
+    callback: () => {
+      setmenuShown(false);
+    },
     ignoreRef: refToButton,
   });
-
-  const [isOpen, setIsOpen] = useState(false);
 
   // get link configs from link context
   useEffect(() => {
@@ -51,71 +49,50 @@ export function MoreDetails({
     }
   }, [linkConfigs]);
 
+  const linkChoice = setBadStateShown ? (
+    <Button
+      altClasses="more-details_button"
+      action={handleSetBadState}
+      text="Reset Login"
+      moreDetails={true}
+    />
+  ) : linkToken != null && callbacks != null ? (
+    <LinkButton
+      userId={userId}
+      itemId={itemId}
+      linkToken={linkToken}
+      callbacks={callbacks}
+      altClasses="more-details_button"
+      update={true}
+    >
+      Update Login
+    </LinkButton>
+  ) : (
+    <></>
+  );
+
   return (
-    <div className="more-details">
-      {setBadStateShown && (
-        <Dropdown
-          isOpen={isOpen}
-          target={
-            <IconButton
-              ref={refToButton}
-              accessibilityLabel="Navigation"
-              icon={<Menu />}
-              onClick={() => setIsOpen(!isOpen)}
-            />
-          }
-        >
-          {/* {setBadStateShown && ( */}
-          <div>
-            <Button
-              altClasses="more-details_button"
-              action={handleSetBadState}
-              text="Reset Login"
-              moreDetails={true}
-            />
-          </div>
-          <div>
-            <Button
-              altClasses="more-details_button"
-              text="Remove"
-              action={handleDelete}
-            />
-          </div>
-        </Dropdown>
-      )}
-      {updateShown && linkToken != null && callbacks != null && (
-        <Dropdown
-          isOpen={isOpen}
-          target={
-            <IconButton
-              ref={refToButton}
-              accessibilityLabel="Navigation"
-              icon={<Menu />}
-              onClick={() => setIsOpen(!isOpen)}
-            />
-          }
-        >
-          {/* {setBadStateShown && ( */}
-          <div>
-            <LinkButton
-              userId={userId}
-              itemId={itemId}
-              linkToken={linkToken}
-              callbacks={callbacks}
-              altClasses="more-details_button"
-            >
-              Update Login
-            </LinkButton>
-          </div>
-          <div>
-            <Button
-              altClasses="more-details_button"
-              text="Remove"
-              action={handleDelete}
-            />
-          </div>
-        </Dropdown>
-      )}
+    <div className="more-details" ref={refToMenu}>
+      <div ref={refToButton}> </div>
+      <Dropdown
+        isOpen={menuShown}
+        target={
+          <IconButton
+            accessibilityLabel="Navigation"
+            icon={<Menu />}
+            onClick={() => setmenuShown(!menuShown)}
+          />
+        }
+      >
+        <div>{linkChoice}</div>
+        <div>
+          <Button
+            altClasses="more-details_button"
+            text="Remove"
+            action={handleDelete}
+          />
+        </div>
+      </Dropdown>
     </div>
   );
 }

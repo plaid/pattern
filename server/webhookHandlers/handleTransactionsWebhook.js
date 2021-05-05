@@ -82,7 +82,6 @@ const handleTransactionsUpdate = async (plaidItemId, startDate, endDate) => {
     transactions: incomingTransactions,
     accounts,
   } = await fetchTransactions(plaidItemId, startDate, endDate);
-  console.log('inside handle transactionsUpdate, accounts: ', accounts);
 
   // Retrieve existing transactions from our db.
   const existingTransactions = await retrieveTransactionsInDateRange(

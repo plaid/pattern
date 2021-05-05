@@ -57,9 +57,7 @@ router.get(
       const response = await plaid.institutionsGetById(request);
       const institution = response.data.institution;
       res.json(toArray(institution));
-    } catch (error) {
-      console.log(error.response.data);
-    }
+    } catch (error) {}
   })
 );
 

@@ -23,14 +23,14 @@ const Button = ({ primary, action, disabled, text, altClasses }) => {
   const isPrimary = primary ? 'button--is-primary' : '';
   const classlist = altClasses !== undefined ? altClasses : '';
   return (
-    <PlaidButton
+    <div
       className={`button ${isPrimary} ${classlist}`}
       onClick={action}
       disabled={disabled}
       centered
     >
       {text}
-    </PlaidButton>
+    </div>
   );
 };
 

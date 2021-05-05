@@ -51,7 +51,6 @@ const ItemCard = ({ item, userId }) => {
     deleteAccountsByItemId(id);
     deleteTransactionsByItemId(id);
   };
-  console.log(item);
 
   return (
     <div className="box">

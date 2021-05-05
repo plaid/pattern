@@ -11,6 +11,7 @@ LinkButton.propTypes = {
   linkToken: propTypes.string,
   callbacks: propTypes.object,
   seconodary: propTypes.bool,
+  update: propTypes.bool,
 };
 
 LinkButton.defaultProps = {
@@ -19,6 +20,7 @@ LinkButton.defaultProps = {
   linkToken: null,
   callbacks: null,
   secondary: false,
+  update: false,
 };
 
 export default function LinkButton({
@@ -27,7 +29,7 @@ export default function LinkButton({
   primary,
   linkToken,
   callbacks,
-  secondary,
+  update,
 }) {
   const isPrimary = primary ? 'button--is-primary' : '';
   const classlist = altClasses !== null ? altClasses : '';
@@ -40,16 +42,30 @@ export default function LinkButton({
   const { open, ready } = usePlaidLink(linkConfig);
 
   return (
-    <Button
-      secondary={secondary}
-      // centered
-      className={`button ${isPrimary} ${classlist}`}
-      disabled={!ready}
-      onClick={() => {
-        open();
-      }}
-    >
-      {children}
-    </Button>
+    <>
+      {!update && (
+        <Button
+          centered
+          className={`button ${isPrimary} ${classlist}`}
+          disabled={!ready}
+          onClick={() => {
+            open();
+          }}
+        >
+          {children}
+        </Button>
+      )}
+      {update && (
+        <div
+          className={`button ${isPrimary} ${classlist}`}
+          disabled={!ready}
+          onClick={() => {
+            open();
+          }}
+        >
+          {children}
+        </div>
+      )}
+    </>
   );
 }

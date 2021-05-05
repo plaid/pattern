@@ -1,11 +1,12 @@
 import React, { useState, useRef, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { Button, LinkButton } from '.';
+import Menu from 'plaid-threads/Icons/MenuS1';
+import Dropdown from 'plaid-threads/Dropdown';
+import IconButton from 'plaid-threads/IconButton';
+
+import { Action, LinkButton } from '.';
 import { useOnClickOutside } from '../hooks';
 import { useLink } from '../services';
-import Menu from 'plaid-threads/Icons/MenuS1';
-import IconButton from 'plaid-threads/IconButton';
-import Dropdown from 'plaid-threads/Dropdown';
 
 const propTypes = {
   handleDelete: PropTypes.func.isRequired,
@@ -25,10 +26,10 @@ export function MoreDetails({
   itemId,
 }) {
   const [menuShown, setmenuShown] = useState(false);
-  const refToButton = useRef();
-  const { generateLinkConfigs, linkConfigs } = useLink();
   const [linkToken, setLinkToken] = useState(null);
   const [callbacks, setCallbacks] = useState(null);
+  const { generateLinkConfigs, linkConfigs } = useLink();
+  const refToButton = useRef();
   const refToMenu = useOnClickOutside({
     callback: () => {
       setmenuShown(false);
@@ -50,12 +51,7 @@ export function MoreDetails({
   }, [linkConfigs]);
 
   const linkChoice = setBadStateShown ? (
-    <Button
-      altClasses="more-details_button"
-      action={handleSetBadState}
-      text="Reset Login"
-      moreDetails={true}
-    />
+    <Action action={handleSetBadState} text="Reset Login" />
   ) : linkToken != null && callbacks != null ? (
     <LinkButton
       userId={userId}
@@ -71,26 +67,22 @@ export function MoreDetails({
     <></>
   );
 
+  const icon = (
+    <div className="icon-button-container" ref={refToButton}>
+      <IconButton
+        accessibilityLabel="Navigation"
+        icon={<Menu />}
+        onClick={() => setmenuShown(!menuShown)}
+      />
+    </div>
+  );
+
   return (
     <div className="more-details" ref={refToMenu}>
-      <div ref={refToButton}> </div>
-      <Dropdown
-        isOpen={menuShown}
-        target={
-          <IconButton
-            accessibilityLabel="Navigation"
-            icon={<Menu />}
-            onClick={() => setmenuShown(!menuShown)}
-          />
-        }
-      >
+      <Dropdown isOpen={menuShown} target={icon}>
         <div>{linkChoice}</div>
         <div>
-          <Button
-            altClasses="more-details_button"
-            text="Remove"
-            action={handleDelete}
-          />
+          <Action text="Remove" action={handleDelete} />
         </div>
       </Dropdown>
     </div>

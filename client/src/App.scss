@@ -417,12 +417,6 @@ More Details
   position: relative;
 }
 
-.more-details__icon:focus {
-  box-shadow: none;
-}
-
-.more-details__icon {
-  padding: 0px;
-  background: transparent;
-  border: none;
+.icon-button-container {
+  zoom: 2;
 }

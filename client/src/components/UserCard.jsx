@@ -33,7 +33,7 @@ const UserCard = ({ user }) => {
   // get link configs from link context
   useEffect(() => {
     generateLinkConfigs(user.id);
-  }, [getItemsByUser, user.id]);
+  }, [generateLinkConfigs, user.id]);
 
   // set linkToken and callbacks from configs from link context
   useEffect(() => {

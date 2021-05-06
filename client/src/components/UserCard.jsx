@@ -20,8 +20,6 @@ const UserCard = ({ user }) => {
   const { generateLinkConfigs, linkConfigs } = useLink();
   const { deleteUserById } = useUsers();
 
-  const itemId = null; // not in update mode
-
   // update data store with the user's items
   useEffect(() => {
     getItemsByUser(user.id);
@@ -34,7 +32,7 @@ const UserCard = ({ user }) => {
 
   // get link configs from link context
   useEffect(() => {
-    generateLinkConfigs(user.id, itemId);
+    generateLinkConfigs(user.id);
   }, [getItemsByUser, user.id]);
 
   // set linkToken and callbacks from configs from link context

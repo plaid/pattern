@@ -18,7 +18,6 @@ const ItemList = ({ match }) => {
   const { getAccountsByUser } = useAccounts();
   const { generateLinkConfigs, linkConfigs } = useLink();
 
-  const itemId = null;
   const userId = Number(match.params.userId);
 
   // update data store with user
@@ -53,7 +52,7 @@ const ItemList = ({ match }) => {
 
   // get linkToken and configs for Link
   useEffect(() => {
-    generateLinkConfigs(userId, itemId);
+    generateLinkConfigs(userId);
   }, [generateLinkConfigs, userId]);
 
   // set link token and configs for Link

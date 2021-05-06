@@ -3,10 +3,9 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import Button from 'plaid-threads/Button';
 
-import { UserDetails, MoreDetails } from '.';
+import { UserDetails, LinkButton } from '.';
 import { useItems, useUsers, useLink } from '../services';
 import { pluralize } from '../util';
-import LinkButton from './LinkButton';
 
 const propTypes = {
   user: PropTypes.object.isRequired,
@@ -14,16 +13,18 @@ const propTypes = {
 
 const UserCard = ({ user }) => {
   const [numOfItems, setNumOfItems] = useState(0);
-  const { itemsByUser, getItemsByUser } = useItems();
-  const { generateLinkConfigs, linkConfigs } = useLink();
   const [linkToken, setLinkToken] = useState(null);
   const [callbacks, setCallbacks] = useState(null);
+
+  const { itemsByUser, getItemsByUser } = useItems();
+  const { generateLinkConfigs, linkConfigs } = useLink();
   const { deleteUserById } = useUsers();
-  const itemId = null;
+
+  const itemId = null; // not in update mode
 
   // update data store with the user's items
   useEffect(() => {
-    getItemsByUser(user.id, itemId);
+    getItemsByUser(user.id);
   }, [getItemsByUser, user.id]);
 
   // update no of items from data store
@@ -47,13 +48,14 @@ const UserCard = ({ user }) => {
   const handleDeleteUser = () => {
     deleteUserById(user.id);
   };
+
   return (
     <div className="box user-card__box">
       <div className="card user-card">
         <div className="user-card__detail">
           <UserDetails user={user} />
         </div>
-        <div className="user-card__right">
+        <div className="user-card__buttons">
           <div className="user-card__link__button">
             {linkToken != null && callbacks != null && (
               <LinkButton
@@ -65,14 +67,16 @@ const UserCard = ({ user }) => {
               </LinkButton>
             )}
             {!!numOfItems && (
-              <Link className="user-card__link" to={`/user/${user.id}/items`}>
+              <Link
+                className="user-card__items__link"
+                to={`/user/${user.id}/items`}
+              >
                 {`View ${numOfItems} Linked ${pluralize('Item', numOfItems)}`}
               </Link>
             )}
           </div>
           <Button onClick={handleDeleteUser} centered userCard={true} inline>
-            {' '}
-            Remove user{' '}
+            Remove user
           </Button>
         </div>
       </div>

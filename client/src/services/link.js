@@ -1,4 +1,10 @@
-import React, { useCallback, useContext, useMemo, useReducer } from 'react';
+import React, {
+  useCallback,
+  useContext,
+  useMemo,
+  useReducer,
+  useRef,
+} from 'react';
 
 import {
   exchangeToken,
@@ -24,6 +30,10 @@ const types = {
  */
 export function LinkProvider(props) {
   const [linkConfigs, dispatch] = useReducer(reducer, {
+    byUser: {}, // normal case
+    byItem: {}, // update mode
+  });
+  const hasRequested = useRef({
     byUser: {},
     byItem: {},
   });
@@ -36,11 +46,23 @@ export function LinkProvider(props) {
    */
 
   const generateLinkConfigs = useCallback(async (userId, itemId) => {
+    // The config creation will be bypassed if configs already exist for
+    // that User or Item.
+    if (
+      !(itemId != null && !hasRequested.current.byItem[itemId]) &&
+      !(userId != null && !hasRequested.current.byUser[userId])
+    ) {
+      return;
+    }
     const isUpdate = itemId != null;
+    if (isUpdate) {
+      hasRequested.current.byItem[itemId] = true;
+    } else {
+      hasRequested.current.byUser[userId] = true;
+    }
     const linkTokenResponse = await getLinkToken({ itemId, userId });
     const linkToken = await linkTokenResponse.data.link_token;
 
-    let callbacks;
     const onSuccess = async (
       publicToken,
       { institution, accounts, link_session_id }
@@ -87,11 +109,12 @@ export function LinkProvider(props) {
       }
     };
 
-    callbacks = {
+    const callbacks = {
       onSuccess: onSuccess,
       onExit: onExit,
       onEvent: logEvent,
     };
+
     if (isUpdate) {
       dispatch([
         types.LINK_CONFIGS_UPDATE_MODE_CREATED,
@@ -105,12 +128,6 @@ export function LinkProvider(props) {
     }
   }, []);
 
-  /**
-   * @desc Requests a Link handler.
-   * The handler creation will be bypassed if an instance of Link already exists for
-   * that User or Item.
-   */
-
   const value = useMemo(
     () => ({
       generateLinkConfigs,
@@ -123,7 +140,7 @@ export function LinkProvider(props) {
 }
 
 /**
- * @desc Handles updates to the Link state as dictated by dispatched actions.
+ * @desc Handles updates to the Link configs as dictated by dispatched actions.
  */
 function reducer(state, [type, { id, linkToken, callbacks }]) {
   switch (type) {
@@ -151,11 +168,10 @@ function reducer(state, [type, { id, linkToken, callbacks }]) {
           },
         },
       };
-
     default:
       console.warn('unknown action: ', {
         type,
-        payload: { id, linkToken },
+        payload: { id, linkToken, callbacks },
       });
       return state;
   }

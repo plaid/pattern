@@ -3,8 +3,6 @@ import propTypes from 'prop-types';
 import Button from 'plaid-threads/Button';
 import { usePlaidLink } from 'react-plaid-link';
 
-import { useItems } from '../services';
-
 LinkButton.propTypes = {
   linkToken: propTypes.string,
   callbacks: propTypes.object,
@@ -39,7 +37,8 @@ export default function LinkButton({ children, linkToken, callbacks, update }) {
           {children}
         </Button>
       )}
-      {update && (
+      {update && ( // case where link is launched in update mode from dropdown menu in the
+        // item card after item is set to "bad state"
         <div
           disabled={!ready}
           onClick={() => {

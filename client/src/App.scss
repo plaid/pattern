@@ -54,14 +54,12 @@ shared styles
   text-transform: uppercase;
   font-size: 1.2rem;
   margin-bottom: 0;
-  color: $black1000;
 }
 
 .header {
   display: flex;
   justify-content: space-between;
   margin-bottom: 20px;
-  color: $color-text-dark;
 }
 
 .value {
@@ -103,9 +101,6 @@ Content at the top of the view
 
 */
 
-.user {
-  color: $color-text-dark;
-}
 .everpresent-content__heading {
   margin-bottom: 2 * $unit;
   color: $color-text-dark;
@@ -179,7 +174,7 @@ UserCard
   float: left;
 }
 
-.user-card__right {
+.user-card__buttons {
   display: grid;
   grid-template-columns: 1fr 1fr;
 }
@@ -189,7 +184,7 @@ UserCard
   align-items: center;
 }
 
-.user-card__link {
+.user-card__items__link {
   font-weight: 500;
   font-size: 14px;
   text-align: center;
@@ -326,13 +321,6 @@ Add User Form
 
 .user-add__label {
   padding-bottom: 0.5rem;
-}
-
-.user-add__input {
-  height: 6 * $unit;
-  font-size: 2 * $unit;
-  border-radius: 4px;
-  padding-left: $unit;
 }
 
 .add-user__column-3 {

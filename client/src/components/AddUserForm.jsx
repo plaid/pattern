@@ -31,7 +31,6 @@ const AddUserForm = ({ hideForm }) => {
             </label>
             <TextInput
               id="username"
-              className="user-add__input"
               type="text"
               name="username"
               required="required"

@@ -21,6 +21,7 @@ const ItemCard = ({ item, userId }) => {
   const [accounts, setAccounts] = useState([]);
   const [institution, setInstitution] = useState({});
   const [showAccounts, setShowAccounts] = useState(false);
+
   const { accountsByItem, deleteAccountsByItemId } = useAccounts();
   const { deleteItemById } = useItems();
   const { deleteTransactionsByItemId } = useTransactions();
@@ -29,6 +30,7 @@ const ItemCard = ({ item, userId }) => {
     getInstitutionById,
     formatLogoSrc,
   } = useInstitutions();
+
   const { id, plaid_institution_id, status } = item;
   const isSandbox = PLAID_ENV === 'sandbox';
   const isGoodState = status === 'good';

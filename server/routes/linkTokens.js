@@ -12,16 +12,6 @@ const { retrieveItemById } = require('../db/queries');
 
 const router = express.Router();
 
-const formatError = error => {
-  return {
-    error: { ...error.data, status_code: error.status },
-  };
-};
-
-const prettyPrintResponse = response => {
-  console.log(util.inspect(response, { colors: true, depth: 4 }));
-};
-
 router.post(
   '/',
   asyncWrapper(async (req, res) => {
@@ -40,7 +30,6 @@ router.post(
       const linkTokenParams = {
         user: {
           // This should correspond to a unique id for the current user.
-          // client_user_id: '' + userId,
           client_user_id: 'uniqueId' + userId,
         },
         client_name: 'Pattern',
@@ -53,8 +42,8 @@ router.post(
       const createResponse = await plaid.linkTokenCreate(linkTokenParams);
       res.json(createResponse.data);
     } catch (err) {
-      prettyPrintResponse(err);
-      return response.json(formatError(err.response));
+      console.log('error while fetching client token', err);
+      throw err;
       // throw err;
     }
   })

@@ -52,6 +52,8 @@ export function MoreDetails({
     }
   }, [linkConfigs]);
 
+  // show choice to set state to "bad" or initiate link in update mode,
+  // depending on whether item is in a good state or bad state
   const linkChoice = setBadStateShown ? (
     <Action action={handleSetBadState} text="Reset Login" />
   ) : updateShown && linkToken != null && callbacks != null ? (

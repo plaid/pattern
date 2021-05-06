@@ -30,6 +30,7 @@ const fetchTransactions = async (plaidItemId, startDate, endDate) => {
     const { plaid_access_token: accessToken } = await retrieveItemByPlaidItemId(
       plaidItemId
     );
+
     let offset = 0;
     let transactionsToFetch = true;
     let resultData = { transactions: [], accounts: [] };
@@ -156,8 +157,7 @@ const handleTransactionsWebhook = async (requestBody, io) => {
       const startDate = moment().subtract(30, 'days').format('YYYY-MM-DD');
       const endDate = moment().format('YYYY-MM-DD');
       await handleTransactionsUpdate(plaidItemId, startDate, endDate);
-      const response = await retrieveItemByPlaidItemId(plaidItemId);
-      const itemId = response.id;
+      const { id: itemId } = await retrieveItemByPlaidItemId(plaidItemId);
       serverLogAndEmitSocket(`${newTransactions} transactions to add.`, itemId);
       break;
     }
@@ -167,8 +167,7 @@ const handleTransactionsWebhook = async (requestBody, io) => {
       const startDate = moment().subtract(2, 'years').format('YYYY-MM-DD');
       const endDate = moment().format('YYYY-MM-DD');
       await handleTransactionsUpdate(plaidItemId, startDate, endDate);
-      const response = await retrieveItemByPlaidItemId(plaidItemId);
-      const itemId = response.id;
+      const { id: itemId } = await retrieveItemByPlaidItemId(plaidItemId);
       serverLogAndEmitSocket(`${newTransactions} transactions to add.`, itemId);
       break;
     }

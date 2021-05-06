@@ -30,9 +30,8 @@ export const deleteItemById = id => api.delete(`/items/${id}`);
 export const setItemState = (itemId, status) =>
   api.put(`items/${itemId}`, { status });
 // This endpoint is only availble in the sandbox enviornment
-export const setItemToBadState = itemId => {
+export const setItemToBadState = itemId =>
   api.post('/items/sandbox/item/reset_login', { itemId });
-};
 
 export const getLinkToken = ({ userId, itemId }) =>
   api.post(`/link-token`, {

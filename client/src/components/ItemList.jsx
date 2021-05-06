@@ -10,14 +10,15 @@ import { Banner, LinkButton, UserDetails } from '.';
 const ItemList = ({ match }) => {
   const [user, setUser] = useState({});
   const [items, setItems] = useState([]);
+  const [linkToken, setLinkToken] = useState(null);
+  const [callbacks, setCallbacks] = useState(null);
+
   const { usersById, getUserById } = useUsers();
   const { itemsByUser, getItemsByUser } = useItems();
   const { getAccountsByUser } = useAccounts();
   const { generateLinkConfigs, linkConfigs } = useLink();
-  const [linkToken, setLinkToken] = useState(null);
-  const [callbacks, setCallbacks] = useState(null);
-  const itemId = null;
 
+  const itemId = null;
   const userId = Number(match.params.userId);
 
   // update data store with user
@@ -55,13 +56,14 @@ const ItemList = ({ match }) => {
     generateLinkConfigs(userId, itemId);
   }, [generateLinkConfigs, userId]);
 
-  //set link token and configs for Link
+  // set link token and configs for Link
   useEffect(() => {
-    if (linkConfigs.byUser[userId]) {
+    if (linkConfigs.byUser[userId] != null) {
       setLinkToken(linkConfigs.byUser[userId].linkToken);
       setCallbacks(linkConfigs.byUser[userId].callbacks);
     }
   }, [linkConfigs]);
+
   return (
     <div>
       <Link to={`/`} className="back-to-user__link">{`< BACK TO USERS`}</Link>

@@ -50,7 +50,7 @@ export function MoreDetails({
       setLinkToken(linkConfigs.byItem[itemId].linkToken);
       setCallbacks(linkConfigs.byItem[itemId].callbacks);
     }
-  }, [linkConfigs]);
+  }, [linkConfigs.byItem[itemId]]);
 
   // show choice to set state to "bad" or initiate link in update mode,
   // depending on whether item is in a good state or bad state

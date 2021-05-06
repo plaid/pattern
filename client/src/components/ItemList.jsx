@@ -61,7 +61,7 @@ const ItemList = ({ match }) => {
       setLinkToken(linkConfigs.byUser[userId].linkToken);
       setCallbacks(linkConfigs.byUser[userId].callbacks);
     }
-  }, [linkConfigs]);
+  }, [linkConfigs.byUser[userId]]);
 
   return (
     <div>

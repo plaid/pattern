@@ -41,7 +41,7 @@ const UserCard = ({ user }) => {
       setLinkToken(linkConfigs.byUser[user.id].linkToken);
       setCallbacks(linkConfigs.byUser[user.id].callbacks);
     }
-  }, [linkConfigs]);
+  }, [linkConfigs.byUser[user.id]]);
 
   const handleDeleteUser = () => {
     deleteUserById(user.id);

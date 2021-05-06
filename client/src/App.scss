@@ -2,6 +2,7 @@ $threads-font-path: '~plaid-threads/fonts';
 @import '~plaid-threads/scss/typography';
 @import '~plaid-threads/scss/variables';
 
+$border: 1px solid $black200;
 /*
 
 
@@ -27,18 +28,14 @@ shared styles
 */
 .bottom-border-content {
   overflow: hidden;
-  border-bottom-width: 1px;
-  border-bottom-color: $black200;
-  border-bottom-style: solid;
-  margin-bottom: 30px;
-  padding-bottom: 30px;
+  border-bottom: 1px solid $black1000;
+  margin-bottom: 4 * $unit;
+  padding-bottom: 4 * $unit;
 }
 
 .box {
-  border-width: 1px;
-  border-color: $black200;
-  border-style: solid;
-  border-radius: 4px;
+  border: $border;
+  border-radius: $border-radius;
   margin-bottom: 3 * $unit;
   box-shadow: $shadow-xsmall;
 }
@@ -59,7 +56,7 @@ shared styles
 .header {
   display: flex;
   justify-content: space-between;
-  margin-bottom: 20px;
+  margin-bottom: 2 * $unit;
 }
 
 .value {
@@ -84,15 +81,11 @@ shared styles
   color: $blue900;
   font-size: 2 * $unit;
   white-space: pre-line;
-  padding-left: 10px;
+  padding-left: $unit;
 }
 
 .Toastify__toast--error > .toast__body {
   color: $white;
-}
-
-.icon-dots > ellipse {
-  fill: $blue900;
 }
 
 /*
@@ -103,7 +96,6 @@ Content at the top of the view
 
 .everpresent-content__heading {
   margin-bottom: 2 * $unit;
-  color: $color-text-dark;
 }
 
 .everpresent-content__subheading {
@@ -111,7 +103,6 @@ Content at the top of the view
   font-weight: 300;
   line-height: 4 * $unit;
   margin-bottom: 0;
-  color: $color-text-dark;
 }
 
 /*
@@ -138,7 +129,6 @@ UserList
 
 .user-list-heading {
   font-weight: normal;
-  color: $color-text-dark;
 }
 
 /*
@@ -148,14 +138,14 @@ UserCard
 */
 
 .user-card__box {
-  box-shadow: 0 10px 20px 0 rgba(3, 49, 86, 0.2);
+  box-shadow: $shadow-medium;
 }
 .user-card {
   display: grid;
   grid-template-columns: 2fr 1fr;
 }
 .user-card__detail {
-  padding-right: 10rem;
+  padding-right: 12 * $unit;
   width: 80%;
 }
 
@@ -178,6 +168,7 @@ UserCard
   display: grid;
   grid-template-columns: 1fr 1fr;
 }
+
 .user-card__link__button {
   display: flex;
   flex-direction: column;
@@ -186,9 +177,9 @@ UserCard
 
 .user-card__items__link {
   font-weight: 500;
-  font-size: 14px;
+  font-size: 1.4rem;
   text-align: center;
-  margin-top: 5px;
+  margin-top: 0.5rem;
 }
 
 /*
@@ -198,7 +189,7 @@ Item overview
 */
 
 .back-to-user__link {
-  font-size: 12px;
+  font-size: 1.2rem;
   font-weight: 600;
 }
 
@@ -206,28 +197,24 @@ Item overview
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin: 2.5rem 0;
+  margin: 3 * $unit 0;
 }
 .item__header-heading {
   margin-bottom: 1rem;
   font-weight: normal;
-  color: $color-text-dark;
-}
-.item__header-subheading {
-  color: $color-text-dark;
 }
 
 .item-card {
-  padding: 0 20px 0 0;
+  padding: 0 (2.5 * $unit) 0 0;
   background-color: $black100;
-  border-bottom: 1px solid $black200;
+  border-bottom: $border;
 }
 .item-card:hover {
   cursor: pointer;
 }
 
 .item-card__clickable {
-  padding: 20px 0 20px 20px;
+  padding: (2.5 * $unit) 0 (2.5 * $unit) (2.5 * $unit);
   width: 100%;
 }
 
@@ -273,7 +260,7 @@ Account row
 
 */
 .account-data-row {
-  border-bottom: 1px solid $black200;
+  border-bottom: $border;
   padding: 3 * $unit;
   display: grid;
   grid-template-columns: 3fr 1fr;
@@ -300,7 +287,7 @@ Add User Form
 
 .add-user__column-1 {
   width: 25%;
-  padding-right: 2.5rem;
+  padding-right: 3 * $unit;
 }
 
 .add-user__heading {
@@ -309,7 +296,7 @@ Add User Form
 }
 
 .add-user__value {
-  font-size: 14px;
+  font-size: 1.4rem;
 }
 
 .add-user__column-2 {
@@ -333,7 +320,7 @@ Add User Form
 .add-user__button {
   height: 5 * $unit;
   min-width: 10 * $unit;
-  line-height: 6px;
+  line-height: 0.6rem;
   margin: 0.25rem 0.5rem;
 }
 
@@ -343,11 +330,11 @@ transactions-table
 
 */
 .transactions {
-  border-bottom: 1px solid $black200;
+  border-bottom: $border;
 }
 
 .transactions-table {
-  padding: 0 3 * $unit;
+  padding: 0 (3 * $unit);
   width: 100%;
 }
 
@@ -356,13 +343,10 @@ transactions-table
   font-weight: 600;
   padding-top: 2 * $unit;
   padding-bottom: 2 * $unit;
-  color: $color-text-dark;
 }
 
 .transactions-table thead tr {
-  border-bottom-color: $black200;
-  border-bottom-style: solid;
-  border-bottom-width: 1px;
+  border-bottom: $border;
   text-align: left;
 }
 

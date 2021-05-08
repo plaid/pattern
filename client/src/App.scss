@@ -286,7 +286,7 @@ Add User Form
 */
 
 .add-user__column-1 {
-  width: 25%;
+  width: 30%;
   padding-right: 3 * $unit;
 }
 
@@ -312,16 +312,14 @@ Add User Form
 
 .add-user__column-3 {
   display: flex;
-  flex-direction: row-reverse;
+  flex-direction: row;
   justify-content: center;
-  width: 35%;
+  width: 30%;
 }
 
 .add-user__button {
-  height: 5 * $unit;
+  margin: 0 2 * $unit;
   min-width: 10 * $unit;
-  line-height: 0.6rem;
-  margin: 0.25rem 0.5rem;
 }
 
 /*
@@ -384,4 +382,12 @@ More Details
 
 .icon-button-container {
   zoom: 2;
+}
+
+.menuOption {
+  font-size: 2 * $unit;
+  font-family: $font-stack-sans;
+  background-color: transparent;
+  border: none;
+  color: $black1000;
 }

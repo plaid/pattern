@@ -13,8 +13,7 @@ const propTypes = {
 
 const UserCard = ({ user }) => {
   const [numOfItems, setNumOfItems] = useState(0);
-  const [linkToken, setLinkToken] = useState(null);
-  const [callbacks, setCallbacks] = useState(null);
+  const [config, setConfig] = useState({ token: null, onSucces: null });
 
   const { itemsByUser, getItemsByUser } = useItems();
   const { generateLinkConfigs, linkConfigs } = useLink();
@@ -38,15 +37,15 @@ const UserCard = ({ user }) => {
   // set linkToken and callbacks from configs from link context
   useEffect(() => {
     if (linkConfigs.byUser[user.id]) {
-      setLinkToken(linkConfigs.byUser[user.id].linkToken);
-      setCallbacks(linkConfigs.byUser[user.id].callbacks);
+      console.log("i'm inside: ", linkConfigs.byUser[user.id]);
+      setConfig(linkConfigs.byUser[user.id]);
     }
   }, [linkConfigs.byUser[user.id]]);
 
   const handleDeleteUser = () => {
     deleteUserById(user.id);
   };
-
+  console.log('did it set it?', config);
   return (
     <div className="box user-card__box">
       <div className="card user-card">
@@ -55,12 +54,8 @@ const UserCard = ({ user }) => {
         </div>
         <div className="user-card__buttons">
           <div className="user-card__link__button">
-            {linkToken != null && callbacks != null && (
-              <LinkButton
-                linkToken={linkToken}
-                userId={user.id}
-                callbacks={callbacks}
-              >
+            {config.token != null && config.onSuccess != null && (
+              <LinkButton userId={user.id} config={config}>
                 Link an Item
               </LinkButton>
             )}
@@ -73,7 +68,13 @@ const UserCard = ({ user }) => {
               </Link>
             )}
           </div>
-          <Button onClick={handleDeleteUser} centered userCard={true} inline>
+          <Button
+            onClick={handleDeleteUser}
+            small
+            centered
+            userCard={true}
+            inline
+          >
             Remove user
           </Button>
         </div>

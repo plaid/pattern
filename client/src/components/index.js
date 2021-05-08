@@ -1,7 +1,6 @@
 export { default as AccountCard } from './AccountCard';
 export { default as AddUserForm } from './AddUserForm';
 export { default as Banner } from './Banner';
-export { default as Action } from './Action';
 export { default as DuplicateItemToastMessage } from './DuplicateItemToast';
 export { default as ItemCard } from './ItemCard';
 export { default as ItemList } from './ItemList';

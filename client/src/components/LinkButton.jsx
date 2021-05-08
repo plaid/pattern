@@ -4,31 +4,25 @@ import Button from 'plaid-threads/Button';
 import { usePlaidLink } from 'react-plaid-link';
 
 LinkButton.propTypes = {
-  linkToken: propTypes.string,
-  callbacks: propTypes.object,
+  config: propTypes.object,
   update: propTypes.bool,
 };
 
 LinkButton.defaultProps = {
-  linkToken: null,
-  callbacks: null,
+  config: null,
   update: false,
 };
 
-export default function LinkButton({ children, linkToken, callbacks, update }) {
-  const linkConfig = {
-    ...callbacks,
-    token: linkToken,
-  };
-
-  const { open, ready } = usePlaidLink(linkConfig);
+export default function LinkButton({ children, config, update }) {
+  const { open, ready } = usePlaidLink(config);
 
   return (
     <>
-      {!update && (
+      {!update ? (
         <Button
           centered
           inline
+          small
           disabled={!ready}
           onClick={() => {
             open();
@@ -36,8 +30,8 @@ export default function LinkButton({ children, linkToken, callbacks, update }) {
         >
           {children}
         </Button>
-      )}
-      {update && ( // case where link is launched in update mode from dropdown menu in the
+      ) : (
+        // case where link is launched in update mode from dropdown menu in the
         // item card after item is set to "bad state"
         <div
           disabled={!ready}

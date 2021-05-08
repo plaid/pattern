@@ -4,7 +4,7 @@ import Menu from 'plaid-threads/Icons/MenuS1';
 import Dropdown from 'plaid-threads/Dropdown';
 import IconButton from 'plaid-threads/IconButton';
 
-import { Action, LinkButton } from '.';
+import { LinkButton } from '.';
 import { useOnClickOutside } from '../hooks';
 import { useLink } from '../services';
 
@@ -28,8 +28,7 @@ export function MoreDetails({
   itemId,
 }) {
   const [menuShown, setmenuShown] = useState(false);
-  const [linkToken, setLinkToken] = useState(null);
-  const [callbacks, setCallbacks] = useState(null);
+  const [config, setConfig] = useState({ token: null, onSucces: null });
   const { generateLinkConfigs, linkConfigs } = useLink();
   const refToButton = useRef();
   const refToMenu = useOnClickOutside({
@@ -46,26 +45,24 @@ export function MoreDetails({
 
   // set linkToken and callbacks from configs from link context
   useEffect(() => {
+    console.log('here i am inside', linkConfigs);
     if (linkConfigs.byItem[itemId]) {
-      setLinkToken(linkConfigs.byItem[itemId].linkToken);
-      setCallbacks(linkConfigs.byItem[itemId].callbacks);
+      setConfig(linkConfigs.byItem[itemId]);
     }
   }, [linkConfigs.byItem[itemId]]);
 
   // show choice to set state to "bad" or initiate link in update mode,
   // depending on whether item is in a good state or bad state
   const linkChoice = setBadStateShown ? (
-    <Action action={handleSetBadState} text="Reset Login" />
-  ) : updateShown && linkToken != null && callbacks != null ? (
-    <LinkButton
-      userId={userId}
-      itemId={itemId}
-      linkToken={linkToken}
-      callbacks={callbacks}
-      update={true}
-    >
-      Update Login
-    </LinkButton>
+    <button className="menuOption" onClick={handleSetBadState}>
+      Reset Login
+    </button>
+  ) : updateShown && config.token != null && config.onSuccess != null ? (
+    <div>
+      <LinkButton userId={userId} itemId={itemId} config={config} update={true}>
+        Update Login
+      </LinkButton>
+    </div>
   ) : (
     <></>
   );
@@ -83,10 +80,11 @@ export function MoreDetails({
   return (
     <div className="more-details" ref={refToMenu}>
       <Dropdown isOpen={menuShown} target={icon}>
-        <div>{linkChoice}</div>
-        <div>
-          <Action text="Remove" action={handleDelete} />
-        </div>
+        {linkChoice}
+
+        <button className="menuOption" onClick={handleDelete}>
+          Remove
+        </button>
       </Dropdown>
     </div>
   );

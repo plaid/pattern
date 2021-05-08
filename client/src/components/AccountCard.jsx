@@ -43,7 +43,7 @@ export default function AccountCard({ account }) {
         </div>
         <div className="account-data-row__right">
           {!!transactions.length && (
-            <Button onClick={toggleShowTransactions} centered inline>
+            <Button onClick={toggleShowTransactions} centered small inline>
               {transactionsShown ? 'Hide Transactions' : 'View Transactions'}
             </Button>
           )}

@@ -10,8 +10,7 @@ import { Banner, LinkButton, UserDetails } from '.';
 const ItemList = ({ match }) => {
   const [user, setUser] = useState({});
   const [items, setItems] = useState([]);
-  const [linkToken, setLinkToken] = useState(null);
-  const [callbacks, setCallbacks] = useState(null);
+  const [config, setConfig] = useState({ token: null, onSucces: null });
 
   const { usersById, getUserById } = useUsers();
   const { itemsByUser, getItemsByUser } = useItems();
@@ -58,8 +57,7 @@ const ItemList = ({ match }) => {
   // set link token and configs for Link
   useEffect(() => {
     if (linkConfigs.byUser[userId] != null) {
-      setLinkToken(linkConfigs.byUser[userId].linkToken);
-      setCallbacks(linkConfigs.byUser[userId].callbacks);
+      setConfig(linkConfigs.byUser[userId]);
     }
   }, [linkConfigs.byUser[userId]]);
 
@@ -89,12 +87,8 @@ const ItemList = ({ match }) => {
             </p>
           )}
         </div>
-        {linkToken != null && callbacks != null && (
-          <LinkButton
-            linkToken={linkToken}
-            userId={user.id}
-            callbacks={callbacks}
-          >
+        {config.token != null && config.onSuccess != null && (
+          <LinkButton userId={user.id} config={config}>
             Add Another Item
           </LinkButton>
         )}

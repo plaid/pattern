@@ -61,7 +61,7 @@ export function LinkProvider(props) {
       hasRequested.current.byUser[userId] = true;
     }
     const linkTokenResponse = await getLinkToken({ itemId, userId });
-    const linkToken = await linkTokenResponse.data.link_token;
+    const token = await linkTokenResponse.data.link_token;
 
     const onSuccess = async (
       publicToken,
@@ -118,13 +118,10 @@ export function LinkProvider(props) {
     if (isUpdate) {
       dispatch([
         types.LINK_CONFIGS_UPDATE_MODE_CREATED,
-        { id: itemId, linkToken, callbacks },
+        { id: itemId, token, callbacks },
       ]);
     } else {
-      dispatch([
-        types.LINK_CONFIGS_CREATED,
-        { id: userId, linkToken, callbacks },
-      ]);
+      dispatch([types.LINK_CONFIGS_CREATED, { id: userId, token, callbacks }]);
     }
   }, []);
 
@@ -142,7 +139,7 @@ export function LinkProvider(props) {
 /**
  * @desc Handles updates to the Link configs as dictated by dispatched actions.
  */
-function reducer(state, [type, { id, linkToken, callbacks }]) {
+function reducer(state, [type, { id, token, callbacks }]) {
   switch (type) {
     case types.LINK_CONFIGS_CREATED:
       return {
@@ -151,8 +148,8 @@ function reducer(state, [type, { id, linkToken, callbacks }]) {
           ...state.byUser,
           [id]: {
             ...state.byUser[id],
-            linkToken,
-            callbacks,
+            token,
+            ...callbacks,
           },
         },
       };
@@ -163,15 +160,15 @@ function reducer(state, [type, { id, linkToken, callbacks }]) {
           ...state.byItem,
           [id]: {
             ...state.byItem[id],
-            linkToken,
-            callbacks,
+            token,
+            ...callbacks,
           },
         },
       };
     default:
       console.warn('unknown action: ', {
         type,
-        payload: { id, linkToken, callbacks },
+        payload: { id, token, callbacks },
       });
       return state;
   }

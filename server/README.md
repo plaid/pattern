@@ -12,11 +12,11 @@ Plaid does not have a user data object for tying multiple items together, so it 
 
 By default, Plaid Link will let a user link to the same institution multiple times. Some developers prefer disallowing duplicate account linkages because duplicate connections still come at an additional cost. It is entirely possible for a user to create multiple items linked to the same financial institution. In practice, you probably want to prevent this. The easiest way to do this is to check the institution id of a newly created item before performing the token exchange and storing the item. For an example of this, see the [root items route][items-routes].
 
-### Using webhooks to update transaction data
+### Using webhooks to update transaction data and test update mode in Link.
 
-Plaid uses [webhooks][transactions-webhooks] to notify you whenever there are new transactions associated with an item. This allows you to make a call to Plaid's transactions endpoint only when there are new transactions available, rather than polling for them. For an example of this, see the [transactions webhook handler][transactions-handler].
+Plaid uses [webhooks][transactions-webhooks] to notify you whenever there are new transactions associated with an item. This allows you to make a call to Plaid's transactions endpoint only when there are new transactions available, rather than polling for them. For an example of this, see the [transactions webhook handler][transactions-handler]. This sample app also demonstrates the use of the sandboxItemResetLogin endpoint to test the webhook used to notify you when a user needs to update their login information at their financial institution.
 
-For webhooks to work, the server must be publicly accessible on the internet. For development purposes, this application uses [ngrok][ngrok-readme] to accomplish that.
+For webhooks to work, the server must be publicly accessible on the internet. For development purposes, this application uses [ngrok][ngrok-readme] to accomplish that. Therefore, if the server is re-started, any items created in this sample app previous to the current session will have a different webhook address attached to it. As a result, webhooks are only valid during the session in which an item is created; for previously created items, no transactions webhooks will be received, and no webhook will be received from the call to sandboxItemResetLogin.
 
 ## Debugging
 

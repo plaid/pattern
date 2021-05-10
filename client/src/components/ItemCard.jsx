@@ -13,6 +13,7 @@ import { setItemToBadState } from '../services/api';
 import { diffBetweenCurrentTime } from '../util';
 
 const PLAID_ENV = process.env.REACT_APP_PLAID_ENV || 'sandbox';
+
 const propTypes = {
   item: PropTypes.object.isRequired,
 };
@@ -47,13 +48,14 @@ const ItemCard = ({ item, userId }) => {
     getInstitutionById(plaid_institution_id);
   }, [getInstitutionById, plaid_institution_id]);
 
-  const handleSetBadState = () => setItemToBadState(id);
+  const handleSetBadState = () => {
+    setItemToBadState(id);
+  };
   const handleDeleteItem = () => {
     deleteItemById(id);
     deleteAccountsByItemId(id);
     deleteTransactionsByItemId(id);
   };
-
   return (
     <div className="box">
       <div className="card item-card">

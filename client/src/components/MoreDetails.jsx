@@ -45,7 +45,6 @@ export function MoreDetails({
 
   // set linkToken and callbacks from configs from link context
   useEffect(() => {
-    console.log('here i am inside', linkConfigs);
     if (linkConfigs.byItem[itemId]) {
       setConfig(linkConfigs.byItem[itemId]);
     }

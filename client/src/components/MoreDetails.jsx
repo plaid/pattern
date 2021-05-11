@@ -6,8 +6,7 @@ import IconButton from 'plaid-threads/IconButton';
 import Touchable from 'plaid-threads/Touchable';
 
 import { LinkButton } from '.';
-import { useOnClickOutside } from '../hooks';
-import { useLink } from '../services';
+import { useOnClickOutside, useGenerateLinkConfig } from '../hooks';
 
 const propTypes = {
   handleDelete: PropTypes.func.isRequired,
@@ -30,7 +29,6 @@ export function MoreDetails({
 }) {
   const [menuShown, setmenuShown] = useState(false);
   const [config, setConfig] = useState({ token: null, onSucces: null });
-  const { generateLinkConfigs, linkConfigs } = useLink();
   const refToButton = useRef();
   const refToMenu = useOnClickOutside({
     callback: () => {
@@ -38,18 +36,11 @@ export function MoreDetails({
     },
     ignoreRef: refToButton,
   });
+  const getLinkConfig = useGenerateLinkConfig(userId, itemId);
 
-  // get link configs from link context
   useEffect(() => {
-    generateLinkConfigs(userId, itemId);
-  }, [generateLinkConfigs, itemId]);
-
-  // set linkToken and callbacks from configs from link context
-  useEffect(() => {
-    if (linkConfigs.byItem[itemId]) {
-      setConfig(linkConfigs.byItem[itemId]);
-    }
-  }, [linkConfigs.byItem[itemId]]);
+    setConfig(getLinkConfig);
+  }, [getLinkConfig, itemId]);
 
   // show choice to set state to "bad" or initiate link in update mode,
   // depending on whether item is in a good state or bad state
@@ -57,7 +48,7 @@ export function MoreDetails({
     <Touchable className="menuOption" onClick={handleSetBadState}>
       Reset Login
     </Touchable>
-  ) : updateShown && config.token != null && config.onSuccess != null ? (
+  ) : updateShown && config.token != null ? (
     <div>
       <LinkButton userId={userId} itemId={itemId} config={config} update={true}>
         Update Login

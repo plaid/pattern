@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import Note from 'plaid-threads/Note';
+import Touchable from 'plaid-threads/Touchable';
 
 import { AccountCard, MoreDetails } from '.';
 import {
@@ -59,7 +60,7 @@ const ItemCard = ({ item, userId }) => {
   return (
     <div className="box">
       <div className="card item-card">
-        <div
+        <Touchable
           className="item-card__clickable"
           onClick={() => setShowAccounts(current => !current)}
         >
@@ -90,7 +91,7 @@ const ItemCard = ({ item, userId }) => {
             <h3 className="heading">LAST_UPDATED</h3>
             <p className="value">{diffBetweenCurrentTime(item.updated_at)}</p>
           </div>
-        </div>
+        </Touchable>
         <MoreDetails
           updateShown={!isGoodState}
           setBadStateShown={isSandbox && isGoodState}

@@ -2,9 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import sortBy from 'lodash/sortBy';
 
-import { useItems, useAccounts, useUsers, useLink } from '../services';
+import { useItems, useAccounts, useUsers } from '../services';
 import { pluralize } from '../util';
 import ItemCard from './ItemCard';
+import { useGenerateLinkConfig } from '../hooks';
 import { Banner, LinkButton, UserDetails } from '.';
 
 const ItemList = ({ match }) => {
@@ -15,9 +16,8 @@ const ItemList = ({ match }) => {
   const { usersById, getUserById } = useUsers();
   const { itemsByUser, getItemsByUser } = useItems();
   const { getAccountsByUser } = useAccounts();
-  const { generateLinkConfigs, linkConfigs } = useLink();
-
   const userId = Number(match.params.userId);
+  const getLinkConfig = useGenerateLinkConfig(userId, null);
 
   // update data store with user
   useEffect(() => {
@@ -49,17 +49,9 @@ const ItemList = ({ match }) => {
     getAccountsByUser(userId);
   }, [getAccountsByUser, userId]);
 
-  // get linkToken and configs for Link
   useEffect(() => {
-    generateLinkConfigs(userId);
-  }, [generateLinkConfigs, userId]);
-
-  // set link token and configs for Link
-  useEffect(() => {
-    if (linkConfigs.byUser[userId] != null) {
-      setConfig(linkConfigs.byUser[userId]);
-    }
-  }, [linkConfigs.byUser[userId]]);
+    setConfig(getLinkConfig);
+  }, [getLinkConfig, userId]);
 
   return (
     <div>
@@ -87,7 +79,7 @@ const ItemList = ({ match }) => {
             </p>
           )}
         </div>
-        {config.token != null && config.onSuccess != null && (
+        {config.token != null && (
           <LinkButton userId={user.id} config={config}>
             Add Another Item
           </LinkButton>

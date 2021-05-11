@@ -4,7 +4,8 @@ import { Link } from 'react-router-dom';
 import Button from 'plaid-threads/Button';
 
 import { UserDetails, LinkButton } from '.';
-import { useItems, useUsers, useLink } from '../services';
+import { useItems, useUsers } from '../services';
+import { useGenerateLinkConfig } from '../hooks';
 import { pluralize } from '../util';
 
 const propTypes = {
@@ -16,8 +17,8 @@ const UserCard = ({ user }) => {
   const [config, setConfig] = useState({ token: null, onSucces: null });
 
   const { itemsByUser, getItemsByUser } = useItems();
-  const { generateLinkConfigs, linkConfigs } = useLink();
   const { deleteUserById } = useUsers();
+  const getLinkConfig = useGenerateLinkConfig(user.id, null);
 
   // update data store with the user's items
   useEffect(() => {
@@ -29,17 +30,9 @@ const UserCard = ({ user }) => {
     itemsByUser[user.id] && setNumOfItems(itemsByUser[user.id].length);
   }, [itemsByUser, user.id]);
 
-  // get link configs from link context
   useEffect(() => {
-    generateLinkConfigs(user.id);
-  }, [generateLinkConfigs, user.id]);
-
-  // set linkToken and callbacks from configs from link context
-  useEffect(() => {
-    if (linkConfigs.byUser[user.id]) {
-      setConfig(linkConfigs.byUser[user.id]);
-    }
-  }, [linkConfigs.byUser[user.id]]);
+    setConfig(getLinkConfig);
+  }, [getLinkConfig, user.id]);
 
   const handleDeleteUser = () => {
     deleteUserById(user.id);
@@ -52,7 +45,7 @@ const UserCard = ({ user }) => {
         </div>
         <div className="user-card__buttons">
           <div className="user-card__link__button">
-            {config.token != null && config.onSuccess != null && (
+            {config.token != null && (
               <LinkButton userId={user.id} config={config}>
                 Link an Item
               </LinkButton>

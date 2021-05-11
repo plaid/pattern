@@ -292,7 +292,6 @@ Add User Form
 
 .add-user__heading {
   font-size: 2 * $unit;
-  padding-bottom: 0.5rem;
 }
 
 .add-user__value {
@@ -304,6 +303,10 @@ Add User Form
   display: flex;
   flex-direction: column;
   padding: 1rem;
+
+  fieldset {
+    margin-bottom: 0;
+  }
 }
 
 .user-add__label {

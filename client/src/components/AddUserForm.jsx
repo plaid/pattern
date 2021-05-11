@@ -26,9 +26,6 @@ const AddUserForm = ({ hideForm }) => {
             </p>
           </div>
           <div className="add-user__column-2">
-            <label className="heading user-add__label" htmlFor="username">
-              User_Name
-            </label>
             <TextInput
               id="username"
               type="text"
@@ -37,6 +34,7 @@ const AddUserForm = ({ hideForm }) => {
               autoComplete="off"
               value={username}
               placeholder="New user name"
+              label="User_Name"
               onChange={e => setUsername(e.target.value)}
             />
           </div>

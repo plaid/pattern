@@ -1,6 +1,7 @@
 import React from 'react';
 import propTypes from 'prop-types';
 import Button from 'plaid-threads/Button';
+import Touchable from 'plaid-threads/Touchable';
 import { usePlaidLink } from 'react-plaid-link';
 
 LinkButton.propTypes = {
@@ -33,14 +34,15 @@ export default function LinkButton({ children, config, update }) {
       ) : (
         // case where link is launched in update mode from dropdown menu in the
         // item card after item is set to "bad state"
-        <div
+        <Touchable
+          className="menuOption"
           disabled={!ready}
           onClick={() => {
             open();
           }}
         >
           {children}
-        </div>
+        </Touchable>
       )}
     </>
   );

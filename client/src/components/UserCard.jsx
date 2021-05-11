@@ -37,7 +37,6 @@ const UserCard = ({ user }) => {
   // set linkToken and callbacks from configs from link context
   useEffect(() => {
     if (linkConfigs.byUser[user.id]) {
-      console.log("i'm inside: ", linkConfigs.byUser[user.id]);
       setConfig(linkConfigs.byUser[user.id]);
     }
   }, [linkConfigs.byUser[user.id]]);
@@ -45,7 +44,6 @@ const UserCard = ({ user }) => {
   const handleDeleteUser = () => {
     deleteUserById(user.id);
   };
-  console.log('did it set it?', config);
   return (
     <div className="box user-card__box">
       <div className="card user-card">
@@ -59,7 +57,7 @@ const UserCard = ({ user }) => {
                 Link an Item
               </LinkButton>
             )}
-            {!!numOfItems && (
+            {numOfItems !== 0 && (
               <Link
                 className="user-card__items__link"
                 to={`/user/${user.id}/items`}
@@ -68,13 +66,7 @@ const UserCard = ({ user }) => {
               </Link>
             )}
           </div>
-          <Button
-            onClick={handleDeleteUser}
-            small
-            centered
-            userCard={true}
-            inline
-          >
+          <Button onClick={handleDeleteUser} small centered inline>
             Remove user
           </Button>
         </div>

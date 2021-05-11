@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import Menu from 'plaid-threads/Icons/MenuS1';
 import Dropdown from 'plaid-threads/Dropdown';
 import IconButton from 'plaid-threads/IconButton';
+import Touchable from 'plaid-threads/Touchable';
 
 import { LinkButton } from '.';
 import { useOnClickOutside } from '../hooks';
@@ -53,9 +54,9 @@ export function MoreDetails({
   // show choice to set state to "bad" or initiate link in update mode,
   // depending on whether item is in a good state or bad state
   const linkChoice = setBadStateShown ? (
-    <button className="menuOption" onClick={handleSetBadState}>
+    <Touchable className="menuOption" onClick={handleSetBadState}>
       Reset Login
-    </button>
+    </Touchable>
   ) : updateShown && config.token != null && config.onSuccess != null ? (
     <div>
       <LinkButton userId={userId} itemId={itemId} config={config} update={true}>
@@ -81,9 +82,9 @@ export function MoreDetails({
       <Dropdown isOpen={menuShown} target={icon}>
         {linkChoice}
 
-        <button className="menuOption" onClick={handleDelete}>
+        <Touchable className="menuOption" onClick={handleDelete}>
           Remove
-        </button>
+        </Touchable>
       </Dropdown>
     </div>
   );

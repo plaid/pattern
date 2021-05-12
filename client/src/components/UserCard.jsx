@@ -41,7 +41,10 @@ const UserCard = ({ user }) => {
   return (
     <div className="box user-card__box">
       <div className=" card user-card">
-        <Touchable className=" " href={`/user/${user.id}/items`}>
+        <Touchable
+          className="user-card-clickable"
+          href={`/user/${user.id}/items`}
+        >
           <div className="user-card__detail">
             <UserDetails user={user} numOfItems={numOfItems} />
           </div>

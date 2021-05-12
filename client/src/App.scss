@@ -15,7 +15,7 @@ body {
 }
 
 .App {
-  max-width: 1050px;
+  max-width: 131 * $unit;
   margin-right: auto;
   margin-left: auto;
   padding: 10 * $unit 5 * $unit;
@@ -147,56 +147,19 @@ UserCard
   z-index: -10;
 }
 
-.user-card-clickable {
-}
-
 .user-card__detail {
   padding-right: 12 * $unit;
-  width: 80%;
+  display: grid;
+  grid-template-columns: 2fr 3fr 3fr 2fr;
 }
 
-.user-card__column-1 {
-  width: 20%;
-  float: left;
-}
-
-.user-card__column-2 {
-  width: 30%;
-  float: left;
-}
-
-.user-card__column-3 {
-  width: 30%;
-  float: left;
-}
-
-.user-card__column-4 {
-  width: 20%;
-  float: left;
+.user-card__detail:hover {
+  cursor: pointer;
 }
 
 .user-card__buttons {
   display: grid;
   grid-row-gap: $unit;
-}
-
-.user-card__link__button {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  z-index: 100;
-}
-
-.user-card__items__link {
-  font-weight: 500;
-  font-size: 1.4rem;
-  text-align: center;
-  margin-top: 0.5rem;
-}
-
-.remove {
-  // max-width: 50px;
-  // min-width: none;
 }
 
 /*

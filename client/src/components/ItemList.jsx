@@ -58,8 +58,8 @@ const ItemList = ({ match }) => {
     <div>
       <NavigationLink href="/">BACK TO USERS</NavigationLink>
       <Banner />
-      <div className="bottom-border-content">
-        <UserDetails user={user} />
+      <div className="bottom-border-content user-card__detail">
+        <UserDetails numOfItems={items.length} user={user} />
       </div>
       <div className="item__header">
         <div>

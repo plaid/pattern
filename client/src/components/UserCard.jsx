@@ -16,6 +16,7 @@ const propTypes = {
 const UserCard = ({ user }) => {
   const [numOfItems, setNumOfItems] = useState(0);
   const [config, setConfig] = useState({ token: null, onSucces: null });
+  const [hovered, setHovered] = useState(false);
 
   const { itemsByUser, getItemsByUser } = useItems();
   const { deleteUserById } = useUsers();
@@ -42,13 +43,24 @@ const UserCard = ({ user }) => {
     <div className="box user-card__box">
       <div className=" card user-card">
         <Touchable
+          onMouseEnter={() => {
+            setHovered(true);
+          }}
+          onMouseLeave={() => {
+            setHovered(false);
+          }}
           className="user-card-clickable"
           href={`/user/${user.id}/items`}
         >
           <div className="user-card__detail">
-            <UserDetails user={user} numOfItems={numOfItems} />
+            <UserDetails
+              hovered={hovered}
+              user={user}
+              numOfItems={numOfItems}
+            />
           </div>
         </Touchable>
+
         <div className="user-card__buttons">
           {config.token != null && (
             <LinkButton userId={user.id} config={config}>

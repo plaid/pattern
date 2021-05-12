@@ -7,9 +7,10 @@ import { formatDate } from '../util';
 const propTypes = {
   user: PropTypes.object.isRequired,
   numOfItems: PropTypes.number,
+  hovered: PropTypes.bool,
 };
 
-const UserDetails = ({ user, numOfItems }) => (
+const UserDetails = ({ user, numOfItems, hovered }) => (
   <>
     <div className="user-card__column-1">
       <h3 className="heading">User_ID</h3>
@@ -25,10 +26,17 @@ const UserDetails = ({ user, numOfItems }) => (
     </div>
     <div className="user-card__column-4">
       <h3 className="heading">LINKED_ITEMS</h3>
-      <p className="value">{`${numOfItems} ${pluralize(
-        'item',
-        numOfItems
-      )}`}</p>
+      {!hovered ? (
+        <p className="value">{`${numOfItems} ${pluralize(
+          'item',
+          numOfItems
+        )}`}</p>
+      ) : (
+        <p className="value">{`View ${numOfItems} ${pluralize(
+          'item',
+          numOfItems
+        )}`}</p>
+      )}
     </div>
   </>
 );

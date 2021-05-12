@@ -26,17 +26,10 @@ const UserDetails = ({ user, numOfItems, hovered }) => (
     </div>
     <div className="user-card__column-4">
       <h3 className="heading">LINKED_ITEMS</h3>
-      {!hovered ? (
-        <p className="value">{`${numOfItems} ${pluralize(
-          'item',
-          numOfItems
-        )}`}</p>
-      ) : (
-        <p className="value">{`View ${numOfItems} ${pluralize(
-          'item',
-          numOfItems
-        )}`}</p>
-      )}
+      <p className="value">
+        {hovered ? 'View ' : ''}{' '}
+        {`${numOfItems} ${pluralize('item', numOfItems)}`}
+      </p>
     </div>
   </>
 );

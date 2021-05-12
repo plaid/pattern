@@ -152,10 +152,6 @@ UserCard
   grid-template-columns: 2fr 3fr 3fr 2fr;
 }
 
-.user-card__detail:hover {
-  cursor: pointer;
-}
-
 .user-card__buttons {
   display: grid;
   grid-row-gap: $unit;
@@ -196,10 +192,6 @@ Item overview
   width: 95%;
   display: grid;
   grid-template-columns: 8fr 6fr 5fr 4fr;
-}
-
-.item-card__clickable:hover {
-  cursor: pointer;
 }
 
 .item-card__column-1 {
@@ -266,7 +258,7 @@ Add User Form
   flex-direction: column;
   padding: 1rem;
 
-  fieldset {
+  .input_field {
     margin-bottom: 0;
   }
 }

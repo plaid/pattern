@@ -32,6 +32,7 @@ const AddUserForm = ({ hideForm }) => {
               name="username"
               required="required"
               autoComplete="off"
+              className="input_field"
               value={username}
               placeholder="New user name"
               label="User_Name"

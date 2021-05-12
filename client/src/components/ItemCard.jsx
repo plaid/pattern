@@ -57,9 +57,13 @@ const ItemCard = ({ item, userId }) => {
     deleteAccountsByItemId(id);
     deleteTransactionsByItemId(id);
   };
+
+  const cardClassNames = showAccounts
+    ? 'card item-card expanded'
+    : 'card item-card';
   return (
     <div className="box">
-      <div className="card item-card">
+      <div className={cardClassNames}>
         <Touchable
           className="item-card__clickable"
           onClick={() => setShowAccounts(current => !current)}

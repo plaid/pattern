@@ -23,7 +23,7 @@ const Banner = ({ initialSubheading }) => {
 
   return (
     <div id="banner" className="bottom-border-content">
-      <h4>{PLAID_ENV} User</h4>
+      <h4>{PLAID_ENV} user</h4>
       <div className="header">
         <h1 className="everpresent-content__heading">Plaid Pattern</h1>
         <Button
@@ -32,6 +32,7 @@ const Banner = ({ initialSubheading }) => {
           rel="noopener noreferrer"
           inline
           centered
+          secondary
         >
           Send Feedback
         </Button>

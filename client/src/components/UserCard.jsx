@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import Button from 'plaid-threads/Button';
+import Touchable from 'plaid-threads/Touchable';
 
 import { UserDetails, LinkButton } from '.';
 import { useItems, useUsers } from '../services';
@@ -39,27 +40,27 @@ const UserCard = ({ user }) => {
   };
   return (
     <div className="box user-card__box">
-      <div className="card user-card">
-        <div className="user-card__detail">
-          <UserDetails user={user} />
-        </div>
-        <div className="user-card__buttons">
-          <div className="user-card__link__button">
-            {config.token != null && (
-              <LinkButton userId={user.id} config={config}>
-                Link an Item
-              </LinkButton>
-            )}
-            {numOfItems !== 0 && (
-              <Link
-                className="user-card__items__link"
-                to={`/user/${user.id}/items`}
-              >
-                {`View ${numOfItems} Linked ${pluralize('Item', numOfItems)}`}
-              </Link>
-            )}
+      <div className=" card user-card">
+        <Touchable className=" " href={`/user/${user.id}/items`}>
+          <div className="user-card__detail">
+            <UserDetails user={user} numOfItems={numOfItems} />
           </div>
-          <Button onClick={handleDeleteUser} small centered inline>
+        </Touchable>
+        <div className="user-card__buttons">
+          {config.token != null && (
+            <LinkButton userId={user.id} config={config}>
+              Link an Item
+            </LinkButton>
+          )}
+
+          <Button
+            className="remove"
+            onClick={handleDeleteUser}
+            small
+            inline
+            centered
+            secondary
+          >
             Remove user
           </Button>
         </div>

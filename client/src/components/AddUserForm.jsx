@@ -46,6 +46,7 @@ const AddUserForm = ({ hideForm }) => {
               className="add-user__button"
               centered
               small
+              secondary
               type="cancel"
               onClick={hideForm}
             >

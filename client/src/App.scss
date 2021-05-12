@@ -144,7 +144,6 @@ UserCard
 .user-card {
   display: grid;
   grid-template-columns: 6fr 1fr;
-  z-index: -10;
 }
 
 .user-card__detail {
@@ -180,60 +179,41 @@ Item overview
 }
 
 .item-card {
-  padding: 0 (2.5 * $unit) 0 0;
+  padding: 0 $unit 0 0;
   background-color: $black100;
   border-bottom: $border;
   box-shadow: $shadow-medium;
+  display: grid;
+  grid-template-columns: 9fr 1fr;
 
   &.expanded {
     box-shadow: none;
   }
 }
 
-.item-card:hover {
+.item-card__clickable {
+  padding: (2 * $unit) 0 (2 * $unit) (2 * $unit);
+  width: 95%;
+  display: grid;
+  grid-template-columns: 8fr 6fr 5fr 4fr;
+}
+
+.item-card__clickable:hover {
   cursor: pointer;
 }
 
-.item-card__clickable {
-  padding: (2 * $unit) 0 (2 * $unit) (2 * $unit);
-  width: 100%;
-}
-
 .item-card__column-1 {
-  width: 35%;
   display: flex;
-  float: left;
   align-items: center;
 }
 
 .item-card__column-2 {
-  width: 30%;
-  float: left;
   margin-top: $unit;
-  padding-left: 4 * $unit;
-}
-
-.item-card__column-3 {
-  width: 15%;
-  float: left;
-}
-
-.item-card__column-4 {
-  width: 20%;
-  float: left;
 }
 
 .item-card__img {
   height: 4 * $unit;
   padding-right: 1rem;
-}
-
-.item-card__column:nth-child(1) {
-  padding-right: $unit;
-}
-
-.item-card__column:nth-child(2) {
-  padding-left: $unit;
 }
 
 /*
@@ -289,10 +269,6 @@ Add User Form
   fieldset {
     margin-bottom: 0;
   }
-}
-
-.user-add__label {
-  padding-bottom: 0.5rem;
 }
 
 .add-user__column-3 {

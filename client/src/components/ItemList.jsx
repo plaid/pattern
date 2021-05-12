@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import sortBy from 'lodash/sortBy';
+import NavigationLink from 'plaid-threads/NavigationLink';
 
 import { useItems, useAccounts, useUsers } from '../services';
 import { pluralize } from '../util';
@@ -55,7 +56,7 @@ const ItemList = ({ match }) => {
 
   return (
     <div>
-      <Link to={`/`} className="back-to-user__link">{`< BACK TO USERS`}</Link>
+      <NavigationLink href="/">BACK TO USERS</NavigationLink>
       <Banner />
       <div className="bottom-border-content">
         <UserDetails user={user} />

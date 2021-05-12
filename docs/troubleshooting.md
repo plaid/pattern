@@ -12,6 +12,10 @@ Plaid Pattern has implemented server logic such that duplicate account linkages 
 
 Before you can access the Development environment, you will need to request access via the [Plaid Dashboard](https://dashboard.plaid.com/overview/development).
 
+## I am not receiving transactions webhooks and my 'reset login' button does not work
+
+For webhooks to work, the server must be publicly accessible on the internet. For development purposes, this application uses [ngrok][ngrok-readme] to accomplish that. Therefore, if the server is re-started, any items created in this sample app previous to the current session will have a different webhook address attached to it. As a result, webhooks are only valid during the session in which an item is created; for previously created items, no transactions webhooks will be received, and no webhook will be received from the call to sandboxItemResetLogin.
+
 ## Still need help?
 
 Please head to the [Help Center](https://support.plaid.com/hc/en-us) or [get in touch](https://dashboard.plaid.com/support/new) with Support.

@@ -1,7 +1,12 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { IconDots, Button, LinkButton } from '.';
-import { useOnClickOutside } from '../hooks';
+import Menu from 'plaid-threads/Icons/MenuS1';
+import Dropdown from 'plaid-threads/Dropdown';
+import IconButton from 'plaid-threads/IconButton';
+import Touchable from 'plaid-threads/Touchable';
+
+import { LinkButton } from '.';
+import { useOnClickOutside, useGenerateLinkConfig } from '../hooks';
 
 const propTypes = {
   handleDelete: PropTypes.func.isRequired,
@@ -23,45 +28,55 @@ export function MoreDetails({
   itemId,
 }) {
   const [menuShown, setmenuShown] = useState(false);
+  const [config, setConfig] = useState({ token: null, onSucces: null });
   const refToButton = useRef();
   const refToMenu = useOnClickOutside({
-    callback: () => setmenuShown(false),
+    callback: () => {
+      setmenuShown(false);
+    },
     ignoreRef: refToButton,
   });
+  const getLinkConfig = useGenerateLinkConfig(userId, itemId);
+
+  useEffect(() => {
+    setConfig(getLinkConfig);
+  }, [getLinkConfig, itemId]);
+
+  // show choice to set state to "bad" or initiate link in update mode,
+  // depending on whether item is in a good state or bad state
+  const linkChoice = setBadStateShown ? (
+    <Touchable className="menuOption" onClick={handleSetBadState}>
+      Reset Login
+    </Touchable>
+  ) : updateShown && config.token != null ? (
+    <div>
+      <LinkButton userId={userId} itemId={itemId} config={config} update={true}>
+        Update Login
+      </LinkButton>
+    </div>
+  ) : (
+    <></>
+  );
+
+  const icon = (
+    <div className="icon-button-container" ref={refToButton}>
+      <IconButton
+        accessibilityLabel="Navigation"
+        icon={<Menu />}
+        onClick={() => setmenuShown(!menuShown)}
+      />
+    </div>
+  );
+
   return (
-    <div className="more-details">
-      <button
-        ref={refToButton}
-        className="more-details__icon"
-        onClick={() => setmenuShown(current => !current)}
-      >
-        <IconDots />
-      </button>
-      {menuShown && (
-        <div className="more-details__button-group" ref={refToMenu}>
-          {setBadStateShown && (
-            <Button
-              altClasses="more-details_button"
-              action={handleSetBadState}
-              text="Reset Login"
-            />
-          )}
-          {updateShown && (
-            <LinkButton
-              userId={userId}
-              itemId={itemId}
-              altClasses="more-details_button"
-            >
-              Update Login
-            </LinkButton>
-          )}
-          <Button
-            altClasses="more-details_button"
-            text="Remove"
-            action={handleDelete}
-          />
-        </div>
-      )}
+    <div className="more-details" ref={refToMenu}>
+      <Dropdown isOpen={menuShown} target={icon}>
+        {linkChoice}
+
+        <Touchable className="menuOption" onClick={handleDelete}>
+          Remove
+        </Touchable>
+      </Dropdown>
     </div>
   );
 }

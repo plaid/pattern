@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
+import Note from 'plaid-threads/Note';
+import Touchable from 'plaid-threads/Touchable';
 
 import { AccountCard, MoreDetails } from '.';
 import {
@@ -12,6 +14,7 @@ import { setItemToBadState } from '../services/api';
 import { diffBetweenCurrentTime } from '../util';
 
 const PLAID_ENV = process.env.REACT_APP_PLAID_ENV || 'sandbox';
+
 const propTypes = {
   item: PropTypes.object.isRequired,
 };
@@ -46,17 +49,22 @@ const ItemCard = ({ item, userId }) => {
     getInstitutionById(plaid_institution_id);
   }, [getInstitutionById, plaid_institution_id]);
 
-  const handleSetBadState = () => setItemToBadState(id);
+  const handleSetBadState = () => {
+    setItemToBadState(id);
+  };
   const handleDeleteItem = () => {
     deleteItemById(id);
     deleteAccountsByItemId(id);
     deleteTransactionsByItemId(id);
   };
 
+  const cardClassNames = showAccounts
+    ? 'card item-card expanded'
+    : 'card item-card';
   return (
     <div className="box">
-      <div className="card item-card">
-        <div
+      <div className={cardClassNames}>
+        <Touchable
           className="item-card__clickable"
           onClick={() => setShowAccounts(current => !current)}
         >
@@ -70,9 +78,13 @@ const ItemCard = ({ item, userId }) => {
           </div>
           <div className="item-card__column-2">
             {isGoodState ? (
-              <div className="item-card__status">Updated</div>
+              <Note info solid>
+                Updated
+              </Note>
             ) : (
-              <div className="item-card__status bad">Login Required</div>
+              <Note error solid>
+                Login Required
+              </Note>
             )}
           </div>
           <div className="item-card__column-3">
@@ -83,7 +95,7 @@ const ItemCard = ({ item, userId }) => {
             <h3 className="heading">LAST_UPDATED</h3>
             <p className="value">{diffBetweenCurrentTime(item.updated_at)}</p>
           </div>
-        </div>
+        </Touchable>
         <MoreDetails
           updateShown={!isGoodState}
           setBadStateShown={isSandbox && isGoodState}

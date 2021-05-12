@@ -1,21 +1,24 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import sortBy from 'lodash/sortBy';
+import NavigationLink from 'plaid-threads/NavigationLink';
 
 import { useItems, useAccounts, useUsers } from '../services';
 import { pluralize } from '../util';
 import ItemCard from './ItemCard';
+import { useGenerateLinkConfig } from '../hooks';
 import { Banner, LinkButton, UserDetails } from '.';
 
 const ItemList = ({ match }) => {
   const [user, setUser] = useState({});
   const [items, setItems] = useState([]);
+  const [config, setConfig] = useState({ token: null, onSucces: null });
 
   const { usersById, getUserById } = useUsers();
   const { itemsByUser, getItemsByUser } = useItems();
   const { getAccountsByUser } = useAccounts();
-
   const userId = Number(match.params.userId);
+  const getLinkConfig = useGenerateLinkConfig(userId, null);
 
   // update data store with user
   useEffect(() => {
@@ -47,12 +50,16 @@ const ItemList = ({ match }) => {
     getAccountsByUser(userId);
   }, [getAccountsByUser, userId]);
 
+  useEffect(() => {
+    setConfig(getLinkConfig);
+  }, [getLinkConfig, userId]);
+
   return (
     <div>
-      <Link to={`/`} className="back-to-user__link">{`< BACK TO USERS`}</Link>
+      <NavigationLink href="/">BACK TO USERS</NavigationLink>
       <Banner />
-      <div className="bottom-border-content">
-        <UserDetails user={user} />
+      <div className="bottom-border-content user-card__detail">
+        <UserDetails numOfItems={items.length} user={user} />
       </div>
       <div className="item__header">
         <div>
@@ -73,9 +80,11 @@ const ItemList = ({ match }) => {
             </p>
           )}
         </div>
-        <LinkButton primary userId={userId}>
-          Add Another Item
-        </LinkButton>
+        {config.token != null && (
+          <LinkButton userId={user.id} config={config}>
+            Add Another Item
+          </LinkButton>
+        )}
       </div>
       {items.map(item => (
         <div key={item.id}>

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import startCase from 'lodash/startCase';
 import toLower from 'lodash/toLower';
+import Button from 'plaid-threads/Button';
 
 import { useTransactions } from '../services';
 import { currencyFilter } from '../util';
@@ -42,12 +43,9 @@ export default function AccountCard({ account }) {
         </div>
         <div className="account-data-row__right">
           {!!transactions.length && (
-            <button
-              onClick={toggleShowTransactions}
-              className="button button--is-small button--is-default transaction-button"
-            >
+            <Button onClick={toggleShowTransactions} centered small inline>
               {transactionsShown ? 'Hide Transactions' : 'View Transactions'}
-            </button>
+            </Button>
           )}
         </div>
       </div>

@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import Button from 'plaid-threads/Button';
+import TextInput from 'plaid-threads/TextInput';
 
 import { useUsers } from '../services';
 
@@ -24,35 +26,33 @@ const AddUserForm = ({ hideForm }) => {
             </p>
           </div>
           <div className="add-user__column-2">
-            <label className="heading user-add__label" htmlFor="username">
-              User_Name
-            </label>
-            <input
+            <TextInput
               id="username"
-              className="user-add__input"
               type="text"
               name="username"
               required="required"
               autoComplete="off"
+              className="input_field"
               value={username}
               placeholder="New user name"
+              label="User_Name"
               onChange={e => setUsername(e.target.value)}
             />
           </div>
           <div className="add-user__column-3">
-            <button
-              className="button button--is-primary add-user__button"
-              type="submit"
-            >
+            <Button className="add-user__button" centered small type="submit">
               Add User
-            </button>
-            <button
-              className="button add-user__button"
+            </Button>
+            <Button
+              className="add-user__button"
+              centered
+              small
+              secondary
               type="cancel"
               onClick={hideForm}
             >
               Cancel
-            </button>
+            </Button>
           </div>
         </div>
       </form>

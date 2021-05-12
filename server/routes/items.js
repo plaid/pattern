@@ -37,7 +37,6 @@ router.post(
   '/',
   asyncWrapper(async (req, res) => {
     const { publicToken, institutionId, userId } = req.body;
-
     // prevent duplicate items for the same institution per user.
     const existingItem = await retrieveItemByPlaidInstitutionId(
       institutionId,
@@ -49,10 +48,11 @@ router.post(
       });
 
     // exchange the public token for a private token and store the item.
-    const {
-      item_id: itemId,
-      access_token: accessToken,
-    } = await plaid.exchangePublicToken(publicToken);
+    const response = await plaid.itemPublicTokenExchange({
+      public_token: publicToken,
+    });
+    const accessToken = response.data.access_token;
+    const itemId = response.data.item_id;
     const newItem = await createItem(
       institutionId,
       accessToken,
@@ -126,14 +126,20 @@ router.delete(
     const { itemId } = req.params;
     const { plaid_access_token: accessToken } = await retrieveItemById(itemId);
     /* eslint-disable camelcase */
-    const { removed, status_code } = await plaid.removeItem(accessToken);
-
-    if (!removed)
-      throw new Boom('Item could not be removed in the Plaid API.', {
-        statusCode: status_code,
+    try {
+      const response = await plaid.itemRemove({
+        access_token: accessToken,
       });
-
+      const removed = response.data.removed;
+      const status_code = response.data.status_code;
+    } catch (error) {
+      if (!removed)
+        throw new Boom('Item could not be removed in the Plaid API.', {
+          statusCode: status_code,
+        });
+    }
     await deleteItem(itemId);
+
     res.sendStatus(204);
   })
 );
@@ -182,8 +188,10 @@ router.post(
   asyncWrapper(async (req, res) => {
     const { itemId } = req.body;
     const { plaid_access_token: accessToken } = await retrieveItemById(itemId);
-    const resetResponse = await plaid.resetLogin(accessToken);
-    res.json(resetResponse);
+    const resetResponse = await plaid.sandboxItemResetLogin({
+      access_token: accessToken,
+    });
+    res.json(resetResponse.data);
   })
 );
 

@@ -23,9 +23,15 @@ router.get(
     const radix = 10;
     count = parseInt(count, radix);
     offset = parseInt(offset, radix);
-    const { institutions } = await plaid.getInstitutions(count, offset, {
-      include_optional_metadata: true,
-    });
+    const requst = {
+      count: count,
+      offset: offset,
+      options: {
+        include_optional_metadata: true,
+      },
+    };
+    const response = await plaid.institutionsGet(request);
+    const institutions = response.data.institutions;
     res.json(toArray(institutions));
   })
 );
@@ -40,10 +46,18 @@ router.get(
   '/:instId',
   asyncWrapper(async (req, res) => {
     const { instId } = req.params;
-    const { institution } = await plaid.getInstitutionById(instId, {
-      include_optional_metadata: true,
-    });
-    res.json(toArray(institution));
+    const request = {
+      institution_id: instId,
+      country_codes: ['US'],
+      options: {
+        include_optional_metadata: true,
+      },
+    };
+    try {
+      const response = await plaid.institutionsGetById(request);
+      const institution = response.data.institution;
+      res.json(toArray(institution));
+    } catch (error) {}
   })
 );
 

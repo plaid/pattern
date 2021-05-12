@@ -1,0 +1,342 @@
+$threads-font-path: '~plaid-threads/fonts';
+@import '~plaid-threads/scss/typography';
+@import '~plaid-threads/scss/variables';
+
+$border: 1px solid $black200;
+/*
+
+
+Base
+
+*/
+
+body {
+  background: $white;
+}
+
+.App {
+  max-width: 131 * $unit;
+  margin-right: auto;
+  margin-left: auto;
+  padding: 10 * $unit 5 * $unit;
+}
+
+/*
+
+shared styles
+
+*/
+.bottom-border-content {
+  overflow: hidden;
+  border-bottom: 1px solid $black1000;
+  margin-bottom: 4 * $unit;
+  padding-bottom: 4 * $unit;
+}
+
+.box {
+  border: $border;
+  border-radius: $border-radius;
+  margin-bottom: 3 * $unit;
+  box-shadow: $shadow-xsmall;
+}
+
+.card {
+  display: flex;
+  padding: 2rem;
+  align-items: center;
+}
+
+.heading {
+  font-weight: bold;
+  text-transform: uppercase;
+  font-size: 1.2rem;
+  margin-bottom: 0;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 2 * $unit;
+}
+
+.value {
+  text-overflow: ellipsis;
+  overflow-x: hidden;
+}
+
+.toast__background {
+  background: $white;
+}
+
+.toast__link {
+  color: $white;
+  text-decoration: underline;
+}
+
+.Toastify__toast--error.toast__background {
+  background: $red800;
+}
+
+.toast__body {
+  color: $black1000;
+  font-size: 2 * $unit;
+  white-space: pre-line;
+  padding-left: $unit;
+}
+
+.Toastify__toast--error > .toast__body {
+  color: $white;
+}
+
+/*
+
+Content at the top of the view
+
+*/
+
+.everpresent-content__heading {
+  margin-bottom: 2 * $unit;
+}
+
+.everpresent-content__subheading {
+  font-size: 3 * $unit;
+  font-weight: 300;
+  line-height: 4 * $unit;
+  margin-bottom: 0;
+}
+
+/*
+
+Landing overview
+
+*/
+
+.landing__column {
+  width: 33%;
+  float: left;
+}
+
+.landing__value {
+  overflow-x: hidden;
+  padding-right: 1rem;
+}
+
+/*
+
+UserList
+
+*/
+
+.user-list-heading {
+  font-weight: normal;
+}
+
+/*
+
+UserCard
+
+*/
+
+.user-card__box {
+  box-shadow: $shadow-medium;
+  border-bottom: $border;
+}
+.user-card {
+  display: grid;
+  grid-template-columns: 6fr 1fr;
+}
+
+.user-card__detail {
+  padding-right: 12 * $unit;
+  display: grid;
+  grid-template-columns: 2fr 3fr 3fr 2fr;
+}
+
+.user-card__buttons {
+  display: grid;
+  grid-row-gap: $unit;
+}
+
+/*
+
+Item overview
+
+*/
+
+.item__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 3 * $unit 0;
+}
+.item__header-heading {
+  margin-bottom: 1rem;
+  font-weight: normal;
+}
+
+.item-card {
+  padding: 0 $unit 0 0;
+  background-color: $black100;
+  border-bottom: $border;
+  box-shadow: $shadow-medium;
+  display: grid;
+  grid-template-columns: 9fr 1fr;
+
+  &.expanded {
+    box-shadow: none;
+  }
+}
+
+.item-card__clickable {
+  padding: (2 * $unit) 0 (2 * $unit) (2 * $unit);
+  width: 95%;
+  display: grid;
+  grid-template-columns: 8fr 6fr 5fr 4fr;
+}
+
+.item-card__column-1 {
+  display: flex;
+  align-items: center;
+}
+
+.item-card__column-2 {
+  margin-top: $unit;
+}
+
+.item-card__img {
+  height: 4 * $unit;
+  padding-right: 1rem;
+}
+
+/*
+
+Account row
+
+*/
+.account-data-row {
+  border-bottom: $border;
+  padding: 3 * $unit;
+  display: grid;
+  grid-template-columns: 3fr 1fr;
+}
+
+.account-data-row:after {
+  clear: both;
+  content: '';
+  display: table;
+}
+
+.account-data-row__name {
+  font-size: 2 * $unit;
+  line-height: 4 * $unit;
+  display: inline-block;
+  font-weight: 500;
+}
+
+/*
+
+Add User Form
+
+*/
+
+.add-user__column-1 {
+  width: 30%;
+  padding-right: 3 * $unit;
+}
+
+.add-user__heading {
+  font-size: 2 * $unit;
+}
+
+.add-user__value {
+  font-size: 1.4rem;
+}
+
+.add-user__column-2 {
+  width: 40%;
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+
+  .input_field {
+    margin-bottom: 0;
+  }
+}
+
+.add-user__column-3 {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  width: 30%;
+}
+
+.add-user__button {
+  margin: 0 2 * $unit;
+  min-width: 10 * $unit;
+}
+
+/*
+
+transactions-table
+
+*/
+.transactions {
+  border-bottom: $border;
+}
+
+.transactions-table {
+  padding: 0 (3 * $unit);
+  width: 100%;
+}
+
+.transactions-table th {
+  font-size: 2 * $unit;
+  font-weight: 600;
+  padding-top: 2 * $unit;
+  padding-bottom: 2 * $unit;
+}
+
+.transactions-table thead tr {
+  border-bottom: $border;
+  text-align: left;
+}
+
+.transactions-body {
+  height: 63 * $unit;
+  overflow-y: auto;
+  overflow-x: hidden;
+  text-align: left;
+}
+
+.table-name {
+  width: 35%;
+}
+
+.table-category {
+  width: 25%;
+}
+
+.table-amount {
+  width: 20%;
+}
+
+.table-date {
+  width: 20%;
+}
+
+/*
+
+More Details
+
+*/
+.more-details {
+  position: relative;
+}
+
+.menuOption {
+  font-size: 2 * $unit;
+  font-family: $font-stack-sans;
+  background-color: transparent;
+  border: none;
+  color: $black1000;
+}

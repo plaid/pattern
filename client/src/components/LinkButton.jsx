@@ -1,56 +1,49 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import propTypes from 'prop-types';
-
-import { useLink } from '../services';
+import Button from 'plaid-threads/Button';
+import Touchable from 'plaid-threads/Touchable';
+import { usePlaidLink } from 'react-plaid-link';
 
 LinkButton.propTypes = {
-  userId: propTypes.number,
-  itemId: propTypes.number,
-  altClasses: propTypes.string,
-  primary: propTypes.bool,
+  config: propTypes.object,
+  update: propTypes.bool,
 };
 
 LinkButton.defaultProps = {
-  userId: null,
-  itemId: null,
-  altClasses: null,
-  primary: false,
+  config: null,
+  update: false,
 };
 
-export default function LinkButton({
-  children,
-  userId,
-  itemId,
-  altClasses,
-  primary,
-}) {
-  const [linkInstance, setLinkInstance] = useState({});
-  const { linkHandlers, getLinkHandler } = useLink();
-
-  const isPrimary = primary ? 'button--is-primary' : '';
-  const classlist = altClasses !== null ? altClasses : '';
-
-  useEffect(() => {
-    getLinkHandler({ userId, itemId });
-  }, [userId, itemId, getLinkHandler]);
-
-  useEffect(() => {
-    if (itemId) {
-      setLinkInstance(linkHandlers.byItem[itemId] || {});
-    } else {
-      setLinkInstance(linkHandlers.byUser[userId] || {});
-    }
-  }, [linkHandlers, itemId, userId]);
+export default function LinkButton({ children, config, update }) {
+  const { open, ready } = usePlaidLink(config);
 
   return (
-    <button
-      className={`button ${isPrimary} ${classlist}`}
-      disabled={!linkInstance.isReady}
-      onClick={() => {
-        linkInstance.handler.open();
-      }}
-    >
-      {children}
-    </button>
+    <>
+      {!update ? (
+        <Button
+          centered
+          inline
+          small
+          disabled={!ready}
+          onClick={() => {
+            open();
+          }}
+        >
+          {children}
+        </Button>
+      ) : (
+        // case where link is launched in update mode from dropdown menu in the
+        // item card after item is set to "bad state"
+        <Touchable
+          className="menuOption"
+          disabled={!ready}
+          onClick={() => {
+            open();
+          }}
+        >
+          {children}
+        </Touchable>
+      )}
+    </>
   );
 }

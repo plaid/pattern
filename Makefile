@@ -31,7 +31,7 @@ start: $(envfile) $(clear_db_after_schema_change)
 	@echo "Pulling images from Docker Hub (this may take a few minutes)"
 	docker-compose pull
 	@echo "Starting Docker services"
-	docker-compose up --detach
+	docker-compose up --build --detach
 	./wait-for-client.sh
 
 ## Start the services without webhooks

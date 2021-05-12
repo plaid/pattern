@@ -3,7 +3,7 @@
  */
 
 const forEach = require('lodash/forEach');
-const plaid = require('plaid');
+const { Configuration, PlaidApi, PlaidEnvironments } = require('plaid');
 
 const {
   createPlaidApiEvent,
@@ -38,7 +38,7 @@ const OPTIONS = { clientApp: 'Plaid-Pattern' };
  * @param {Object} response the response from the Plaid client.
  */
 const defaultLogger = async (clientMethod, clientMethodArgs, response) => {
-  const accessToken = clientMethodArgs[0];
+  const accessToken = clientMethodArgs[0].access_token;
   const { id: itemId } = await retrieveItemByPlaidAccessToken(accessToken);
   await createPlaidApiEvent(itemId, clientMethod, clientMethodArgs, response);
 };
@@ -64,49 +64,95 @@ const noAccessTokenLogger = async (
   );
 };
 
-// All available Plaid client methods as of v4.1.0 mapped to their appropriate logging functions.
-const clientMethodLoggingFns = {
-  createPublicToken: defaultLogger,
-  exchangePublicToken: noAccessTokenLogger,
-  createProcessorToken: defaultLogger,
-  invalidateAccessToken: defaultLogger,
-  updateAccessTokenVersion: defaultLogger,
-  removeItem: defaultLogger,
-  getItem: defaultLogger,
-  updateItemWebhook: defaultLogger,
-  getAccounts: defaultLogger,
-  getBalance: defaultLogger,
-  getAuth: defaultLogger,
-  getIdentity: defaultLogger,
-  getIncome: defaultLogger,
-  getCreditDetails: defaultLogger,
-  getLiabilities: defaultLogger,
-  getHoldings: defaultLogger,
-  getInvestmentTransactions: defaultLogger,
-  getTransactions: defaultLogger,
-  getAllTransactions: defaultLogger,
-  createStripeToken: defaultLogger,
-  getInstitutions: noAccessTokenLogger,
-  getInstitutionById: noAccessTokenLogger,
-  searchInstitutionsByName: noAccessTokenLogger,
-  getCategories: noAccessTokenLogger,
-  createLinkToken: noAccessTokenLogger,
-  // remaining methods are only available in the sandbox environment
-  resetLogin: defaultLogger,
-  sandboxItemFireWebhook: defaultLogger,
-  sandboxPublicTokenCreate: noAccessTokenLogger,
-};
+// All available Plaid client methods as of v9.0.0-beta-release mapped to their appropriate logging functions.
 
+const clientMethodLoggingFns = {
+  accountsBalanceGet: defaultLogger,
+  accountsGet: defaultLogger,
+  assetReportAuditCopyCreate: defaultLogger,
+  assetReportAuditCopyGet: noAccessTokenLogger,
+  assetReportAuditCopyRemove: noAccessTokenLogger,
+  assetReportCreate: noAccessTokenLogger,
+  assetReportFilter: noAccessTokenLogger,
+  assetReportGet: noAccessTokenLogger,
+  assetReportPdfGet: noAccessTokenLogger,
+  assetReportRefresh: noAccessTokenLogger,
+  assetReportRemove: noAccessTokenLogger,
+  authGet: defaultLogger,
+  bankTransferBalanceGet: noAccessTokenLogger,
+  bankTransferCancel: noAccessTokenLogger,
+  bankTransferCreate: defaultLogger,
+  bankTransferEventList: noAccessTokenLogger,
+  bankTransferEventSync: noAccessTokenLogger,
+  bankTransferGet: noAccessTokenLogger,
+  bankTransferList: noAccessTokenLogger,
+  bankTransferMigrateAccount: noAccessTokenLogger,
+  categoriesGet: noAccessTokenLogger,
+  depositSwitchAltCreate: noAccessTokenLogger,
+  depositSwitchCreate: noAccessTokenLogger,
+  depositSwitchGet: noAccessTokenLogger,
+  depositSwitchTokenCreate: noAccessTokenLogger,
+  employersSearch: noAccessTokenLogger,
+  transactionsGet: defaultLogger,
+  identityGet: defaultLogger,
+  institutionsGet: noAccessTokenLogger,
+  institutionsGetById: noAccessTokenLogger,
+  institutionsSearch: noAccessTokenLogger,
+  investmentsHoldingsGet: defaultLogger,
+  investmentsTransactionsGet: defaultLogger,
+  itemAccessTokenInvalidate: defaultLogger,
+  itemCreatePublicToken: defaultLogger,
+  itemGet: defaultLogger,
+  itemPublicTokenExchange: noAccessTokenLogger,
+  itemRemove: defaultLogger,
+  itemWebhookUpdate: defaultLogger,
+  liabilitiesGet: defaultLogger,
+  linkTokenCreate: noAccessTokenLogger,
+  linkTokenGet: noAccessTokenLogger,
+  paymentInitiationPaymentCreate: noAccessTokenLogger,
+  paymentInitiationPaymentGet: noAccessTokenLogger,
+  paymentInitiationPaymentList: noAccessTokenLogger,
+  paymentInitiationRecipientCreate: noAccessTokenLogger,
+  paymentInitiationRecipientGet: noAccessTokenLogger,
+  paymentInitiationRecipientList: noAccessTokenLogger,
+  processorAuthGet: noAccessTokenLogger,
+  processorBalanceGet: noAccessTokenLogger,
+  processorIdentityGet: noAccessTokenLogger,
+  processorStripeBankAccountTokenCreate: defaultLogger,
+  processorTokenCreate: defaultLogger,
+  sandboxBankTransferFireWebhook: noAccessTokenLogger,
+  transactionsGet: defaultLogger,
+  sandboxBankTransferSimulate: noAccessTokenLogger,
+  transactionsGet: defaultLogger,
+  transactionsGet: defaultLogger,
+  sandboxPublicTokenCreate: noAccessTokenLogger,
+  transactionsGet: defaultLogger,
+  transactionsRefresh: defaultLogger,
+  webhookVerificationKeyGet: noAccessTokenLogger,
+  transactionsGet: defaultLogger,
+  // remaining methods are only available in the sandbox environment
+  sandboxItemFireWebhook: defaultLogger,
+  sandboxItemResetLogin: defaultLogger,
+  sandboxItemSetVerificationStatus: defaultLogger,
+  sandboxProcessorTokenCreate: noAccessTokenLogger,
+};
 // Wrapper for the Plaid client. This allows us to easily log data for all Plaid client requests.
 class PlaidClientWrapper {
   constructor() {
     // Initialize the Plaid client.
-    this.client = new plaid.Client({
-      clientID: PLAID_CLIENT_ID,
-      secret: PLAID_SECRET,
-      env: plaid.environments[PLAID_ENV],
-      options: OPTIONS,
+
+    const configuration = new Configuration({
+      basePath: PlaidEnvironments[PLAID_ENV],
+      baseOptions: {
+        headers: {
+          'PLAID-CLIENT-ID': PLAID_CLIENT_ID,
+          'PLAID-SECRET': PLAID_SECRET,
+          'Plaid-Version': '2020-09-14',
+        },
+      },
     });
+
+    this.client = new PlaidApi(configuration);
 
     // Wrap the Plaid client methods to add a logging function.
     forEach(clientMethodLoggingFns, (logFn, method) => {

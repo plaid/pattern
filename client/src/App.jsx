@@ -10,7 +10,7 @@ import { ItemsProvider } from './services/items';
 import { LinkProvider } from './services/link';
 import { TransactionsProvider } from './services/transactions';
 import { UsersProvider } from './services/users';
-import './App.css';
+import './App.scss';
 
 function App() {
   toast.configure({

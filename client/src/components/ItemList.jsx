@@ -56,7 +56,9 @@ const ItemList = ({ match }) => {
 
   return (
     <div>
-      <NavigationLink href="/">BACK TO USERS</NavigationLink>
+      <NavigationLink component={Link} to="/">
+        BACK TO USERS
+      </NavigationLink>
       <Banner />
       <div className="bottom-border-content user-card__detail">
         <UserDetails numOfItems={items.length} user={user} />

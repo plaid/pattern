@@ -40,17 +40,20 @@ const UserCard = ({ user }) => {
     deleteUserById(user.id);
   };
   return (
-    <div className="box user-card__box">
+    <div
+      className="box user-card__box"
+      onMouseEnter={() => {
+        setHovered(true);
+      }}
+      onMouseLeave={() => {
+        setHovered(false);
+      }}
+    >
       <div className=" card user-card">
         <Touchable
-          onMouseEnter={() => {
-            setHovered(true);
-          }}
-          onMouseLeave={() => {
-            setHovered(false);
-          }}
           className="user-card-clickable"
-          href={`/user/${user.id}/items`}
+          component={Link}
+          to={`/user/${user.id}/items`}
         >
           <div className="user-card__detail">
             <UserDetails

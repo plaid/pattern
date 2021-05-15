@@ -33,7 +33,6 @@ function App() {
                   <Switch>
                     <Route exact path="/" component={Landing} />
                     <Route path="/user/:userId/items" component={ItemList} />
-                    <Route path="/user/lindaWoo" component={Landing} />
                   </Switch>
                 </UsersProvider>
               </TransactionsProvider>

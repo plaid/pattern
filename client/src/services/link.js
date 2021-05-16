@@ -60,6 +60,7 @@ export function LinkProvider(props) {
     } else {
       hasRequested.current.byUser[userId] = true;
     }
+
     const linkTokenResponse = await getLinkToken({ itemId, userId });
     const token = await linkTokenResponse.data.link_token;
 
@@ -123,6 +124,9 @@ export function LinkProvider(props) {
     } else {
       dispatch([types.LINK_CONFIGS_CREATED, { id: userId, token, callbacks }]);
     }
+
+    localStorage.setItem('token', token);
+    localStorage.setItem('onSuccess', onSuccess);
   }, []);
 
   const value = useMemo(

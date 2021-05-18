@@ -18,6 +18,10 @@ Plaid uses [webhooks][transactions-webhooks] to notify you whenever there are ne
 
 For webhooks to work, the server must be publicly accessible on the internet. For development purposes, this application uses [ngrok][ngrok-readme] to accomplish that. Therefore, if the server is re-started, any items created in this sample app previous to the current session will have a different webhook address attached to it. As a result, webhooks are only valid during the session in which an item is created; for previously created items, no transactions webhooks will be received, and no webhook will be received from the call to sandboxItemResetLogin.
 
+### Testing OAuth
+
+A redirect_uri parameter is included in the linkTokenCreate and set in this sample app to 'http://localhost:3000/OAuthLink'. This is the page that the user will be redirected to upon completion of the OAuth flow at their OAuth institution. To test the OAuth flow, choose 'Playtypus OAuth Bank' from the list of financial instutions in Plaid Link.
+
 ## Debugging
 
 The node debugging port (9229) is exposed locally on port 9229.

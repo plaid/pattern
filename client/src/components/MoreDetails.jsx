@@ -36,7 +36,7 @@ export function MoreDetails({
     },
     ignoreRef: refToButton,
   });
-  const getLinkConfig = useGenerateLinkConfig(userId, itemId);
+  const getLinkConfig = useGenerateLinkConfig(false, userId, itemId);
 
   useEffect(() => {
     setConfig(getLinkConfig);
@@ -50,7 +50,12 @@ export function MoreDetails({
     </Touchable>
   ) : updateShown && config.token != null ? (
     <div>
-      <LinkButton userId={userId} itemId={itemId} config={config} update={true}>
+      <LinkButton
+        userId={userId}
+        itemId={itemId}
+        config={config}
+        isUpdate={true}
+      >
         Update Login
       </LinkButton>
     </div>

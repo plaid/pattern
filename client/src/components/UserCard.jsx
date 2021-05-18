@@ -20,7 +20,7 @@ const UserCard = ({ user }) => {
 
   const { itemsByUser, getItemsByUser } = useItems();
   const { deleteUserById } = useUsers();
-  const getLinkConfig = useGenerateLinkConfig(user.id, null);
+  const getLinkConfig = useGenerateLinkConfig(false, user.id, null);
 
   // update data store with the user's items
   useEffect(() => {
@@ -63,7 +63,12 @@ const UserCard = ({ user }) => {
 
         <div className="user-card__buttons">
           {config.token != null && (
-            <LinkButton userId={user.id} config={config}>
+            <LinkButton
+              userId={user.id}
+              config={config}
+              itemId={null}
+              userId={user.id}
+            >
               Link an Item
             </LinkButton>
           )}

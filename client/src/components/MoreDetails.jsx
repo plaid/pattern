@@ -36,11 +36,11 @@ export function MoreDetails({
     },
     ignoreRef: refToButton,
   });
-  const getLinkConfig = useGenerateLinkConfig(userId, itemId);
+  const linkConfig = useGenerateLinkConfig(false, userId, itemId);
 
   useEffect(() => {
-    setConfig(getLinkConfig);
-  }, [getLinkConfig, itemId]);
+    setConfig(linkConfig);
+  }, [linkConfig, itemId]);
 
   // show choice to set state to "bad" or initiate link in update mode,
   // depending on whether item is in a good state or bad state
@@ -50,7 +50,12 @@ export function MoreDetails({
     </Touchable>
   ) : updateShown && config.token != null ? (
     <div>
-      <LinkButton userId={userId} itemId={itemId} config={config} update={true}>
+      <LinkButton
+        userId={userId}
+        itemId={itemId} // only case where itemId is not null is in link update mode
+        config={config}
+        isUpdate={true}
+      >
         Update Login
       </LinkButton>
     </div>

@@ -45,85 +45,96 @@ export function LinkProvider(props) {
    * the configuration object see https://plaid.com/docs/#parameter-reference
    */
 
-  const generateLinkConfigs = useCallback(async (userId, itemId) => {
-    // The config creation will be bypassed if configs already exist for
-    // that User or Item.
-    if (
-      !(itemId != null && !hasRequested.current.byItem[itemId]) &&
-      !(userId != null && !hasRequested.current.byUser[userId])
-    ) {
-      return;
-    }
-    const isUpdate = itemId != null;
-    if (isUpdate) {
-      hasRequested.current.byItem[itemId] = true;
-    } else {
-      hasRequested.current.byUser[userId] = true;
-    }
-    const linkTokenResponse = await getLinkToken({ itemId, userId });
-    const token = await linkTokenResponse.data.link_token;
+  const generateLinkConfigs = useCallback(
+    async (isOauth, userId, itemId, oauthToken) => {
+      // The config creation will be bypassed if configs already exist for
+      // that User or Item.
 
-    const onSuccess = async (
-      publicToken,
-      { institution, accounts, link_session_id }
-    ) => {
-      logEvent('onSuccess', { institution, accounts, link_session_id });
-      await postLinkEvent({
-        userId,
-        link_session_id,
-        type: 'success',
-      });
+      if (
+        !(itemId != null && !hasRequested.current.byItem[itemId]) &&
+        !(userId != null && !hasRequested.current.byUser[userId])
+      ) {
+        return;
+      }
+      const isUpdate = itemId != null;
+
       if (isUpdate) {
-        await setItemState(itemId, 'good');
-        getItemById(itemId, true);
+        hasRequested.current.byItem[itemId] = true;
       } else {
-        await exchangeToken(publicToken, institution, accounts, userId);
-        getItemsByUser(userId, true);
+        hasRequested.current.byUser[userId] = true;
+      }
+      let token;
+      if (!isOauth) {
+        const linkTokenResponse = await getLinkToken({ itemId, userId });
+        token = await linkTokenResponse.data.link_token;
+      } else {
+        token = oauthToken;
       }
 
-      if (window.location.pathname === '/') {
+      const onSuccess = async (
+        publicToken,
+        { institution, accounts, link_session_id }
+      ) => {
+        logEvent('onSuccess', { institution, accounts, link_session_id });
+        await postLinkEvent({
+          userId,
+          link_session_id,
+          type: 'success',
+        });
+        if (isUpdate) {
+          await setItemState(itemId, 'good');
+          getItemById(itemId, true);
+        } else {
+          await exchangeToken(publicToken, institution, accounts, userId);
+          getItemsByUser(userId, true);
+        }
+
         window.location.href = `/user/${userId}/items`;
-      }
-    };
+      };
 
-    const onExit = async (
-      error,
-      { institution, link_session_id, request_id }
-    ) => {
-      logEvent('onExit', {
+      const onExit = async (
         error,
-        institution,
-        link_session_id,
-        request_id,
-      });
-      const eventError = error || {};
-      await postLinkEvent({
-        userId,
-        link_session_id,
-        request_id,
-        type: 'exit',
-        ...eventError,
-      });
-      if (error != null && error.error_code === 'INVALID_LINK_TOKEN') {
-        await generateLinkConfigs(userId, itemId);
+        { institution, link_session_id, request_id }
+      ) => {
+        logEvent('onExit', {
+          error,
+          institution,
+          link_session_id,
+          request_id,
+        });
+        const eventError = error || {};
+        await postLinkEvent({
+          userId,
+          link_session_id,
+          request_id,
+          type: 'exit',
+          ...eventError,
+        });
+        if (error != null && error.error_code === 'INVALID_LINK_TOKEN') {
+          await generateLinkConfigs(userId, itemId);
+        }
+      };
+
+      const callbacks = {
+        onSuccess: onSuccess,
+        onExit: onExit,
+        onEvent: logEvent,
+      };
+
+      if (isUpdate) {
+        dispatch([
+          types.LINK_CONFIGS_UPDATE_MODE_CREATED,
+          { id: itemId, token, callbacks },
+        ]);
+      } else {
+        dispatch([
+          types.LINK_CONFIGS_CREATED,
+          { id: userId, token, callbacks },
+        ]);
       }
-    };
-
-    const callbacks = {
-      onSuccess: onSuccess,
-      onExit: onExit,
-      onEvent: logEvent,
-    };
-
-    if (isUpdate) {
-      dispatch([
-        types.LINK_CONFIGS_UPDATE_MODE_CREATED,
-        { id: itemId, token, callbacks },
-      ]);
-    } else {
-      dispatch([types.LINK_CONFIGS_CREATED, { id: userId, token, callbacks }]);
-    }
-  }, []);
+    },
+    []
+  );
 
   const value = useMemo(
     () => ({

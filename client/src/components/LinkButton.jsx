@@ -54,6 +54,8 @@ export default function LinkButton({
       {isOauth ? (
         <></>
       ) : isUpdate ? (
+        // case where link is launched in update mode from dropdown menu in the
+        // item card after item is set to "bad state"
         <Touchable
           className="menuOption"
           disabled={!ready}

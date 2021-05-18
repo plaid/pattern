@@ -18,7 +18,7 @@ const ItemList = ({ match }) => {
   const { itemsByUser, getItemsByUser } = useItems();
   const { getAccountsByUser } = useAccounts();
   const userId = Number(match.params.userId);
-  const getLinkConfig = useGenerateLinkConfig(false, userId, null, false);
+  const getLinkConfig = useGenerateLinkConfig(false, userId, null);
 
   // update data store with user
   useEffect(() => {
@@ -81,12 +81,7 @@ const ItemList = ({ match }) => {
           )}
         </div>
         {config.token != null && (
-          <LinkButton
-            isOauth={false}
-            config={config}
-            userId={userId}
-            itemId={null}
-          >
+          <LinkButton config={config} userId={userId} itemId={null}>
             Add Another Item
           </LinkButton>
         )}

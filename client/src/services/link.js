@@ -57,7 +57,7 @@ export function LinkProvider(props) {
         return;
       }
       const isUpdate = itemId != null;
-      console.log(isUpdate);
+
       if (isUpdate) {
         hasRequested.current.byItem[itemId] = true;
       } else {
@@ -67,7 +67,6 @@ export function LinkProvider(props) {
       if (!isOauth) {
         const linkTokenResponse = await getLinkToken({ itemId, userId });
         token = await linkTokenResponse.data.link_token;
-        localStorage.setItem('token', token);
       } else {
         token = oauthToken;
       }
@@ -97,7 +96,6 @@ export function LinkProvider(props) {
         error,
         { institution, link_session_id, request_id }
       ) => {
-        console.log('ERROR!!!');
         logEvent('onExit', {
           error,
           institution,

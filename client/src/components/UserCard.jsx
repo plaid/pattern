@@ -63,12 +63,7 @@ const UserCard = ({ user }) => {
 
         <div className="user-card__buttons">
           {config.token != null && (
-            <LinkButton
-              userId={user.id}
-              config={config}
-              itemId={null}
-              userId={user.id}
-            >
+            <LinkButton userId={user.id} config={config} itemId={null}>
               Link an Item
             </LinkButton>
           )}

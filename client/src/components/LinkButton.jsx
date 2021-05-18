@@ -8,8 +8,8 @@ LinkButton.propTypes = {
   config: propTypes.object,
   isUpdate: propTypes.bool,
   isOauth: propTypes.bool,
-  userId: propTypes.string,
-  itemId: propTypes.string,
+  userId: propTypes.number,
+  itemId: propTypes.number || null,
 };
 
 LinkButton.defaultProps = {
@@ -28,7 +28,7 @@ export default function LinkButton({
   userId,
   itemId,
 }) {
-  // add additional receivedRedirectUri config when re-launching link in Oauth.
+  // add additional receivedRedirectUri config when re-launching Link in Oauth.
   if (isOauth) {
     config.receivedRedirectUri = window.location.href;
   }

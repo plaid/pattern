@@ -13,14 +13,14 @@ useGenerateLinkConfig.defaultProps = {
   itemId: null,
 };
 
-export default function useGenerateLinkConfig(oauth, userId, itemId) {
+export default function useGenerateLinkConfig(isOauth, userId, itemId, token) {
   const [config, setConfig] = useState({ token: null, onSucces: null });
   const { generateLinkConfigs, linkConfigs } = useLink();
 
   // get link configs from link context
   useEffect(() => {
-    generateLinkConfigs(oauth, userId, itemId);
-  }, [generateLinkConfigs, userId, itemId]);
+    generateLinkConfigs(isOauth, userId, itemId, token);
+  }, [generateLinkConfigs, userId, itemId, token]);
 
   // set linkToken and callbacks from configs from link context
   useEffect(() => {

@@ -33,7 +33,7 @@ function App() {
                   <Switch>
                     <Route exact path="/" component={Landing} />
                     <Route path="/user/:userId/items" component={ItemList} />
-                    <Route path="/OAuthLink" component={OAuthLink} />
+                    <Route path="/oauth-link" component={OAuthLink} />
                   </Switch>
                 </UsersProvider>
               </TransactionsProvider>

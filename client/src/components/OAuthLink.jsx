@@ -11,11 +11,11 @@ const OAuthLink = () => {
     localStorage.getItem('oauthConfig')
   );
 
-  const getLinkConfig = useGenerateLinkConfig(true, userId, itemId, token);
+  const linkConfig = useGenerateLinkConfig(true, userId, itemId, token);
 
   useEffect(() => {
-    setConfig(getLinkConfig);
-  }, [getLinkConfig, userId, itemId, token]);
+    setConfig(linkConfig);
+  }, [linkConfig, userId, itemId, token]);
 
   return (
     <>

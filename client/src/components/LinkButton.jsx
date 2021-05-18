@@ -35,7 +35,7 @@ export default function LinkButton({
   const { open, ready } = usePlaidLink(config);
 
   useEffect(() => {
-    // initiallizes Link automatically if it is OAuth
+    // initiallizes Link automatically if it is handling an OAuth reidrect
     if (isOauth && ready) {
       open();
     }

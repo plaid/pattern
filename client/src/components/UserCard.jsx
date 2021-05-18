@@ -20,7 +20,7 @@ const UserCard = ({ user }) => {
 
   const { itemsByUser, getItemsByUser } = useItems();
   const { deleteUserById } = useUsers();
-  const getLinkConfig = useGenerateLinkConfig(false, user.id, null);
+  const linkConfig = useGenerateLinkConfig(false, user.id, null);
 
   // update data store with the user's items
   useEffect(() => {
@@ -33,8 +33,8 @@ const UserCard = ({ user }) => {
   }, [itemsByUser, user.id]);
 
   useEffect(() => {
-    setConfig(getLinkConfig);
-  }, [getLinkConfig, user.id]);
+    setConfig(linkConfig);
+  }, [linkConfig, user.id]);
 
   const handleDeleteUser = () => {
     deleteUserById(user.id);

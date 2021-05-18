@@ -28,20 +28,21 @@ export default function LinkButton({
   userId,
   itemId,
 }) {
+  // add additional receivedRedirectUri config when re-launching link in Oauth.
   if (isOauth) {
     config.receivedRedirectUri = window.location.href;
   }
   const { open, ready } = usePlaidLink(config);
 
   useEffect(() => {
-    // initiallizes link automatically if it is OAuth
+    // initiallizes Link automatically if it is OAuth
     if (isOauth && ready) {
       open();
     }
   }, [ready, open]);
 
   const handleClick = () => {
-    // set link token, userId and itemId in local storage for use by Oauth
+    // set link token, userId and itemId in local storage for use if necessary by Oauth
     localStorage.setItem(
       'oauthConfig',
       JSON.stringify({ userId: userId, itemId: itemId, token: config.token })
@@ -54,7 +55,7 @@ export default function LinkButton({
       {isOauth ? (
         <></>
       ) : isUpdate ? (
-        // case where link is launched in update mode from dropdown menu in the
+        // case where Link is launched in update mode from dropdown menu in the
         // item card after item is set to "bad state"
         <Touchable
           className="menuOption"
@@ -66,6 +67,7 @@ export default function LinkButton({
           {children}
         </Touchable>
       ) : (
+        // regular case for initializing Link from user card or from user item list
         <Button
           centered
           inline

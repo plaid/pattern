@@ -52,7 +52,7 @@ export function MoreDetails({
     <div>
       <LinkButton
         userId={userId}
-        itemId={itemId}
+        itemId={itemId} // only case where itemId is not null is in link update mode
         config={config}
         isUpdate={true}
       >

@@ -6,7 +6,6 @@ import React, {
   useCallback,
 } from 'react';
 import { toast } from 'react-toastify';
-
 import { login as apiLogin } from './api';
 
 const CurrentUserContext = createContext();

@@ -44,7 +44,7 @@ const UserList = () => {
                 </div>
               ))}
             </div>
-          )}{' '}
+          )}
           {!showAllUsers && <UserCard removeButton={false} user={user} />}
         </>
       )}

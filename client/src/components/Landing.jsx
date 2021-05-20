@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
+import Button from 'plaid-threads/Button';
 
 import { useUsers, useCurrentUser } from '../services';
 import Login from './Login';
 import Banner from './Banner';
 import UserList from './UserList';
 import AddUserForm from './AddUserForm';
-import Button from 'plaid-threads/Button';
 
 import { useBoolean } from '../hooks';
 
@@ -14,7 +14,6 @@ const PLAID_ENV = process.env.REACT_APP_PLAID_ENV;
 export default function Landing({}) {
   const { getUsers, usersById } = useUsers();
   const { userState, setCurrentUser } = useCurrentUser();
-  const currentUser = userState.currentUser;
   const [isAdding, showForm, hideForm, toggleForm] = useBoolean(false);
 
   useEffect(() => {

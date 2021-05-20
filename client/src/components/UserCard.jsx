@@ -5,9 +5,8 @@ import Button from 'plaid-threads/Button';
 import Touchable from 'plaid-threads/Touchable';
 
 import { UserDetails, LinkButton } from '.';
-import { useItems, useUsers, useCurrentUser } from '../services';
+import { useItems, useUsers } from '../services';
 import { useGenerateLinkConfig } from '../hooks';
-import { pluralize } from '../util';
 
 UserCard.propTypes = {
   user: PropTypes.object.isRequired,

@@ -14,6 +14,8 @@ const UserList = () => {
     <>
       {user != null && user.username != null && (
         <>
+          {/* this will show logged-in user only in final version */}
+          {/* these buttons will be removed from final version; just makes it easier for me for development purposes */}
           <div className="usersViewBtns">
             <Button
               centered

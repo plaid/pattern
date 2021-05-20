@@ -104,8 +104,7 @@ Content at the top of the view
   line-height: 4 * $unit;
   margin-bottom: 0;
 }
-.popUp {
-}
+
 /*
 
 Landing overview
@@ -137,7 +136,7 @@ Modal
 
 .loginInput {
   width: 75%;
-  margin: 100px auto 0;
+  margin: -5 * $unit 0 3 * $unit 3 * $unit;
 }
 
 input::placeholder {
@@ -145,8 +144,10 @@ input::placeholder {
 }
 
 .loginSubmitBtn {
+  position: relative;
   width: 25%;
-  margin: auto;
+  left: 70%;
+  bottom: 5%;
 }
 
 /*

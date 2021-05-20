@@ -26,7 +26,6 @@ export default function UserCard({ user, removeButton }) {
 
   const { itemsByUser, getItemsByUser } = useItems();
   const { deleteUserById } = useUsers();
-  const { removeCurrentUser } = useCurrentUser();
   const linkConfig = useGenerateLinkConfig(false, user.id, null);
 
   // update data store with the user's items
@@ -45,7 +44,6 @@ export default function UserCard({ user, removeButton }) {
 
   const handleDeleteUser = () => {
     deleteUserById(user.id);
-    removeCurrentUser(user.id);
   };
   return (
     <div

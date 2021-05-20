@@ -25,7 +25,11 @@ const Login = () => {
       </Button>
       <Modal isOpen={show} onRequestClose={() => setShow(false)}>
         <>
-          <div className="loginHeader">User Login</div>
+          <ModalBody
+            onClickCancel={() => setShow(false)}
+            header="User Login"
+            isLoading={false}
+          />
           <div className="loginInput">
             {' '}
             <TextInput
@@ -44,8 +48,6 @@ const Login = () => {
           >
             Submit
           </Button>
-
-          <ModalBody onClickCancel={() => setShow(false)} isLoading={false} />
         </>
       </Modal>
     </div>

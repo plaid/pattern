@@ -3,7 +3,6 @@
  */
 
 const express = require('express');
-const Boom = require('@hapi/boom');
 const { retrieveUserByUsername } = require('../db/queries');
 const { asyncWrapper } = require('../middleware');
 const { sanitizeUsers } = require('../util');
@@ -21,9 +20,7 @@ const plaid = require('../plaid');
 router.post(
   '/',
   asyncWrapper(async (req, res) => {
-    console.log("i'm inside the post");
     const { username } = req.body;
-
     const user = await retrieveUserByUsername(username);
     if (user != null) {
       res.json(sanitizeUsers(user));

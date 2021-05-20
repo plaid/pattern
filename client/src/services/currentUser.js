@@ -18,7 +18,6 @@ const types = {
   SUCCESSFUL_GET: 0,
   FAILED_GET: 1,
   ADD_USER: 2,
-  REMOVE_CURRENT_USER: 3,
 };
 
 /**
@@ -61,14 +60,8 @@ export function CurrentUserProvider(props) {
     }
   }, []);
 
-  const newUser = useCallback(async username => {
+  const setNewUser = useCallback(async username => {
     dispatch([types.ADD_USER, username]);
-  }, []);
-
-  const removeCurrentUser = useCallback(async userId => {
-    if (userState.currentUser.id === userId) {
-      dispatch([types.REMOVE_CURRENT_USER]);
-    }
   }, []);
 
   /**
@@ -80,10 +73,9 @@ export function CurrentUserProvider(props) {
       userState,
       login,
       setCurrentUser,
-      newUser,
-      removeCurrentUser,
+      setNewUser,
     };
-  }, [userState, login, setCurrentUser, removeCurrentUser, newUser]);
+  }, [userState, login, setCurrentUser, setNewUser]);
 
   return <CurrentUserContext.Provider value={value} {...props} />;
 }
@@ -108,12 +100,6 @@ function reducer(state, [type, payload]) {
         ...state,
         newUser: payload,
       };
-    case types.REMOVE_CURRENT_USER:
-      return {
-        ...state,
-        currentUser: {},
-      };
-
     default:
       console.warn('unknown action: ', { type, payload });
       return state;

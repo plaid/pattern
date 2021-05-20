@@ -1,34 +1,25 @@
 import React from 'react';
-import Button from 'plaid-threads/Button';
 
-import { useBoolean } from '../hooks';
-import { useUsers } from '../services';
-import { pluralize } from '../util';
+import { useUsers, useCurrentUser } from '../services';
 import UserCard from './UserCard';
-import AddUserForm from './AddUserForm';
 
 const UserList = () => {
   const { allUsers } = useUsers();
-  const [isAdding, showForm, hideForm, toggleForm] = useBoolean(false); // eslint-disable-line no-unused-vars
+  const { userState } = useCurrentUser();
+  const user = userState.currentUser;
 
   return (
-    <div>
-      <div className="header">
-        <h2 className="user-list-heading">
-          {`${allUsers.length} ${pluralize('User', allUsers.length)}`}
-        </h2>
-        <Button onClick={toggleForm} centered inline>
-          Add a New User
-        </Button>
-      </div>
-      {/* @TODO handle prevention of duplicate username */}
-      {isAdding && <AddUserForm hideForm={hideForm} />}
-      {allUsers.map(user => (
-        <div key={user.id}>
-          <UserCard user={user} />
+    <>
+      {user != null && user.username != null && (
+        <div>
+          {allUsers.map(user => (
+            <div key={user.id}>
+              <UserCard user={user} />
+            </div>
+          ))}
         </div>
-      ))}
-    </div>
+      )}
+    </>
   );
 };
 

@@ -1,13 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Button from 'plaid-threads/Button';
 import TextInput from 'plaid-threads/TextInput';
 
-import { useUsers } from '../services';
+import { useUsers, useCurrentUser } from '../services';
 
 const AddUserForm = ({ hideForm }) => {
   const [username, setUsername] = useState('');
 
-  const { addNewUser } = useUsers();
+  const { addNewUser, getUsers, usersById } = useUsers();
+  const { userState, getUserByName, setCurrentUser } = useCurrentUser();
 
   function handleSubmit(e) {
     e.preventDefault();
@@ -15,14 +16,21 @@ const AddUserForm = ({ hideForm }) => {
     hideForm();
   }
 
+  useEffect(() => {
+    getUsers();
+  }, [addNewUser]);
+  useEffect(() => {
+    console.log(usersById);
+  }, [addNewUser]);
+
   return (
-    <div className="box">
+    <div className="box addUserForm">
       <form onSubmit={handleSubmit}>
         <div className="card">
           <div className="add-user__column-1">
             <h3 className="heading add-user__heading">Add a new user</h3>
             <p className="value add-user__value">
-              Enter a name in the input field for your new user.
+              Enter your name in the input field.
             </p>
           </div>
           <div className="add-user__column-2">

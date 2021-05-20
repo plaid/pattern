@@ -3,13 +3,21 @@ import { Route, Switch, withRouter } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.min.css';
 
-import { ItemList, Landing, Sockets, OAuthLink } from './components';
+import {
+  ItemList,
+  Landing,
+  Sockets,
+  OAuthLink,
+  PopUpManager,
+} from './components';
 import { AccountsProvider } from './services/accounts';
 import { InstitutionsProvider } from './services/institutions';
 import { ItemsProvider } from './services/items';
 import { LinkProvider } from './services/link';
 import { TransactionsProvider } from './services/transactions';
 import { UsersProvider } from './services/users';
+import { CurrentUserProvider } from './services/currentUser';
+
 import './App.scss';
 
 function App() {
@@ -29,12 +37,15 @@ function App() {
             <AccountsProvider>
               <TransactionsProvider>
                 <UsersProvider>
-                  <Sockets />
-                  <Switch>
-                    <Route exact path="/" component={Landing} />
-                    <Route path="/user/:userId/items" component={ItemList} />
-                    <Route path="/oauth-link" component={OAuthLink} />
-                  </Switch>
+                  <CurrentUserProvider>
+                    <PopUpManager />
+                    <Sockets />
+                    <Switch>
+                      <Route exact path="/" component={Landing} />
+                      <Route path="/user/:userId/items" component={ItemList} />
+                      <Route path="/oauth-link" component={OAuthLink} />
+                    </Switch>
+                  </CurrentUserProvider>
                 </UsersProvider>
               </TransactionsProvider>
             </AccountsProvider>

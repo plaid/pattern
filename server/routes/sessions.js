@@ -1,0 +1,36 @@
+/**
+ * @file Defines all routes for the Users route.
+ */
+
+const express = require('express');
+const Boom = require('@hapi/boom');
+const { retrieveUserByUsername } = require('../db/queries');
+const { asyncWrapper } = require('../middleware');
+const { sanitizeUsers } = require('../util');
+
+const router = express.Router();
+
+const plaid = require('../plaid');
+
+/**
+ * Retrieves user information for a single user.
+ *
+ * @param {string} username the name of the user.
+ * @returns {Object[]} an array containing a single user.
+ */
+router.post(
+  '/',
+  asyncWrapper(async (req, res) => {
+    console.log("i'm inside the post");
+    const { username } = req.body;
+
+    const user = await retrieveUserByUsername(username);
+    if (user != null) {
+      res.json(sanitizeUsers(user));
+    } else {
+      res.json(null);
+    }
+  })
+);
+
+module.exports = router;

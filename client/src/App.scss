@@ -104,7 +104,8 @@ Content at the top of the view
   line-height: 4 * $unit;
   margin-bottom: 0;
 }
-
+.popUp {
+}
 /*
 
 Landing overview
@@ -119,6 +120,32 @@ Landing overview
 .landing__value {
   overflow-x: hidden;
   padding-right: 1rem;
+}
+
+.loginBtns {
+  display: flex;
+  width: 30%;
+  justify-content: space-around;
+}
+
+/*
+
+Modal
+
+*/
+
+.loginInput {
+  width: 75%;
+  margin: 100px auto 0;
+}
+
+input::placeholder {
+  line-height: 1.5;
+}
+
+.loginSubmitBtn {
+  width: 25%;
+  margin: auto;
 }
 
 /*
@@ -238,6 +265,10 @@ Account row
 Add User Form
 
 */
+
+.addUserForm {
+  margin-top: 3 * $unit;
+}
 
 .add-user__column-1 {
   width: 30%;

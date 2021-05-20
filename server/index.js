@@ -11,6 +11,7 @@ const { errorHandler } = require('./middleware');
 
 const {
   usersRouter,
+  sessionsRouter,
   itemsRouter,
   accountsRouter,
   institutionsRouter,
@@ -54,6 +55,7 @@ app.get('/test', (req, res) => {
 });
 
 app.use('/users', usersRouter);
+app.use('/sessions', sessionsRouter);
 app.use('/items', itemsRouter);
 app.use('/accounts', accountsRouter);
 app.use('/institutions', institutionsRouter);

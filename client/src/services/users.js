@@ -118,7 +118,7 @@ export function UsersProvider(props) {
       addNewUser,
       deleteUserById,
     };
-  }, [usersById, getUsers, getUserById, addNewUser, deleteUserById]);
+  }, [usersById, getUsers, getUserById, addNewUser, usersById, deleteUserById]);
 
   return <UsersContext.Provider value={value} {...props} />;
 }
@@ -136,6 +136,14 @@ function reducer(state, [type, payload]) {
       return {
         ...state,
         ...keyBy(payload, 'id'),
+      };
+    case types.SUCCESSFUL_GET_BY_USERNAME:
+      if (!payload.length) {
+        return state;
+      }
+      return {
+        ...state,
+        ...keyBy(payload, 'username'),
       };
     case types.SUCCESSFUL_DELETE:
       return omit(state, [payload]);

@@ -12,11 +12,11 @@ const UserList = () => {
     <>
       {user != null && user.username != null && (
         <div>
-          {allUsers.map(user => (
-            <div key={user.id}>
-              <UserCard user={user} />
-            </div>
-          ))}
+          {/* {allUsers.map(user => ( */}
+          {/* <div key={user.id}> */}
+          <UserCard user={user} />
+          {/* </div> */}
+          {/* ))} */}
         </div>
       )}
     </>

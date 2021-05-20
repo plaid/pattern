@@ -7,20 +7,18 @@ import { useUsers, useCurrentUser } from '../services';
 const AddUserForm = ({ hideForm }) => {
   const [username, setUsername] = useState('');
 
-  const { addNewUser, getUsers, usersById } = useUsers();
-  const { userState, getUserByName, setCurrentUser } = useCurrentUser();
+  const { addNewUser, getUsers, usersById, allUsers } = useUsers();
+  const { userState, getUserByName, newUser } = useCurrentUser();
 
   function handleSubmit(e) {
     e.preventDefault();
     addNewUser(username);
     hideForm();
+    newUser(username);
   }
 
   useEffect(() => {
     getUsers();
-  }, [addNewUser]);
-  useEffect(() => {
-    console.log(usersById);
   }, [addNewUser]);
 
   return (

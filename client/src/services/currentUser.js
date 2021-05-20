@@ -6,6 +6,7 @@ import React, {
   useCallback,
 } from 'react';
 import keyBy from 'lodash/keyBy';
+import { toast } from 'react-toastify';
 
 import { login as apiLogin } from './api';
 
@@ -34,6 +35,7 @@ export function CurrentUserProvider(props) {
       title: '',
       show: false,
     },
+    newUser: null,
   });
 
   /**
@@ -43,8 +45,10 @@ export function CurrentUserProvider(props) {
     try {
       const { data: payload } = await apiLogin(username);
       if (payload != null) {
+        toast.success(`Successful login.  Welcome back ${username}`);
         dispatch([types.SUCCESSFUL_GET, payload]);
       } else {
+        toast.error(`Username ${username} is invalid`);
         dispatch([types.FAILED_GET]);
       }
     } catch (err) {
@@ -65,6 +69,11 @@ export function CurrentUserProvider(props) {
     }
   }, []);
 
+  const newUser = useCallback(async username => {
+    toast.success(`Successful addition.  User ${username} has been created.`);
+    dispatch([types.ADD_USER, username]);
+  }, []);
+
   const dismissBanner = useCallback(async () => {
     dispatch([types.BANNER_DISMISS]);
   }, []);
@@ -79,8 +88,9 @@ export function CurrentUserProvider(props) {
       login,
       dismissBanner,
       setCurrentUser,
+      newUser,
     };
-  }, [userState, login, dismissBanner, setCurrentUser]);
+  }, [userState, login, dismissBanner, setCurrentUser, newUser]);
 
   return <CurrentUserContext.Provider value={value} {...props} />;
 }
@@ -92,32 +102,39 @@ function reducer(state, [type, payload]) {
   switch (type) {
     case types.SUCCESSFUL_GET:
       return {
+        ...state,
         banner: {
           text: 'You have logged in successfully',
           title: 'Success!',
           show: true,
         },
         currentUser: payload[0],
+        newUser: null,
       };
     case types.FAILED_GET:
       return {
+        ...state,
         banner: {
           text: 'Try logging in again',
           title: 'Invalid Username',
           show: true,
           error: true,
         },
-        currentUser: {},
+        newUser: null,
       };
     case types.BANNER_DISMISS:
       return {
         ...state,
         banner: {
-          text: 'Try logging in again',
-          title: 'Invalid Username',
+          ...state.banner,
           show: false,
-          error: true,
         },
+        newUser: null,
+      };
+    case types.ADD_USER:
+      return {
+        ...state,
+        newUser: payload,
       };
 
     default:

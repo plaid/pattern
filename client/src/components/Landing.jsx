@@ -13,7 +13,7 @@ const PLAID_ENV = process.env.REACT_APP_PLAID_ENV;
 
 export default function Landing({}) {
   const { getUsers, usersById } = useUsers();
-  const { userState } = useCurrentUser();
+  const { userState, setCurrentUser } = useCurrentUser();
   const currentUser = userState.currentUser;
   const [isAdding, showForm, hideForm, toggleForm] = useBoolean(false);
 
@@ -24,7 +24,9 @@ export default function Landing({}) {
   }, [getUsers, usersById]);
 
   useEffect(() => {
-    console.log(usersById);
+    if (userState.newUser != null) {
+      setCurrentUser(userState.newUser);
+    }
   }, [getUsers, usersById]);
 
   const buttons =

@@ -14,4 +14,3 @@ export { default as UserDetails } from './UserDetails';
 export { default as UserList } from './UserList';
 export { default as OAuthLink } from './OAuthLink';
 export { default as Login } from './Login';
-export { default as PopUpManager } from './PopUpManager';

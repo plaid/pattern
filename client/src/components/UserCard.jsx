@@ -5,21 +5,28 @@ import Button from 'plaid-threads/Button';
 import Touchable from 'plaid-threads/Touchable';
 
 import { UserDetails, LinkButton } from '.';
-import { useItems, useUsers } from '../services';
+import { useItems, useUsers, useCurrentUser } from '../services';
 import { useGenerateLinkConfig } from '../hooks';
 import { pluralize } from '../util';
 
-const propTypes = {
+UserCard.propTypes = {
   user: PropTypes.object.isRequired,
+  removeButton: PropTypes.bool,
 };
 
-const UserCard = ({ user }) => {
+UserCard.defaultProps = {
+  user: {},
+  removeButton: true,
+};
+
+export default function UserCard({ user, removeButton }) {
   const [numOfItems, setNumOfItems] = useState(0);
   const [config, setConfig] = useState({ token: null, onSucces: null });
   const [hovered, setHovered] = useState(false);
 
   const { itemsByUser, getItemsByUser } = useItems();
   const { deleteUserById } = useUsers();
+  const { removeCurrentUser } = useCurrentUser();
   const linkConfig = useGenerateLinkConfig(false, user.id, null);
 
   // update data store with the user's items
@@ -38,6 +45,7 @@ const UserCard = ({ user }) => {
 
   const handleDeleteUser = () => {
     deleteUserById(user.id);
+    removeCurrentUser(user.id);
   };
   return (
     <div
@@ -70,23 +78,20 @@ const UserCard = ({ user }) => {
               Link an Item
             </LinkButton>
           )}
-
-          <Button
-            className="remove"
-            onClick={handleDeleteUser}
-            small
-            inline
-            centered
-            secondary
-          >
-            Remove user
-          </Button>
+          {removeButton && (
+            <Button
+              className="remove"
+              onClick={handleDeleteUser}
+              small
+              inline
+              centered
+              secondary
+            >
+              Remove user
+            </Button>
+          )}
         </div>
       </div>
     </div>
   );
-};
-
-UserCard.propTypes = propTypes;
-
-export default UserCard;
+}

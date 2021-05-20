@@ -5,7 +5,6 @@ import React, {
   useReducer,
   useCallback,
 } from 'react';
-import keyBy from 'lodash/keyBy';
 import { toast } from 'react-toastify';
 
 import { login as apiLogin } from './api';
@@ -18,10 +17,8 @@ const CurrentUserContext = createContext();
 const types = {
   SUCCESSFUL_GET: 0,
   FAILED_GET: 1,
-  // DELETE_BY_ID: 2,
-  // SUCCESSFUL_DELETE: 3,
-  // FAILED_DELETE: 4,
-  BANNER_DISMISS: 5,
+  ADD_USER: 2,
+  REMOVE_CURRENT_USER: 3,
 };
 
 /**
@@ -30,11 +27,6 @@ const types = {
 export function CurrentUserProvider(props) {
   const [userState, dispatch] = useReducer(reducer, {
     currentUser: {},
-    banner: {
-      text: '',
-      title: '',
-      show: false,
-    },
     newUser: null,
   });
 
@@ -48,7 +40,7 @@ export function CurrentUserProvider(props) {
         toast.success(`Successful login.  Welcome back ${username}`);
         dispatch([types.SUCCESSFUL_GET, payload]);
       } else {
-        toast.error(`Username ${username} is invalid`);
+        toast.error(`Username ${username} is invalid.  Try again. `);
         dispatch([types.FAILED_GET]);
       }
     } catch (err) {
@@ -70,12 +62,13 @@ export function CurrentUserProvider(props) {
   }, []);
 
   const newUser = useCallback(async username => {
-    toast.success(`Successful addition.  User ${username} has been created.`);
     dispatch([types.ADD_USER, username]);
   }, []);
 
-  const dismissBanner = useCallback(async () => {
-    dispatch([types.BANNER_DISMISS]);
+  const removeCurrentUser = useCallback(async userId => {
+    if (userState.currentUser.id === userId) {
+      dispatch([types.REMOVE_CURRENT_USER]);
+    }
   }, []);
 
   /**
@@ -86,11 +79,11 @@ export function CurrentUserProvider(props) {
     return {
       userState,
       login,
-      dismissBanner,
       setCurrentUser,
       newUser,
+      removeCurrentUser,
     };
-  }, [userState, login, dismissBanner, setCurrentUser, newUser]);
+  }, [userState, login, setCurrentUser, removeCurrentUser, newUser]);
 
   return <CurrentUserContext.Provider value={value} {...props} />;
 }
@@ -102,39 +95,23 @@ function reducer(state, [type, payload]) {
   switch (type) {
     case types.SUCCESSFUL_GET:
       return {
-        ...state,
-        banner: {
-          text: 'You have logged in successfully',
-          title: 'Success!',
-          show: true,
-        },
         currentUser: payload[0],
         newUser: null,
       };
     case types.FAILED_GET:
       return {
         ...state,
-        banner: {
-          text: 'Try logging in again',
-          title: 'Invalid Username',
-          show: true,
-          error: true,
-        },
-        newUser: null,
-      };
-    case types.BANNER_DISMISS:
-      return {
-        ...state,
-        banner: {
-          ...state.banner,
-          show: false,
-        },
         newUser: null,
       };
     case types.ADD_USER:
       return {
         ...state,
         newUser: payload,
+      };
+    case types.REMOVE_CURRENT_USER:
+      return {
+        ...state,
+        currentUser: {},
       };
 
     default:

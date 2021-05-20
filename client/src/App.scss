@@ -126,6 +126,7 @@ Landing overview
   display: flex;
   width: 30%;
   justify-content: space-around;
+  margin-bottom: 2 * $unit;
 }
 
 /*
@@ -158,6 +159,12 @@ UserList
   font-weight: normal;
 }
 
+.usersViewBtns {
+  display: flex;
+  justify-content: space-around;
+  width: 40%;
+  margin-bottom: 2 * $unit;
+}
 /*
 
 UserCard

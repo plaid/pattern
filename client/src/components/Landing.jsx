@@ -17,8 +17,6 @@ export default function Landing({}) {
   const currentUser = userState.currentUser;
   const [isAdding, showForm, hideForm, toggleForm] = useBoolean(false);
 
-  // const [user, setUser] = useState();
-
   useEffect(() => {
     getUsers();
   }, [getUsers, usersById]);
@@ -29,17 +27,14 @@ export default function Landing({}) {
     }
   }, [getUsers, usersById]);
 
-  const buttons =
-    currentUser.username == null ? (
-      <div className="loginBtns">
-        <Login />
-        <Button onClick={toggleForm} centered inline>
-          New User
-        </Button>
-      </div>
-    ) : (
-      <></>
-    );
+  const buttons = (
+    <div className="loginBtns">
+      <Login />
+      <Button onClick={toggleForm} centered inline>
+        New User
+      </Button>
+    </div>
+  );
 
   return (
     <div>

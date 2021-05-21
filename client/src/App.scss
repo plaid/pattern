@@ -121,11 +121,13 @@ Landing overview
   padding-right: 1rem;
 }
 
-.loginBtns {
+.btnsContainer {
   display: flex;
-  width: 30%;
-  justify-content: space-around;
   margin-bottom: 2 * $unit;
+}
+
+.btnWithMargin {
+  margin-left: 2 * $unit;
 }
 
 /*
@@ -134,20 +136,8 @@ Modal
 
 */
 
-.loginInput {
-  width: 75%;
-  margin: -5 * $unit 0 3 * $unit 3 * $unit;
-}
-
 input::placeholder {
   line-height: 1.5;
-}
-
-.loginSubmitBtn {
-  position: relative;
-  width: 25%;
-  left: 70%;
-  bottom: 5%;
 }
 
 /*

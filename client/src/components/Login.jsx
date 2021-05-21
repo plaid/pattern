@@ -27,25 +27,17 @@ const Login = () => {
             onClickCancel={() => setShow(false)}
             header="User Login"
             isLoading={false}
+            onClickConfirm={handleSubmit}
+            confirmText="Submit"
+            body={
+              <TextInput
+                id="id-6"
+                placeholder="Enter User Name"
+                value={value}
+                onChange={e => setValue(e.currentTarget.value)}
+              />
+            }
           />
-          <div className="loginInput">
-            {' '}
-            <TextInput
-              id="id-6"
-              placeholder="Enter User Name"
-              value={value}
-              onChange={e => setValue(e.currentTarget.value)}
-            />
-          </div>
-          <Button
-            className="loginSubmitBtn"
-            centered
-            inline
-            small
-            onClick={handleSubmit}
-          >
-            Submit
-          </Button>
         </>
       </Modal>
     </div>

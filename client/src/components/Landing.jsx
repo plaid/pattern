@@ -27,9 +27,9 @@ export default function Landing({}) {
   }, [getUsers, usersById]);
 
   const buttons = (
-    <div className="loginBtns">
+    <div className="btnsContainer">
       <Login />
-      <Button onClick={toggleForm} centered inline>
+      <Button className="btnWithMargin" onClick={toggleForm} centered inline>
         New User
       </Button>
     </div>

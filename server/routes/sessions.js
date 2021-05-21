@@ -9,8 +9,6 @@ const { sanitizeUsers } = require('../util');
 
 const router = express.Router();
 
-const plaid = require('../plaid');
-
 /**
  * Retrieves user information for a single user.
  *

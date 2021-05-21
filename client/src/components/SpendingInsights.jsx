@@ -4,13 +4,21 @@ import PropTypes from 'prop-types';
 import { currencyFilter } from '../util';
 
 SpendingInsights.propTypes = {
-  transactions: PropTypes.array.isRequired,
+  transactions: PropTypes.array,
 };
 
 export default function SpendingInsights({ transactions }) {
+  // grab transactions from most recent month
+  const today = new Date();
+  const oneMonthAgo = new Date().setDate(today.getDate() - 30);
+  const monthlyTransactions = transactions.filter(tx => {
+    const date = new Date(tx.date);
+    return date > oneMonthAgo;
+  });
+
   const categories = {};
 
-  transactions.forEach(tx => {
+  monthlyTransactions.forEach(tx => {
     if (tx.category !== 'Payment')
       if (categories[tx.category] != null) {
         categories[tx.category] += tx.amount;
@@ -22,7 +30,7 @@ export default function SpendingInsights({ transactions }) {
 
   const names = {};
 
-  transactions.forEach(tx => {
+  monthlyTransactions.forEach(tx => {
     if (tx.category !== 'Payment')
       if (names[tx.name] != null) {
         names[tx.name] += tx.amount;
@@ -38,7 +46,7 @@ export default function SpendingInsights({ transactions }) {
   }
 
   sortableNames.sort((a, b) => b[1] - a[1]);
-  sortableNames = [...sortableNames.slice(0, 6)]; // top 6 stores
+  sortableNames = [...sortableNames.slice(0, 6)]; // top 6
 
   console.log(sortableNames);
   const categoryRows = [];
@@ -63,6 +71,7 @@ export default function SpendingInsights({ transactions }) {
 
   return (
     <div className="transactions">
+      Monthly spending summary
       <table className="transactions-table">
         <thead className="transactions-header">
           <tr>

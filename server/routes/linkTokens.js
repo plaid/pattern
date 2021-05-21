@@ -38,7 +38,7 @@ router.post(
         language: 'en',
         webhook: httpTunnel.public_url + '/services/webhook',
         access_token: accessToken,
-        redirect_uri: 'https://localhost:3000/oauth-link',
+        redirect_uri: 'http://localhost:3000/oauth-link',
       };
       const createResponse = await plaid.linkTokenCreate(linkTokenParams);
       res.json(createResponse.data);

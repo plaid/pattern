@@ -26,6 +26,7 @@ const types = {
   // FAILED_GET: 1,
   DELETE_BY_ITEM: 2,
   DELETE_BY_USER: 3,
+  SUCCESSFUL_GET_BY_DATE: 4,
   // SUCCESSFUL_DELETE: 4,
   // FAILED_DELETE: 5,
 };
@@ -82,6 +83,19 @@ export function TransactionsProvider(props) {
   }, []);
 
   /**
+   * @desc Requests all Transactions that belong to an individual User by Date
+   * The api request will be bypassed if the data has already been fetched.
+   * A 'refresh' parameter can force a request for new data even if local state exists.
+   */
+  const getTransactionsByUserByDate = useCallback(async (userId, refresh) => {
+    if (!hasRequested.current.byUser[userId] || refresh) {
+      hasRequested.current.byUser[userId] = true;
+      const { data: payload } = await apiGetTransactionsByUser(userId);
+      dispatch([types.SUCCESSFUL_GET_BY_DATE, payload]);
+    }
+  }, []);
+
+  /**
    * @desc Will Delete all transactions that belong to an individual Item.
    * There is no api request as apiDeleteItemById in items delete all related transactions
    */
@@ -113,6 +127,7 @@ export function TransactionsProvider(props) {
       getTransactionsByAccount,
       getTransactionsByItem,
       getTransactionsByUser,
+      getTransactionsByUserByDate,
       deleteTransactionsByItemId,
       deleteTransactionsByUserId,
     };
@@ -121,6 +136,7 @@ export function TransactionsProvider(props) {
     getTransactionsByAccount,
     getTransactionsByItem,
     getTransactionsByUser,
+    getTransactionsByUserByDate,
     deleteTransactionsByItemId,
     deleteTransactionsByUserId,
   ]);
@@ -141,6 +157,14 @@ function reducer(state, [type, payload]) {
       return {
         ...state,
         ...keyBy(payload, 'id'),
+      };
+    case types.SUCCESSFUL_GET_BY_DATE:
+      if (!payload.length) {
+        return state;
+      }
+      return {
+        ...state,
+        ...payload,
       };
     case types.DELETE_BY_ITEM:
       return omitBy(state, transaction => transaction.item_id === payload);

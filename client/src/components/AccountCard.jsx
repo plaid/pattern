@@ -33,6 +33,7 @@ export default function AccountCard({ account }) {
     setTransactions(transactionsByAccount[id] || []);
   }, [transactionsByAccount, id]);
 
+  console.log('on account card:', transactions);
   return (
     <div>
       <div className="account-data-row">

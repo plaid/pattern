@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import Button from 'plaid-threads/Button';
 import Touchable from 'plaid-threads/Touchable';
 
+import { SpendingInsights } from '.';
 import { UserDetails, LinkButton } from '.';
 import { useItems, useUsers, useTransactions } from '../services';
 import { useGenerateLinkConfig } from '../hooks';
@@ -20,12 +21,12 @@ UserCard.defaultProps = {
 
 export default function UserCard({ user, removeButton }) {
   const [numOfItems, setNumOfItems] = useState(0);
-  const [transactions, setTransactions] = useState(null);
+  const [transactions, setTransactions] = useState([]);
   const [config, setConfig] = useState({ token: null, onSucces: null });
   const [hovered, setHovered] = useState(false);
 
   const { itemsByUser, getItemsByUser } = useItems();
-  const { getTransactionsByUser, transactionsByUser } = useTransactions();
+  const { getTransactionsByUserByDate, transactionsByUser } = useTransactions();
   const { deleteUserById } = useUsers();
   const linkConfig = useGenerateLinkConfig(false, user.id, null);
 
@@ -35,12 +36,12 @@ export default function UserCard({ user, removeButton }) {
   }, [getItemsByUser, user.id]);
 
   useEffect(() => {
-    getTransactionsByUser();
-  }, [getItemsByUser, user.id]);
+    getTransactionsByUserByDate(user.id);
+  }, [getTransactionsByUserByDate, user.id]);
 
   useEffect(() => {
-    setTransactions(transactionsByUser);
-  }, [getItemsByUser, user.id]);
+    setTransactions(transactionsByUser[user.id] || []);
+  }, [transactionsByUser, user.id]);
 
   // update no of items from data store
   useEffect(() => {
@@ -57,50 +58,53 @@ export default function UserCard({ user, removeButton }) {
 
   console.log('Transactions by user', transactions);
   return (
-    <div
-      className="box user-card__box"
-      onMouseEnter={() => {
-        setHovered(true);
-      }}
-      onMouseLeave={() => {
-        setHovered(false);
-      }}
-    >
-      <div className=" card user-card">
-        <Touchable
-          className="user-card-clickable"
-          component={Link}
-          to={`/user/${user.id}/items`}
-        >
-          <div className="user-card__detail">
-            <UserDetails
-              hovered={hovered}
-              user={user}
-              numOfItems={numOfItems}
-            />
-          </div>
-        </Touchable>
+    <>
+      <div
+        className="box user-card__box"
+        onMouseEnter={() => {
+          setHovered(true);
+        }}
+        onMouseLeave={() => {
+          setHovered(false);
+        }}
+      >
+        <div className=" card user-card">
+          <Touchable
+            className="user-card-clickable"
+            component={Link}
+            to={`/user/${user.id}/items`}
+          >
+            <div className="user-card__detail">
+              <UserDetails
+                hovered={hovered}
+                user={user}
+                numOfItems={numOfItems}
+              />
+            </div>
+          </Touchable>
 
-        <div className="user-card__buttons">
-          {config.token != null && (
-            <LinkButton userId={user.id} config={config} itemId={null}>
-              Link an Item
-            </LinkButton>
-          )}
-          {removeButton && (
-            <Button
-              className="remove"
-              onClick={handleDeleteUser}
-              small
-              inline
-              centered
-              secondary
-            >
-              Remove user
-            </Button>
-          )}
+          <div className="user-card__buttons">
+            {config.token != null && (
+              <LinkButton userId={user.id} config={config} itemId={null}>
+                Link an Item
+              </LinkButton>
+            )}
+            {removeButton && (
+              <Button
+                className="remove"
+                onClick={handleDeleteUser}
+                small
+                inline
+                centered
+                secondary
+              >
+                Remove user
+              </Button>
+            )}
+          </div>
         </div>
       </div>
-    </div>
+      <SpendingInsights transactions={transactions} />
+    </>
   );
 }

@@ -26,19 +26,15 @@ export default function Landing({}) {
     }
   }, [getUsers, usersById]);
 
-  const buttons = (
-    <div className="loginBtns">
-      <Login />
-      <Button onClick={toggleForm} centered inline>
-        New User
-      </Button>
-    </div>
-  );
-
   return (
     <div>
       <Banner initialSubheading />
-      {buttons}
+      <div className="btnContainer">
+        <Login />
+        <Button className="btnWithMargin" onClick={toggleForm} centered inline>
+          New User
+        </Button>
+      </div>
       {isAdding && <AddUserForm hideForm={hideForm} />}
 
       <UserList />

@@ -121,11 +121,15 @@ Landing overview
   padding-right: 1rem;
 }
 
-.loginBtns {
+.btnContainer {
   display: flex;
-  width: 30%;
-  justify-content: space-around;
+  // width: 30%;
+  // justify-content: space-around;
   margin-bottom: 2 * $unit;
+}
+
+.btnWithMargin {
+  margin-left: 2 * $unit;
 }
 
 /*

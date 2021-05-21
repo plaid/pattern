@@ -5,7 +5,7 @@ import Button from 'plaid-threads/Button';
 import Touchable from 'plaid-threads/Touchable';
 
 import { UserDetails, LinkButton } from '.';
-import { useItems, useUsers } from '../services';
+import { useItems, useUsers, useTransactions } from '../services';
 import { useGenerateLinkConfig } from '../hooks';
 
 UserCard.propTypes = {
@@ -20,16 +20,26 @@ UserCard.defaultProps = {
 
 export default function UserCard({ user, removeButton }) {
   const [numOfItems, setNumOfItems] = useState(0);
+  const [transactions, setTransactions] = useState(null);
   const [config, setConfig] = useState({ token: null, onSucces: null });
   const [hovered, setHovered] = useState(false);
 
   const { itemsByUser, getItemsByUser } = useItems();
+  const { getTransactionsByUser, transactionsByUser } = useTransactions();
   const { deleteUserById } = useUsers();
   const linkConfig = useGenerateLinkConfig(false, user.id, null);
 
   // update data store with the user's items
   useEffect(() => {
     getItemsByUser(user.id);
+  }, [getItemsByUser, user.id]);
+
+  useEffect(() => {
+    getTransactionsByUser();
+  }, [getItemsByUser, user.id]);
+
+  useEffect(() => {
+    setTransactions(transactionsByUser);
   }, [getItemsByUser, user.id]);
 
   // update no of items from data store
@@ -44,6 +54,8 @@ export default function UserCard({ user, removeButton }) {
   const handleDeleteUser = () => {
     deleteUserById(user.id);
   };
+
+  console.log('Transactions by user', transactions);
   return (
     <div
       className="box user-card__box"

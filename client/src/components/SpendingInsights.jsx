@@ -1,0 +1,86 @@
+import React from 'react';
+import PropTypes from 'prop-types';
+
+import { currencyFilter } from '../util';
+
+SpendingInsights.propTypes = {
+  transactions: PropTypes.array.isRequired,
+};
+
+export default function SpendingInsights({ transactions }) {
+  const categories = {};
+
+  transactions.forEach(tx => {
+    if (tx.category !== 'Payment')
+      if (categories[tx.category] != null) {
+        categories[tx.category] += tx.amount;
+      } else {
+        categories[tx.category] = tx.amount;
+      }
+  });
+  console.log(categories);
+
+  const names = {};
+
+  transactions.forEach(tx => {
+    if (tx.category !== 'Payment')
+      if (names[tx.name] != null) {
+        names[tx.name] += tx.amount;
+      } else {
+        names[tx.name] = tx.amount;
+      }
+  });
+
+  var sortableNames = [];
+
+  for (const name in names) {
+    sortableNames.push([name, names[name]]);
+  }
+
+  sortableNames.sort((a, b) => b[1] - a[1]);
+  sortableNames = [...sortableNames.slice(0, 6)]; // top 6 stores
+
+  console.log(sortableNames);
+  const categoryRows = [];
+  for (const category in categories) {
+    categoryRows.push(
+      <tr className="transactions-data-rows">
+        <td className="table-category">{category}</td>
+        <td className="table-amount">{currencyFilter(categories[category])}</td>
+      </tr>
+    );
+  }
+
+  const vendorRows = sortableNames.map(vendor => {
+    if (vendor[1] > 0)
+      return (
+        <tr className="transactions-data-rows">
+          <td className="table-category">{vendor[0]}</td>
+          <td className="table-amount">{currencyFilter(vendor[1])}</td>
+        </tr>
+      );
+  });
+
+  return (
+    <div className="transactions">
+      <table className="transactions-table">
+        <thead className="transactions-header">
+          <tr>
+            <th className="table-category">Category</th>
+            <th className="table-amount">Amount</th>
+          </tr>
+        </thead>
+        <tbody className="transactions-body">{categoryRows}</tbody>
+      </table>
+      <table className="transactions-table">
+        <thead className="transactions-header">
+          <tr>
+            <th className="table-category">Vendor</th>
+            <th className="table-amount">Amount</th>
+          </tr>
+        </thead>
+        <tbody className="transactions-body">{vendorRows}</tbody>
+      </table>
+    </div>
+  );
+}

@@ -1,11 +1,10 @@
 /**
- * @file Defines the unhandled route handler.
+ * @file Defines the route for link token creation.
  */
 
 const { asyncWrapper } = require('../middleware');
 
 const express = require('express');
-const util = require('util');
 const plaid = require('../plaid');
 const fetch = require('node-fetch');
 const { retrieveItemById } = require('../db/queries');
@@ -18,8 +17,9 @@ router.post(
     try {
       const { userId, itemId } = req.body;
       let accessToken = null;
-      let products = ['transactions'];
+      let products = ['transactions']; // must include transactions in order to receive transactions webhooks
       if (itemId != null) {
+        // for the link update mode, include access token and an empty products array
         const itemIdResponse = await retrieveItemById(itemId);
         accessToken = itemIdResponse.plaid_access_token;
         products = [];
@@ -38,7 +38,7 @@ router.post(
         language: 'en',
         webhook: httpTunnel.public_url + '/services/webhook',
         access_token: accessToken,
-        redirect_uri: 'http://localhost:3000/oauth-link',
+        redirect_uri: 'https://localhost:3000/oauth-link',
       };
       const createResponse = await plaid.linkTokenCreate(linkTokenParams);
       res.json(createResponse.data);

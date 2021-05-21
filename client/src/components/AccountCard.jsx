@@ -7,6 +7,7 @@ import Button from 'plaid-threads/Button';
 import { useTransactions } from '../services';
 import { currencyFilter } from '../util';
 import { TransactionsTable } from '.';
+import { SpendingInsights } from '.';
 
 AccountCard.propTypes = {
   account: PropTypes.object.isRequired,
@@ -49,6 +50,7 @@ export default function AccountCard({ account }) {
           )}
         </div>
       </div>
+      <SpendingInsights transactions={transactions} />
       {transactionsShown && <TransactionsTable transactions={transactions} />}
     </div>
   );

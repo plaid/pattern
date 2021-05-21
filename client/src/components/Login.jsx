@@ -27,9 +27,10 @@ const Login = () => {
             onClickCancel={() => setShow(false)}
             header="User Login"
             isLoading={false}
+            onClickConfirm={handleSubmit}
+            // confirmText="Submit"
           />
           <div className="loginInput">
-            {' '}
             <TextInput
               id="id-6"
               placeholder="Enter User Name"

@@ -16,7 +16,7 @@ const UserList = () => {
         <>
           {/* this will show logged-in user only in final version */}
           {/* these buttons will be removed from final version; just makes it easier for me for development purposes */}
-          <div className="usersViewBtns">
+          <div className="btnContainer">
             <Button
               centered
               small
@@ -27,6 +27,7 @@ const UserList = () => {
               show all users
             </Button>
             <Button
+              className="btnWithMargin"
               small
               inline
               centered

@@ -16,6 +16,8 @@ const api = axios.create({
 });
 
 export default api;
+// currentUser
+export const login = username => api.post('/sessions', { username });
 
 // users
 export const getUsers = () => api.get('/users');

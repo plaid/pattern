@@ -57,7 +57,7 @@ const ItemList = ({ match }) => {
   return (
     <div>
       <NavigationLink component={Link} to="/">
-        BACK TO USERS
+        BACK TO LOGIN
       </NavigationLink>
       <Banner />
       <div className="bottom-border-content user-card__detail">

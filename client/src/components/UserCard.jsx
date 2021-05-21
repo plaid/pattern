@@ -7,13 +7,18 @@ import Touchable from 'plaid-threads/Touchable';
 import { UserDetails, LinkButton } from '.';
 import { useItems, useUsers } from '../services';
 import { useGenerateLinkConfig } from '../hooks';
-import { pluralize } from '../util';
 
-const propTypes = {
+UserCard.propTypes = {
   user: PropTypes.object.isRequired,
+  removeButton: PropTypes.bool,
 };
 
-const UserCard = ({ user }) => {
+UserCard.defaultProps = {
+  user: {},
+  removeButton: true,
+};
+
+export default function UserCard({ user, removeButton }) {
   const [numOfItems, setNumOfItems] = useState(0);
   const [config, setConfig] = useState({ token: null, onSucces: null });
   const [hovered, setHovered] = useState(false);
@@ -70,23 +75,20 @@ const UserCard = ({ user }) => {
               Link an Item
             </LinkButton>
           )}
-
-          <Button
-            className="remove"
-            onClick={handleDeleteUser}
-            small
-            inline
-            centered
-            secondary
-          >
-            Remove user
-          </Button>
+          {removeButton && (
+            <Button
+              className="remove"
+              onClick={handleDeleteUser}
+              small
+              inline
+              centered
+              secondary
+            >
+              Remove user
+            </Button>
+          )}
         </div>
       </div>
     </div>
   );
-};
-
-UserCard.propTypes = propTypes;
-
-export default UserCard;
+}

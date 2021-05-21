@@ -3,6 +3,7 @@
  */
 
 const usersRouter = require('./users');
+const sessionsRouter = require('./sessions');
 const itemsRouter = require('./items');
 const accountsRouter = require('./accounts');
 const institutionsRouter = require('./institutions');
@@ -20,4 +21,5 @@ module.exports = {
   linkEventsRouter,
   linkTokensRouter,
   unhandledRouter,
+  sessionsRouter,
 };

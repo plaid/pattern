@@ -42,7 +42,7 @@ export default function AccountCard({ account }) {
           )} • Balance ${currencyFilter(account.current_balance)}`}</div>
         </div>
         <div className="account-data-row__right">
-          {!!transactions.length && (
+          {transactions.length !== 0 && (
             <Button onClick={toggleShowTransactions} centered small inline>
               {transactionsShown ? 'Hide Transactions' : 'View Transactions'}
             </Button>

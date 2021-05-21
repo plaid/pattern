@@ -10,6 +10,8 @@ import { ItemsProvider } from './services/items';
 import { LinkProvider } from './services/link';
 import { TransactionsProvider } from './services/transactions';
 import { UsersProvider } from './services/users';
+import { CurrentUserProvider } from './services/currentUser';
+
 import './App.scss';
 
 function App() {
@@ -29,12 +31,14 @@ function App() {
             <AccountsProvider>
               <TransactionsProvider>
                 <UsersProvider>
-                  <Sockets />
-                  <Switch>
-                    <Route exact path="/" component={Landing} />
-                    <Route path="/user/:userId/items" component={ItemList} />
-                    <Route path="/oauth-link" component={OAuthLink} />
-                  </Switch>
+                  <CurrentUserProvider>
+                    <Sockets />
+                    <Switch>
+                      <Route exact path="/" component={Landing} />
+                      <Route path="/user/:userId/items" component={ItemList} />
+                      <Route path="/oauth-link" component={OAuthLink} />
+                    </Switch>
+                  </CurrentUserProvider>
                 </UsersProvider>
               </TransactionsProvider>
             </AccountsProvider>

@@ -1,34 +1,55 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Button from 'plaid-threads/Button';
 
-import { useBoolean } from '../hooks';
-import { useUsers } from '../services';
-import { pluralize } from '../util';
+import { useUsers, useCurrentUser } from '../services';
 import UserCard from './UserCard';
-import AddUserForm from './AddUserForm';
 
 const UserList = () => {
   const { allUsers } = useUsers();
-  const [isAdding, showForm, hideForm, toggleForm] = useBoolean(false); // eslint-disable-line no-unused-vars
+  const { userState } = useCurrentUser();
+  const user = userState.currentUser;
+  const [showAllUsers, setShowAllUsers] = useState(false);
 
   return (
-    <div>
-      <div className="header">
-        <h2 className="user-list-heading">
-          {`${allUsers.length} ${pluralize('User', allUsers.length)}`}
-        </h2>
-        <Button onClick={toggleForm} centered inline>
-          Add a New User
-        </Button>
-      </div>
-      {/* @TODO handle prevention of duplicate username */}
-      {isAdding && <AddUserForm hideForm={hideForm} />}
-      {allUsers.map(user => (
-        <div key={user.id}>
-          <UserCard user={user} />
-        </div>
-      ))}
-    </div>
+    <>
+      {user != null && user.username != null && (
+        <>
+          {/* this will show logged-in user only in final version */}
+          {/* these buttons will be removed from final version; just makes it easier for me for development purposes */}
+          <div className="btnsContainer">
+            <Button
+              centered
+              small
+              secondary
+              inline
+              onClick={() => setShowAllUsers(true)}
+            >
+              show all users
+            </Button>
+            <Button
+              className="btnWithMargin"
+              small
+              inline
+              centered
+              secondary
+              onClick={() => setShowAllUsers(false)}
+            >
+              show current user only
+            </Button>
+          </div>
+          {showAllUsers && (
+            <div>
+              {allUsers.map(user => (
+                <div key={user.id}>
+                  <UserCard user={user} />
+                </div>
+              ))}
+            </div>
+          )}
+          {!showAllUsers && <UserCard removeButton={false} user={user} />}
+        </>
+      )}
+    </>
   );
 };
 

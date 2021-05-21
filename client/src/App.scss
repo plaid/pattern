@@ -121,6 +121,25 @@ Landing overview
   padding-right: 1rem;
 }
 
+.btnsContainer {
+  display: flex;
+  margin-bottom: 2 * $unit;
+}
+
+.btnWithMargin {
+  margin-left: 2 * $unit;
+}
+
+/*
+
+Modal
+
+*/
+
+input::placeholder {
+  line-height: 1.5;
+}
+
 /*
 
 UserList
@@ -238,6 +257,10 @@ Account row
 Add User Form
 
 */
+
+.addUserForm {
+  margin-top: 3 * $unit;
+}
 
 .add-user__column-1 {
   width: 30%;

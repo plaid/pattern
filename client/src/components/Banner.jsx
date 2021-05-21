@@ -14,7 +14,7 @@ const defaultProps = {
 
 const Banner = ({ initialSubheading }) => {
   const initialText =
-    'This is an example app that outlines an end-to-end integration with Plaid.';
+    'This is an example app that shows a Plaid integration for a Personal Finance Manager Use Case.';
 
   const successText =
     'Success! You can explore account and transaction details for the linked item';

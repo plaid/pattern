@@ -29,10 +29,10 @@ export default function Landing({}) {
   return (
     <div>
       <Banner initialSubheading />
-      <div className="btnContainer">
+      <div className="btnsContainer">
         <Login />
         <Button className="btnWithMargin" onClick={toggleForm} centered inline>
-          New User
+          Add New User
         </Button>
       </div>
       {isAdding && <AddUserForm hideForm={hideForm} />}

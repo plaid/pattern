@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import { currencyFilter } from '../util';
+import { CategoriesChart } from '.';
 
 SpendingInsights.propTypes = {
   transactions: PropTypes.array,
@@ -19,7 +20,7 @@ export default function SpendingInsights({ transactions }) {
   const categories = {};
 
   monthlyTransactions.forEach(tx => {
-    if (tx.category !== 'Payment')
+    if (tx.category !== 'Payment' && tx.category !== 'Transfer')
       if (categories[tx.category] != null) {
         categories[tx.category] += tx.amount;
       } else {
@@ -31,7 +32,7 @@ export default function SpendingInsights({ transactions }) {
   const names = {};
 
   monthlyTransactions.forEach(tx => {
-    if (tx.category !== 'Payment')
+    if (tx.category !== 'Payment' && tx.category !== 'Transfer')
       if (names[tx.name] != null) {
         names[tx.name] += tx.amount;
       } else {
@@ -90,6 +91,7 @@ export default function SpendingInsights({ transactions }) {
         </thead>
         <tbody className="transactions-body">{vendorRows}</tbody>
       </table>
+      <CategoriesChart categories={categories} />
     </div>
   );
 }

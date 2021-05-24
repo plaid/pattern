@@ -369,3 +369,16 @@ More Details
   border: none;
   color: $black1000;
 }
+
+/*
+
+Charts
+
+*/
+.transactionsContainer {
+  display: flex;
+  justify-content: space-between;
+}
+.recharts-wrapper {
+  margin: 0;
+}

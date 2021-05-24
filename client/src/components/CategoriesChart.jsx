@@ -1,94 +1,75 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-// import {
-//   Chart,
-//   LinearScale,
-//   TimeScale,
-//   TimeSeriesScale,
-//   Decimation,
-//   Filler,
-//   Legend,
-//   Title,
-//   Tooltip,
-//   Doughnut,
-// } from 'chart.js';
-
-// Chart.register(
-//   LinearScale,
-//   TimeScale,
-//   TimeSeriesScale,
-//   Decimation,
-//   Filler,
-//   Legend,
-//   Title,
-//   Tooltip,
-//   Doughnut
-// );
-
-import { Doughnut } from 'react-chartjs-2';
-// import 'chartjs-plugin-datalabels';
+import {
+  PieChart,
+  Pie,
+  Sector,
+  Cell,
+  ResponsiveContainer,
+  Legend,
+  Tooltip,
+} from 'recharts';
 
 CategoriesChart.propTypes = {
   categories: PropTypes.object,
 };
 
 export default function CategoriesChart({ categories }) {
+  const data = [];
   const labels = Object.keys(categories);
-  const data = Object.values(categories);
-  const state = {
-    labels: labels,
-    datasets: [
-      {
-        options: {
-          legend: {
-            display: true,
-          },
-          plugins: {
-            datalabels: {
-              display: true,
-              color: 'white',
-              backgroundColor: '#404040',
-            },
-          },
-        },
-        data: data,
-        backgroundColor: [
-          'rgba(255, 99, 132, 0.2)',
-          'rgba(54, 162, 235, 0.2)',
-          'rgba(255, 206, 86, 0.2)',
-          'rgba(75, 192, 192, 0.2)',
-          'rgba(153, 102, 255, 0.2)',
-          'rgba(255, 159, 64, 0.2)',
-        ],
-        borderColor: [
-          'rgba(255, 99, 132, 1)',
-          'rgba(54, 162, 235, 1)',
-          'rgba(255, 206, 86, 1)',
-          'rgba(75, 192, 192, 1)',
-          'rgba(153, 102, 255, 1)',
-          'rgba(255, 159, 64, 1)',
-        ],
-      },
-    ],
-  };
+  const values = Object.values(categories);
+  for (let i = 0; i < labels.length; i++) {
+    data.push({ name: labels[i], value: Math.round(values[i]) });
+  }
+
+  const renderCustomLabel = item => (
+    <text
+      fill={item.fill}
+      x={item.x}
+      y={item.y}
+      stroke="none"
+      alignmentBaseline="middle"
+      className="recharts-text recharts-pie-label-text"
+      textAnchor="end"
+    >
+      <tspan x={item.x} textAnchor={item.textAnchor} dy="0em">
+        {item.name}
+      </tspan>
+    </text>
+  );
+
+  console.log(data);
+  const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
 
   return (
-    <div className="chartContainer">
-      The doughnut is right below me
-      <Doughnut
-        data={state}
-        options={{
-          title: {
-            display: true,
-            text: 'My doughnut chart',
-          },
-          legend: {
-            display: true,
-            position: 'right',
-          },
-        }}
-      />
+    <div>
+      <h4>Monthly Spending Categories Summary</h4>
+      <PieChart width={400} height={400}>
+        <Legend />
+
+        <Pie
+          data={data}
+          cx="50%"
+          cy="50%"
+          isAnimationActive={false}
+          // paddingAngle={5}
+          label
+          innerRadius={70}
+          outerRadius={90}
+          fill="#8884d8"
+          dataKey="value"
+        >
+          {data.map((entry, index) => (
+            <Cell
+              label={true}
+              key={`cell-${index}`}
+              fill={COLORS[index % COLORS.length]}
+            />
+          ))}
+        </Pie>
+        <Tooltip />
+      </PieChart>
     </div>
   );
 }

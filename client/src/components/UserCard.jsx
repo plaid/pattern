@@ -45,7 +45,6 @@ export default function UserCard({ user, removeButton }) {
   const handleDeleteUser = () => {
     deleteUserById(user.id);
   };
-
   return (
     <div
       className="box user-card__box"

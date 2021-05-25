@@ -31,7 +31,7 @@ const ItemList = ({ match }) => {
   const [properties, setProperties] = useState([]);
   const [accounts, setAccounts] = useState([]);
 
-  const { getTransactionsByUserByDate, transactionsByUser } = useTransactions();
+  const { getTransactionsByUser, transactionsByUser } = useTransactions();
   const { getAccountsByUser, accountsByUser } = useAccounts();
   const { propertiesByUser, getPropertiesByUser } = useProperties();
   const { usersById, getUserById } = useUsers();
@@ -50,16 +50,12 @@ const ItemList = ({ match }) => {
   }, [usersById, userId]);
 
   useEffect(() => {
-    getTransactionsByUserByDate(userId);
-  }, [getTransactionsByUserByDate, userId]);
+    getTransactionsByUser(userId);
+  }, [getTransactionsByUser, userId]);
 
   useEffect(() => {
     setTransactions(transactionsByUser[userId] || []);
   }, [transactionsByUser, userId]);
-
-  useEffect(() => {
-    setAccounts(accountsByUser[userId] || []);
-  }, [accountsByUser, userId]);
 
   useEffect(() => {
     getPropertiesByUser(userId);
@@ -88,6 +84,10 @@ const ItemList = ({ match }) => {
   useEffect(() => {
     getAccountsByUser(userId);
   }, [getAccountsByUser, userId]);
+
+  useEffect(() => {
+    setAccounts(accountsByUser[userId] || []);
+  }, [accountsByUser, userId]);
 
   // update no of items from data store
   useEffect(() => {

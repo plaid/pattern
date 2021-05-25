@@ -8,28 +8,6 @@ TransactionsTable.propTypes = {
 };
 
 export default function TransactionsTable({ transactions }) {
-  const categories = {};
-
-  transactions.forEach(tx => {
-    if (categories[tx.category] != null) {
-      categories[tx.category] += tx.amount;
-    } else {
-      categories[tx.category] = tx.amount;
-    }
-  });
-  console.log(categories);
-
-  const names = {};
-
-  transactions.forEach(tx => {
-    if (names[tx.name] != null) {
-      names[tx.name] += tx.amount;
-    } else {
-      names[tx.name] = tx.amount;
-    }
-  });
-  console.log(names);
-
   return (
     <div className="transactions">
       <table className="transactions-table">

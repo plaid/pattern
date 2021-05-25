@@ -23,7 +23,6 @@ const ItemCard = ({ item, userId }) => {
   const [accounts, setAccounts] = useState([]);
   const [institution, setInstitution] = useState({});
   const [showAccounts, setShowAccounts] = useState(false);
-  const [transactions, setTransactions] = useState(['hello']);
 
   const { accountsByItem, deleteAccountsByItemId } = useAccounts();
   const { deleteItemById } = useItems();

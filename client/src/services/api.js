@@ -19,6 +19,11 @@ export default api;
 // currentUser
 export const login = username => api.post('/sessions', { username });
 
+// properties
+export const addProperty = (userId, description, value) =>
+  api.post('/properties', { userId, description, value });
+export const getPropertiesByUser = userId => api.get(`/properties/${userId}`);
+
 // users
 export const getUsers = () => api.get('/users');
 export const getUserById = userId => api.get(`/users/${userId}`);

@@ -40,11 +40,10 @@ export default function CategoriesChart({ categories }) {
   );
 
   console.log(data);
-  const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
+  const COLORS = ['#0868b8', '#2ab589', '#d9bc2d', '#d44648'];
 
   return (
     <div>
-      <h4>Monthly Spending Categories Summary</h4>
       <PieChart width={400} height={400}>
         <Legend />
 

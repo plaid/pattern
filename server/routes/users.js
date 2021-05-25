@@ -35,6 +35,7 @@ router.get(
   '/',
   asyncWrapper(async (req, res) => {
     const users = await retrieveUsers();
+    console.log('users:', users);
     res.json(sanitizeUsers(users));
   })
 );

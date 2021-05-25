@@ -382,3 +382,37 @@ Charts
 .recharts-wrapper {
   margin: 0;
 }
+
+/*
+
+net worth
+
+*/
+.netWorthText {
+  font-family: $font-stack-monospace;
+  font-size: 2 * $unit;
+  line-height: 1.33;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.netWorthContainer {
+  display: flex;
+}
+
+.holdingsContainer {
+  width: 69 * $unit;
+  height: 40 * $unit;
+  border: $border;
+  margin-right: $unit;
+}
+
+.assets,
+.liabilities {
+  padding: 2 * $unit;
+}
+
+.dollars {
+  font-weight: bold;
+  margin-top: 0;
+}

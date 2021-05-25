@@ -5,8 +5,10 @@ import Button from 'plaid-threads/Button';
 import Touchable from 'plaid-threads/Touchable';
 
 import { SpendingInsights } from '.';
+import { Property } from '.';
+import { NetWorth } from '.';
 import { UserDetails, LinkButton } from '.';
-import { useItems, useUsers, useTransactions } from '../services';
+import { useItems, useUsers, useTransactions, useAccounts } from '../services';
 import { useGenerateLinkConfig } from '../hooks';
 
 UserCard.propTypes = {
@@ -22,11 +24,13 @@ UserCard.defaultProps = {
 export default function UserCard({ user, removeButton }) {
   const [numOfItems, setNumOfItems] = useState(0);
   const [transactions, setTransactions] = useState([]);
+  const [accounts, setAccounts] = useState([]);
   const [config, setConfig] = useState({ token: null, onSucces: null });
   const [hovered, setHovered] = useState(false);
 
   const { itemsByUser, getItemsByUser } = useItems();
   const { getTransactionsByUserByDate, transactionsByUser } = useTransactions();
+  const { getAccountsByUser, accountsByUser } = useAccounts();
   const { deleteUserById } = useUsers();
   const linkConfig = useGenerateLinkConfig(false, user.id, null);
 
@@ -43,6 +47,14 @@ export default function UserCard({ user, removeButton }) {
     setTransactions(transactionsByUser[user.id] || []);
   }, [transactionsByUser, user.id]);
 
+  useEffect(() => {
+    getAccountsByUser(user.id);
+  }, [getAccountsByUser, user.id]);
+
+  useEffect(() => {
+    setAccounts(accountsByUser[user.id] || []);
+  }, [accountsByUser, user.id]);
+
   // update no of items from data store
   useEffect(() => {
     itemsByUser[user.id] && setNumOfItems(itemsByUser[user.id].length);
@@ -56,7 +68,9 @@ export default function UserCard({ user, removeButton }) {
     deleteUserById(user.id);
   };
 
-  console.log('Transactions by user', transactions);
+  console.log('all accounts:', accountsByUser);
+  console.log('my accounts:', accounts);
+
   return (
     <>
       <div
@@ -101,9 +115,11 @@ export default function UserCard({ user, removeButton }) {
                 Remove user
               </Button>
             )}
+            <Property userId={user.id} />
           </div>
         </div>
       </div>
+      <NetWorth accounts={accounts} numOfItems={numOfItems} />
       <SpendingInsights transactions={transactions} />
     </>
   );

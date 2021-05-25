@@ -71,28 +71,22 @@ export default function SpendingInsights({ transactions }) {
   });
 
   return (
-    <div className="transactionsContainer">
-      <CategoriesChart categories={categories} />
-      {/* <table className="transactions-table">
-        <thead className="transactions-header">
-          <tr>
-            <th className="table-category">Category</th>
-            <th className="table-amount">Amount</th>
-          </tr>
-        </thead>
-        <tbody className="transactions-body">{categoryRows}</tbody>
-      </table> */}
-      <div className="tableContainer">
-        <h4 className="tableHeading">Top Vendors by Spending</h4>
-        <table className="transactions-table">
-          <thead className="transactions-header">
-            <tr>
-              <th className="table-category">Vendor</th>
-              <th className="table-amount">Amount</th>
-            </tr>
-          </thead>
-          <tbody className="transactions-body">{vendorRows}</tbody>
-        </table>
+    <div>
+      <h2>Monthly Spending</h2>
+      <div className="transactionsContainer">
+        <CategoriesChart categories={categories} />
+        <div className="tableContainer">
+          <h4 className="tableHeading">Top Vendors by Spending</h4>
+          <table className="transactions-table">
+            <thead className="transactions-header">
+              <tr>
+                <th className="table-category">Vendor</th>
+                <th className="table-amount">Amount</th>
+              </tr>
+            </thead>
+            <tbody className="transactions-body">{vendorRows}</tbody>
+          </table>
+        </div>
       </div>
     </div>
   );

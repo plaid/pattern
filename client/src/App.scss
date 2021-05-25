@@ -394,19 +394,34 @@ net worth
   display: flex;
 }
 
-.holdingsContainer {
+.userDataBox {
   width: 69 * $unit;
-  height: 40 * $unit;
+  min-height: 40 * $unit;
   border: $border;
-  margin-right: $unit;
+  margin-right: 2 * $unit;
 }
 
 .assets,
-.liabilities {
+.liabilities,
+.chart,
+.vendors {
   padding: 2 * $unit;
+
+  p {
+    font-weight: bold;
+  }
 }
 
 .dollars {
   font-weight: bold;
   margin-top: 0;
+}
+
+.holdingsList {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+
+  p {
+    font-weight: normal;
+  }
 }

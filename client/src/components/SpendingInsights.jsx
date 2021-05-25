@@ -19,6 +19,13 @@ export default function SpendingInsights({ transactions }) {
 
   // create category and name objects from transactions
   const categories = {};
+  // final categories object should look like:
+  // {
+  //    Food and Drink: 365.99,
+  //    Travel: 2,444.87,
+  //    Shops: 566.43
+  //    ...
+  //  }
   monthlyTransactions.forEach(tx => {
     if (tx.category !== 'Payment' && tx.category !== 'Transfer')
       if (categories[tx.category] != null) {
@@ -29,6 +36,13 @@ export default function SpendingInsights({ transactions }) {
   });
 
   const names = {};
+  // final names object should look like:
+  // {
+  //    McDonalds: 563.23,
+  //    Target: 345.23,
+  //    Safeway: 897.77
+  //    ...
+  //  }
   monthlyTransactions.forEach(tx => {
     if (tx.category !== 'Payment' && tx.category !== 'Transfer')
       if (names[tx.name] != null) {
@@ -54,7 +68,7 @@ export default function SpendingInsights({ transactions }) {
           <CategoriesChart categories={categories} />
         </div>
         <div className="userDataBox">
-          <div className="vendors">
+          <div className="data">
             <h4 className="tableHeading">Top 5 Vendors</h4>
             <div className="holdingsList">
               <p className="title">Vendor</p> <p className="title">Amount</p>

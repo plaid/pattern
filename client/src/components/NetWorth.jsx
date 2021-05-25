@@ -1,8 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { currencyFilter } from '../util';
-import { pluralize } from '../util';
+import { currencyFilter, pluralize } from '../util';
 
 NetWorth.propTypes = {
   accounts: PropTypes.array,
@@ -35,19 +34,18 @@ export default function NetWorth({ numOfItems, accounts, properties }) {
     },
   };
 
+  //create accountTypes object balances in accounts
   accounts.forEach(account => {
     accountTypes[account.type][account.subtype] += account.current_balance;
   });
 
+  const addAll = accountType =>
+    Object.values(accountType).reduce((a, b) => a + b);
   // sums of account types
-  const depository = Object.values(accountTypes.depository).reduce(
-    (a, b) => a + b
-  );
-  const investment = Object.values(accountTypes.investment).reduce(
-    (a, b) => a + b
-  );
-  const loan = Object.values(accountTypes.loan).reduce((a, b) => a + b);
-  const credit = Object.values(accountTypes.credit).reduce((a, b) => a + b);
+  const depository = addAll(accountTypes.depository);
+  const investment = addAll(accountTypes.investment);
+  const loan = addAll(accountTypes.loan);
+  const credit = addAll(accountTypes.credit);
 
   const assets = depository + investment + propertyValue;
   const liabilities = loan + credit;
@@ -65,8 +63,8 @@ export default function NetWorth({ numOfItems, accounts, properties }) {
       <h2>{currencyFilter(assets - liabilities)}</h2>
       <div className="netWorthContainer">
         <div className="userDataBox">
-          <div className="assets">
-            <h4 className="dollars">{currencyFilter(assets)}</h4>
+          <div className="data">
+            <h4 className="dollarsHeader">{currencyFilter(assets)}</h4>
 
             <div className="holdingsList">
               <p className="title">Assets</p>
@@ -84,8 +82,8 @@ export default function NetWorth({ numOfItems, accounts, properties }) {
           </div>
         </div>
         <div className="userDataBox">
-          <div className="liabilities">
-            <h4 className="dollars">{currencyFilter(liabilities)}</h4>
+          <div className="data">
+            <h4 className="dollarsHeader">{currencyFilter(liabilities)}</h4>
 
             <div className="holdingsList">
               <p className="title">Liabilities</p>

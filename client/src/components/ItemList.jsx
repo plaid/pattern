@@ -3,9 +3,6 @@ import { Link } from 'react-router-dom';
 import sortBy from 'lodash/sortBy';
 import NavigationLink from 'plaid-threads/NavigationLink';
 
-import { SpendingInsights } from '.';
-import { Property } from '.';
-import { NetWorth } from '.';
 import {
   useItems,
   useAccounts,
@@ -14,9 +11,16 @@ import {
   useUsers,
 } from '../services';
 import { pluralize } from '../util';
-import ItemCard from './ItemCard';
 import { useGenerateLinkConfig } from '../hooks';
-import { Banner, LinkButton, UserDetails } from '.';
+import {
+  Banner,
+  LinkButton,
+  UserDetails,
+  SpendingInsights,
+  Property,
+  NetWorth,
+  ItemCard,
+} from '.';
 
 const ItemList = ({ match }) => {
   const [user, setUser] = useState({});
@@ -133,7 +137,7 @@ const ItemList = ({ match }) => {
             Add Another Item
           </LinkButton>
         )}
-        <Property userId={user.id} />
+        <Property userId={userId} />
       </div>
       {items.map(item => (
         <div key={item.id}>

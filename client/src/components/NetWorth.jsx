@@ -39,8 +39,6 @@ export default function NetWorth({ numOfItems, accounts }) {
     accountTypes[account.type][account.subtype] += account.current_balance;
   });
 
-  console.log(accountTypes);
-
   // sums of account types
   const depository = Object.values(accountTypes.depository).reduce(
     (a, b) => a + b
@@ -50,8 +48,6 @@ export default function NetWorth({ numOfItems, accounts }) {
   );
   const loan = Object.values(accountTypes.loan).reduce((a, b) => a + b);
   const credit = Object.values(accountTypes.credit).reduce((a, b) => a + b);
-
-  console.log('sum of all deposits', depository);
 
   const assets = depository + investment + propertyValue;
   const liabilities = loan + credit;

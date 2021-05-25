@@ -27,11 +27,7 @@ const ItemCard = ({ item, userId }) => {
 
   const { accountsByItem, deleteAccountsByItemId } = useAccounts();
   const { deleteItemById } = useItems();
-  const {
-    deleteTransactionsByItemId,
-    getTransactionsByItem,
-    allTransactions,
-  } = useTransactions();
+  const { deleteTransactionsByItemId } = useTransactions();
   const {
     institutionsById,
     getInstitutionById,
@@ -54,14 +50,6 @@ const ItemCard = ({ item, userId }) => {
     getInstitutionById(plaid_institution_id);
   }, [getInstitutionById, plaid_institution_id]);
 
-  useEffect(() => {
-    getTransactionsByItem(id);
-  }, [id]);
-
-  useEffect(() => {
-    setTransactions(allTransactions);
-  }, [id]);
-
   const handleSetBadState = () => {
     setItemToBadState(id);
   };
@@ -70,8 +58,6 @@ const ItemCard = ({ item, userId }) => {
     deleteAccountsByItemId(id);
     deleteTransactionsByItemId(id);
   };
-
-  console.log('on item card: ', transactions);
 
   const cardClassNames = showAccounts
     ? 'card item-card expanded'

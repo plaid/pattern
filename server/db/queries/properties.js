@@ -44,6 +44,5 @@ const retrievePropertiesByUser = async userId => {
 
 module.exports = {
   createProperty,
-  // deleteItem,
   retrievePropertiesByUser,
 };

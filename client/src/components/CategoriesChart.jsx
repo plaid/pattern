@@ -1,15 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import {
-  PieChart,
-  Pie,
-  Sector,
-  Cell,
-  ResponsiveContainer,
-  Legend,
-  Tooltip,
-} from 'recharts';
+import { PieChart, Pie, Cell, Legend, Tooltip } from 'recharts';
 
 CategoriesChart.propTypes = {
   categories: PropTypes.object,
@@ -23,23 +15,7 @@ export default function CategoriesChart({ categories }) {
     data.push({ name: labels[i], value: Math.round(values[i]) });
   }
 
-  const renderCustomLabel = item => (
-    <text
-      fill={item.fill}
-      x={item.x}
-      y={item.y}
-      stroke="none"
-      alignmentBaseline="middle"
-      className="recharts-text recharts-pie-label-text"
-      textAnchor="end"
-    >
-      <tspan x={item.x} textAnchor={item.textAnchor} dy="0em">
-        {item.name}
-      </tspan>
-    </text>
-  );
-
-  console.log(data);
+  // threads colors
   const COLORS = ['#0868b8', '#2ab589', '#d9bc2d', '#d44648'];
 
   return (
@@ -52,7 +28,7 @@ export default function CategoriesChart({ categories }) {
           cx="50%"
           cy="50%"
           isAnimationActive={false}
-          // paddingAngle={5}
+          paddingAngle={5}
           label
           innerRadius={70}
           outerRadius={90}
@@ -67,7 +43,6 @@ export default function CategoriesChart({ categories }) {
             />
           ))}
         </Pie>
-        <Tooltip />
       </PieChart>
     </div>
   );

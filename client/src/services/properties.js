@@ -6,7 +6,6 @@ import React, {
   useCallback,
 } from 'react';
 import { toast } from 'react-toastify';
-import keyBy from 'lodash/keyBy';
 import { addProperty as apiAddProperty } from './api';
 import { getPropertiesByUser as apiGetPropertiesByUser } from './api';
 

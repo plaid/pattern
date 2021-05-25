@@ -27,29 +27,6 @@ export function PropertiesProvider(props) {
     properties: [],
   });
 
-  /**
-   * @desc Requests details for a single User.
-   */
-  const addProperty = useCallback(
-    async (userId, description, value, refresh) => {
-      try {
-        const { data: payload } = await apiAddProperty(
-          userId,
-          description,
-          value
-        );
-        if (payload != null) {
-          toast.success(`Successful addition of ${description}`);
-        } else {
-          toast.error(`could not add ${description}`);
-        }
-      } catch (err) {
-        console.log(err);
-      }
-    },
-    []
-  );
-
   const getPropertiesByUser = useCallback(async userId => {
     try {
       const { data: payload } = await apiGetPropertiesByUser(userId);
@@ -62,6 +39,27 @@ export function PropertiesProvider(props) {
       console.log(err);
     }
   }, []);
+
+  const addProperty = useCallback(
+    async (userId, description, value, refresh) => {
+      try {
+        const { data: payload } = await apiAddProperty(
+          userId,
+          description,
+          value
+        );
+        if (payload != null) {
+          toast.success(`Successful addition of ${description}`);
+          await getPropertiesByUser(userId);
+        } else {
+          toast.error(`could not add ${description}`);
+        }
+      } catch (err) {
+        console.log(err);
+      }
+    },
+    []
+  );
 
   /**
    * @desc Builds a more accessible state shape from the Users data. useMemo will prevent

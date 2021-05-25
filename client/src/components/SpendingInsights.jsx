@@ -17,8 +17,8 @@ export default function SpendingInsights({ transactions }) {
     return date > oneMonthAgo;
   });
 
+  // create category and name objects from transactions
   const categories = {};
-
   monthlyTransactions.forEach(tx => {
     if (tx.category !== 'Payment' && tx.category !== 'Transfer')
       if (categories[tx.category] != null) {
@@ -27,10 +27,8 @@ export default function SpendingInsights({ transactions }) {
         categories[tx.category] = tx.amount;
       }
   });
-  console.log(categories);
 
   const names = {};
-
   monthlyTransactions.forEach(tx => {
     if (tx.category !== 'Payment' && tx.category !== 'Transfer')
       if (names[tx.name] != null) {
@@ -40,55 +38,33 @@ export default function SpendingInsights({ transactions }) {
       }
   });
 
+  // sort names by spending totals
   var sortableNames = [];
-
   for (const name in names) {
     sortableNames.push([name, names[name]]);
   }
-
   sortableNames.sort((a, b) => b[1] - a[1]);
-  sortableNames = [...sortableNames.slice(0, 6)]; // top 6
-
-  console.log(sortableNames);
-  const categoryRows = [];
-  for (const category in categories) {
-    categoryRows.push(
-      <tr className="transactions-data-rows">
-        <td className="table-category">{category}</td>
-        <td className="table-amount">{currencyFilter(categories[category])}</td>
-      </tr>
-    );
-  }
-
-  const vendorRows = sortableNames.map(vendor => {
-    if (vendor[1] > 0)
-      return (
-        <tr className="transactions-data-rows">
-          <td className="table-category">{vendor[0]}</td>
-          <td className="table-amount">{currencyFilter(vendor[1])}</td>
-        </tr>
-      );
-  });
+  sortableNames.splice(5); // top 5
 
   return (
     <div>
       <h2>Monthly Spending</h2>
-      <div className="transactionsContainer">
+      <div className="monthlySpendingContainer">
         <div className="userDataBox">
           <CategoriesChart categories={categories} />
         </div>
         <div className="userDataBox">
           <div className="vendors">
-            <h4 className="tableHeading">Top Vendors by Spending</h4>
-            <table className="transactions-table">
-              <thead className="transactions-header">
-                <tr>
-                  <th className="table-category">Vendor</th>
-                  <th className="table-amount">Amount</th>
-                </tr>
-              </thead>
-              <tbody className="transactions-body">{vendorRows}</tbody>
-            </table>
+            <h4 className="tableHeading">Top 5 Vendors</h4>
+            <div className="holdingsList">
+              <p className="title">Vendor</p> <p className="title">Amount</p>
+              {sortableNames.map(vendor => (
+                <>
+                  <p>{vendor[0]}</p>
+                  <p>{currencyFilter(vendor[1])}</p>
+                </>
+              ))}
+            </div>
           </div>
         </div>
       </div>

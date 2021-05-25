@@ -4,11 +4,9 @@ import { Link } from 'react-router-dom';
 import Button from 'plaid-threads/Button';
 import Touchable from 'plaid-threads/Touchable';
 
-import { SpendingInsights } from '.';
 import { Property } from '.';
-import { NetWorth } from '.';
 import { UserDetails, LinkButton } from '.';
-import { useItems, useUsers, useTransactions, useAccounts } from '../services';
+import { useItems, useUsers } from '../services';
 import { useGenerateLinkConfig } from '../hooks';
 
 UserCard.propTypes = {
@@ -23,14 +21,10 @@ UserCard.defaultProps = {
 
 export default function UserCard({ user, removeButton }) {
   const [numOfItems, setNumOfItems] = useState(0);
-  const [transactions, setTransactions] = useState([]);
-  const [accounts, setAccounts] = useState([]);
   const [config, setConfig] = useState({ token: null, onSucces: null });
   const [hovered, setHovered] = useState(false);
 
   const { itemsByUser, getItemsByUser } = useItems();
-  const { getTransactionsByUserByDate, transactionsByUser } = useTransactions();
-  const { getAccountsByUser, accountsByUser } = useAccounts();
   const { deleteUserById } = useUsers();
   const linkConfig = useGenerateLinkConfig(false, user.id, null);
 
@@ -38,22 +32,6 @@ export default function UserCard({ user, removeButton }) {
   useEffect(() => {
     getItemsByUser(user.id);
   }, [getItemsByUser, user.id]);
-
-  useEffect(() => {
-    getTransactionsByUserByDate(user.id);
-  }, [getTransactionsByUserByDate, user.id]);
-
-  useEffect(() => {
-    setTransactions(transactionsByUser[user.id] || []);
-  }, [transactionsByUser, user.id]);
-
-  useEffect(() => {
-    getAccountsByUser(user.id);
-  }, [getAccountsByUser, user.id]);
-
-  useEffect(() => {
-    setAccounts(accountsByUser[user.id] || []);
-  }, [accountsByUser, user.id]);
 
   // update no of items from data store
   useEffect(() => {
@@ -116,8 +94,6 @@ export default function UserCard({ user, removeButton }) {
           </div>
         </div>
       </div>
-      <NetWorth accounts={accounts} numOfItems={numOfItems} />
-      <SpendingInsights transactions={transactions} />
     </>
   );
 }

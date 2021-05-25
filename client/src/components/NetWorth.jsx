@@ -2,21 +2,19 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import { currencyFilter } from '../util';
-import { useProperties } from '../services';
 import { pluralize } from '../util';
 
 NetWorth.propTypes = {
-  transactions: PropTypes.array,
+  accounts: PropTypes.array,
+  numOfItems: PropTypes.number,
+  properties: PropTypes.array,
 };
 
-export default function NetWorth({ numOfItems, accounts }) {
-  const { propertiesByUser } = useProperties();
-  const properties = propertiesByUser.properties;
+export default function NetWorth({ numOfItems, accounts, properties }) {
   const propertyValue = properties.reduce((a, b) => {
     return a + b.value;
   }, 0);
 
-  console.log(properties[0]);
   const accountTypes = {
     depository: {
       checking: 0,
@@ -54,15 +52,6 @@ export default function NetWorth({ numOfItems, accounts }) {
   const assets = depository + investment + propertyValue;
   const liabilities = loan + credit;
 
-  const propertiesRows = properties.map(property => {
-    return (
-      <>
-        <p>{property.description}</p>
-        <p>{currencyFilter(property.value)}</p>
-      </>
-    );
-  });
-
   return (
     <div className="newWorthContainer">
       <h2 className="tableHeading">Net Worth</h2>
@@ -78,20 +67,29 @@ export default function NetWorth({ numOfItems, accounts }) {
         <div className="userDataBox">
           <div className="assets">
             <h4 className="dollars">{currencyFilter(assets)}</h4>
-            <p>Assets</p>
+
             <div className="holdingsList">
+              <p className="title">Assets</p>
+              <p>{''}</p>
               <p>Cash</p> <p>{currencyFilter(depository)}</p>
               <p>Investment</p>
               <p>{currencyFilter(investment)}</p>
-              {propertiesRows}
+              {properties.map(property => (
+                <>
+                  <p>{property.description}</p>
+                  <p>{currencyFilter(property.value)}</p>
+                </>
+              ))}
             </div>
           </div>
         </div>
         <div className="userDataBox">
           <div className="liabilities">
             <h4 className="dollars">{currencyFilter(liabilities)}</h4>
-            <p>Liabilities</p>
+
             <div className="holdingsList">
+              <p className="title">Liabilities</p>
+              <p>{''}</p>
               <p>Credit Cards</p> <p>{currencyFilter(credit)}</p>
               <p>Loans</p>
               <p>{currencyFilter(loan)}</p>

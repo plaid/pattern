@@ -363,20 +363,6 @@ More Details
   border: none;
   color: $black1000;
 }
-
-/*
-
-Charts
-
-*/
-.transactionsContainer {
-  display: flex;
-  justify-content: space-between;
-}
-.recharts-wrapper {
-  margin: 0;
-}
-
 /*
 
 net worth
@@ -385,7 +371,6 @@ net worth
 .netWorthText {
   font-family: $font-stack-monospace;
   font-size: 2 * $unit;
-  line-height: 1.33;
   letter-spacing: 1px;
   text-transform: uppercase;
 }
@@ -423,5 +408,22 @@ net worth
 
   p {
     font-weight: normal;
+    margin-bottom: 0;
   }
+
+  .title {
+    font-weight: bold;
+  }
+}
+
+/*
+
+Monthly Spending
+
+*/
+.monthlySpendingContainer {
+  display: flex;
+}
+.recharts-wrapper {
+  margin: 0;
 }

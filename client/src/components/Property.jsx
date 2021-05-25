@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import Modal from 'plaid-threads/Modal';
 import ModalBody from 'plaid-threads/ModalBody';
 import Button from 'plaid-threads/Button';
@@ -10,27 +10,13 @@ const Property = userId => {
   const [show, setShow] = useState(false);
   const [description, setDescription] = useState('');
   const [value, setValue] = useState('');
-  const {
-    addProperty,
-    getPropertiesByUser,
-    propertiesByUser,
-  } = useProperties();
-  const [properties, setProperties] = useState({});
+  const { addProperty } = useProperties();
 
   const handleSubmit = () => {
     setShow(false);
     addProperty(userId.userId, description, value);
   };
 
-  useEffect(() => {
-    getPropertiesByUser(userId.userId);
-  }, []);
-
-  useEffect(() => {
-    setProperties(propertiesByUser);
-  }, []);
-
-  console.log('properties', propertiesByUser);
   return (
     <div>
       <Button centered inline small secondary onClick={() => setShow(!show)}>

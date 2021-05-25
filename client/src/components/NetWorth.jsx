@@ -64,7 +64,7 @@ export default function NetWorth({ numOfItems, accounts, properties }) {
       <div className="netWorthContainer">
         <div className="userDataBox">
           <div className="data">
-            <h4 className="dollarsHeader">{currencyFilter(assets)}</h4>
+            <h4 className="dollarsHeading">{currencyFilter(assets)}</h4>
 
             <div className="holdingsList">
               <p className="title">Assets</p>
@@ -83,7 +83,7 @@ export default function NetWorth({ numOfItems, accounts, properties }) {
         </div>
         <div className="userDataBox">
           <div className="data">
-            <h4 className="dollarsHeader">{currencyFilter(liabilities)}</h4>
+            <h4 className="dollarsHeading">{currencyFilter(liabilities)}</h4>
 
             <div className="holdingsList">
               <p className="title">Liabilities</p>

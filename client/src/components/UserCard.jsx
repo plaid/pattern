@@ -47,53 +47,51 @@ export default function UserCard({ user, removeButton }) {
   };
 
   return (
-    <>
-      <div
-        className="box user-card__box"
-        onMouseEnter={() => {
-          setHovered(true);
-        }}
-        onMouseLeave={() => {
-          setHovered(false);
-        }}
-      >
-        <div className=" card user-card">
-          <Touchable
-            className="user-card-clickable"
-            component={Link}
-            to={`/user/${user.id}/items`}
-          >
-            <div className="user-card__detail">
-              <UserDetails
-                hovered={hovered}
-                user={user}
-                numOfItems={numOfItems}
-              />
-            </div>
-          </Touchable>
-
-          <div className="user-card__buttons">
-            {config.token != null && (
-              <LinkButton userId={user.id} config={config} itemId={null}>
-                Link an Item
-              </LinkButton>
-            )}
-            {removeButton && (
-              <Button
-                className="remove"
-                onClick={handleDeleteUser}
-                small
-                inline
-                centered
-                secondary
-              >
-                Remove user
-              </Button>
-            )}
-            <Property userId={user.id} />
+    <div
+      className="box user-card__box"
+      onMouseEnter={() => {
+        setHovered(true);
+      }}
+      onMouseLeave={() => {
+        setHovered(false);
+      }}
+    >
+      <div className=" card user-card">
+        <Touchable
+          className="user-card-clickable"
+          component={Link}
+          to={`/user/${user.id}/items`}
+        >
+          <div className="user-card__detail">
+            <UserDetails
+              hovered={hovered}
+              user={user}
+              numOfItems={numOfItems}
+            />
           </div>
+        </Touchable>
+
+        <div className="user-card__buttons">
+          {config.token != null && (
+            <LinkButton userId={user.id} config={config} itemId={null}>
+              Link an Item
+            </LinkButton>
+          )}
+          {removeButton && (
+            <Button
+              className="remove"
+              onClick={handleDeleteUser}
+              small
+              inline
+              centered
+              secondary
+            >
+              Remove user
+            </Button>
+          )}
+          <Property userId={user.id} />
         </div>
       </div>
-    </>
+    </div>
   );
 }

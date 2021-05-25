@@ -14,13 +14,17 @@ const Property = userId => {
 
   const handleSubmit = () => {
     setShow(false);
-    addProperty(userId.userId, description, value);
+    addProperty(
+      userId.userId,
+      description,
+      parseFloat(value.replace(/[^0-9.-]+/g, ''))
+    );
   };
 
   return (
     <div>
       <Button centered inline small secondary onClick={() => setShow(!show)}>
-        Add Property
+        Add Asset
       </Button>
       <Modal isOpen={show} onRequestClose={() => setShow(false)}>
         <>
@@ -34,13 +38,13 @@ const Property = userId => {
               <>
                 <TextInput
                   id="id-6"
-                  placeholder="Enter Property Description (e.g. house or car)"
+                  placeholder="Enter Asset Description (e.g. house or car)"
                   value={description}
                   onChange={e => setDescription(e.currentTarget.value)}
                 />
                 <TextInput
                   id="id-6"
-                  placeholder="Enter Property Value (in dollars $)"
+                  placeholder="Enter Asset Value (in dollars $)"
                   value={value}
                   onChange={e => setValue(e.currentTarget.value)}
                 />

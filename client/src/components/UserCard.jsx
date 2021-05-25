@@ -68,9 +68,6 @@ export default function UserCard({ user, removeButton }) {
     deleteUserById(user.id);
   };
 
-  console.log('all accounts:', accountsByUser);
-  console.log('my accounts:', accounts);
-
   return (
     <>
       <div

@@ -25,6 +25,7 @@ const {
   retrieveTransactionsByItemId,
   retrieveTransactionsByUserId,
   retrieveTransactionsInDateRange,
+  retrieveTransactionsInDateRangeByUserId,
   deleteTransactions,
 } = require('./transactions');
 const {
@@ -61,6 +62,7 @@ module.exports = {
   retrieveTransactionsByItemId,
   retrieveTransactionsByUserId,
   retrieveTransactionsInDateRange,
+  retrieveTransactionsInDateRangeByUserId,
   deleteTransactions,
   // users
   createUser,

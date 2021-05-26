@@ -84,7 +84,6 @@ function reducer(state, [type, payload]) {
     case types.FAILED_GET:
       return {
         ...state,
-        newUser: null,
       };
 
     default:

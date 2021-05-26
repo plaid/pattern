@@ -3,6 +3,7 @@ import Modal from 'plaid-threads/Modal';
 import ModalBody from 'plaid-threads/ModalBody';
 import Button from 'plaid-threads/Button';
 import TextInput from 'plaid-threads/TextInput';
+import NumberInput from 'plaid-threads/NumberInput';
 import PropTypes from 'prop-types';
 
 import { useProperties } from '../services';
@@ -19,11 +20,7 @@ export default function Property({ userId }) {
 
   const handleSubmit = () => {
     setShow(false);
-    addProperty(
-      userId,
-      description,
-      parseFloat(value.replace(/[^0-9.-]+/g, ''))
-    );
+    addProperty(userId, description, parseInt(value));
   };
 
   return (
@@ -47,7 +44,7 @@ export default function Property({ userId }) {
                   value={description}
                   onChange={e => setDescription(e.currentTarget.value)}
                 />
-                <TextInput
+                <NumberInput
                   id="id-6"
                   placeholder="Enter Asset Value (in dollars $)"
                   value={value}

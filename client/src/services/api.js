@@ -57,6 +57,8 @@ export const getTransactionsByItem = itemId =>
   api.get(`/items/${itemId}/transactions`);
 export const getTransactionsByUser = userId =>
   api.get(`/users/${userId}/transactions`);
+export const getTransactionsInDateRangeByUser = (userId, start, end) =>
+  api.post(`/users/transactionsInDateRange`, { userId, start, end });
 
 // institutions
 export const getInstitutionById = instId => api.get(`/institutions/${instId}`);

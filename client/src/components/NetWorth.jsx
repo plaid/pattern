@@ -10,10 +10,6 @@ NetWorth.propTypes = {
 };
 
 export default function NetWorth({ numOfItems, accounts, properties }) {
-  const propertyValue = properties.reduce((a, b) => {
-    return a + b.value;
-  }, 0);
-
   const accountTypes = {
     depository: {
       checking: 0,
@@ -47,6 +43,9 @@ export default function NetWorth({ numOfItems, accounts, properties }) {
   const investment = addAll(accountTypes.investment);
   const loan = addAll(accountTypes.loan);
   const credit = addAll(accountTypes.credit);
+  const propertyValue = properties.reduce((a, b) => {
+    return a + b.value;
+  }, 0);
 
   const assets = depository + investment + propertyValue;
   const liabilities = loan + credit;
@@ -61,37 +60,41 @@ export default function NetWorth({ numOfItems, accounts, properties }) {
         'Account',
         numOfItems
       )}`}</div>
-      <h2>{currencyFilter(assets - liabilities)}</h2>
+      <h2 className="netWorthDollars">
+        {currencyFilter(assets - liabilities)}
+      </h2>
       <div className="holdingsContainer">
         <div className="userDataBox">
-          <div className="data">
+          <div className="holdingsList">
             <h4 className="dollarsHeading">{currencyFilter(assets)}</h4>
 
-            <div className="holdingsList">
+            <div className="data">
               <p className="title">Assets</p>
               <p>{''}</p>
-              <p>Cash</p> <p>{currencyFilter(depository)}</p>
-              <p>Investment</p>
-              <p>{currencyFilter(investment)}</p>
+              <p className="dataItem">Cash</p>{' '}
+              <p className="dataItem">{currencyFilter(depository)}</p>
+              <p className="dataItem">Investment</p>
+              <p className="dataItem">{currencyFilter(investment)}</p>
               {properties.map(property => (
                 <>
-                  <p>{property.description}</p>
-                  <p>{currencyFilter(property.value)}</p>
+                  <p className="dataItem">{property.description}</p>
+                  <p className="dataItem">{currencyFilter(property.value)}</p>
                 </>
               ))}
             </div>
           </div>
         </div>
         <div className="userDataBox">
-          <div className="data">
+          <div className="holdingsList">
             <h4 className="dollarsHeading">{currencyFilter(liabilities)}</h4>
 
-            <div className="holdingsList">
+            <div className="data">
               <p className="title">Liabilities</p>
               <p>{''}</p>
-              <p>Credit Cards</p> <p>{currencyFilter(credit)}</p>
-              <p>Loans</p>
-              <p>{currencyFilter(loan)}</p>
+              <p className="dataItem">Credit Cards</p>{' '}
+              <p className="dataItem">{currencyFilter(credit)}</p>
+              <p className="dataItem">Loans</p>
+              <p className="dataItem">{currencyFilter(loan)}</p>
             </div>
           </div>
         </div>

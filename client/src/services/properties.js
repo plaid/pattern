@@ -94,7 +94,7 @@ function reducer(state, [type, payload]) {
 }
 
 /**
- * @desc A convenience hook to provide access to the Users context state in components.
+ * @desc A convenience hook to provide access to the Properties context state in components.
  */
 export default function useProperties() {
   const context = useContext(PropertiesContext);

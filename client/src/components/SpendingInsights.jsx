@@ -9,47 +9,27 @@ SpendingInsights.propTypes = {
 };
 
 export default function SpendingInsights({ transactions }) {
-  // grab transactions from most recent month
+  // grab transactions from most recent month and filter out transfers and payments
   const today = new Date();
   const oneMonthAgo = new Date().setDate(today.getDate() - 30);
   const monthlyTransactions = transactions.filter(tx => {
     const date = new Date(tx.date);
-    return date > oneMonthAgo;
+    return (
+      date > oneMonthAgo &&
+      tx.category !== 'Payment' &&
+      tx.category !== 'Transfer'
+    );
   });
 
   // create category and name objects from transactions
   const categories = {};
-  // final categories object should look like:
-  // {
-  //    Food and Drink: 365.99,
-  //    Travel: 2,444.87,
-  //    Shops: 566.43
-  //    ...
-  //  }
   monthlyTransactions.forEach(tx => {
-    if (tx.category !== 'Payment' && tx.category !== 'Transfer')
-      if (categories[tx.category] != null) {
-        categories[tx.category] += tx.amount;
-      } else {
-        categories[tx.category] = tx.amount;
-      }
+    categories[tx.category] = (categories[tx.category] || 0) + tx.amount;
   });
 
   const names = {};
-  // final names object should look like:
-  // {
-  //    McDonalds: 563.23,
-  //    Target: 345.23,
-  //    Safeway: 897.77
-  //    ...
-  //  }
   monthlyTransactions.forEach(tx => {
-    if (tx.category !== 'Payment' && tx.category !== 'Transfer')
-      if (names[tx.name] != null) {
-        names[tx.name] += tx.amount;
-      } else {
-        names[tx.name] = tx.amount;
-      }
+    names[tx.name] = (names[tx.name] || 0) + tx.amount;
   });
 
   // sort names by spending totals
@@ -68,9 +48,9 @@ export default function SpendingInsights({ transactions }) {
           <CategoriesChart categories={categories} />
         </div>
         <div className="userDataBox">
-          <div className="data">
+          <div className="holdingsList">
             <h4 className="tableHeading">Top 5 Vendors</h4>
-            <div className="holdingsList">
+            <div className="data">
               <p className="title">Vendor</p> <p className="title">Amount</p>
               {sortableNames.map(vendor => (
                 <>

@@ -381,11 +381,12 @@ net worth
 }
 
 .netWorthContainer {
-  h2 {
+  .netWorthDollars {
     margin-top: $unit;
   }
 
   .tableHeading {
+    margin-top: $unit;
     margin-bottom: 0;
   }
 }
@@ -401,10 +402,10 @@ net worth
   margin-right: 2 * $unit;
 }
 
-.data {
+.holdingsList {
   padding: 2 * $unit;
 
-  p {
+  .title {
     font-weight: bold;
   }
 }
@@ -414,17 +415,16 @@ net worth
   margin-top: 0;
 }
 
-.holdingsList {
+.data {
   display: grid;
   grid-template-columns: 1fr 1fr;
 
-  p {
-    font-weight: normal;
-    margin-bottom: 0;
-  }
-
   .title {
     font-weight: bold;
+  }
+
+  .dataItem {
+    margin-bottom: 0;
   }
 }
 
@@ -436,6 +436,7 @@ Monthly Spending
 .monthlySpendingContainer {
   display: flex;
 }
+
 .recharts-wrapper {
-  margin: 0;
+  margin: 0 2 * $unit;
 }

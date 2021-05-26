@@ -18,7 +18,7 @@ export default function CategoriesChart({ categories }) {
   const COLORS = ['#0868b8', '#2ab589', '#d9bc2d', '#d44648'];
 
   return (
-    <div className="data">
+    <div className="holdingsList">
       <h4 className="tableHeading">Spending Categories</h4>
       <PieChart width={400} height={400}>
         <Legend />

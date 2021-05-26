@@ -3,10 +3,15 @@ import Modal from 'plaid-threads/Modal';
 import ModalBody from 'plaid-threads/ModalBody';
 import Button from 'plaid-threads/Button';
 import TextInput from 'plaid-threads/TextInput';
+import PropTypes from 'prop-types';
 
 import { useProperties } from '../services';
 
-const Property = userId => {
+Property.propTypes = {
+  userId: PropTypes.number,
+};
+
+export default function Property({ userId }) {
   const [show, setShow] = useState(false);
   const [description, setDescription] = useState('');
   const [value, setValue] = useState('');
@@ -15,7 +20,7 @@ const Property = userId => {
   const handleSubmit = () => {
     setShow(false);
     addProperty(
-      userId.userId,
+      userId,
       description,
       parseFloat(value.replace(/[^0-9.-]+/g, ''))
     );
@@ -55,6 +60,4 @@ const Property = userId => {
       </Modal>
     </div>
   );
-};
-
-export default Property;
+}

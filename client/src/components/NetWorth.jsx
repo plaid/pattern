@@ -36,13 +36,13 @@ export default function NetWorth({ numOfItems, accounts, properties }) {
   });
 
   // sums of account types
-  const addAll = accountType =>
+  const addAllAccounts = accountType =>
     Object.values(accountType).reduce((a, b) => a + b);
 
-  const depository = addAll(accountTypes.depository);
-  const investment = addAll(accountTypes.investment);
-  const loan = addAll(accountTypes.loan);
-  const credit = addAll(accountTypes.credit);
+  const depository = addAllAccounts(accountTypes.depository);
+  const investment = addAllAccounts(accountTypes.investment);
+  const loan = addAllAccounts(accountTypes.loan);
+  const credit = addAllAccounts(accountTypes.credit);
   const propertyValue = properties.reduce((a, b) => {
     return a + b.value;
   }, 0);

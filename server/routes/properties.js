@@ -3,11 +3,8 @@
  */
 
 const express = require('express');
-const Boom = require('@hapi/boom');
 const { retrievePropertiesByUser, createProperty } = require('../db/queries');
-
 const { asyncWrapper } = require('../middleware');
-const plaid = require('../plaid');
 
 const router = express.Router();
 

@@ -52,7 +52,7 @@ export function PropertiesProvider(props) {
           toast.success(`Successful addition of ${description}`);
           await getPropertiesByUser(userId);
         } else {
-          toast.error(`could not add ${description}`);
+          toast.error(`Could not add ${description}`);
         }
       } catch (err) {
         console.log(err);

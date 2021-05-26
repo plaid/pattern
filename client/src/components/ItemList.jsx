@@ -91,8 +91,8 @@ const ItemList = ({ match }) => {
 
   // update no of items from data store
   useEffect(() => {
-    itemsByUser[user.id] && setNumOfItems(itemsByUser[user.id].length);
-  }, [itemsByUser, user.id]);
+    itemsByUser[userId] && setNumOfItems(itemsByUser[userId].length);
+  }, [itemsByUser, userId]);
 
   useEffect(() => {
     setConfig(linkConfig);

@@ -83,7 +83,7 @@ CREATE TABLE properties_table
 (
   id SERIAL PRIMARY KEY,
   user_id integer REFERENCES users_table(id) ON DELETE CASCADE,
-  value numeric(28,10),
+  value numeric(28,2),
   description text,
   created_at timestamptz default now(),
   updated_at timestamptz default now()

@@ -34,14 +34,15 @@ export default function NetWorth({ numOfItems, accounts, properties }) {
     },
   };
 
-  //create accountTypes object balances in accounts
+  //create accountTypes balances object
   accounts.forEach(account => {
     accountTypes[account.type][account.subtype] += account.current_balance;
   });
 
+  // sums of account types
   const addAll = accountType =>
     Object.values(accountType).reduce((a, b) => a + b);
-  // sums of account types
+
   const depository = addAll(accountTypes.depository);
   const investment = addAll(accountTypes.investment);
   const loan = addAll(accountTypes.loan);
@@ -51,9 +52,9 @@ export default function NetWorth({ numOfItems, accounts, properties }) {
   const liabilities = loan + credit;
 
   return (
-    <div className="newWorthContainer">
+    <div className="netWorthContainer">
       <h2 className="tableHeading">Net Worth</h2>
-      <h4 className="tablesubHeading">
+      <h4 className="tableSubHeading">
         A summary of your assets and liabilities
       </h4>
       <div className="netWorthText">{`Your total Across ${numOfItems} ${pluralize(
@@ -61,7 +62,7 @@ export default function NetWorth({ numOfItems, accounts, properties }) {
         numOfItems
       )}`}</div>
       <h2>{currencyFilter(assets - liabilities)}</h2>
-      <div className="netWorthContainer">
+      <div className="holdingsContainer">
         <div className="userDataBox">
           <div className="data">
             <h4 className="dollarsHeading">{currencyFilter(assets)}</h4>

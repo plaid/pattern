@@ -61,10 +61,6 @@ export function PropertiesProvider(props) {
     []
   );
 
-  /**
-   * @desc Builds a more accessible state shape from the Users data. useMemo will prevent
-   * these from being rebuilt on every render unless usersById is updated in the reducer.
-   */
   const value = useMemo(() => {
     return {
       propertiesByUser,
@@ -77,7 +73,7 @@ export function PropertiesProvider(props) {
 }
 
 /**
- * @desc Handles updates to the Users state as dictated by dispatched actions.
+ * @desc Handles updates to the propertiesByUser as dictated by dispatched actions.
  */
 function reducer(state, [type, payload]) {
   switch (type) {

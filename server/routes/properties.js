@@ -14,6 +14,8 @@ const router = express.Router();
 /**
  *
  * @param {string} userId the user ID of the active user.
+ * @param {string} description the description of the property.
+ * @param {number} value the numerical value of the property.
  */
 router.post(
   '/',
@@ -25,10 +27,10 @@ router.post(
 );
 
 /**
- * Retrieves a single item.
+ * Retrieves property for a single user
  *
- * @param {string} itemId the ID of the item.
- * @returns {Object[]} an array containing a single item.
+ * @param {string} userId the ID of the user.
+ * @returns {Object[]} an array of properties
  */
 router.get(
   '/:userId',

@@ -368,6 +368,11 @@ More Details
 net worth
 
 */
+
+.tableSubHeading {
+  margin-top: $unit;
+}
+
 .netWorthText {
   font-family: $font-stack-monospace;
   font-size: 2 * $unit;
@@ -376,6 +381,16 @@ net worth
 }
 
 .netWorthContainer {
+  h2 {
+    margin-top: $unit;
+  }
+
+  .tableHeading {
+    margin-bottom: 0;
+  }
+}
+
+.holdingsContainer {
   display: flex;
 }
 

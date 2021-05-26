@@ -9,6 +9,7 @@ import {
   useTransactions,
   useProperties,
   useUsers,
+  useAssets,
 } from '../services';
 import { pluralize } from '../util';
 import { useGenerateLinkConfig } from '../hooks';
@@ -18,6 +19,7 @@ import {
   UserDetails,
   SpendingInsights,
   Property,
+  Asset,
   NetWorth,
   ItemCard,
 } from '.';
@@ -30,10 +32,12 @@ const ItemList = ({ match }) => {
   const [transactions, setTransactions] = useState([]);
   const [properties, setProperties] = useState([]);
   const [accounts, setAccounts] = useState([]);
+  const [assets, setAssets] = useState([]);
 
   const { getTransactionsByUser, transactionsByUser } = useTransactions();
   const { getAccountsByUser, accountsByUser } = useAccounts();
   const { propertiesByUser, getPropertiesByUser } = useProperties();
+  const { assetsByUser, getAssetsByUser } = useAssets();
   const { usersById, getUserById } = useUsers();
   const { itemsByUser, getItemsByUser } = useItems();
   const userId = Number(match.params.userId);
@@ -64,6 +68,14 @@ const ItemList = ({ match }) => {
   useEffect(() => {
     setProperties(propertiesByUser.properties || []);
   }, [propertiesByUser, userId]);
+
+  useEffect(() => {
+    getAssetsByUser(userId);
+  }, [getAssetsByUser, userId]);
+
+  useEffect(() => {
+    setAssets(assetsByUser.assets || []);
+  }, [assetsByUser, userId]);
 
   // update data store with the user's items
   useEffect(() => {
@@ -111,6 +123,7 @@ const ItemList = ({ match }) => {
         accounts={accounts}
         numOfItems={numOfItems}
         properties={properties}
+        personalAssets={assets}
       />
       <SpendingInsights transactions={transactions} />
       <div className="item__header">
@@ -138,6 +151,7 @@ const ItemList = ({ match }) => {
           </LinkButton>
         )}
         <Property userId={userId} />
+        <Asset userId={userId} />
       </div>
       {items.map(item => (
         <div key={item.id}>

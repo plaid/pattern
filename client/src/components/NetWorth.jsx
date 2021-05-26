@@ -9,7 +9,12 @@ NetWorth.propTypes = {
   properties: PropTypes.array,
 };
 
-export default function NetWorth({ numOfItems, accounts, properties }) {
+export default function NetWorth({
+  numOfItems,
+  accounts,
+  properties,
+  personalAssets,
+}) {
   const accountTypes = {
     depository: {
       checking: 0,
@@ -47,7 +52,11 @@ export default function NetWorth({ numOfItems, accounts, properties }) {
     return a + b.value;
   }, 0);
 
-  const assets = depository + investment + propertyValue;
+  const personalAssetValue = personalAssets.reduce((a, b) => {
+    return a + b.value;
+  }, 0);
+
+  const assets = depository + investment + propertyValue + personalAssetValue;
   const liabilities = loan + credit;
 
   return (
@@ -79,6 +88,12 @@ export default function NetWorth({ numOfItems, accounts, properties }) {
                 <>
                   <p className="dataItem">{property.description}</p>
                   <p className="dataItem">{currencyFilter(property.value)}</p>
+                </>
+              ))}
+              {personalAssets.map(asset => (
+                <>
+                  <p className="dataItem">{asset.description}</p>
+                  <p className="dataItem">{currencyFilter(asset.value)}</p>
                 </>
               ))}
             </div>

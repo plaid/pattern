@@ -24,6 +24,11 @@ export const addProperty = (userId, description, value) =>
   api.post('/properties', { userId, description, value });
 export const getPropertiesByUser = userId => api.get(`/properties/${userId}`);
 
+// assets
+export const addAsset = (userId, description, value) =>
+  api.post('/assets', { userId, description, value });
+export const getAssetsByUser = userId => api.get(`/assets/${userId}`);
+
 // users
 export const getUsers = () => api.get('/users');
 export const getUserById = userId => api.get(`/users/${userId}`);

@@ -6,33 +6,33 @@ import TextInput from 'plaid-threads/TextInput';
 import NumberInput from 'plaid-threads/NumberInput';
 import PropTypes from 'prop-types';
 
-import { useProperties } from '../services';
+import { useAssets } from '../services';
 
-Property.propTypes = {
+Asset.propTypes = {
   userId: PropTypes.number,
 };
 
-export default function Property({ userId }) {
+export default function Asset({ userId }) {
   const [show, setShow] = useState(false);
   const [description, setDescription] = useState('');
   const [value, setValue] = useState('');
-  const { addProperty } = useProperties();
+  const { addAsset } = useAssets();
 
   const handleSubmit = () => {
     setShow(false);
-    addProperty(userId, description, parseInt(value));
+    addAsset(userId, description, parseInt(value));
   };
 
   return (
     <div>
       <Button centered inline small secondary onClick={() => setShow(!show)}>
-        Add Property
+        Add Asset
       </Button>
       <Modal isOpen={show} onRequestClose={() => setShow(false)}>
         <>
           <ModalBody
             onClickCancel={() => setShow(false)}
-            header="Enter Your Property"
+            header="Enter Your Asset"
             isLoading={false}
             onClickConfirm={handleSubmit}
             confirmText="Submit"

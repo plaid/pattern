@@ -160,38 +160,6 @@ const retrieveTransactionsInDateRange = async (
 };
 
 /**
- * Retrieves all transactions for a single item within a specified date range.
- *
- * @param {string} userId the ID of the user
- * @param {string} startDate the earliest date to retrieve ('YYYY-MM-DD').
- * @param {string} endDate the latest date to retrieve ('YYYY-MM-DD').
- * @returns {Object[]} an array of transactions.
- */
-const retrieveTransactionsInDateRangeByUserId = async (
-  userId,
-  startDate,
-  endDate
-) => {
-  const query = {
-    text: `
-      SELECT
-        *
-      FROM
-        transactions
-      WHERE
-        user_id = $1
-        AND date >= $2
-        AND date <= $3
-      ORDER BY
-        date DESC;
-    `,
-    values: [userId, startDate, endDate],
-  };
-  const { rows: transactions } = await db.query(query);
-  return transactions;
-};
-
-/**
  * Removes one or more transactions.
  *
  * @param {string[]} plaidTransactionIds the Plaid IDs of the transactions.
@@ -213,6 +181,5 @@ module.exports = {
   retrieveTransactionsByItemId,
   retrieveTransactionsByUserId,
   retrieveTransactionsInDateRange,
-  retrieveTransactionsInDateRangeByUserId,
   deleteTransactions,
 };

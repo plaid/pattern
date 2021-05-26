@@ -14,7 +14,6 @@ import {
   getTransactionsByAccount as apiGetTransactionsByAccount,
   getTransactionsByItem as apiGetTransactionsByItem,
   getTransactionsByUser as apiGetTransactionsByUser,
-  getTransactionsInDateRangeByUser as apiGetTransactionsInDateRangeByUser,
 } from './api';
 
 const TransactionsContext = createContext();
@@ -83,26 +82,6 @@ export function TransactionsProvider(props) {
   }, []);
 
   /**
-   * @desc Requests all Transactions that belong to an individual User within a date range.
-   * The api request will be bypassed if the data has already been fetched.
-   * A 'refresh' parameter can force a request for new data even if local state exists.
-   */
-  const getTransactionsInDateRangeByUser = useCallback(
-    async (userId, start, end, refresh) => {
-      if (!hasRequested.current.byUser[userId] || refresh) {
-        hasRequested.current.byUser[userId] = true;
-        const { data: payload } = await apiGetTransactionsInDateRangeByUser(
-          userId,
-          start,
-          end
-        );
-        dispatch([types.SUCCESSFUL_GET, payload]);
-      }
-    },
-    []
-  );
-
-  /**
    * @desc Will Delete all transactions that belong to an individual Item.
    * There is no api request as apiDeleteItemById in items delete all related transactions
    */
@@ -134,7 +113,6 @@ export function TransactionsProvider(props) {
       getTransactionsByAccount,
       getTransactionsByItem,
       getTransactionsByUser,
-      getTransactionsInDateRangeByUser,
       deleteTransactionsByItemId,
       deleteTransactionsByUserId,
     };
@@ -143,7 +121,6 @@ export function TransactionsProvider(props) {
     getTransactionsByAccount,
     getTransactionsByItem,
     getTransactionsByUser,
-    getTransactionsInDateRangeByUser,
     deleteTransactionsByItemId,
     deleteTransactionsByUserId,
   ]);

@@ -76,10 +76,10 @@ AS
 
 
 -- -- PROPERTY
--- -- This table is used to store the property associated with each user. The view returns the same data
+-- -- This table is used to store the asset associated with each user. The view returns the same data
 -- -- as the table, we're just using both to maintain consistency with our other tables.
 
-CREATE TABLE properties_table
+CREATE TABLE assets_table
 (
   id SERIAL PRIMARY KEY,
   user_id integer REFERENCES users_table(id) ON DELETE CASCADE,
@@ -89,12 +89,12 @@ CREATE TABLE properties_table
   updated_at timestamptz default now()
 );
 
-CREATE TRIGGER properties_updated_at_timestamp
-BEFORE UPDATE ON properties_table
+CREATE TRIGGER assets_updated_at_timestamp
+BEFORE UPDATE ON assets_table
 FOR EACH ROW
 EXECUTE PROCEDURE trigger_set_timestamp();
 
-CREATE VIEW properties
+CREATE VIEW assets
 AS
   SELECT
     id,
@@ -104,7 +104,7 @@ AS
     created_at,
     updated_at
   FROM
-    properties_table;
+    assets_table;
 
 
 

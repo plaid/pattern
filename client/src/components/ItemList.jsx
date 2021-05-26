@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import sortBy from 'lodash/sortBy';
 import NavigationLink from 'plaid-threads/NavigationLink';
-import moment from 'moment';
 
 import {
   useItems,
@@ -32,18 +31,13 @@ const ItemList = ({ match }) => {
   const [properties, setProperties] = useState([]);
   const [accounts, setAccounts] = useState([]);
 
-  const {
-    getTransactionsInDateRangeByUser,
-    transactionsByUser,
-  } = useTransactions();
+  const { getTransactionsByUser, transactionsByUser } = useTransactions();
   const { getAccountsByUser, accountsByUser } = useAccounts();
   const { propertiesByUser, getPropertiesByUser } = useProperties();
   const { usersById, getUserById } = useUsers();
   const { itemsByUser, getItemsByUser } = useItems();
   const userId = Number(match.params.userId);
   const linkConfig = useGenerateLinkConfig(false, userId, null);
-  const startDate = moment().subtract(30, 'days').format('YYYY-MM-DD');
-  const endDate = moment().format('YYYY-MM-DD');
 
   // update data store with user
   useEffect(() => {
@@ -56,8 +50,8 @@ const ItemList = ({ match }) => {
   }, [usersById, userId]);
 
   useEffect(() => {
-    getTransactionsInDateRangeByUser(userId, startDate, endDate);
-  }, [getTransactionsInDateRangeByUser, userId]);
+    getTransactionsByUser(userId);
+  }, [getTransactionsByUser, userId]);
 
   useEffect(() => {
     setTransactions(transactionsByUser[userId] || []);

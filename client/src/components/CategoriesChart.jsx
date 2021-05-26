@@ -17,9 +17,9 @@ export default function CategoriesChart({ categories }) {
 
   // threads colors (TO DO:  USE THREADS VARIABLE NAMES!!!)
   const COLORS = [
-    colors.yellow900,
-    colors.green900,
     colors.blue900,
+    colors.green900,
+    colors.yellow900,
     colors.red900,
   ];
 

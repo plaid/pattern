@@ -9,13 +9,24 @@ SpendingInsights.propTypes = {
 };
 
 export default function SpendingInsights({ transactions }) {
-  // filter out transfers and payments from transactions
-
-  const monthlyTransactions = transactions.filter(tx => {
-    return tx.category !== 'Payment' && tx.category !== 'Transfer';
-  });
+  // grab transactions from most recent month and filter out transfers and payments
+  const today = new Date();
+  const oneMonthAgo = new Date().setDate(today.getDate() - 30);
+  const monthlyTransactions = useMemo(
+    () =>
+      transactions.filter(tx => {
+        const date = new Date(tx.date);
+        return (
+          date > oneMonthAgo &&
+          tx.category !== 'Payment' &&
+          tx.category !== 'Transfer'
+        );
+      }),
+    [transactions]
+  );
 
   // create category and name objects from transactions
+
   const categoriesObject = useMemo(() => {
     const categories = {};
     monthlyTransactions.forEach(tx => {
@@ -34,7 +45,7 @@ export default function SpendingInsights({ transactions }) {
 
   // sort names by spending totals
   const sortedNames = useMemo(() => {
-    let namesArray = [];
+    const namesArray = [];
     for (const name in namesObject) {
       namesArray.push([name, namesObject[name]]);
     }

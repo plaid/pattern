@@ -25,7 +25,6 @@ const {
   retrieveTransactionsByItemId,
   retrieveTransactionsByUserId,
   retrieveTransactionsInDateRange,
-  retrieveTransactionsInDateRangeByUserId,
   deleteTransactions,
 } = require('./transactions');
 const {
@@ -37,7 +36,7 @@ const {
 } = require('./users');
 const { createLinkEvent } = require('./linkEvents');
 
-const { createProperty, retrievePropertiesByUser } = require('./properties');
+const { createAsset, retrieveAssetsByUser } = require('./assets');
 
 module.exports = {
   // accounts
@@ -62,7 +61,6 @@ module.exports = {
   retrieveTransactionsByItemId,
   retrieveTransactionsByUserId,
   retrieveTransactionsInDateRange,
-  retrieveTransactionsInDateRangeByUserId,
   deleteTransactions,
   // users
   createUser,
@@ -71,8 +69,8 @@ module.exports = {
   retrieveUserByUsername,
   retrieveUsers,
   //properties
-  createProperty,
-  retrievePropertiesByUser,
+  createAsset,
+  retrieveAssetsByUser,
   // link events
   createLinkEvent,
 };

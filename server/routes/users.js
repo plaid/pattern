@@ -122,27 +122,6 @@ router.get(
 );
 
 /**
- * Retrieves all transactions associated with a single user within a date range.
- *
- * @param {string} userId the ID of the user.
- * @param {string} start the start date.
- * @param {string} end the end date.
- * @returns {Object[]} an array of transactions
- */
-router.post(
-  '/transactionsInDateRange',
-  asyncWrapper(async (req, res) => {
-    const { userId, start, end } = req.body;
-    const transactions = await retrieveTransactionsInDateRangeByUserId(
-      userId,
-      start,
-      end
-    );
-    res.json(sanitizeTransactions(transactions));
-  })
-);
-
-/**
  * Deletes a user and its related items
  *
  * @param {string} userId the ID of the user.

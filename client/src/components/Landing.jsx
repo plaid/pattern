@@ -36,8 +36,6 @@ export default function Landing({}) {
         </Button>
       </div>
       {isAdding && <AddUserForm hideForm={hideForm} />}
-
-      <UserList />
     </div>
   );
 }

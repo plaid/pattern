@@ -37,6 +37,7 @@ export function CurrentUserProvider(props) {
       if (payload != null) {
         toast.success(`Successful login.  Welcome back ${username}`);
         dispatch([types.SUCCESSFUL_GET, payload]);
+        window.location.href = `/user/${payload[0].id}/items`;
       } else {
         toast.error(`Username ${username} is invalid.  Try again. `);
         dispatch([types.FAILED_GET]);
@@ -51,6 +52,7 @@ export function CurrentUserProvider(props) {
       const { data: payload } = await apiLogin(username);
       if (payload != null) {
         dispatch([types.SUCCESSFUL_GET, payload]);
+        window.location.href = `/user/${payload[0].id}/items`;
       } else {
         dispatch([types.FAILED_GET]);
       }

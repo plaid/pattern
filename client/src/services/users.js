@@ -99,6 +99,7 @@ export function UsersProvider(props) {
       deleteTransactionsByUserId(id);
       dispatch([types.SUCCESSFUL_DELETE, id]);
       delete hasRequested.current.byId[id];
+      window.location.href = `/`;
     },
     [deleteItemsByUserId, deleteAccountsByUserId, deleteTransactionsByUserId]
   );

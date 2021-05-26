@@ -20,6 +20,7 @@ import {
   Property,
   NetWorth,
   ItemCard,
+  UserCard,
 } from '.';
 
 const ItemList = ({ match }) => {
@@ -104,9 +105,7 @@ const ItemList = ({ match }) => {
         BACK TO LOGIN
       </NavigationLink>
       <Banner />
-      <div className="bottom-border-content user-card__detail">
-        <UserDetails numOfItems={items.length} user={user} />
-      </div>
+      <UserCard user={user} />
       <NetWorth
         accounts={accounts}
         numOfItems={numOfItems}
@@ -137,7 +136,6 @@ const ItemList = ({ match }) => {
             Add Another Item
           </LinkButton>
         )}
-        <Property userId={userId} />
       </div>
       {items.map(item => (
         <div key={item.id}>

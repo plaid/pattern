@@ -76,6 +76,7 @@ export default function UserCard({ user, removeButton }) {
               Link an Item
             </LinkButton>
           )}
+          <Property userId={user.id} />
           {removeButton && (
             <Button
               className="remove"
@@ -85,10 +86,9 @@ export default function UserCard({ user, removeButton }) {
               centered
               secondary
             >
-              Remove user
+              Delete user
             </Button>
           )}
-          <Property userId={user.id} />
         </div>
       </div>
     </div>

@@ -35,7 +35,7 @@ export default function Property({ userId }) {
         <>
           <ModalBody
             onClickCancel={() => setShow(false)}
-            header="Enter Your Property"
+            header="Enter Your Asset"
             isLoading={false}
             onClickConfirm={handleSubmit}
             confirmText="Submit"

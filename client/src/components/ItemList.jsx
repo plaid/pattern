@@ -3,20 +3,39 @@ import { Link } from 'react-router-dom';
 import sortBy from 'lodash/sortBy';
 import NavigationLink from 'plaid-threads/NavigationLink';
 
-import { useItems, useAccounts, useUsers } from '../services';
+import {
+  useItems,
+  useAccounts,
+  useTransactions,
+  useUsers,
+  useAssets,
+} from '../services';
 import { pluralize } from '../util';
-import ItemCard from './ItemCard';
 import { useGenerateLinkConfig } from '../hooks';
-import { Banner, LinkButton, UserDetails } from '.';
+import {
+  Banner,
+  LinkButton,
+  UserDetails,
+  SpendingInsights,
+  Asset,
+  NetWorth,
+  ItemCard,
+} from '.';
 
 const ItemList = ({ match }) => {
   const [user, setUser] = useState({});
   const [items, setItems] = useState([]);
   const [config, setConfig] = useState({ token: null, onSucces: null });
+  const [numOfItems, setNumOfItems] = useState(0);
+  const [transactions, setTransactions] = useState([]);
+  const [accounts, setAccounts] = useState([]);
+  const [assets, setAssets] = useState([]);
 
+  const { getTransactionsByUser, transactionsByUser } = useTransactions();
+  const { getAccountsByUser, accountsByUser } = useAccounts();
+  const { assetsByUser, getAssetsByUser } = useAssets();
   const { usersById, getUserById } = useUsers();
   const { itemsByUser, getItemsByUser } = useItems();
-  const { getAccountsByUser } = useAccounts();
   const userId = Number(match.params.userId);
   const linkConfig = useGenerateLinkConfig(false, userId, null);
 
@@ -29,6 +48,22 @@ const ItemList = ({ match }) => {
   useEffect(() => {
     setUser(usersById[userId] || {});
   }, [usersById, userId]);
+
+  useEffect(() => {
+    getTransactionsByUser(userId);
+  }, [getTransactionsByUser, userId]);
+
+  useEffect(() => {
+    setTransactions(transactionsByUser[userId] || []);
+  }, [transactionsByUser, userId]);
+
+  useEffect(() => {
+    getAssetsByUser(userId);
+  }, [getAssetsByUser, userId]);
+
+  useEffect(() => {
+    setAssets(assetsByUser.assets || []);
+  }, [assetsByUser, userId]);
 
   // update data store with the user's items
   useEffect(() => {
@@ -51,6 +86,15 @@ const ItemList = ({ match }) => {
   }, [getAccountsByUser, userId]);
 
   useEffect(() => {
+    setAccounts(accountsByUser[userId] || []);
+  }, [accountsByUser, userId]);
+
+  // update no of items from data store
+  useEffect(() => {
+    itemsByUser[userId] && setNumOfItems(itemsByUser[userId].length);
+  }, [itemsByUser, userId]);
+
+  useEffect(() => {
     setConfig(linkConfig);
   }, [linkConfig, userId]);
 
@@ -63,6 +107,12 @@ const ItemList = ({ match }) => {
       <div className="bottom-border-content user-card__detail">
         <UserDetails numOfItems={items.length} user={user} />
       </div>
+      <NetWorth
+        accounts={accounts}
+        numOfItems={numOfItems}
+        personalAssets={assets}
+      />
+      <SpendingInsights transactions={transactions} />
       <div className="item__header">
         <div>
           <h2 className="item__header-heading">
@@ -87,6 +137,7 @@ const ItemList = ({ match }) => {
             Add Another Item
           </LinkButton>
         )}
+        <Asset userId={userId} />
       </div>
       {items.map(item => (
         <div key={item.id}>

@@ -19,6 +19,11 @@ export default api;
 // currentUser
 export const login = username => api.post('/sessions', { username });
 
+// assets
+export const addAsset = (userId, description, value) =>
+  api.post('/assets', { userId, description, value });
+export const getAssetsByUser = userId => api.get(`/assets/${userId}`);
+
 // users
 export const getUsers = () => api.get('/users');
 export const getUserById = userId => api.get(`/users/${userId}`);

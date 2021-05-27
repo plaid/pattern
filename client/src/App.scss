@@ -363,3 +363,80 @@ More Details
   border: none;
   color: $black1000;
 }
+/*
+
+net worth
+
+*/
+
+.tableSubHeading {
+  margin-top: $unit;
+}
+
+.netWorthText {
+  font-family: $font-stack-monospace;
+  font-size: 2 * $unit;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.netWorthContainer {
+  .netWorthDollars {
+    margin-top: $unit;
+  }
+
+  .tableHeading {
+    margin-top: $unit;
+    margin-bottom: 0;
+  }
+}
+
+.holdingsContainer {
+  display: flex;
+}
+
+.userDataBox {
+  width: 69 * $unit;
+  min-height: 40 * $unit;
+  border: $border;
+  margin-right: 2 * $unit;
+}
+
+.holdingsList {
+  padding: 2 * $unit;
+
+  .title {
+    font-weight: bold;
+  }
+}
+
+.dollarsHeading {
+  font-weight: bold;
+  margin-top: 0;
+}
+
+.data {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+
+  .title {
+    font-weight: bold;
+  }
+
+  .dataItem {
+    margin-bottom: 0;
+  }
+}
+
+/*
+
+Monthly Spending
+
+*/
+.monthlySpendingContainer {
+  display: flex;
+}
+
+.recharts-wrapper {
+  margin: 0 2 * $unit;
+}

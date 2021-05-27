@@ -4,8 +4,7 @@ import { Link } from 'react-router-dom';
 import Button from 'plaid-threads/Button';
 import Touchable from 'plaid-threads/Touchable';
 
-import { Property } from '.';
-import { UserDetails, LinkButton } from '.';
+import { UserDetails, LinkButton, Asset } from '.';
 import { useItems, useUsers } from '../services';
 import { useGenerateLinkConfig } from '../hooks';
 
@@ -56,11 +55,7 @@ export default function UserCard({ user, removeButton }) {
       }}
     >
       <div className=" card user-card">
-        <Touchable
-          className="user-card-clickable"
-          component={Link}
-          to={`/user/${user.id}/items`}
-        >
+        <Touchable className="user-card-clickable" href="#itemCard">
           <div className="user-card__detail">
             <UserDetails
               hovered={hovered}
@@ -76,7 +71,7 @@ export default function UserCard({ user, removeButton }) {
               Link an Item
             </LinkButton>
           )}
-          <Property userId={user.id} />
+          <Asset userId={user.id} />
           {removeButton && (
             <Button
               className="remove"

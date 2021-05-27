@@ -6,4 +6,4 @@ export { default as useAccounts } from './accounts';
 export { default as useLink } from './link';
 export { default as useTransactions } from './transactions';
 export { default as useInstitutions } from './institutions';
-export { default as useProperties } from './properties';
+export { default as useAssets } from './assets';

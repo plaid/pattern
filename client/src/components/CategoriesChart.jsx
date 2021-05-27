@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { PieChart, Pie, Cell, Legend } from 'recharts';
+import colors from 'plaid-threads/scss/colors.ts';
 
 CategoriesChart.propTypes = {
   categories: PropTypes.object,
@@ -14,8 +15,12 @@ export default function CategoriesChart({ categories }) {
     data.push({ name: labels[i], value: Math.round(values[i]) });
   }
 
-  // threads colors (TO DO:  USE THREADS VARIABLE NAMES!!!)
-  const COLORS = ['#0868b8', '#2ab589', '#d9bc2d', '#d44648'];
+  const COLORS = [
+    colors.blue900,
+    colors.green900,
+    colors.yellow900,
+    colors.red900,
+  ];
 
   return (
     <div className="holdingsList">

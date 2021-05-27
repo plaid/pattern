@@ -11,7 +11,7 @@ const serviceRouter = require('./services');
 const linkEventsRouter = require('./linkEvents');
 const unhandledRouter = require('./unhandled');
 const linkTokensRouter = require('./linkTokens');
-const propertiesRouter = require('./properties');
+const assetsRouter = require('./assets');
 
 module.exports = {
   usersRouter,
@@ -23,5 +23,5 @@ module.exports = {
   linkTokensRouter,
   unhandledRouter,
   sessionsRouter,
-  propertiesRouter,
+  assetsRouter,
 };

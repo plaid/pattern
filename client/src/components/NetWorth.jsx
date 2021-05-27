@@ -6,10 +6,10 @@ import { currencyFilter, pluralize } from '../util';
 NetWorth.propTypes = {
   accounts: PropTypes.array,
   numOfItems: PropTypes.number,
-  properties: PropTypes.array,
+  personalAssets: PropTypes.array,
 };
 
-export default function NetWorth({ numOfItems, accounts, properties }) {
+export default function NetWorth({ numOfItems, accounts, personalAssets }) {
   const accountTypes = {
     depository: {
       checking: 0,
@@ -43,11 +43,12 @@ export default function NetWorth({ numOfItems, accounts, properties }) {
   const investment = addAllAccounts(accountTypes.investment);
   const loan = addAllAccounts(accountTypes.loan);
   const credit = addAllAccounts(accountTypes.credit);
-  const propertyValue = properties.reduce((a, b) => {
+
+  const personalAssetValue = personalAssets.reduce((a, b) => {
     return a + b.value;
   }, 0);
 
-  const assets = depository + investment + propertyValue;
+  const assets = depository + investment + personalAssetValue;
   const liabilities = loan + credit;
 
   return (
@@ -75,10 +76,10 @@ export default function NetWorth({ numOfItems, accounts, properties }) {
               <p className="dataItem">{currencyFilter(depository)}</p>
               <p className="dataItem">Investment</p>
               <p className="dataItem">{currencyFilter(investment)}</p>
-              {properties.map(property => (
+              {personalAssets.map(asset => (
                 <>
-                  <p className="dataItem">{property.description}</p>
-                  <p className="dataItem">{currencyFilter(property.value)}</p>
+                  <p className="dataItem">{asset.description}</p>
+                  <p className="dataItem">{currencyFilter(asset.value)}</p>
                 </>
               ))}
             </div>

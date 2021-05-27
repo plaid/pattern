@@ -7,8 +7,8 @@ import {
   useItems,
   useAccounts,
   useTransactions,
-  useProperties,
   useUsers,
+  useAssets,
 } from '../services';
 import { pluralize } from '../util';
 import { useGenerateLinkConfig } from '../hooks';
@@ -17,7 +17,7 @@ import {
   LinkButton,
   UserDetails,
   SpendingInsights,
-  Property,
+  Asset,
   NetWorth,
   ItemCard,
   UserCard,
@@ -29,12 +29,12 @@ const ItemList = ({ match }) => {
   const [config, setConfig] = useState({ token: null, onSucces: null });
   const [numOfItems, setNumOfItems] = useState(0);
   const [transactions, setTransactions] = useState([]);
-  const [properties, setProperties] = useState([]);
   const [accounts, setAccounts] = useState([]);
+  const [assets, setAssets] = useState([]);
 
   const { getTransactionsByUser, transactionsByUser } = useTransactions();
   const { getAccountsByUser, accountsByUser } = useAccounts();
-  const { propertiesByUser, getPropertiesByUser } = useProperties();
+  const { assetsByUser, getAssetsByUser } = useAssets();
   const { usersById, getUserById } = useUsers();
   const { itemsByUser, getItemsByUser } = useItems();
   const userId = Number(match.params.userId);
@@ -59,12 +59,12 @@ const ItemList = ({ match }) => {
   }, [transactionsByUser, userId]);
 
   useEffect(() => {
-    getPropertiesByUser(userId);
-  }, [getPropertiesByUser, userId]);
+    getAssetsByUser(userId);
+  }, [getAssetsByUser, userId]);
 
   useEffect(() => {
-    setProperties(propertiesByUser.properties || []);
-  }, [propertiesByUser, userId]);
+    setAssets(assetsByUser.assets || []);
+  }, [assetsByUser, userId]);
 
   // update data store with the user's items
   useEffect(() => {
@@ -109,7 +109,7 @@ const ItemList = ({ match }) => {
       <NetWorth
         accounts={accounts}
         numOfItems={numOfItems}
-        properties={properties}
+        personalAssets={assets}
       />
       <SpendingInsights transactions={transactions} />
       <div className="item__header">
@@ -136,9 +136,10 @@ const ItemList = ({ match }) => {
             Add Another Item
           </LinkButton>
         )}
+        <Asset userId={userId} />
       </div>
       {items.map(item => (
-        <div key={item.id}>
+        <div id="itemCard" key={item.id}>
           <ItemCard item={item} userId={userId} />
         </div>
       ))}

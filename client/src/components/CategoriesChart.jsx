@@ -15,7 +15,6 @@ export default function CategoriesChart({ categories }) {
     data.push({ name: labels[i], value: Math.round(values[i]) });
   }
 
-  // threads colors (TO DO:  USE THREADS VARIABLE NAMES!!!)
   const COLORS = [
     colors.blue900,
     colors.green900,

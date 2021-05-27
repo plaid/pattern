@@ -7,7 +7,6 @@ import {
   useItems,
   useAccounts,
   useTransactions,
-  useProperties,
   useUsers,
   useAssets,
 } from '../services';
@@ -18,7 +17,6 @@ import {
   LinkButton,
   UserDetails,
   SpendingInsights,
-  Property,
   Asset,
   NetWorth,
   ItemCard,
@@ -30,13 +28,11 @@ const ItemList = ({ match }) => {
   const [config, setConfig] = useState({ token: null, onSucces: null });
   const [numOfItems, setNumOfItems] = useState(0);
   const [transactions, setTransactions] = useState([]);
-  const [properties, setProperties] = useState([]);
   const [accounts, setAccounts] = useState([]);
   const [assets, setAssets] = useState([]);
 
   const { getTransactionsByUser, transactionsByUser } = useTransactions();
   const { getAccountsByUser, accountsByUser } = useAccounts();
-  const { propertiesByUser, getPropertiesByUser } = useProperties();
   const { assetsByUser, getAssetsByUser } = useAssets();
   const { usersById, getUserById } = useUsers();
   const { itemsByUser, getItemsByUser } = useItems();
@@ -60,14 +56,6 @@ const ItemList = ({ match }) => {
   useEffect(() => {
     setTransactions(transactionsByUser[userId] || []);
   }, [transactionsByUser, userId]);
-
-  useEffect(() => {
-    getPropertiesByUser(userId);
-  }, [getPropertiesByUser, userId]);
-
-  useEffect(() => {
-    setProperties(propertiesByUser.properties || []);
-  }, [propertiesByUser, userId]);
 
   useEffect(() => {
     getAssetsByUser(userId);
@@ -122,7 +110,6 @@ const ItemList = ({ match }) => {
       <NetWorth
         accounts={accounts}
         numOfItems={numOfItems}
-        properties={properties}
         personalAssets={assets}
       />
       <SpendingInsights transactions={transactions} />
@@ -150,7 +137,6 @@ const ItemList = ({ match }) => {
             Add Another Item
           </LinkButton>
         )}
-        <Property userId={userId} />
         <Asset userId={userId} />
       </div>
       {items.map(item => (

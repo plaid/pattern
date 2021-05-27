@@ -4,7 +4,6 @@ import { Link } from 'react-router-dom';
 import Button from 'plaid-threads/Button';
 import Touchable from 'plaid-threads/Touchable';
 
-import { Property } from '.';
 import { UserDetails, LinkButton } from '.';
 import { useItems, useUsers } from '../services';
 import { useGenerateLinkConfig } from '../hooks';
@@ -88,7 +87,6 @@ export default function UserCard({ user, removeButton }) {
               Remove user
             </Button>
           )}
-          <Property userId={user.id} />
         </div>
       </div>
     </div>

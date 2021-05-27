@@ -28,19 +28,21 @@ export default function SpendingInsights({ transactions }) {
   // create category and name objects from transactions
 
   const categoriesObject = useMemo(() => {
-    const categories = {};
-    monthlyTransactions.forEach(tx => {
-      categories[tx.category] = (categories[tx.category] || 0) + tx.amount;
-    });
-    return categories;
+    return monthlyTransactions.reduce((obj, tx) => {
+      tx.category in obj
+        ? (obj[tx.category] = tx.amount + obj[tx.category])
+        : (obj[tx.category] = tx.amount);
+      return obj;
+    }, {});
   }, [transactions]);
 
   const namesObject = useMemo(() => {
-    const names = {};
-    monthlyTransactions.forEach(tx => {
-      names[tx.name] = (names[tx.name] || 0) + tx.amount;
-    });
-    return names;
+    return monthlyTransactions.reduce((obj, tx) => {
+      tx.name in obj
+        ? (obj[tx.name] = tx.amount + obj[tx.name])
+        : (obj[tx.name] = tx.amount);
+      return obj;
+    }, {});
   }, [transactions]);
 
   // sort names by spending totals

@@ -17,7 +17,7 @@ const Banner = ({ initialSubheading }) => {
     'This is an example app that shows a Plaid integration for a Personal Finance Manager Use Case.';
 
   const successText =
-    'Success! You can explore account and transaction details for the linked item';
+    "This page shows a user's net worth, spending by category, and allows them to explore account and transactions details for linked items.";
 
   const subheadingText = initialSubheading ? initialText : successText;
 

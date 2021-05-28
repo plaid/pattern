@@ -53,7 +53,7 @@ export default function NetWorth({ numOfItems, accounts, personalAssets }) {
 
   return (
     <div className="netWorthContainer">
-      <h2 className="tableHeading">Net Worth</h2>
+      <h2 className="netWorthHeading">Net Worth</h2>
       <h4 className="tableSubHeading">
         A summary of your assets and liabilities
       </h4>

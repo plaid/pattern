@@ -93,13 +93,12 @@ export function UsersProvider(props) {
    */
   const deleteUserById = useCallback(
     async id => {
-      await apiDeleteUserById(id);
+      await apiDeleteUserById(id); // this will delete all items associated with user
       deleteItemsByUserId(id);
       deleteAccountsByUserId(id);
       deleteTransactionsByUserId(id);
       dispatch([types.SUCCESSFUL_DELETE, id]);
       delete hasRequested.current.byId[id];
-      window.location.href = `/`;
     },
     [deleteItemsByUserId, deleteAccountsByUserId, deleteTransactionsByUserId]
   );

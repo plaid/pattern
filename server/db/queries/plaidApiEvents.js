@@ -49,6 +49,20 @@ const createPlaidApiEvent = async (
   await db.query(query);
 };
 
+/**
+ * Retrieves all events.
+ *
+ * @returns {Object[]} an array of events.
+ */
+const retrieveAllApiEvents = async () => {
+  const query = {
+    text: 'SELECT * FROM api_events_table',
+  };
+  const { rows: events } = await db.query(query);
+  return events;
+};
+
 module.exports = {
   createPlaidApiEvent,
+  retrieveAllApiEvents,
 };

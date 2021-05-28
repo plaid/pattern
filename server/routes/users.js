@@ -12,7 +12,6 @@ const {
   deleteUsers,
   retrieveItemsByUser,
   retrieveTransactionsByUserId,
-  retrieveTransactionsInDateRangeByUserId,
   retrieveUserById,
 } = require('../db/queries');
 const { asyncWrapper } = require('../middleware');

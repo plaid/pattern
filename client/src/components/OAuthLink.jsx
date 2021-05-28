@@ -4,7 +4,7 @@ import { LinkButton } from './';
 import { useGenerateLinkConfig } from '../hooks';
 
 // Component rendered when user is redirected back to site from Oauth institution site.  It initiates link immediately with
-// configs that are generated with the link token, userId and itemId from local storage.
+// configs that are generated with the original link token, userId and itemId that were set in local storage from the initial link initialization.
 const OAuthLink = () => {
   const [config, setConfig] = useState({});
   let { userId, itemId, token } = JSON.parse(
@@ -21,7 +21,7 @@ const OAuthLink = () => {
     <>
       {config.onSuccess != null && (
         <LinkButton
-          isOauth={true}
+          isOauth={true} // this will initiate link immediately
           userId={userId}
           itemId={itemId}
           config={config}

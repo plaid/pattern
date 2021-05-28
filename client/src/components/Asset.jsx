@@ -26,7 +26,7 @@ export default function Asset({ userId }) {
   return (
     <div>
       <Button centered inline small secondary onClick={() => setShow(!show)}>
-        Add Asset
+        Add An Asset
       </Button>
       <Modal isOpen={show} onRequestClose={() => setShow(false)}>
         <>

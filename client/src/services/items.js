@@ -51,6 +51,7 @@ export function ItemsProvider(props) {
     if (!hasRequested.current.byId[id] || refresh) {
       hasRequested.current.byId[id] = true;
       const { data: payload } = await apiGetItemById(id);
+      console.log("i'm insde items services", payload);
       dispatch([types.SUCCESSFUL_REQUEST, payload]);
     }
   }, []);
@@ -71,9 +72,10 @@ export function ItemsProvider(props) {
    * The api request will be bypassed if the data has already been fetched.
    * A 'refresh' parameter can force a request for new data even if local state exists.
    */
-  const deleteItemById = useCallback(async id => {
+  const deleteItemById = useCallback(async (id, userId) => {
     await apiDeleteItemById(id);
     dispatch([types.SUCCESSFUL_DELETE, id]);
+    await getItemsByUser(userId);
     delete hasRequested.current.byId[id];
   }, []);
 

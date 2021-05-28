@@ -174,6 +174,7 @@ UserCard
 .user-card__buttons {
   display: grid;
   grid-row-gap: $unit;
+  justify-content: center;
 }
 
 /*
@@ -385,8 +386,8 @@ net worth
     margin-top: $unit;
   }
 
-  .tableHeading {
-    margin-top: $unit;
+  .netWorthHeading {
+    margin-top: 7 * $unit;
     margin-bottom: 0;
   }
 }
@@ -403,7 +404,7 @@ net worth
 }
 
 .holdingsList {
-  padding: 2 * $unit;
+  padding: 4 * $unit;
 
   .title {
     font-weight: bold;
@@ -412,6 +413,10 @@ net worth
 
 .dollarsHeading {
   font-weight: bold;
+  margin-top: 0;
+}
+
+.holdingsHeading {
   margin-top: 0;
 }
 
@@ -435,6 +440,11 @@ Monthly Spending
 */
 .monthlySpendingContainer {
   display: flex;
+}
+
+.monthlySpendingHeading {
+  margin-top: 10 * $unit;
+  margin-bottom: 7 * $unit;
 }
 
 .recharts-wrapper {

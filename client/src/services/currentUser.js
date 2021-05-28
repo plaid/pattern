@@ -7,6 +7,7 @@ import React, {
 } from 'react';
 import { toast } from 'react-toastify';
 import { login as apiLogin } from './api';
+import { useRouter } from '../hooks';
 
 const CurrentUserContext = createContext();
 
@@ -27,6 +28,7 @@ export function CurrentUserProvider(props) {
     currentUser: {},
     newUser: null,
   });
+  const pushRoute = useRouter();
 
   /**
    * @desc Requests details for a single User.
@@ -37,7 +39,7 @@ export function CurrentUserProvider(props) {
       if (payload != null) {
         toast.success(`Successful login.  Welcome back ${username}`);
         dispatch([types.SUCCESSFUL_GET, payload]);
-        window.location.href = `/user/${payload[0].id}/items`;
+        pushRoute(`/user/${payload[0].id}/items`);
       } else {
         toast.error(`Username ${username} is invalid.  Try again. `);
         dispatch([types.FAILED_GET]);
@@ -52,7 +54,7 @@ export function CurrentUserProvider(props) {
       const { data: payload } = await apiLogin(username);
       if (payload != null) {
         dispatch([types.SUCCESSFUL_GET, payload]);
-        window.location.href = `/user/${payload[0].id}/items`;
+        pushRoute(`/user/${payload[0].id}/items`);
       } else {
         dispatch([types.FAILED_GET]);
       }

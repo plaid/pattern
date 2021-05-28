@@ -28,6 +28,7 @@ export const getAssetsByUser = userId => api.get(`/assets/${userId}`);
 export const getUsers = () => api.get('/users');
 export const getUserById = userId => api.get(`/users/${userId}`);
 export const addNewUser = username => api.post('/users', { username });
+// delete all items associated with a user
 export const deleteUserById = userId => api.delete(`/users/${userId}`);
 
 // items
@@ -63,6 +64,7 @@ export const getInstitutionById = instId => api.get(`/institutions/${instId}`);
 
 // misc
 export const postLinkEvent = event => api.post(`/link-event`, event);
+export const getLinkEvents = () => api.get(`/link-event`);
 
 export const exchangeToken = async (
   publicToken,

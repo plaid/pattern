@@ -67,7 +67,7 @@ export default function LinkButton({
           {children}
         </Touchable>
       ) : (
-        // regular case for initializing Link from user card or from user item list
+        // regular case for initializing Link from user card or from "add another item" button
         <Button
           centered
           inline

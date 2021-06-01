@@ -107,7 +107,7 @@ const UserPage = ({ match }) => {
         BACK TO LOGIN
       </NavigationLink>
       <Banner />
-      <UserCard user={user} removeButton={false} numOfItems={numOfItems} />
+      <UserCard user={user} removeButton={false} />
       {numOfItems > 0 && (
         <>
           <NetWorth

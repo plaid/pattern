@@ -42,20 +42,6 @@ const createLinkEvent = async ({
   await db.query(query);
 };
 
-/**
- * Retrieves all events.
- *
- * @returns {Object[]} an array of events.
- */
-const retrieveAllLinkEvents = async () => {
-  const query = {
-    text: 'SELECT * FROM link_events_table',
-  };
-  const { rows: events } = await db.query(query);
-  return events;
-};
-
 module.exports = {
   createLinkEvent,
-  retrieveAllLinkEvents,
 };

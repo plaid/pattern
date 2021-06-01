@@ -18,10 +18,7 @@ const {
   retrieveItemsByUser,
   updateItemStatus,
 } = require('./items');
-const {
-  createPlaidApiEvent,
-  retrieveAllApiEvents,
-} = require('./plaidApiEvents');
+const { createPlaidApiEvent } = require('./plaidApiEvents');
 const {
   createTransactions,
   retrieveTransactionsByAccountId,
@@ -37,7 +34,7 @@ const {
   retrieveUserById,
   retrieveUserByUsername,
 } = require('./users');
-const { createLinkEvent, retrieveAllLinkEvents } = require('./linkEvents');
+const { createLinkEvent } = require('./linkEvents');
 
 const { createAsset, retrieveAssetsByUser } = require('./assets');
 
@@ -58,7 +55,6 @@ module.exports = {
   updateItemStatus,
   // plaid api events
   createPlaidApiEvent,
-  retrieveAllApiEvents,
   // transactions
   createTransactions,
   retrieveTransactionsByAccountId,
@@ -77,5 +73,4 @@ module.exports = {
   retrieveAssetsByUser,
   // link events
   createLinkEvent,
-  retrieveAllLinkEvents,
 };

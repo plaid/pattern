@@ -24,7 +24,7 @@ export default function Asset({ userId }) {
   };
 
   return (
-    <div>
+    <div className="assetBtnContainer">
       <Button centered inline small secondary onClick={() => setShow(!show)}>
         Add An Asset
       </Button>

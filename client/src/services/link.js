@@ -5,6 +5,7 @@ import React, {
   useReducer,
   useRef,
 } from 'react';
+import { useHistory } from 'react-router-dom';
 
 import {
   exchangeToken,
@@ -13,7 +14,6 @@ import {
   setItemState,
 } from './api';
 
-import { useRouter } from '../hooks';
 import { useItems } from '.';
 
 const LinkContext = React.createContext();
@@ -31,7 +31,7 @@ const types = {
  * and fetch instances of Link.
  */
 export function LinkProvider(props) {
-  const router = useRouter();
+  const history = useHistory();
   const [linkConfigs, dispatch] = useReducer(reducer, {
     byUser: {}, // normal case
     byItem: {}, // update mode
@@ -84,7 +84,7 @@ export function LinkProvider(props) {
           getItemsByUser(userId, true);
         }
 
-        router(`/user/${userId}`);
+        history.push(`/user/${userId}`);
       };
 
       const onExit = async (

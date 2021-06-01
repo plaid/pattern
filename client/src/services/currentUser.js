@@ -6,8 +6,8 @@ import React, {
   useCallback,
 } from 'react';
 import { toast } from 'react-toastify';
+import { useHistory } from 'react-router-dom';
 import { login as apiLogin } from './api';
-import { useRouter } from '../hooks';
 
 const CurrentUserContext = createContext();
 
@@ -28,7 +28,7 @@ export function CurrentUserProvider(props) {
     currentUser: {},
     newUser: null,
   });
-  const router = useRouter();
+  const history = useHistory();
 
   /**
    * @desc Requests details for a single User.
@@ -39,7 +39,7 @@ export function CurrentUserProvider(props) {
       if (payload != null) {
         toast.success(`Successful login.  Welcome back ${username}`);
         dispatch([types.SUCCESSFUL_GET, payload]);
-        router(`/user/${payload[0].id}/items`);
+        history.push(`/user/${payload[0].id}/items`);
       } else {
         toast.error(`Username ${username} is invalid.  Try again. `);
         dispatch([types.FAILED_GET]);
@@ -54,7 +54,7 @@ export function CurrentUserProvider(props) {
       const { data: payload } = await apiLogin(username);
       if (payload != null) {
         dispatch([types.SUCCESSFUL_GET, payload]);
-        router(`/user/${payload[0].id}/items`);
+        history.push(`/user/${payload[0].id}/items`);
       } else {
         dispatch([types.FAILED_GET]);
       }

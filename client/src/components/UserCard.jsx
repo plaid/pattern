@@ -12,26 +12,20 @@ UserCard.propTypes = {
   user: PropTypes.object.isRequired,
   removeButton: PropTypes.bool,
   linkButton: PropTypes.bool,
-  numOfItems: PropTypes.number,
 };
 
 UserCard.defaultProps = {
   user: {},
   removeButton: true,
   linkButton: true,
-  numOfItems: 0,
 };
 
-export default function UserCard({
-  user,
-  removeButton,
-  linkButton,
-  numOfItems,
-}) {
+export default function UserCard({ user, removeButton, linkButton }) {
+  const [numOfItems, setNumOfItems] = useState(0);
   const [config, setConfig] = useState({ token: null, onSucces: null });
   const [hovered, setHovered] = useState(false);
 
-  const { getItemsByUser } = useItems();
+  const { itemsByUser, getItemsByUser } = useItems();
   const { deleteUserById } = useUsers();
   const linkConfig = useGenerateLinkConfig(false, user.id, null);
 
@@ -39,6 +33,15 @@ export default function UserCard({
   useEffect(() => {
     getItemsByUser(user.id);
   }, [getItemsByUser, user.id]);
+
+  // update no of items from data store
+  useEffect(() => {
+    if (itemsByUser[user.id] != null) {
+      setNumOfItems(itemsByUser[user.id].length);
+    } else {
+      setNumOfItems(0);
+    }
+  }, [itemsByUser, user.id]);
 
   useEffect(() => {
     setConfig(linkConfig);

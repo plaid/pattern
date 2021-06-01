@@ -23,12 +23,7 @@ const UserList = () => {
       <div>
         {users.map(user => (
           <div key={user.id}>
-            <UserCard
-              user={user}
-              admin={true}
-              linkButton={false}
-              assetButton={false}
-            />
+            <UserCard user={user} linkButton={false} assetButton={false} />
           </div>
         ))}
       </div>

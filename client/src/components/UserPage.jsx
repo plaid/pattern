@@ -114,6 +114,7 @@ const UserPage = ({ match }) => {
             accounts={accounts}
             numOfItems={numOfItems}
             personalAssets={assets}
+            userId={userId}
           />
           <SpendingInsights transactions={transactions} />
           <div className="item__header">

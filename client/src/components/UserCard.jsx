@@ -14,7 +14,6 @@ UserCard.propTypes = {
   removeButton: PropTypes.bool,
   linkButton: PropTypes.bool,
   assetButton: PropTypes.bool,
-  admin: PropTypes.bool,
 };
 
 UserCard.defaultProps = {
@@ -22,7 +21,6 @@ UserCard.defaultProps = {
   removeButton: true,
   linkButton: true,
   assetButton: true,
-  admin: false,
 };
 
 export default function UserCard({
@@ -30,7 +28,6 @@ export default function UserCard({
   removeButton,
   linkButton,
   assetButton,
-  admin,
 }) {
   const [numOfItems, setNumOfItems] = useState(0);
   const [config, setConfig] = useState({ token: null, onSucces: null });
@@ -74,7 +71,8 @@ export default function UserCard({
       <div className=" card user-card">
         <Touchable
           className="user-card-clickable"
-          href={!admin ? '#itemCard' : `/user/${user.id}`}
+          component={HashLink}
+          to={`/user/${user.id}#itemCard`}
         >
           <div className="user-card__detail">
             <UserDetails

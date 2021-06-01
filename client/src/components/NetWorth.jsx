@@ -2,14 +2,21 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import { currencyFilter, pluralize } from '../util';
+import { Asset } from '.';
 
 NetWorth.propTypes = {
   accounts: PropTypes.array,
   numOfItems: PropTypes.number,
   personalAssets: PropTypes.array,
+  userId: PropTypes.number,
 };
 
-export default function NetWorth({ numOfItems, accounts, personalAssets }) {
+export default function NetWorth({
+  numOfItems,
+  accounts,
+  personalAssets,
+  userId,
+}) {
   const accountTypes = {
     depository: {
       checking: 0,
@@ -83,6 +90,7 @@ export default function NetWorth({ numOfItems, accounts, personalAssets }) {
                 </>
               ))}
             </div>
+            <Asset userId={userId} />
           </div>
         </div>
         <div className="userDataBox">

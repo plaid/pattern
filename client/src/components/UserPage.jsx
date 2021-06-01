@@ -143,7 +143,7 @@ const UserPage = ({ match }) => {
             )}
           </div>
           {items.map(item => (
-            <div id="itemCard" key={item.id}>
+            <div id="itemCards" key={item.id}>
               <ItemCard item={item} userId={userId} removeButton={false} />
             </div>
           ))}

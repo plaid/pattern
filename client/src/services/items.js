@@ -74,6 +74,7 @@ export function ItemsProvider(props) {
   const deleteItemById = useCallback(async (id, userId) => {
     await apiDeleteItemById(id);
     dispatch([types.SUCCESSFUL_DELETE, id]);
+    // Update items list after deletion.
     await getItemsByUser(userId);
     delete hasRequested.current.byId[id];
   }, []);

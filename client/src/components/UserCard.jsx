@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
 import { HashLink } from 'react-router-hash-link';
 import Button from 'plaid-threads/Button';
 import Touchable from 'plaid-threads/Touchable';
@@ -21,12 +20,7 @@ UserCard.defaultProps = {
   linkButton: true,
 };
 
-export default function UserCard({
-  user,
-  removeButton,
-  linkButton,
-  assetButton,
-}) {
+export default function UserCard({ user, removeButton, linkButton }) {
   const [numOfItems, setNumOfItems] = useState(0);
   const [config, setConfig] = useState({ token: null, onSucces: null });
   const [hovered, setHovered] = useState(false);
@@ -70,7 +64,7 @@ export default function UserCard({
         <Touchable
           className="user-card-clickable"
           component={HashLink}
-          to={`/user/${user.id}#itemCard`}
+          to={`/user/${user.id}#itemCards`}
         >
           <div className="user-card__detail">
             <UserDetails

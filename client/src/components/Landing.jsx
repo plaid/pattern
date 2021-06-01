@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import Button from 'plaid-threads/Button';
-import { useHistory, Link } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 
 import { useUsers, useCurrentUser } from '../services';
 import { Login, Banner, AddUserForm } from './';

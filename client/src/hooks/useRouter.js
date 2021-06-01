@@ -9,7 +9,8 @@ useRouter.propTypes = {
 useRouter.defaultProps = {
   path: null,
 };
-
+// Custom hook created in order to use useRouter hook in
+// onSuccess function in Link.
 export default function useRouter() {
   const history = useHistory();
 

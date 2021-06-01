@@ -5,7 +5,7 @@ import { HashLink } from 'react-router-hash-link';
 import Button from 'plaid-threads/Button';
 import Touchable from 'plaid-threads/Touchable';
 
-import { UserDetails, LinkButton, Asset } from '.';
+import { UserDetails, LinkButton } from '.';
 import { useItems, useUsers } from '../services';
 import { useGenerateLinkConfig } from '../hooks';
 
@@ -13,14 +13,12 @@ UserCard.propTypes = {
   user: PropTypes.object.isRequired,
   removeButton: PropTypes.bool,
   linkButton: PropTypes.bool,
-  assetButton: PropTypes.bool,
 };
 
 UserCard.defaultProps = {
   user: {},
   removeButton: true,
   linkButton: true,
-  assetButton: true,
 };
 
 export default function UserCard({
@@ -89,7 +87,6 @@ export default function UserCard({
               Link an Item
             </LinkButton>
           )}
-          {assetButton && <Asset userId={user.id} />}
           {removeButton && (
             <Button
               className="remove"

@@ -64,7 +64,6 @@ export const getInstitutionById = instId => api.get(`/institutions/${instId}`);
 
 // misc
 export const postLinkEvent = event => api.post(`/link-event`, event);
-export const getLinkEvents = () => api.get(`/link-event`);
 
 export const exchangeToken = async (
   publicToken,

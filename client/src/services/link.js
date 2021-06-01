@@ -50,15 +50,6 @@ export function LinkProvider(props) {
 
   const generateLinkConfigs = useCallback(
     async (isOauth, userId, itemId, oauthToken) => {
-      // The config creation will be bypassed if configs already exist for
-      // that User or Item.
-
-      // if (
-      //   !(itemId != null && !hasRequested.current.byItem[itemId]) &&
-      //   !(userId != null && !hasRequested.current.byUser[userId])
-      // ) {
-      //   return;
-      // }
       const isUpdate = itemId != null;
 
       if (isUpdate) {

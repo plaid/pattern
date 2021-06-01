@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import Button from 'plaid-threads/Button';
 import { useHistory, Link } from 'react-router-dom';
 
-import { useUsers, useCurrentUser, useLinkEvents } from '../services';
+import { useUsers, useCurrentUser } from '../services';
 import { Login, Banner, AddUserForm } from './';
 
 import { useBoolean } from '../hooks';
@@ -12,7 +12,6 @@ const PLAID_ENV = process.env.REACT_APP_PLAID_ENV;
 export default function Landing({}) {
   const { getUsers, usersById } = useUsers();
   const { userState, setCurrentUser } = useCurrentUser();
-  const { linkEvents, getLinkEvents } = useLinkEvents();
   const [isAdding, showForm, hideForm, toggleForm] = useBoolean(false);
   const history = useHistory();
 
@@ -25,12 +24,6 @@ export default function Landing({}) {
       setCurrentUser(userState.newUser);
     }
   }, [getUsers, usersById]);
-
-  useEffect(() => {
-    getLinkEvents();
-  }, [getLinkEvents, usersById]);
-
-  console.log(userState);
 
   const returnToCurrentUser = () => {
     history.push(`/user/${userState.currentUser.id}`);
@@ -50,8 +43,6 @@ export default function Landing({}) {
             centered
             inline
             onClick={returnToCurrentUser}
-            // component={Link}
-            // to = `/user/${userState.currentUser.id}/items`
           >
             Return to Current User
           </Button>

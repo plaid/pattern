@@ -51,7 +51,6 @@ export function ItemsProvider(props) {
     if (!hasRequested.current.byId[id] || refresh) {
       hasRequested.current.byId[id] = true;
       const { data: payload } = await apiGetItemById(id);
-      console.log("i'm insde items services", payload);
       dispatch([types.SUCCESSFUL_REQUEST, payload]);
     }
   }, []);

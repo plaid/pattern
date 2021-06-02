@@ -21,7 +21,7 @@ const OAuthLink = () => {
     <>
       {config.onSuccess != null && (
         <LinkButton
-          isOauth={true} // this will initiate link immediately
+          isOauth // this will initiate link immediately
           userId={userId}
           itemId={itemId}
           config={config}

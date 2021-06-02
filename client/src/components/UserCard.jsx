@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
+import { HashLink } from 'react-router-hash-link';
 import Button from 'plaid-threads/Button';
 import Touchable from 'plaid-threads/Touchable';
 
@@ -11,14 +11,16 @@ import { useGenerateLinkConfig } from '../hooks';
 UserCard.propTypes = {
   user: PropTypes.object.isRequired,
   removeButton: PropTypes.bool,
+  linkButton: PropTypes.bool,
 };
 
 UserCard.defaultProps = {
   user: {},
   removeButton: true,
+  linkButton: true,
 };
 
-export default function UserCard({ user, removeButton }) {
+export default function UserCard({ user, removeButton, linkButton }) {
   const [numOfItems, setNumOfItems] = useState(0);
   const [config, setConfig] = useState({ token: null, onSucces: null });
   const [hovered, setHovered] = useState(false);
@@ -34,7 +36,11 @@ export default function UserCard({ user, removeButton }) {
 
   // update no of items from data store
   useEffect(() => {
-    itemsByUser[user.id] && setNumOfItems(itemsByUser[user.id].length);
+    if (itemsByUser[user.id] != null) {
+      setNumOfItems(itemsByUser[user.id].length);
+    } else {
+      setNumOfItems(0);
+    }
   }, [itemsByUser, user.id]);
 
   useEffect(() => {
@@ -42,7 +48,7 @@ export default function UserCard({ user, removeButton }) {
   }, [linkConfig, user.id]);
 
   const handleDeleteUser = () => {
-    deleteUserById(user.id);
+    deleteUserById(user.id); // this will delete all items associated with a user
   };
   return (
     <div
@@ -57,8 +63,8 @@ export default function UserCard({ user, removeButton }) {
       <div className=" card user-card">
         <Touchable
           className="user-card-clickable"
-          component={Link}
-          to={`/user/${user.id}/items`}
+          component={HashLink}
+          to={`/user/${user.id}#itemCards`}
         >
           <div className="user-card__detail">
             <UserDetails
@@ -70,7 +76,7 @@ export default function UserCard({ user, removeButton }) {
         </Touchable>
 
         <div className="user-card__buttons">
-          {config.token != null && (
+          {config.token != null && linkButton && (
             <LinkButton userId={user.id} config={config} itemId={null}>
               Link an Item
             </LinkButton>
@@ -84,7 +90,7 @@ export default function UserCard({ user, removeButton }) {
               centered
               secondary
             >
-              Remove user
+              Delete user
             </Button>
           )}
         </div>

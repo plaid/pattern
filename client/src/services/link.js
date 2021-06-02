@@ -5,6 +5,7 @@ import React, {
   useReducer,
   useRef,
 } from 'react';
+import { useHistory } from 'react-router-dom';
 
 import {
   exchangeToken,
@@ -12,6 +13,7 @@ import {
   postLinkEvent,
   setItemState,
 } from './api';
+
 import { useItems } from '.';
 
 const LinkContext = React.createContext();
@@ -29,6 +31,7 @@ const types = {
  * and fetch instances of Link.
  */
 export function LinkProvider(props) {
+  const history = useHistory();
   const [linkConfigs, dispatch] = useReducer(reducer, {
     byUser: {}, // normal case
     byItem: {}, // update mode
@@ -47,15 +50,6 @@ export function LinkProvider(props) {
 
   const generateLinkConfigs = useCallback(
     async (isOauth, userId, itemId, oauthToken) => {
-      // The config creation will be bypassed if configs already exist for
-      // that User or Item.
-
-      if (
-        !(itemId != null && !hasRequested.current.byItem[itemId]) &&
-        !(userId != null && !hasRequested.current.byUser[userId])
-      ) {
-        return;
-      }
       const isUpdate = itemId != null;
 
       if (isUpdate) {
@@ -63,6 +57,7 @@ export function LinkProvider(props) {
       } else {
         hasRequested.current.byUser[userId] = true;
       }
+      // generate link token only if not OAuth redirect.  Else use the oauthToken from local storage.
       let token;
       if (!isOauth) {
         const linkTokenResponse = await getLinkToken({ itemId, userId });
@@ -89,7 +84,7 @@ export function LinkProvider(props) {
           getItemsByUser(userId, true);
         }
 
-        window.location.href = `/user/${userId}/items`;
+        history.push(`/user/${userId}`);
       };
 
       const onExit = async (

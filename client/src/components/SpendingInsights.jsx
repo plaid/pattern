@@ -58,14 +58,14 @@ export default function SpendingInsights({ transactions }) {
 
   return (
     <div>
-      <h2>Monthly Spending</h2>
+      <h2 className="monthlySpendingHeading">Monthly Spending</h2>
       <div className="monthlySpendingContainer">
         <div className="userDataBox">
           <CategoriesChart categories={categoriesObject} />
         </div>
         <div className="userDataBox">
           <div className="holdingsList">
-            <h4 className="tableHeading">Top 5 Vendors</h4>
+            <h4 className="holdingsHeading">Top 5 Vendors</h4>
             <div className="data">
               <p className="title">Vendor</p> <p className="title">Amount</p>
               {sortedNames.map(vendor => (

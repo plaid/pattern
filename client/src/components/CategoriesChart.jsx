@@ -24,7 +24,7 @@ export default function CategoriesChart({ categories }) {
 
   return (
     <div className="holdingsList">
-      <h4 className="tableHeading">Spending Categories</h4>
+      <h4 className="holdingsHeading">Spending Categories</h4>
       <PieChart width={400} height={400}>
         <Legend />
         <Pie

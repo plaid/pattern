@@ -15,14 +15,13 @@ import { useGenerateLinkConfig } from '../hooks';
 import {
   Banner,
   LinkButton,
-  UserDetails,
   SpendingInsights,
-  Asset,
   NetWorth,
   ItemCard,
+  UserCard,
 } from '.';
 
-const ItemList = ({ match }) => {
+const UserPage = ({ match }) => {
   const [user, setUser] = useState({});
   const [items, setItems] = useState([]);
   const [config, setConfig] = useState({ token: null, onSucces: null });
@@ -91,7 +90,11 @@ const ItemList = ({ match }) => {
 
   // update no of items from data store
   useEffect(() => {
-    itemsByUser[userId] && setNumOfItems(itemsByUser[userId].length);
+    if (itemsByUser[userId] != null) {
+      setNumOfItems(itemsByUser[userId].length);
+    } else {
+      setNumOfItems(0);
+    }
   }, [itemsByUser, userId]);
 
   useEffect(() => {
@@ -104,48 +107,50 @@ const ItemList = ({ match }) => {
         BACK TO LOGIN
       </NavigationLink>
       <Banner />
-      <div className="bottom-border-content user-card__detail">
-        <UserDetails numOfItems={items.length} user={user} />
-      </div>
-      <NetWorth
-        accounts={accounts}
-        numOfItems={numOfItems}
-        personalAssets={assets}
-      />
-      <SpendingInsights transactions={transactions} />
-      <div className="item__header">
-        <div>
-          <h2 className="item__header-heading">
-            {`${items.length} ${pluralize('Item', items.length)} Linked`}
-          </h2>
-          {!!items.length && (
-            <p className="item__header-subheading">
-              Below is a list of all the&nbsp;
-              <a
-                href="https://plaid.com/docs/quickstart/#item-overview"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                items
-              </a>
-              . Click on an item to view its associated accounts.
-            </p>
-          )}
-        </div>
-        {config.token != null && (
-          <LinkButton config={config} userId={userId} itemId={null}>
-            Add Another Item
-          </LinkButton>
-        )}
-        <Asset userId={userId} />
-      </div>
-      {items.map(item => (
-        <div key={item.id}>
-          <ItemCard item={item} userId={userId} />
-        </div>
-      ))}
+      <UserCard user={user} removeButton={false} />
+      {numOfItems > 0 && (
+        <>
+          <NetWorth
+            accounts={accounts}
+            numOfItems={numOfItems}
+            personalAssets={assets}
+            userId={userId}
+          />
+          <SpendingInsights transactions={transactions} />
+          <div className="item__header">
+            <div>
+              <h2 className="item__header-heading">
+                {`${items.length} ${pluralize('Item', items.length)} Linked`}
+              </h2>
+              {!!items.length && (
+                <p className="item__header-subheading">
+                  Below is a list of all the&nbsp;
+                  <a
+                    href="https://plaid.com/docs/quickstart/#item-overview"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    items
+                  </a>
+                  . Click on an item to view its associated accounts.
+                </p>
+              )}
+            </div>
+            {config.token != null && (
+              <LinkButton config={config} userId={userId} itemId={null}>
+                Add Another Item
+              </LinkButton>
+            )}
+          </div>
+          {items.map(item => (
+            <div id="itemCards" key={item.id}>
+              <ItemCard item={item} userId={userId} removeButton={false} />
+            </div>
+          ))}
+        </>
+      )}
     </div>
   );
 };
 
-export default ItemList;
+export default UserPage;

@@ -1,54 +1,32 @@
-import React, { useState } from 'react';
-import Button from 'plaid-threads/Button';
+import React, { useState, useEffect } from 'react';
 
-import { useUsers, useCurrentUser } from '../services';
+import { useUsers } from '../services';
 import UserCard from './UserCard';
-
+// This provides developers with a view of all users, and ability to delete a user.
+// View at path: "/admin"
 const UserList = () => {
-  const { allUsers } = useUsers();
-  const { userState } = useCurrentUser();
-  const user = userState.currentUser;
-  const [showAllUsers, setShowAllUsers] = useState(false);
+  const { allUsers, getUsers, usersById } = useUsers();
+  const [users, setUsers] = useState([]);
+
+  useEffect(() => {
+    getUsers();
+  }, [getUsers, usersById]);
+
+  useEffect(() => {
+    setUsers(allUsers);
+  }, [allUsers, usersById]);
 
   return (
     <>
-      {user != null && user.username != null && (
-        <>
-          {/* this will show logged-in user only in final version */}
-          {/* these buttons will be removed from final version; just makes it easier for me for development purposes */}
-          <div className="btnsContainer">
-            <Button
-              centered
-              small
-              secondary
-              inline
-              onClick={() => setShowAllUsers(true)}
-            >
-              show all users
-            </Button>
-            <Button
-              className="btnWithMargin"
-              small
-              inline
-              centered
-              secondary
-              onClick={() => setShowAllUsers(false)}
-            >
-              show current user only
-            </Button>
+      <h5>For developer admin use</h5>
+
+      <div>
+        {users.map(user => (
+          <div key={user.id}>
+            <UserCard user={user} linkButton={false} />
           </div>
-          {showAllUsers && (
-            <div>
-              {allUsers.map(user => (
-                <div key={user.id}>
-                  <UserCard user={user} />
-                </div>
-              ))}
-            </div>
-          )}
-          {!showAllUsers && <UserCard removeButton={false} user={user} />}
-        </>
-      )}
+        ))}
+      </div>
     </>
   );
 };

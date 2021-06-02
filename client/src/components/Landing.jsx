@@ -1,11 +1,9 @@
 import React, { useEffect } from 'react';
 import Button from 'plaid-threads/Button';
+import { useHistory } from 'react-router-dom';
 
 import { useUsers, useCurrentUser } from '../services';
-import Login from './Login';
-import Banner from './Banner';
-import UserList from './UserList';
-import AddUserForm from './AddUserForm';
+import { Login, Banner, AddUserForm } from './';
 
 import { useBoolean } from '../hooks';
 
@@ -15,6 +13,7 @@ export default function Landing({}) {
   const { getUsers, usersById } = useUsers();
   const { userState, setCurrentUser } = useCurrentUser();
   const [isAdding, showForm, hideForm, toggleForm] = useBoolean(false);
+  const history = useHistory();
 
   useEffect(() => {
     getUsers();
@@ -26,6 +25,10 @@ export default function Landing({}) {
     }
   }, [getUsers, usersById]);
 
+  const returnToCurrentUser = () => {
+    history.push(`/user/${userState.currentUser.id}`);
+  };
+
   return (
     <div>
       <Banner initialSubheading />
@@ -34,10 +37,18 @@ export default function Landing({}) {
         <Button className="btnWithMargin" onClick={toggleForm} centered inline>
           Add New User
         </Button>
+        {userState.currentUser.username != null && (
+          <Button
+            className="btnWithMargin"
+            centered
+            inline
+            onClick={returnToCurrentUser}
+          >
+            Return to Current User
+          </Button>
+        )}
       </div>
       {isAdding && <AddUserForm hideForm={hideForm} />}
-
-      <UserList />
     </div>
   );
 }

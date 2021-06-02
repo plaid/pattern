@@ -93,7 +93,7 @@ export function UsersProvider(props) {
    */
   const deleteUserById = useCallback(
     async id => {
-      await apiDeleteUserById(id);
+      await apiDeleteUserById(id); // this will delete all items associated with user
       deleteItemsByUserId(id);
       deleteAccountsByUserId(id);
       deleteTransactionsByUserId(id);

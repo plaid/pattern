@@ -53,7 +53,7 @@ const ItemCard = ({ item, userId }) => {
     setItemToBadState(id);
   };
   const handleDeleteItem = () => {
-    deleteItemById(id);
+    deleteItemById(id, userId);
     deleteAccountsByItemId(id);
     deleteTransactionsByItemId(id);
   };

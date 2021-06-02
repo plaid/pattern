@@ -12,7 +12,6 @@ const {
   deleteUsers,
   retrieveItemsByUser,
   retrieveTransactionsByUserId,
-  retrieveTransactionsInDateRangeByUserId,
   retrieveUserById,
 } = require('../db/queries');
 const { asyncWrapper } = require('../middleware');
@@ -131,8 +130,8 @@ router.delete(
   asyncWrapper(async (req, res) => {
     const { userId } = req.params;
 
-    // remove an Item from Plaid services. Once removed, the access_token
-    // associated with the Item is no longer valid and cannot be used to
+    // removes all items from Plaid services associated with the user. Once removed, the access_token
+    // associated with an Item is no longer valid and cannot be used to
     // access any data that was associated with the Item.
 
     // @TODO wrap promise in a try catch block once proper error handling introduced

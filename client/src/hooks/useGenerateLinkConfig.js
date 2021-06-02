@@ -13,6 +13,10 @@ useGenerateLinkConfig.defaultProps = {
   itemId: null,
 };
 
+// generates link configs in the link context.
+// If not OAuth, token argument will be null and link context will call Plaid.linkTokenCreate to create a link token;
+// If OAuth, link token from local storage is passed and used.
+
 export default function useGenerateLinkConfig(isOauth, userId, itemId, token) {
   const [config, setConfig] = useState({ token: null, onSucces: null });
   const { generateLinkConfigs, linkConfigs } = useLink();

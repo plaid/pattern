@@ -411,6 +411,12 @@ net worth
   }
 }
 
+.assetsHeaderContainer {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
 .dollarsHeading {
   font-weight: bold;
   margin-top: 0;
@@ -431,10 +437,6 @@ net worth
   .dataItem {
     margin-bottom: 0;
   }
-}
-
-.assetBtnContainer {
-  margin-top: 2 * $unit;
 }
 
 /*

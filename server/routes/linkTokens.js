@@ -40,6 +40,8 @@ router.post(
         access_token: accessToken,
         redirect_uri: 'http://localhost:3000/oauth-link',
       };
+
+      console.log('inside route', linkTokenParams);
       const createResponse = await plaid.linkTokenCreate(linkTokenParams);
       res.json(createResponse.data);
     } catch (err) {

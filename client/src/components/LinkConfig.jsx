@@ -23,22 +23,22 @@ export default function useGenerateLinkConfig(isOauth, userId, itemId, token) {
 
   // get link configs from link context
   useEffect(() => {
-    //   generateLinkConfigs(isOauth, userId, itemId, token);
-    // }, [generateLinkConfigs, userId, itemId, token]);
-    // set linkToken and callbacks from configs from link context
-    // useEffect(() => {
-    //   if (linkConfigs.byUser[userId]) {
-    //     setConfig(linkConfigs.byUser[userId]);
-    //   }
-    //   if (linkConfigs.byItem[itemId]) {
-    //     setConfig(linkConfigs.byItem[itemId]);
-    //   }
-    // }, [
-    //   generateLinkConfigs,
-    //   linkConfigs.byUser[userId],
-    //   linkConfigs.byItem[itemId],
-    // ]);
-  });
+    generateLinkConfigs(isOauth, userId, itemId, token);
+  }, [generateLinkConfigs, userId, itemId, token]);
 
-  return null;
+  // set linkToken and callbacks from configs from link context
+  useEffect(() => {
+    if (linkConfigs.byUser[userId]) {
+      setConfig(linkConfigs.byUser[userId]);
+    }
+    if (linkConfigs.byItem[itemId]) {
+      setConfig(linkConfigs.byItem[itemId]);
+    }
+  }, [
+    generateLinkConfigs,
+    linkConfigs.byUser[userId],
+    linkConfigs.byItem[itemId],
+  ]);
+
+  return config;
 }

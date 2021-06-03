@@ -97,12 +97,12 @@ const ItemCard = ({ item, userId }) => {
           </div>
         </Touchable>
         <MoreDetails
-          updateShown={!isGoodState}
           setBadStateShown={isSandbox && isGoodState}
           handleDelete={handleDeleteItem}
           handleSetBadState={handleSetBadState}
           userId={userId}
           itemId={id}
+          badState={!isGoodState}
         />
       </div>
       {showAccounts && (

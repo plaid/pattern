@@ -19,7 +19,8 @@ export default function SpendingInsights({ transactions }) {
         return (
           date > oneMonthAgo &&
           tx.category !== 'Payment' &&
-          tx.category !== 'Transfer'
+          tx.category !== 'Transfer' &&
+          tx.category !== 'Interest'
         );
       }),
     [transactions]

@@ -6,14 +6,15 @@ import IconButton from 'plaid-threads/IconButton';
 import Touchable from 'plaid-threads/Touchable';
 
 import { LinkButton } from '.';
-import { useOnClickOutside, useGenerateLinkConfig } from '../hooks';
+import { useOnClickOutside } from '../hooks';
+import { useLink } from '../services';
 
 const propTypes = {
   handleDelete: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
-  updateShown: false,
+  badState: false,
   handleUpdate: () => {},
   setBadStateShown: false,
   handleSetBadState: () => {},
@@ -21,14 +22,14 @@ const defaultProps = {
 
 export function MoreDetails({
   handleDelete,
-  updateShown,
+  badState,
   setBadStateShown,
   handleSetBadState,
   userId,
   itemId,
 }) {
   const [menuShown, setmenuShown] = useState(false);
-  const [config, setConfig] = useState({ token: null, onSucces: null });
+  const [token, setToken] = useState(null);
   const refToButton = useRef();
   const refToMenu = useOnClickOutside({
     callback: () => {
@@ -36,11 +37,16 @@ export function MoreDetails({
     },
     ignoreRef: refToButton,
   });
-  const linkConfig = useGenerateLinkConfig(false, userId, itemId);
+
+  const { generateLinkToken, linkToken } = useLink();
 
   useEffect(() => {
-    setConfig(linkConfig);
-  }, [linkConfig, itemId]);
+    generateLinkToken(false, userId, itemId);
+  }, [userId, badState]);
+
+  useEffect(() => {
+    setToken(linkToken.byItem[itemId]);
+  }, [linkToken, userId, badState]);
 
   // show choice to set state to "bad" or initiate link in update mode,
   // depending on whether item is in a good state or bad state
@@ -48,12 +54,12 @@ export function MoreDetails({
     <Touchable className="menuOption" onClick={handleSetBadState}>
       Reset Login
     </Touchable>
-  ) : updateShown && config.token != null ? (
+  ) : badState && token != null ? (
     <div>
       <LinkButton
         userId={userId}
         itemId={itemId} // only case where itemId is not null is in link update mode
-        config={config}
+        token={token}
         isUpdate={true}
       >
         Update Login

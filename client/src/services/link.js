@@ -8,13 +8,12 @@ const LinkContext = React.createContext();
  * @desc Enumerated action types
  */
 const types = {
-  LINK_CONFIGS_CREATED: 0,
-  LINK_CONFIGS_UPDATE_MODE_CREATED: 1,
+  LINK_TOKEN_CREATED: 0,
+  LINK_TOKEN_UPDATE_MODE_CREATED: 1,
 };
 
 /**
- * @desc Maintains the Link context state and provides a linkToken object to create
- * and fetch instances of Link.
+ * @desc Maintains the Link context state to create and fetch link tokens.
  */
 export function LinkProvider(props) {
   const [linkTokens, dispatch] = useReducer(reducer, {
@@ -23,8 +22,7 @@ export function LinkProvider(props) {
   });
 
   /**
-   * @desc Creates a new instance of Link for a given User or Item. For more details on
-   * the configuration object see https://plaid.com/docs/#parameter-reference
+   * @desc Creates a new link token for a given User or Item.
    */
 
   const generateLinkToken = useCallback(async (userId, itemId) => {
@@ -32,9 +30,9 @@ export function LinkProvider(props) {
     const token = await linkTokenResponse.data.link_token;
 
     if (itemId != null) {
-      dispatch([types.LINK_CONFIGS_UPDATE_MODE_CREATED, itemId, token]);
+      dispatch([types.LINK_TOKEN_UPDATE_MODE_CREATED, itemId, token]);
     } else {
-      dispatch([types.LINK_CONFIGS_CREATED, userId, token]);
+      dispatch([types.LINK_TOKEN_CREATED, userId, token]);
     }
   }, []);
 
@@ -50,11 +48,11 @@ export function LinkProvider(props) {
 }
 
 /**
- * @desc Handles updates to the Link configs as dictated by dispatched actions.
+ * @desc Handles updates to the LinkTokens state as dictated by dispatched actions.
  */
 function reducer(state, [type, id, token]) {
   switch (type) {
-    case types.LINK_CONFIGS_CREATED:
+    case types.LINK_TOKEN_CREATED:
       return {
         ...state,
         byUser: {
@@ -62,7 +60,7 @@ function reducer(state, [type, id, token]) {
         },
       };
 
-    case types.LINK_CONFIGS_UPDATE_MODE_CREATED:
+    case types.LINK_TOKEN_UPDATE_MODE_CREATED:
       return {
         ...state,
         byItem: {

@@ -47,6 +47,7 @@ export default function LinkButton({
       // update mode: no need to exchange public token
       await setItemState(itemId, 'good');
       getItemById(itemId, true);
+      // regular link mode: exchange public token for access token
     } else {
       await exchangeToken(publicToken, institution, accounts, userId);
       getItemsByUser(userId, true);
@@ -107,8 +108,8 @@ export default function LinkButton({
   }, [ready, open]);
 
   const handleClick = () => {
-    // regular, non-OAuth case
-    // set link token, userId and itemId in local storage for use if necessary by OAuth
+    // regular, non-OAuth case:
+    // set link token, userId and itemId in local storage for use if needed later by OAuth
     localStorage.setItem(
       'oauthConfig',
       JSON.stringify({ userId: userId, itemId: itemId, token: token })
@@ -119,7 +120,7 @@ export default function LinkButton({
   return (
     <>
       {isOauth ? (
-        // no button rendered: OAuth will open automatically by useEffect on line 103
+        // no link button rendered: OAuth will open automatically by useEffect on line 103
         <></>
       ) : itemId != null ? (
         // update mode: link is launched from dropdown menu in the

@@ -1,5 +1,6 @@
 /**
  * @file Defines the handler for Transactions webhooks.
+ * No calls to plaid.transactionsGet are made until a transactions webhook is received.
  * https://plaid.com/docs/#transactions-webhooks
  */
 

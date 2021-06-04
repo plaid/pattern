@@ -14,15 +14,14 @@ const propTypes = {
 };
 
 const defaultProps = {
-  badState: false,
   handleUpdate: () => {},
   setBadStateShown: false,
   handleSetBadState: () => {},
 };
 
+// Provides for testing of the ITEM_LOGIN_REQUIRED webhook and Link update mode
 export function MoreDetails({
   handleDelete,
-  badState,
   setBadStateShown,
   handleSetBadState,
   userId,
@@ -38,30 +37,27 @@ export function MoreDetails({
     ignoreRef: refToButton,
   });
 
-  const { generateLinkToken, linkToken } = useLink();
+  const { generateLinkToken, linkTokens } = useLink();
 
   useEffect(() => {
-    generateLinkToken(false, userId, itemId);
-  }, [userId, badState]);
+    generateLinkToken(userId, itemId); // itemId is set because link is in update mode
+  }, [userId]);
 
   useEffect(() => {
-    setToken(linkToken.byItem[itemId]);
-  }, [linkToken, userId, badState]);
+    setToken(linkTokens.byItem[itemId]);
+  }, [linkTokens, userId]);
 
-  // show choice to set state to "bad" or initiate link in update mode,
-  // depending on whether item is in a good state or bad state
+  // display choice, depending on whether item is in "good" or "bad" state
   const linkChoice = setBadStateShown ? (
+    // handleSetBadState uses sandbox/item/reset_login to send the ITEM_LOGIN_REQUIRED webhook;
+    // app responds to this webhook by setting item to "bad" state (server/webhookHandlers/handleItemWebhook.js)
     <Touchable className="menuOption" onClick={handleSetBadState}>
       Reset Login
     </Touchable>
-  ) : badState && token != null ? (
+  ) : token != null ? (
+    // item is in "bad" state;  launch link to login and return to "good" state
     <div>
-      <LinkButton
-        userId={userId}
-        itemId={itemId} // only case where itemId is not null is in link update mode
-        token={token}
-        isUpdate={true}
-      >
+      <LinkButton userId={userId} itemId={itemId} token={token}>
         Update Login
       </LinkButton>
     </div>

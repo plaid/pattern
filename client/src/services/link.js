@@ -1,10 +1,4 @@
-import React, {
-  useCallback,
-  useContext,
-  useMemo,
-  useReducer,
-  useRef,
-} from 'react';
+import React, { useCallback, useContext, useMemo, useReducer } from 'react';
 
 import { getLinkToken } from './api';
 
@@ -19,11 +13,11 @@ const types = {
 };
 
 /**
- * @desc Maintains the Link context state and provides a linkToken to create
+ * @desc Maintains the Link context state and provides a linkToken object to create
  * and fetch instances of Link.
  */
 export function LinkProvider(props) {
-  const [linkToken, dispatch] = useReducer(reducer, {
+  const [linkTokens, dispatch] = useReducer(reducer, {
     byUser: {},
     byItem: {},
   });
@@ -33,34 +27,25 @@ export function LinkProvider(props) {
    * the configuration object see https://plaid.com/docs/#parameter-reference
    */
 
-  const generateLinkToken = useCallback(
-    async (isOauth, userId, itemId, oauthToken) => {
-      const isUpdate = itemId != null;
+  const generateLinkToken = useCallback(async (userId, itemId) => {
+    const isUpdate = itemId != null;
 
-      // generate link token only if not OAuth redirect.  Else use the oauthToken from local storage.
-      let token;
-      if (!isOauth) {
-        const linkTokenResponse = await getLinkToken({ userId, itemId });
-        token = await linkTokenResponse.data.link_token;
-      } else {
-        token = oauthToken;
-      }
+    const linkTokenResponse = await getLinkToken({ userId, itemId });
+    const token = await linkTokenResponse.data.link_token;
 
-      if (isUpdate) {
-        dispatch([types.LINK_CONFIGS_UPDATE_MODE_CREATED, itemId, token]);
-      } else {
-        dispatch([types.LINK_CONFIGS_CREATED, userId, token]);
-      }
-    },
-    []
-  );
+    if (isUpdate) {
+      dispatch([types.LINK_CONFIGS_UPDATE_MODE_CREATED, itemId, token]);
+    } else {
+      dispatch([types.LINK_CONFIGS_CREATED, userId, token]);
+    }
+  }, []);
 
   const value = useMemo(
     () => ({
       generateLinkToken,
-      linkToken,
+      linkTokens,
     }),
-    [linkToken, generateLinkToken]
+    [linkTokens, generateLinkToken]
   );
 
   return <LinkContext.Provider value={value} {...props} />;

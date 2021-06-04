@@ -38,8 +38,7 @@ const UserPage = ({ match }) => {
   const { usersById, getUserById } = useUsers();
   const { itemsByUser, getItemsByUser } = useItems();
   const userId = Number(match.params.userId);
-  const { generateLinkToken, linkToken } = useLink();
-  const itemId = null;
+  const { generateLinkToken, linkTokens } = useLink();
 
   // update data store with user
   useEffect(() => {
@@ -101,13 +100,12 @@ const UserPage = ({ match }) => {
   }, [accountsByUser, userId]);
 
   useEffect(() => {
-    generateLinkToken(false, userId, null);
+    generateLinkToken(userId, null); // itemId is null
   }, [userId, numOfItems]);
 
   useEffect(() => {
-    setToken(linkToken.byUser[userId]);
-    console.log(linkToken);
-  }, [linkToken, userId, numOfItems]);
+    setToken(linkTokens.byUser[userId]);
+  }, [linkTokens, userId, numOfItems]);
 
   return (
     <div>

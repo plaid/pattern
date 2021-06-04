@@ -26,7 +26,7 @@ export default function UserCard({ user, removeButton, linkButton }) {
 
   const { itemsByUser, getItemsByUser } = useItems();
   const { deleteUserById } = useUsers();
-  const { generateLinkToken, linkToken } = useLink();
+  const { generateLinkToken, linkTokens } = useLink();
 
   // update data store with the user's items
   useEffect(() => {
@@ -43,12 +43,12 @@ export default function UserCard({ user, removeButton, linkButton }) {
   }, [itemsByUser, user.id]);
 
   useEffect(() => {
-    generateLinkToken(false, user.id, null);
+    generateLinkToken(user.id, null); // itemId is null
   }, [user.id, numOfItems]);
 
   useEffect(() => {
-    setToken(linkToken.byUser[user.id]);
-  }, [linkToken, user.id, numOfItems]);
+    setToken(linkTokens.byUser[user.id]);
+  }, [linkTokens, user.id, numOfItems]);
 
   const handleDeleteUser = () => {
     deleteUserById(user.id); // this will delete all items associated with a user

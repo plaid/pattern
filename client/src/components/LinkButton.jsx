@@ -6,10 +6,9 @@ import { usePlaidLink } from 'react-plaid-link';
 import { useHistory } from 'react-router-dom';
 
 import { exchangeToken, postLinkEvent, setItemState } from '../services/api';
-import { useItems } from '../services';
+import { useItems, useLink } from '../services';
 
 LinkButton.propTypes = {
-  isUpdate: propTypes.bool,
   isOauth: propTypes.bool,
   userId: propTypes.number,
   itemId: propTypes.number || null,
@@ -17,23 +16,22 @@ LinkButton.propTypes = {
 };
 
 LinkButton.defaultProps = {
-  isUpdate: false,
   isOauth: false,
   userId: null,
   itemId: null,
-  token: '', // cannot set to null initially
+  token: '', // cannot set to null initially because component will not render
 };
 
 export default function LinkButton({
   isOauth,
   children,
   token,
-  isUpdate,
   userId,
   itemId,
 }) {
   const history = useHistory();
   const { getItemsByUser, getItemById } = useItems();
+  const { generateLinkToken } = useLink();
 
   const onSuccess = async (
     publicToken,
@@ -45,7 +43,8 @@ export default function LinkButton({
       link_session_id,
       type: 'success',
     });
-    if (isUpdate) {
+    if (itemId != null) {
+      // update mode: no need to exchange public token
       await setItemState(itemId, 'good');
       getItemById(itemId, true);
     } else {
@@ -75,7 +74,7 @@ export default function LinkButton({
       ...eventError,
     });
     if (error != null && error.error_code === 'INVALID_LINK_TOKEN') {
-      // await generateLinkConfigs(userId, itemId);
+      await generateLinkToken(userId, itemId);
     }
   };
 
@@ -122,8 +121,8 @@ export default function LinkButton({
       {isOauth ? (
         // no button rendered: OAuth will open automatically by useEffect on line 103
         <></>
-      ) : isUpdate ? (
-        // case where Link is launched in update mode from dropdown menu in the
+      ) : itemId != null ? (
+        // update mode: link is launched from dropdown menu in the
         // item card after item is set to "bad state"
         <Touchable
           className="menuOption"

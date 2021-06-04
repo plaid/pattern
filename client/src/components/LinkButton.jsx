@@ -19,7 +19,7 @@ LinkButton.defaultProps = {
   isOauth: false,
   userId: null,
   itemId: null,
-  token: '', // cannot set to null initially because component will not render
+  token: null,
 };
 
 export default function LinkButton({

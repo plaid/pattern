@@ -18,8 +18,8 @@ const types = {
  */
 export function LinkProvider(props) {
   const [linkTokens, dispatch] = useReducer(reducer, {
-    byUser: {},
-    byItem: {},
+    byUser: {}, // normal case
+    byItem: {}, // update mode
   });
 
   /**
@@ -28,12 +28,10 @@ export function LinkProvider(props) {
    */
 
   const generateLinkToken = useCallback(async (userId, itemId) => {
-    const isUpdate = itemId != null;
-
     const linkTokenResponse = await getLinkToken({ userId, itemId });
     const token = await linkTokenResponse.data.link_token;
 
-    if (isUpdate) {
+    if (itemId != null) {
       dispatch([types.LINK_CONFIGS_UPDATE_MODE_CREATED, itemId, token]);
     } else {
       dispatch([types.LINK_CONFIGS_CREATED, userId, token]);

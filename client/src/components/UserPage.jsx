@@ -105,6 +105,7 @@ const UserPage = ({ match }) => {
 
   useEffect(() => {
     setToken(linkTokens.byUser[userId]);
+    console.log(linkTokens);
   }, [linkTokens, userId, numOfItems]);
 
   return (

@@ -5,6 +5,7 @@ import Touchable from 'plaid-threads/Touchable';
 import { usePlaidLink } from 'react-plaid-link';
 import { useHistory } from 'react-router-dom';
 
+import { logSuccess, logExit } from '../util';
 import { exchangeToken, postLinkEvent, setItemState } from '../services/api';
 import { useItems, useLink } from '../services';
 
@@ -26,24 +27,28 @@ LinkButton.defaultProps = {
 // TODO do onSuccess and onEvent logging
 const logEvent = (eventName, extra) => {
   console.log(`Link Event: ${eventName}`, extra);
-}
+};
 
-const logExit = async (error, { institution, link_session_id, request_id }, userId) => {
-  logEvent('onExit', {
-    error,
-    institution,
-    link_session_id,
-    request_id,
-  });
-  const eventError = error || {};
-  await postLinkEvent({
-    userId,
-    link_session_id,
-    request_id,
-    type: 'exit',
-    ...eventError,
-  });
-}
+// const logExit = async (
+//   error,
+//   { institution, link_session_id, request_id },
+//   userId
+// ) => {
+//   logEvent('onExit', {
+//     error,
+//     institution,
+//     link_session_id,
+//     request_id,
+//   });
+//   const eventError = error || {};
+//   await postLinkEvent({
+//     userId,
+//     link_session_id,
+//     request_id,
+//     type: 'exit',
+//     ...eventError,
+//   });
+// };
 
 export default function LinkButton({
   isOauth,
@@ -60,12 +65,8 @@ export default function LinkButton({
     publicToken,
     { institution, accounts, link_session_id }
   ) => {
-    logEvent('onSuccess', { institution, accounts, link_session_id });
-    await postLinkEvent({
-      userId,
-      link_session_id,
-      type: 'success',
-    });
+    console.log(institution);
+    logSuccess(institution, accounts, link_session_id, userId);
     if (itemId != null) {
       // update mode: no need to exchange public token
       await setItemState(itemId, 'good');
@@ -79,11 +80,8 @@ export default function LinkButton({
     history.push(`/user/${userId}`);
   };
 
-  const onExit = async (
-    error,
-    metadata,
-  ) => {
-    logExit(error, metadata, userId)
+  const onExit = async (error, metadata) => {
+    logExit(error, metadata, userId);
     if (error != null && error.error_code === 'INVALID_LINK_TOKEN') {
       await generateLinkToken(userId, itemId);
     }

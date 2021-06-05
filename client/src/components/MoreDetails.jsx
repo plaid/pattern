@@ -6,29 +6,29 @@ import IconButton from 'plaid-threads/IconButton';
 import Touchable from 'plaid-threads/Touchable';
 
 import { LinkButton } from '.';
-import { useOnClickOutside, useGenerateLinkConfig } from '../hooks';
+import { useOnClickOutside } from '../hooks';
+import { useLink } from '../services';
 
 const propTypes = {
   handleDelete: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
-  updateShown: false,
   handleUpdate: () => {},
   setBadStateShown: false,
   handleSetBadState: () => {},
 };
 
+// Provides for testing of the ITEM_LOGIN_REQUIRED webhook and Link update mode
 export function MoreDetails({
   handleDelete,
-  updateShown,
   setBadStateShown,
   handleSetBadState,
   userId,
   itemId,
 }) {
   const [menuShown, setmenuShown] = useState(false);
-  const [config, setConfig] = useState({ token: null, onSucces: null });
+  const [token, setToken] = useState(null);
   const refToButton = useRef();
   const refToMenu = useOnClickOutside({
     callback: () => {
@@ -36,26 +36,28 @@ export function MoreDetails({
     },
     ignoreRef: refToButton,
   });
-  const linkConfig = useGenerateLinkConfig(false, userId, itemId);
+
+  const { generateLinkToken, linkTokens } = useLink();
 
   useEffect(() => {
-    setConfig(linkConfig);
-  }, [linkConfig, itemId]);
+    generateLinkToken(userId, itemId); // itemId is set because link is in update mode
+  }, [userId]);
 
-  // show choice to set state to "bad" or initiate link in update mode,
-  // depending on whether item is in a good state or bad state
+  useEffect(() => {
+    setToken(linkTokens.byItem[itemId]);
+  }, [linkTokens, userId]);
+
+  // display choice, depending on whether item is in "good" or "bad" state
   const linkChoice = setBadStateShown ? (
+    // handleSetBadState uses sandbox/item/reset_login to send the ITEM_LOGIN_REQUIRED webhook;
+    // app responds to this webhook by setting item to "bad" state (server/webhookHandlers/handleItemWebhook.js)
     <Touchable className="menuOption" onClick={handleSetBadState}>
       Reset Login
     </Touchable>
-  ) : updateShown && config.token != null ? (
+  ) : token != null ? (
+    // item is in "bad" state;  launch link to login and return to "good" state
     <div>
-      <LinkButton
-        userId={userId}
-        itemId={itemId} // only case where itemId is not null is in link update mode
-        config={config}
-        isUpdate={true}
-      >
+      <LinkButton userId={userId} itemId={itemId} token={token}>
         Update Login
       </LinkButton>
     </div>

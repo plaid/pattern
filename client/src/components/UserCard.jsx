@@ -5,8 +5,7 @@ import Button from 'plaid-threads/Button';
 import Touchable from 'plaid-threads/Touchable';
 
 import { UserDetails, LinkButton } from '.';
-import { useItems, useUsers } from '../services';
-import { useGenerateLinkConfig } from '../hooks';
+import { useItems, useUsers, useLink } from '../services';
 
 UserCard.propTypes = {
   user: PropTypes.object.isRequired,
@@ -22,12 +21,12 @@ UserCard.defaultProps = {
 
 export default function UserCard({ user, removeButton, linkButton }) {
   const [numOfItems, setNumOfItems] = useState(0);
-  const [config, setConfig] = useState({ token: null, onSucces: null });
+  const [token, setToken] = useState(null);
   const [hovered, setHovered] = useState(false);
 
   const { itemsByUser, getItemsByUser } = useItems();
   const { deleteUserById } = useUsers();
-  const linkConfig = useGenerateLinkConfig(false, user.id, null);
+  const { generateLinkToken, linkTokens } = useLink();
 
   // update data store with the user's items
   useEffect(() => {
@@ -44,8 +43,12 @@ export default function UserCard({ user, removeButton, linkButton }) {
   }, [itemsByUser, user.id]);
 
   useEffect(() => {
-    setConfig(linkConfig);
-  }, [linkConfig, user.id]);
+    generateLinkToken(user.id, null); // itemId is null
+  }, [user.id, numOfItems]);
+
+  useEffect(() => {
+    setToken(linkTokens.byUser[user.id]);
+  }, [linkTokens, user.id, numOfItems]);
 
   const handleDeleteUser = () => {
     deleteUserById(user.id); // this will delete all items associated with a user
@@ -76,8 +79,8 @@ export default function UserCard({ user, removeButton, linkButton }) {
         </Touchable>
 
         <div className="user-card__buttons">
-          {config.token != null && linkButton && (
-            <LinkButton userId={user.id} config={config} itemId={null}>
+          {token != null && linkButton && (
+            <LinkButton userId={user.id} token={token} itemId={null}>
               Link an Item
             </LinkButton>
           )}

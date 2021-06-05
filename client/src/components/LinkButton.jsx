@@ -3,35 +3,67 @@ import propTypes from 'prop-types';
 import Button from 'plaid-threads/Button';
 import Touchable from 'plaid-threads/Touchable';
 import { usePlaidLink } from 'react-plaid-link';
+import { useHistory } from 'react-router-dom';
+
+import { logEvent, logSuccess, logExit } from '../util';
+import { exchangeToken, setItemState } from '../services/api';
+import { useItems, useLink } from '../services';
 
 LinkButton.propTypes = {
-  config: propTypes.object,
-  isUpdate: propTypes.bool,
   isOauth: propTypes.bool,
   userId: propTypes.number,
   itemId: propTypes.number || null,
+  token: propTypes.string,
 };
 
 LinkButton.defaultProps = {
-  config: null,
-  isUpdate: false,
   isOauth: false,
   userId: null,
   itemId: null,
+  token: null,
 };
 
 export default function LinkButton({
   isOauth,
   children,
-  config,
-  isUpdate,
+  token,
   userId,
   itemId,
 }) {
-  // add additional receivedRedirectUri config when re-launching Link in Oauth.
-  if (isOauth) {
-    config.receivedRedirectUri = window.location.href;
-  }
+  const history = useHistory();
+  const { getItemsByUser, getItemById } = useItems();
+  const { generateLinkToken } = useLink();
+
+  const onSuccess = async (publicToken, metadata) => {
+    logSuccess(metadata, userId);
+    if (itemId != null) {
+      // update mode: no need to exchange public token
+      await setItemState(itemId, 'good');
+      getItemById(itemId, true);
+      // regular link mode: exchange public token for access token
+    } else {
+      await exchangeToken(publicToken, metadata, userId);
+      getItemsByUser(userId, true);
+    }
+
+    history.push(`/user/${userId}`);
+  };
+
+  const onExit = async (error, metadata) => {
+    logExit(error, metadata, userId);
+    if (error != null && error.error_code === 'INVALID_LINK_TOKEN') {
+      await generateLinkToken(userId, itemId);
+    }
+  };
+
+  const config = {
+    onSuccess,
+    onExit,
+    onEvent: logEvent,
+    token,
+    receivedRedirectUri: isOauth ? window.location.href : null, // add additional receivedRedirectUri config when handling an OAuth reidrect
+  };
+
   const { open, ready } = usePlaidLink(config);
 
   useEffect(() => {
@@ -42,10 +74,11 @@ export default function LinkButton({
   }, [ready, open]);
 
   const handleClick = () => {
-    // set link token, userId and itemId in local storage for use if necessary by Oauth
+    // regular, non-OAuth case:
+    // set link token, userId and itemId in local storage for use if needed later by OAuth
     localStorage.setItem(
       'oauthConfig',
-      JSON.stringify({ userId: userId, itemId: itemId, token: config.token })
+      JSON.stringify({ userId, itemId, token })
     );
     open();
   };
@@ -53,9 +86,10 @@ export default function LinkButton({
   return (
     <>
       {isOauth ? (
+        // no link button rendered: OAuth will open automatically by useEffect on line 103
         <></>
-      ) : isUpdate ? (
-        // case where Link is launched in update mode from dropdown menu in the
+      ) : itemId != null ? (
+        // update mode: link is launched from dropdown menu in the
         // item card after item is set to "bad state"
         <Touchable
           className="menuOption"

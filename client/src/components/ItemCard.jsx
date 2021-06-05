@@ -96,8 +96,7 @@ const ItemCard = ({ item, userId }) => {
             <p className="value">{diffBetweenCurrentTime(item.updated_at)}</p>
           </div>
         </Touchable>
-        <MoreDetails
-          updateShown={!isGoodState}
+        <MoreDetails // The MoreDetails component allows developer to test the ITEM_LOGIN_REQUIRED webhook and Link update mode
           setBadStateShown={isSandbox && isGoodState}
           handleDelete={handleDeleteItem}
           handleSetBadState={handleSetBadState}

@@ -9,9 +9,11 @@ import {
   useTransactions,
   useUsers,
   useAssets,
+  useLink,
 } from '../services';
+
 import { pluralize } from '../util';
-import { useGenerateLinkConfig } from '../hooks';
+
 import {
   Banner,
   LinkButton,
@@ -24,7 +26,7 @@ import {
 const UserPage = ({ match }) => {
   const [user, setUser] = useState({});
   const [items, setItems] = useState([]);
-  const [config, setConfig] = useState({ token: null, onSucces: null });
+  const [token, setToken] = useState(null);
   const [numOfItems, setNumOfItems] = useState(0);
   const [transactions, setTransactions] = useState([]);
   const [accounts, setAccounts] = useState([]);
@@ -36,7 +38,7 @@ const UserPage = ({ match }) => {
   const { usersById, getUserById } = useUsers();
   const { itemsByUser, getItemsByUser } = useItems();
   const userId = Number(match.params.userId);
-  const linkConfig = useGenerateLinkConfig(false, userId, null);
+  const { generateLinkToken, linkTokens } = useLink();
 
   // update data store with user
   useEffect(() => {
@@ -79,15 +81,6 @@ const UserPage = ({ match }) => {
     setItems(orderedItems);
   }, [itemsByUser, userId]);
 
-  // update data store with the user's accounts
-  useEffect(() => {
-    getAccountsByUser(userId);
-  }, [getAccountsByUser, userId]);
-
-  useEffect(() => {
-    setAccounts(accountsByUser[userId] || []);
-  }, [accountsByUser, userId]);
-
   // update no of items from data store
   useEffect(() => {
     if (itemsByUser[userId] != null) {
@@ -97,9 +90,22 @@ const UserPage = ({ match }) => {
     }
   }, [itemsByUser, userId]);
 
+  // update data store with the user's accounts
   useEffect(() => {
-    setConfig(linkConfig);
-  }, [linkConfig, userId]);
+    getAccountsByUser(userId);
+  }, [getAccountsByUser, userId]);
+
+  useEffect(() => {
+    setAccounts(accountsByUser[userId] || []);
+  }, [accountsByUser, userId]);
+
+  useEffect(() => {
+    generateLinkToken(userId, null); // itemId is null
+  }, [userId, numOfItems]);
+
+  useEffect(() => {
+    setToken(linkTokens.byUser[userId]);
+  }, [linkTokens, userId, numOfItems]);
 
   return (
     <div>
@@ -136,8 +142,8 @@ const UserPage = ({ match }) => {
                 </p>
               )}
             </div>
-            {config.token != null && (
-              <LinkButton config={config} userId={userId} itemId={null}>
+            {token != null && (
+              <LinkButton token={token} userId={userId} itemId={null}>
                 Add Another Item
               </LinkButton>
             )}

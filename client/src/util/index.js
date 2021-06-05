@@ -1,5 +1,7 @@
 import { distanceInWords, parse } from 'date-fns';
 
+import { postLinkEvent } from '../services/api';
+
 /**
  * @desc small helper for pluralizing words for display given a number of items
  */
@@ -61,3 +63,44 @@ export function diffBetweenCurrentTime(timestamp) {
     includeSeconds: true,
   }).replace(/^(about|less than)\s/i, '');
 }
+
+export const logEvent = (eventName, extra) => {
+  console.log(`Link Event: ${eventName}`, extra);
+};
+
+export const logSuccess = async (
+  { institution, accounts, link_session_id },
+  userId
+) => {
+  logEvent('onSuccess', {
+    institution,
+    accounts,
+    link_session_id,
+  });
+  await postLinkEvent({
+    userId,
+    link_session_id,
+    type: 'success',
+  });
+};
+
+export const logExit = async (
+  error,
+  { institution, link_session_id, request_id },
+  userId
+) => {
+  logEvent('onExit', {
+    error,
+    institution,
+    link_session_id,
+    request_id,
+  });
+  const eventError = error || {};
+  await postLinkEvent({
+    userId,
+    link_session_id,
+    request_id,
+    type: 'exit',
+    ...eventError,
+  });
+};

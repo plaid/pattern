@@ -1,20 +1,6 @@
-import React, {
-  useCallback,
-  useContext,
-  useMemo,
-  useReducer,
-  useRef,
-} from 'react';
-import { useHistory } from 'react-router-dom';
+import React, { useCallback, useContext, useMemo, useReducer } from 'react';
 
-import {
-  exchangeToken,
-  getLinkToken,
-  postLinkEvent,
-  setItemState,
-} from './api';
-
-import { useItems } from '.';
+import { getLinkToken } from './api';
 
 const LinkContext = React.createContext();
 
@@ -22,159 +8,70 @@ const LinkContext = React.createContext();
  * @desc Enumerated action types
  */
 const types = {
-  LINK_CONFIGS_CREATED: 0,
-  LINK_CONFIGS_UPDATE_MODE_CREATED: 1,
+  LINK_TOKEN_CREATED: 0,
+  LINK_TOKEN_UPDATE_MODE_CREATED: 1,
 };
 
 /**
- * @desc Maintains the Link handler context state and provides configs and linkToken to create
- * and fetch instances of Link.
+ * @desc Maintains the Link context state to create and fetch link tokens.
  */
 export function LinkProvider(props) {
-  const history = useHistory();
-  const [linkConfigs, dispatch] = useReducer(reducer, {
+  const [linkTokens, dispatch] = useReducer(reducer, {
     byUser: {}, // normal case
     byItem: {}, // update mode
   });
-  const hasRequested = useRef({
-    byUser: {},
-    byItem: {},
-  });
-
-  const { getItemsByUser, getItemById } = useItems();
 
   /**
-   * @desc Creates a new instance of Link for a given User or Item. For more details on
-   * the configuration object see https://plaid.com/docs/#parameter-reference
+   * @desc Creates a new link token for a given User or Item.
    */
 
-  const generateLinkConfigs = useCallback(
-    async (isOauth, userId, itemId, oauthToken) => {
-      const isUpdate = itemId != null;
+  const generateLinkToken = useCallback(async (userId, itemId) => {
+    const linkTokenResponse = await getLinkToken({ userId, itemId });
+    const token = await linkTokenResponse.data.link_token;
 
-      if (isUpdate) {
-        hasRequested.current.byItem[itemId] = true;
-      } else {
-        hasRequested.current.byUser[userId] = true;
-      }
-      // generate link token only if not OAuth redirect.  Else use the oauthToken from local storage.
-      let token;
-      if (!isOauth) {
-        const linkTokenResponse = await getLinkToken({ itemId, userId });
-        token = await linkTokenResponse.data.link_token;
-      } else {
-        token = oauthToken;
-      }
-
-      const onSuccess = async (
-        publicToken,
-        { institution, accounts, link_session_id }
-      ) => {
-        logEvent('onSuccess', { institution, accounts, link_session_id });
-        await postLinkEvent({
-          userId,
-          link_session_id,
-          type: 'success',
-        });
-        if (isUpdate) {
-          await setItemState(itemId, 'good');
-          getItemById(itemId, true);
-        } else {
-          await exchangeToken(publicToken, institution, accounts, userId);
-          getItemsByUser(userId, true);
-        }
-
-        history.push(`/user/${userId}`);
-      };
-
-      const onExit = async (
-        error,
-        { institution, link_session_id, request_id }
-      ) => {
-        logEvent('onExit', {
-          error,
-          institution,
-          link_session_id,
-          request_id,
-        });
-        const eventError = error || {};
-        await postLinkEvent({
-          userId,
-          link_session_id,
-          request_id,
-          type: 'exit',
-          ...eventError,
-        });
-        if (error != null && error.error_code === 'INVALID_LINK_TOKEN') {
-          await generateLinkConfigs(userId, itemId);
-        }
-      };
-
-      const callbacks = {
-        onSuccess: onSuccess,
-        onExit: onExit,
-        onEvent: logEvent,
-      };
-
-      if (isUpdate) {
-        dispatch([
-          types.LINK_CONFIGS_UPDATE_MODE_CREATED,
-          { id: itemId, token, callbacks },
-        ]);
-      } else {
-        dispatch([
-          types.LINK_CONFIGS_CREATED,
-          { id: userId, token, callbacks },
-        ]);
-      }
-    },
-    []
-  );
+    if (itemId != null) {
+      dispatch([types.LINK_TOKEN_UPDATE_MODE_CREATED, itemId, token]);
+    } else {
+      dispatch([types.LINK_TOKEN_CREATED, userId, token]);
+    }
+  }, []);
 
   const value = useMemo(
     () => ({
-      generateLinkConfigs,
-      linkConfigs,
+      generateLinkToken,
+      linkTokens,
     }),
-    [linkConfigs, generateLinkConfigs]
+    [linkTokens, generateLinkToken]
   );
 
   return <LinkContext.Provider value={value} {...props} />;
 }
 
 /**
- * @desc Handles updates to the Link configs as dictated by dispatched actions.
+ * @desc Handles updates to the LinkTokens state as dictated by dispatched actions.
  */
-function reducer(state, [type, { id, token, callbacks }]) {
+function reducer(state, [type, id, token]) {
   switch (type) {
-    case types.LINK_CONFIGS_CREATED:
+    case types.LINK_TOKEN_CREATED:
       return {
         ...state,
         byUser: {
-          ...state.byUser,
-          [id]: {
-            ...state.byUser[id],
-            token,
-            ...callbacks,
-          },
+          [id]: token,
         },
       };
-    case types.LINK_CONFIGS_UPDATE_MODE_CREATED:
+
+    case types.LINK_TOKEN_UPDATE_MODE_CREATED:
       return {
         ...state,
         byItem: {
           ...state.byItem,
-          [id]: {
-            ...state.byItem[id],
-            token,
-            ...callbacks,
-          },
+          [id]: token,
         },
       };
     default:
       console.warn('unknown action: ', {
         type,
-        payload: { id, token, callbacks },
+        payload: { id, token },
       });
       return state;
   }
@@ -190,11 +87,4 @@ export default function useLink() {
   }
 
   return context;
-}
-
-/**
- * @desc Prepends 'Link Event: ' to console logs.
- */
-function logEvent(eventName, extra) {
-  console.log(`Link Event: ${eventName}`, extra);
 }

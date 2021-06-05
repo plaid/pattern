@@ -68,6 +68,22 @@ export const logEvent = (eventName, extra) => {
   console.log(`Link Event: ${eventName}`, extra);
 };
 
+export const logSuccess = async (
+  { institution, accounts, link_session_id },
+  userId
+) => {
+  logEvent('onSuccess', {
+    institution,
+    accounts,
+    link_session_id,
+  });
+  await postLinkEvent({
+    userId,
+    link_session_id,
+    type: 'success',
+  });
+};
+
 export const logExit = async (
   error,
   { institution, link_session_id, request_id },
@@ -86,21 +102,5 @@ export const logExit = async (
     request_id,
     type: 'exit',
     ...eventError,
-  });
-};
-
-export const logSuccess = async (
-  { institution, accounts, link_session_id },
-  userId
-) => {
-  logEvent('onSuccess', {
-    institution,
-    accounts,
-    link_session_id,
-  });
-  await postLinkEvent({
-    userId,
-    link_session_id,
-    type: 'success',
   });
 };

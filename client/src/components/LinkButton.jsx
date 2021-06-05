@@ -5,8 +5,8 @@ import Touchable from 'plaid-threads/Touchable';
 import { usePlaidLink } from 'react-plaid-link';
 import { useHistory } from 'react-router-dom';
 
-import { logSuccess, logExit } from '../util';
-import { exchangeToken, postLinkEvent, setItemState } from '../services/api';
+import { logEvent, logSuccess, logExit } from '../util';
+import { exchangeToken, setItemState } from '../services/api';
 import { useItems, useLink } from '../services';
 
 LinkButton.propTypes = {
@@ -23,33 +23,6 @@ LinkButton.defaultProps = {
   token: null,
 };
 
-// TODO move to utils
-// TODO do onSuccess and onEvent logging
-const logEvent = (eventName, extra) => {
-  console.log(`Link Event: ${eventName}`, extra);
-};
-
-// const logExit = async (
-//   error,
-//   { institution, link_session_id, request_id },
-//   userId
-// ) => {
-//   logEvent('onExit', {
-//     error,
-//     institution,
-//     link_session_id,
-//     request_id,
-//   });
-//   const eventError = error || {};
-//   await postLinkEvent({
-//     userId,
-//     link_session_id,
-//     request_id,
-//     type: 'exit',
-//     ...eventError,
-//   });
-// };
-
 export default function LinkButton({
   isOauth,
   children,
@@ -61,19 +34,15 @@ export default function LinkButton({
   const { getItemsByUser, getItemById } = useItems();
   const { generateLinkToken } = useLink();
 
-  const onSuccess = async (
-    publicToken,
-    { institution, accounts, link_session_id }
-  ) => {
-    console.log(institution);
-    logSuccess(institution, accounts, link_session_id, userId);
+  const onSuccess = async (publicToken, metadata) => {
+    logSuccess(metadata, userId);
     if (itemId != null) {
       // update mode: no need to exchange public token
       await setItemState(itemId, 'good');
       getItemById(itemId, true);
       // regular link mode: exchange public token for access token
     } else {
-      await exchangeToken(publicToken, institution, accounts, userId);
+      await exchangeToken(publicToken, metadata, userId);
       getItemsByUser(userId, true);
     }
 
@@ -87,15 +56,11 @@ export default function LinkButton({
     }
   };
 
-  const callbacks = {
-    onSuccess: onSuccess,
-    onExit: onExit,
-    onEvent: logEvent,
-  };
-
   const config = {
-    ...callbacks,
-    token: token,
+    onSuccess,
+    onExit,
+    onEvent: logEvent,
+    token,
     receivedRedirectUri: isOauth ? window.location.href : null, // add additional receivedRedirectUri config when handling an OAuth reidrect
   };
 
@@ -113,7 +78,7 @@ export default function LinkButton({
     // set link token, userId and itemId in local storage for use if needed later by OAuth
     localStorage.setItem(
       'oauthConfig',
-      JSON.stringify({ userId: userId, itemId: itemId, token: token })
+      JSON.stringify({ userId, itemId, token })
     );
     open();
   };

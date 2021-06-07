@@ -24,7 +24,7 @@ import {
 } from '.';
 
 // provides view of user's net worth, spending by category and allows them to explore
-// accoutna and transactions details for linked items
+// account and transactions details for linked items
 
 const UserPage = ({ match }) => {
   const [user, setUser] = useState({});
@@ -106,6 +106,7 @@ const UserPage = ({ match }) => {
     setAccounts(accountsByUser[userId] || []);
   }, [accountsByUser, userId]);
 
+  // creates new link token upon new user or change in number of items
   useEffect(() => {
     generateLinkToken(userId, null); // itemId is null
   }, [userId, numOfItems]);
@@ -149,7 +150,7 @@ const UserPage = ({ match }) => {
                 </p>
               )}
             </div>
-            {token != null && (
+            {token != null && ( // Link will not render unless there is a link token
               <LinkButton token={token} userId={userId} itemId={null}>
                 Add Another Item
               </LinkButton>

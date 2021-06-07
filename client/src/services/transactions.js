@@ -33,8 +33,8 @@ const types = {
 /**
  * @desc Maintains the Transactions context state and provides functions to update that state.
  *
- *  Transactions requests are made from the database only.  Calls to the Plaid transactions/get api are only
- * made following receipt of transactions webhooks such as 'DEFAULT_UPDATE' or 'INITIAL_UPDATE'.
+ *  The transactions requests below are made from the database only.  Calls to the Plaid transactions/get api are only
+ *  made following receipt of transactions webhooks such as 'DEFAULT_UPDATE' or 'INITIAL_UPDATE'.
  */
 export function TransactionsProvider(props) {
   const [transactionsById, dispatch] = useReducer(reducer, {});

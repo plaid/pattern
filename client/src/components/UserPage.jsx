@@ -23,6 +23,9 @@ import {
   UserCard,
 } from '.';
 
+// provides view of user's net worth, spending by category and allows them to explore
+// accoutna and transactions details for linked items
+
 const UserPage = ({ match }) => {
   const [user, setUser] = useState({});
   const [items, setItems] = useState([]);
@@ -51,6 +54,9 @@ const UserPage = ({ match }) => {
   }, [usersById, userId]);
 
   useEffect(() => {
+    // This gets transactions from the database only.
+    // Note that calls to Plaid's transactions/get api are only made in response
+    // to receipt of a transactions webhook.
     getTransactionsByUser(userId);
   }, [getTransactionsByUser, userId]);
 
@@ -58,6 +64,7 @@ const UserPage = ({ match }) => {
     setTransactions(transactionsByUser[userId] || []);
   }, [transactionsByUser, userId]);
 
+  // update data store with the user's assets
   useEffect(() => {
     getAssetsByUser(userId);
   }, [getAssetsByUser, userId]);
@@ -105,7 +112,6 @@ const UserPage = ({ match }) => {
 
   useEffect(() => {
     setToken(linkTokens.byUser[userId]);
-    console.log(linkTokens);
   }, [linkTokens, userId, numOfItems]);
 
   return (

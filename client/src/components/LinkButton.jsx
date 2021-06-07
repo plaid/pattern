@@ -5,7 +5,8 @@ import Touchable from 'plaid-threads/Touchable';
 import { usePlaidLink } from 'react-plaid-link';
 import { useHistory } from 'react-router-dom';
 
-import { exchangeToken, postLinkEvent, setItemState } from '../services/api';
+import { logSuccess, logExit, logEvent } from '../util';
+import { exchangeToken, setItemState } from '../services/api';
 import { useItems, useLink } from '../services';
 
 LinkButton.propTypes = {
@@ -33,68 +34,38 @@ export default function LinkButton({
   const { getItemsByUser, getItemById } = useItems();
   const { generateLinkToken } = useLink();
 
-  const onSuccess = async (
-    publicToken,
-    { institution, accounts, link_session_id }
-  ) => {
-    logEvent('onSuccess', { institution, accounts, link_session_id });
-    await postLinkEvent({
-      userId,
-      link_session_id,
-      type: 'success',
-    });
+  const onSuccess = async (publicToken, metadata) => {
+    logSuccess(metadata, userId);
     if (itemId != null) {
       // update mode: no need to exchange public token
       await setItemState(itemId, 'good');
       getItemById(itemId, true);
       // regular link mode: exchange public token for access token
     } else {
-      await exchangeToken(publicToken, institution, accounts, userId);
+      await exchangeToken(publicToken, metadata, userId);
       getItemsByUser(userId, true);
     }
 
     history.push(`/user/${userId}`);
   };
 
-  const onExit = async (
-    error,
-    { institution, link_session_id, request_id }
-  ) => {
-    logEvent('onExit', {
-      error,
-      institution,
-      link_session_id,
-      request_id,
-    });
-    const eventError = error || {};
-    await postLinkEvent({
-      userId,
-      link_session_id,
-      request_id,
-      type: 'exit',
-      ...eventError,
-    });
+  const onExit = async (error, metadata) => {
+    logExit(error, metadata, userId);
     if (error != null && error.error_code === 'INVALID_LINK_TOKEN') {
       await generateLinkToken(userId, itemId);
     }
+    // to handle other error codes, see https://plaid.com/docs/errors/institution/
   };
 
-  /**
-   * @desc Prepends 'Link Event: ' to console logs.
-   */
-  function logEvent(eventName, extra) {
-    console.log(`Link Event: ${eventName}`, extra);
-  }
-
-  const callbacks = {
-    onSuccess: onSuccess,
-    onExit: onExit,
-    onEvent: logEvent,
+  const onEvent = async (eventName, metadata) => {
+    logEvent(eventName, metadata);
   };
 
   const config = {
-    ...callbacks,
-    token: token,
+    onSuccess,
+    onExit,
+    onEvent,
+    token,
     receivedRedirectUri: isOauth ? window.location.href : null, // add additional receivedRedirectUri config when handling an OAuth reidrect
   };
 
@@ -112,7 +83,7 @@ export default function LinkButton({
     // set link token, userId and itemId in local storage for use if needed later by OAuth
     localStorage.setItem(
       'oauthConfig',
-      JSON.stringify({ userId: userId, itemId: itemId, token: token })
+      JSON.stringify({ userId, itemId, token })
     );
     open();
   };
@@ -120,7 +91,7 @@ export default function LinkButton({
   return (
     <>
       {isOauth ? (
-        // no link button rendered: OAuth will open automatically by useEffect on line 103
+        // no link button rendered: OAuth will open automatically by useEffect on line 70
         <></>
       ) : itemId != null ? (
         // update mode: link is launched from dropdown menu in the

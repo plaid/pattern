@@ -2,8 +2,9 @@ import React from 'react';
 
 import { LinkButton } from './';
 
-// Component rendered when user is redirected back to site from Oauth institution site.  It initiates link immediately with
-// the original link token that was set in local storage from the initial link initialization.
+// Component rendered when user is redirected back to site from Oauth institution site.
+// It initiates link immediately with the original link token that was set in local storage
+// from the initial link initialization.
 const OAuthLink = () => {
   let { userId, itemId, token } = JSON.parse(
     localStorage.getItem('oauthConfig')
@@ -13,7 +14,7 @@ const OAuthLink = () => {
     <>
       {token != null && (
         <LinkButton
-          isOauth // this will initiate link immediately
+          isOauth // this will signal the link component to initiate immediately
           userId={userId}
           itemId={itemId}
           token={token}

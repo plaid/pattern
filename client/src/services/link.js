@@ -13,7 +13,7 @@ const types = {
 };
 
 /**
- * @desc Maintains the Link context state to create and fetch link tokens.
+ * @desc Maintains the Link context state and fetches link tokens to update that state.
  */
 export function LinkProvider(props) {
   const [linkTokens, dispatch] = useReducer(reducer, {

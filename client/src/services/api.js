@@ -66,8 +66,7 @@ export const postLinkEvent = event => api.post(`/link-event`, event);
 
 export const exchangeToken = async (
   publicToken,
-  institution,
-  accounts,
+  { institution, accounts },
   userId
 ) => {
   try {

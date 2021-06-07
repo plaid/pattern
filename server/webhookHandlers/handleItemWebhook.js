@@ -24,6 +24,8 @@ const itemErrorHandler = async (plaidItemId, error) => {
       await updateItemStatus(itemId, 'bad');
       break;
     }
+
+    // TODO: handle item error webhook cases
     case 'INVALID_CREDENTIALS':
     case 'INVALID_MFA':
     case 'INVALID_UPDATED_USERNAME':

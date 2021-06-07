@@ -5,7 +5,7 @@ import Touchable from 'plaid-threads/Touchable';
 import { usePlaidLink } from 'react-plaid-link';
 import { useHistory } from 'react-router-dom';
 
-import { logSuccess, logExit, logEvent } from '../util';
+import { logEvent, logSuccess, logExit } from '../util';
 import { exchangeToken, setItemState } from '../services/api';
 import { useItems, useLink } from '../services';
 
@@ -57,14 +57,10 @@ export default function LinkButton({
     // to handle other error codes, see https://plaid.com/docs/errors/institution/
   };
 
-  const onEvent = async (eventName, metadata) => {
-    logEvent(eventName, metadata);
-  };
-
   const config = {
     onSuccess,
     onExit,
-    onEvent,
+    onEvent: logEvent,
     token,
     receivedRedirectUri: isOauth ? window.location.href : null, // add additional receivedRedirectUri config when handling an OAuth reidrect
   };

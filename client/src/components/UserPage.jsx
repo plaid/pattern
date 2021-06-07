@@ -55,7 +55,7 @@ const UserPage = ({ match }) => {
 
   useEffect(() => {
     // This gets transactions from the database only.
-    // Note that calls to Plaid's transactions/get api are only made in response
+    // Note that calls to Plaid's transactions/get endpoint are only made in response
     // to receipt of a transactions webhook.
     getTransactionsByUser(userId);
   }, [getTransactionsByUser, userId]);

@@ -64,19 +64,15 @@ export function diffBetweenCurrentTime(timestamp) {
   }).replace(/^(about|less than)\s/i, '');
 }
 
-export const log = (eventName, extra) => {
+export const logEvent = (eventName, extra) => {
   console.log(`Link Event: ${eventName}`, extra);
-};
-
-export const logEvent = async (eventName, metadata) => {
-  log(eventName, metadata);
 };
 
 export const logSuccess = async (
   { institution, accounts, link_session_id },
   userId
 ) => {
-  log('onSuccess', {
+  logEvent('onSuccess', {
     institution,
     accounts,
     link_session_id,
@@ -93,7 +89,7 @@ export const logExit = async (
   { institution, status, link_session_id, request_id },
   userId
 ) => {
-  log('onExit', {
+  logEvent('onExit', {
     error,
     institution,
     status,
@@ -107,5 +103,6 @@ export const logExit = async (
     request_id,
     type: 'exit',
     ...eventError,
+    status,
   });
 };

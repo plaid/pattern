@@ -10,6 +10,7 @@ const LinkContext = React.createContext();
 const types = {
   LINK_TOKEN_CREATED: 0,
   LINK_TOKEN_UPDATE_MODE_CREATED: 1,
+  LINK_TOKEN_ERROR: 2,
 };
 
 /**
@@ -19,6 +20,7 @@ export function LinkProvider(props) {
   const [linkTokens, dispatch] = useReducer(reducer, {
     byUser: {}, // normal case
     byItem: {}, // update mode
+    error: {},
   });
 
   /**
@@ -26,13 +28,18 @@ export function LinkProvider(props) {
    */
 
   const generateLinkToken = useCallback(async (userId, itemId) => {
+    // if itemId is not null, update mode is triggered
     const linkTokenResponse = await getLinkToken({ userId, itemId });
-    const token = await linkTokenResponse.data.link_token;
+    if (linkTokenResponse.data.link_token) {
+      const token = await linkTokenResponse.data.link_token;
 
-    if (itemId != null) {
-      dispatch([types.LINK_TOKEN_UPDATE_MODE_CREATED, itemId, token]);
+      if (itemId != null) {
+        dispatch([types.LINK_TOKEN_UPDATE_MODE_CREATED, itemId, token]);
+      } else {
+        dispatch([types.LINK_TOKEN_CREATED, userId, token]);
+      }
     } else {
-      dispatch([types.LINK_TOKEN_CREATED, userId, token]);
+      dispatch([types.LINK_TOKEN_ERROR, '', '', linkTokenResponse.data]);
     }
   }, []);
 
@@ -50,7 +57,7 @@ export function LinkProvider(props) {
 /**
  * @desc Handles updates to the LinkTokens state as dictated by dispatched actions.
  */
-function reducer(state, [type, id, token]) {
+function reducer(state, [type, id, token, error]) {
   switch (type) {
     case types.LINK_TOKEN_CREATED:
       return {
@@ -58,15 +65,22 @@ function reducer(state, [type, id, token]) {
         byUser: {
           [id]: token,
         },
+        error: {},
       };
 
     case types.LINK_TOKEN_UPDATE_MODE_CREATED:
       return {
         ...state,
+        error: {},
         byItem: {
           ...state.byItem,
           [id]: token,
         },
+      };
+    case types.LINK_TOKEN_ERROR:
+      return {
+        ...state,
+        error,
       };
     default:
       console.warn('unknown action: ', {

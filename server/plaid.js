@@ -64,7 +64,7 @@ const noAccessTokenLogger = async (
   );
 };
 
-// Plaid client methods mapped to their appropriate logging functions.
+// Plaid client methods used in this app, mapped to their appropriate logging functions.
 
 const clientMethodLoggingFns = {
   institutionsGet: noAccessTokenLogger,

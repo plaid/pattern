@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import sortBy from 'lodash/sortBy';
 import NavigationLink from 'plaid-threads/NavigationLink';
+import Callout from 'plaid-threads/Callout';
 
 import {
   useItems,
@@ -34,6 +35,7 @@ const UserPage = ({ match }) => {
   const [transactions, setTransactions] = useState([]);
   const [accounts, setAccounts] = useState([]);
   const [assets, setAssets] = useState([]);
+  const [message, setMessage] = useState(null);
 
   const { getTransactionsByUser, transactionsByUser } = useTransactions();
   const { getAccountsByUser, accountsByUser } = useAccounts();
@@ -121,6 +123,21 @@ const UserPage = ({ match }) => {
         BACK TO LOGIN
       </NavigationLink>
       <Banner />
+      {linkTokens.error.error_code != null && (
+        <Callout warning>
+          <div>
+            Unable to fetch link_token: please make sure your backend server is
+            running and that your .env file has been configured correctly.
+          </div>
+          <div>
+            Error Code: <code>{linkTokens.error.error_code}</code>
+          </div>
+          <div>
+            Error Type: <code>{linkTokens.error.error_type}</code>{' '}
+          </div>
+          <div>Error Message: {linkTokens.error.error_message}</div>
+        </Callout>
+      )}
       <UserCard user={user} removeButton={false} />
       {numOfItems > 0 && (
         <>

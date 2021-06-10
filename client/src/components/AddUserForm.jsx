@@ -19,7 +19,7 @@ const AddUserForm = ({ hideForm }) => {
 
   useEffect(() => {
     getUsers();
-  }, [addNewUser]);
+  }, [addNewUser, getUsers]);
 
   return (
     <div className="box addUserForm">

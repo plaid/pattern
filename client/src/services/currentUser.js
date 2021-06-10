@@ -33,35 +33,41 @@ export function CurrentUserProvider(props) {
   /**
    * @desc Requests details for a single User.
    */
-  const login = useCallback(async (username, refresh) => {
-    try {
-      const { data: payload } = await apiLogin(username);
-      if (payload != null) {
-        toast.success(`Successful login.  Welcome back ${username}`);
-        dispatch([types.SUCCESSFUL_GET, payload]);
-        history.push(`/user/${payload[0].id}`);
-      } else {
-        toast.error(`Username ${username} is invalid.  Try again. `);
-        dispatch([types.FAILED_GET]);
+  const login = useCallback(
+    async (username, refresh) => {
+      try {
+        const { data: payload } = await apiLogin(username);
+        if (payload != null) {
+          toast.success(`Successful login.  Welcome back ${username}`);
+          dispatch([types.SUCCESSFUL_GET, payload]);
+          history.push(`/user/${payload[0].id}`);
+        } else {
+          toast.error(`Username ${username} is invalid.  Try again. `);
+          dispatch([types.FAILED_GET]);
+        }
+      } catch (err) {
+        console.log(err);
       }
-    } catch (err) {
-      console.log(err);
-    }
-  }, []);
+    },
+    [history]
+  );
 
-  const setCurrentUser = useCallback(async username => {
-    try {
-      const { data: payload } = await apiLogin(username);
-      if (payload != null) {
-        dispatch([types.SUCCESSFUL_GET, payload]);
-        history.push(`/user/${payload[0].id}`);
-      } else {
-        dispatch([types.FAILED_GET]);
+  const setCurrentUser = useCallback(
+    async username => {
+      try {
+        const { data: payload } = await apiLogin(username);
+        if (payload != null) {
+          dispatch([types.SUCCESSFUL_GET, payload]);
+          history.push(`/user/${payload[0].id}`);
+        } else {
+          dispatch([types.FAILED_GET]);
+        }
+      } catch (err) {
+        console.log(err);
       }
-    } catch (err) {
-      console.log(err);
-    }
-  }, []);
+    },
+    [history]
+  );
 
   const setNewUser = useCallback(async username => {
     dispatch([types.ADD_USER, username]);

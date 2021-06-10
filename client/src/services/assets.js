@@ -40,19 +40,22 @@ export function AssetsProvider(props) {
     }
   }, []);
 
-  const addAsset = useCallback(async (userId, description, value, refresh) => {
-    try {
-      const { data: payload } = await apiAddAsset(userId, description, value);
-      if (payload != null) {
-        toast.success(`Successful addition of ${description}`);
-        await getAssetsByUser(userId);
-      } else {
-        toast.error(`Could not add ${description}`);
+  const addAsset = useCallback(
+    async (userId, description, value, refresh) => {
+      try {
+        const { data: payload } = await apiAddAsset(userId, description, value);
+        if (payload != null) {
+          toast.success(`Successful addition of ${description}`);
+          await getAssetsByUser(userId);
+        } else {
+          toast.error(`Could not add ${description}`);
+        }
+      } catch (err) {
+        console.log(err);
       }
-    } catch (err) {
-      console.log(err);
-    }
-  }, []);
+    },
+    [getAssetsByUser]
+  );
 
   const value = useMemo(() => {
     return {

@@ -72,7 +72,7 @@ export default function LinkButton({
     if (isOauth && ready) {
       open();
     }
-  }, [ready, open]);
+  }, [ready, open, isOauth]);
 
   const handleClick = () => {
     // regular, non-OAuth case:

@@ -45,7 +45,7 @@ export default function UserCard({ user, removeButton, linkButton }) {
   // creates new link token upon change in user or number of items
   useEffect(() => {
     generateLinkToken(user.id, null); // itemId is null
-  }, [user.id, numOfItems]);
+  }, [user.id, numOfItems, generateLinkToken]);
 
   useEffect(() => {
     setToken(linkTokens.byUser[user.id]);

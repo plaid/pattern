@@ -35,7 +35,6 @@ const UserPage = ({ match }) => {
   const [transactions, setTransactions] = useState([]);
   const [accounts, setAccounts] = useState([]);
   const [assets, setAssets] = useState([]);
-  const [message, setMessage] = useState(null);
 
   const { getTransactionsByUser, transactionsByUser } = useTransactions();
   const { getAccountsByUser, accountsByUser } = useAccounts();
@@ -111,7 +110,7 @@ const UserPage = ({ match }) => {
   // creates new link token upon new user or change in number of items
   useEffect(() => {
     generateLinkToken(userId, null); // itemId is null
-  }, [userId, numOfItems]);
+  }, [userId, numOfItems, generateLinkToken]);
 
   useEffect(() => {
     setToken(linkTokens.byUser[userId]);

@@ -24,7 +24,8 @@ Note: We recommend running these commands in a unix terminal. Windows users can 
     ```shell
     cp .env.template .env
     ```
-1. Update the `.env` file with your [Plaid API keys][plaid-keys].
+1. Update the `.env` file with your [Plaid API keys][plaid-keys] and [OAuth redirect uri][plaid-redirect-uri]
+
 1. Start the services. The first run may take a few minutes as Docker images are pulled/built for the first time.
     ```shell
     make start
@@ -83,6 +84,7 @@ See [`docs/troubleshooting.md`][troubleshooting].
 [plaid-quickstart]: https://plaid.com/docs/quickstart/
 [plaid-signup]: https://dashboard.plaid.com/signup
 [plaid-support-ticket]: https://dashboard.plaid.com/support/new
+[plaid-redirect-uri]: https://plaid.com/docs/link/oauth/#redirect-uri-configuration
 [postgres]: https://www.postgresql.org/
 [react]: http://reactjs.org/
 [server-readme]: server/README.md

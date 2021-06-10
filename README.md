@@ -70,7 +70,7 @@ See [`docs/troubleshooting.md`][troubleshooting].
 
 [MIT](LICENSE)
 
-[client-img]: docs/pattern_screenshot.png
+[client-img]: docs/pattern_screenshot.jpg
 [client-readme]: client/README.md
 [database-readme]: database/README.md
 [docker]: https://docs.docker.com/

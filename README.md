@@ -2,7 +2,7 @@
 
 ![Plaid Pattern client][client-img]
 
-This is a reference application demonstrating an end-to-end [Plaid][plaid] integration, focused on linking items and fetching transaction data.
+This is a sample Personal Finance Manager application demonstrating an end-to-end [Plaid][plaid] integration, focused on linking items and fetching transaction data.
 
 **This is not meant to be run as a production application.**
 
@@ -25,6 +25,8 @@ Note: We recommend running these commands in a unix terminal. Windows users can 
     cp .env.template .env
     ```
 1. Update the `.env` file with your [Plaid API keys][plaid-keys] and [OAuth redirect uri][plaid-redirect-uri]
+
+1. You will also need to configure an allowed redirect URI for your client ID through the [Plaid developer dashboard](https://dashboard.plaid.com/team/api).
 
 1. Start the services. The first run may take a few minutes as Docker images are pulled/built for the first time.
     ```shell

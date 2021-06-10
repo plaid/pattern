@@ -39,8 +39,16 @@ const OPTIONS = { clientApp: 'Plaid-Pattern' };
  */
 const defaultLogger = async (clientMethod, clientMethodArgs, response) => {
   const accessToken = clientMethodArgs[0].access_token;
-  const { id: itemId } = await retrieveItemByPlaidAccessToken(accessToken);
-  await createPlaidApiEvent(itemId, clientMethod, clientMethodArgs, response);
+  const { id: itemId, user_id: userId } = await retrieveItemByPlaidAccessToken(
+    accessToken
+  );
+  await createPlaidApiEvent(
+    itemId,
+    userId,
+    clientMethod,
+    clientMethodArgs,
+    response
+  );
 };
 
 /**
@@ -57,6 +65,7 @@ const noAccessTokenLogger = async (
   response
 ) => {
   await createPlaidApiEvent(
+    undefined,
     undefined,
     clientMethod,
     clientMethodArgs,

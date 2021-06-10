@@ -37,25 +37,23 @@ This table stores responses from the Plaid API for client requests to the Plaid 
 
 User flows that this table captures (based on the client implementation, which hooks into the `onExit` and `onSuccess` Link callbacks):
 
-* User opens Link, closes without trying to connect an account.
+-   User opens Link, closes without trying to connect an account.
     This will have type `exit` but no request_id, error_type, or error_code.
-* User tries to connect an account, fails, and closes link.
+-   User tries to connect an account, fails, and closes link.
     This will have type `exit` and will have a request_id, error_type, and error_code.
-* User successfully connects an account.
+-   User successfully connects an account.
     This will have type `success` but no request_id, error_type, or error_code.
 
 ### plaid_api_events_table
 
 This table stores responses from the Plaid API for server requests to the Plaid client.
 The server stores the responses for all of the requests it makes to the Plaid API.
-Where applicable, it also maps the response to an item.
+Where applicable, it also maps the response to an item and user.
 If the request returned an error, the error_type and error_code columns will be populated.
 
-In a real-world application, you might want to map some of these requests to a user or a session, if they were initiated in response to a client request.
-Since this demo app doesn't have the concept of a session, we did not incorporate that into these logs.
-
 ## Learn More
-- [PostgreSQL documentation][postgres-docs]
+
+-   [PostgreSQL documentation][postgres-docs]
 
 [create-script]: init/create.sql
 [docker-compose]: ../docker-compose.yml

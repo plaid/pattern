@@ -242,6 +242,7 @@ CREATE TABLE plaid_api_events_table
 (
   id SERIAL PRIMARY KEY,
   item_id integer,
+  user_id integer,
   plaid_method text NOT NULL,
   arguments text,
   request_id text UNIQUE,

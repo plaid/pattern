@@ -7,7 +7,7 @@ import React, {
 } from 'react';
 import { toast } from 'react-toastify';
 import { useHistory } from 'react-router-dom';
-import { login as apiLogin } from './api';
+import { getLoginUser as apiGetLoginUser } from './api';
 
 const CurrentUserContext = createContext();
 
@@ -36,7 +36,7 @@ export function CurrentUserProvider(props) {
   const login = useCallback(
     async (username, refresh) => {
       try {
-        const { data: payload } = await apiLogin(username);
+        const { data: payload } = await apiGetLoginUser(username);
         if (payload != null) {
           toast.success(`Successful login.  Welcome back ${username}`);
           dispatch([types.SUCCESSFUL_GET, payload]);
@@ -55,7 +55,7 @@ export function CurrentUserProvider(props) {
   const setCurrentUser = useCallback(
     async username => {
       try {
-        const { data: payload } = await apiLogin(username);
+        const { data: payload } = await apiGetLoginUser(username);
         if (payload != null) {
           dispatch([types.SUCCESSFUL_GET, payload]);
           history.push(`/user/${payload[0].id}`);

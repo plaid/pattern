@@ -30,7 +30,9 @@ export default function UserCard({ user, removeButton, linkButton }) {
 
   // update data store with the user's items
   useEffect(() => {
-    getItemsByUser(user.id);
+    if (user.id) {
+      getItemsByUser(user.id);
+    }
   }, [getItemsByUser, user.id]);
 
   // update no of items from data store

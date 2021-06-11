@@ -14,6 +14,10 @@ body {
   background: $white;
 }
 
+// body[style] {
+//   overflow: visible !important;
+// }
+
 .App {
   max-width: 131 * $unit;
   margin-right: auto;

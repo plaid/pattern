@@ -76,7 +76,9 @@ const UserPage = ({ match }) => {
 
   // update data store with the user's items
   useEffect(() => {
-    getItemsByUser(userId);
+    if (userId != null) {
+      getItemsByUser(userId);
+    }
   }, [getItemsByUser, userId]);
 
   // update state items from data store

@@ -47,6 +47,7 @@ export default function LinkButton({
     }
 
     history.push(`/user/${userId}`);
+    document.getElementsByTagName('body')[0].style.overflow = 'auto';
   };
 
   const onExit = async (error, metadata) => {

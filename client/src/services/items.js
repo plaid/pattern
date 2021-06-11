@@ -39,7 +39,6 @@ export function ItemsProvider(props) {
 
   const hasRequested = useRef({
     byId: {},
-    byUser: {},
   });
 
   /**
@@ -58,18 +57,13 @@ export function ItemsProvider(props) {
   /**
    * @desc Requests all Items that belong to an individual User.
    */
-  const getItemsByUser = useCallback(async (userId, refresh) => {
-    if (!hasRequested.current.byUser[userId] || refresh) {
-      hasRequested.current.byUser[userId] = true;
-      const { data: payload } = await apiGetItemsByUser(userId);
-      dispatch([types.SUCCESSFUL_REQUEST, payload]);
-    }
+  const getItemsByUser = useCallback(async userId => {
+    const { data: payload } = await apiGetItemsByUser(userId);
+    dispatch([types.SUCCESSFUL_REQUEST, payload]);
   }, []);
 
   /**
    * @desc Will deletes Item by itemId.
-   * The api request will be bypassed if the data has already been fetched.
-   * A 'refresh' parameter can force a request for new data even if local state exists.
    */
   const deleteItemById = useCallback(
     async (id, userId) => {

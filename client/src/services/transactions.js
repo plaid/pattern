@@ -42,7 +42,6 @@ export function TransactionsProvider(props) {
   const hasRequested = useRef({
     byAccount: {},
     byItem: {},
-    byUser: {},
   });
 
   /**
@@ -73,15 +72,10 @@ export function TransactionsProvider(props) {
 
   /**
    * @desc Requests all Transactions that belong to an individual User.
-   * The api request will be bypassed if the data has already been fetched.
-   * A 'refresh' parameter can force a request for new data even if local state exists.
    */
-  const getTransactionsByUser = useCallback(async (userId, refresh) => {
-    if (!hasRequested.current.byUser[userId] || refresh) {
-      hasRequested.current.byUser[userId] = true;
-      const { data: payload } = await apiGetTransactionsByUser(userId);
-      dispatch([types.SUCCESSFUL_GET, payload]);
-    }
+  const getTransactionsByUser = useCallback(async userId => {
+    const { data: payload } = await apiGetTransactionsByUser(userId);
+    dispatch([types.SUCCESSFUL_GET, payload]);
   }, []);
 
   /**

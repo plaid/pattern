@@ -23,11 +23,8 @@ const TransactionsContext = createContext();
  */
 const types = {
   SUCCESSFUL_GET: 0,
-  // FAILED_GET: 1,
-  DELETE_BY_ITEM: 2,
-  DELETE_BY_USER: 3,
-  // SUCCESSFUL_DELETE: 4,
-  // FAILED_DELETE: 5,
+  DELETE_BY_ITEM: 1,
+  DELETE_BY_USER: 2,
 };
 
 /**
@@ -41,7 +38,6 @@ export function TransactionsProvider(props) {
 
   const hasRequested = useRef({
     byAccount: {},
-    byItem: {},
   });
 
   /**
@@ -59,15 +55,10 @@ export function TransactionsProvider(props) {
 
   /**
    * @desc Requests all Transactions that belong to an individual Item.
-   * The api request will be bypassed if the data has already been fetched.
-   * A 'refresh' parameter can force a request for new data even if local state exists.
    */
-  const getTransactionsByItem = useCallback(async (itemId, refresh) => {
-    if (!hasRequested.current.byItem[itemId] || refresh) {
-      hasRequested.current.byItem[itemId] = true;
-      const { data: payload } = await apiGetTransactionsByItem(itemId);
-      dispatch([types.SUCCESSFUL_GET, payload]);
-    }
+  const getTransactionsByItem = useCallback(async itemId => {
+    const { data: payload } = await apiGetTransactionsByItem(itemId);
+    dispatch([types.SUCCESSFUL_GET, payload]);
   }, []);
 
   /**
@@ -134,7 +125,6 @@ function reducer(state, [type, payload]) {
       if (!payload.length) {
         return state;
       }
-
       return {
         ...state,
         ...keyBy(payload, 'id'),

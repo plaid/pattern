@@ -2,7 +2,6 @@ import React, {
   createContext,
   useContext,
   useMemo,
-  useRef,
   useReducer,
   useCallback,
 } from 'react';
@@ -16,7 +15,6 @@ const InstitutionsContext = createContext();
  */
 const types = {
   SUCCESSFUL_GET: 0,
-  // FAILED_GET: 1,
 };
 
 /**
@@ -25,20 +23,13 @@ const types = {
 export function InstitutionsProvider(props) {
   const [institutionsById, dispatch] = useReducer(reducer, {});
 
-  const hasRequested = useRef({});
-
   /**
    * @desc Requests details for a single Institution.
-   * The api request will be bypassed if the data has already been fetched.
-   * A 'refresh' parameter can force a request for new data even if local state exists.
    */
-  const getInstitutionById = useCallback(async (id, refresh) => {
-    if (!hasRequested.current[id] || refresh) {
-      hasRequested.current[id] = true;
-      const { data: payload } = await apiGetInstitutionById(id);
-      const institution = payload[0];
-      dispatch([types.SUCCESSFUL_GET, institution]);
-    }
+  const getInstitutionById = useCallback(async id => {
+    const { data: payload } = await apiGetInstitutionById(id);
+    const institution = payload[0];
+    dispatch([types.SUCCESSFUL_GET, institution]);
   }, []);
 
   /**

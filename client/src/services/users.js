@@ -25,10 +25,7 @@ const UsersContext = createContext();
  */
 const types = {
   SUCCESSFUL_GET: 0,
-  // FAILED_GET: 1,
-  // DELETE_BY_ID: 2,
-  SUCCESSFUL_DELETE: 3,
-  // FAILED_DELETE: 4,
+  SUCCESSFUL_DELETE: 1,
 };
 
 /**
@@ -132,7 +129,6 @@ function reducer(state, [type, payload]) {
       if (!payload.length) {
         return state;
       }
-
       return {
         ...state,
         ...keyBy(payload, 'id'),

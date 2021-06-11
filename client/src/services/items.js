@@ -24,11 +24,8 @@ const ItemsContext = createContext();
  */
 const types = {
   SUCCESSFUL_GET: 0,
-  // FAILED_GET: 1,
-  // DELETE_BY_ID: 2,
-  DELETE_BY_USER: 3,
-  SUCCESSFUL_DELETE: 4,
-  // FAILED_DELETE: 5,
+  DELETE_BY_USER: 1,
+  SUCCESSFUL_DELETE: 2,
 };
 
 /**
@@ -36,7 +33,6 @@ const types = {
  */
 export function ItemsProvider(props) {
   const [itemsById, dispatch] = useReducer(reducer, {});
-
   const hasRequested = useRef({
     byId: {},
   });
@@ -48,6 +44,7 @@ export function ItemsProvider(props) {
    */
   const getItemById = useCallback(async (id, refresh) => {
     if (!hasRequested.current.byId[id] || refresh) {
+      console.log(hasRequested);
       hasRequested.current.byId[id] = true;
       const { data: payload } = await apiGetItemById(id);
       dispatch([types.SUCCESSFUL_REQUEST, payload]);

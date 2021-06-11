@@ -2,7 +2,6 @@ import React, {
   createContext,
   useContext,
   useMemo,
-  useRef,
   useReducer,
   useCallback,
 } from 'react';
@@ -22,11 +21,8 @@ const AccountsContext = createContext();
  */
 const types = {
   SUCCESSFUL_GET: 0,
-  // FAILED_GET: 1,
-  DELETE_BY_ITEM: 2,
-  DELETE_BY_USER: 3,
-  // SUCCESSFUL_DELETE: 4,
-  // FAILED_DELETE: 5,
+  DELETE_BY_ITEM: 1,
+  DELETE_BY_USER: 2,
 };
 
 /**
@@ -35,22 +31,12 @@ const types = {
 export function AccountsProvider(props) {
   const [accountsById, dispatch] = useReducer(reducer, {});
 
-  const hasRequested = useRef({
-    byId: {},
-    byItem: {},
-  });
-
   /**
    * @desc Requests all Accounts that belong to an individual Item.
-   * The api request will be bypassed if the data has already been fetched.
-   * A 'refresh' parameter can force a request for new data even if local state exists.
    */
-  const getAccountsByItem = useCallback(async (itemId, refresh) => {
-    if (!hasRequested.current.byItem[itemId] || refresh) {
-      hasRequested.current.byItem[itemId] = true;
-      const { data: payload } = await apiGetAccountsByItem(itemId);
-      dispatch([types.SUCCESSFUL_GET, payload]);
-    }
+  const getAccountsByItem = useCallback(async itemId => {
+    const { data: payload } = await apiGetAccountsByItem(itemId);
+    dispatch([types.SUCCESSFUL_GET, payload]);
   }, []);
 
   /**

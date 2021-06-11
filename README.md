@@ -33,6 +33,10 @@ Note: We recommend running these commands in a unix terminal. Windows users can 
     make start
     ```
 1. Open http://localhost:3000 in a web browser.
+1. View the logs
+    ```shell
+    make logs
+    ```
 1. When you're finished, stop the services.
     ```shell
     make stop

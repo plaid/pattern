@@ -1,5 +1,11 @@
 # Troubleshooting
 
+View the logs with the following Docker command:
+
+```shell
+make logs
+```
+
 If you're experiencing oddities in the app, here are some common problems and their possible solutions.
 
 ## Common Issues

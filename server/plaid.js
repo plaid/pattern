@@ -31,7 +31,7 @@ const OPTIONS = { clientApp: 'Plaid-Pattern' };
 
 /**
  * Logging function for Plaid client methods that use an access_token as an argument. Associates
- * the Plaid API event log entry with the item the request is for.
+ * the Plaid API event log entry with the item and user the request is for.
  *
  * @param {string} clientMethod the name of the Plaid client method called.
  * @param {Array} clientMethodArgs the arguments passed to the Plaid client method.
@@ -53,7 +53,7 @@ const defaultLogger = async (clientMethod, clientMethodArgs, response) => {
 
 /**
  * Logging function for Plaid client methods that do not use access_token as an argument. These
- * Plaid API event log entries will not be associated with an item.
+ * Plaid API event log entries will not be associated with an item or user.
  *
  * @param {string} clientMethod the name of the Plaid client method called.
  * @param {Array} clientMethodArgs the arguments passed to the Plaid client method.

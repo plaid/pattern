@@ -24,6 +24,8 @@ LinkButton.defaultProps = {
 };
 
 // Uses the usePlaidLink hook to manage the Plaid Link creation.  See https://github.com/plaid/react-plaid-link for full usage instructions.
+// The link token passed to usePlaidLink cannot be null.  It must be generated outside of this component.  In this sample app, the link token
+// is generated in the link context in client/src/services/link.js.
 
 export default function LinkButton({
   isOauth,
@@ -36,7 +38,7 @@ export default function LinkButton({
   const { getItemsByUser, getItemById } = useItems();
   const { generateLinkToken } = useLink();
 
-  // define onSuccess, onExit and onEvent functions as configs for creation of Plaid Link instance
+  // define onSuccess, onExit and onEvent functions as configs for Plaid Link creation
   const onSuccess = async (publicToken, metadata) => {
     // log and save metatdata
     logSuccess(metadata, userId);
@@ -46,6 +48,7 @@ export default function LinkButton({
       getItemById(itemId, true);
       // regular link mode: exchange public token for access token
     } else {
+      // call to Plaid api endpoint: /item/public_token/exchange in order to obtain access_token which is then stored with the created item
       await exchangeToken(publicToken, metadata, userId);
       getItemsByUser(userId, true);
     }
@@ -91,7 +94,7 @@ export default function LinkButton({
   return (
     <>
       {isOauth ? (
-        // no link button rendered: OAuth will open automatically by useEffect on line 70
+        // no link button rendered: OAuth will open automatically by useEffect above
         <></>
       ) : itemId != null ? (
         // update mode: Link is launched from dropdown menu in the

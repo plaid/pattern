@@ -47,7 +47,7 @@ router.post(
         statusCode: 409,
       });
 
-    // exchange the public token for a private token and store the item.
+    // exchange the public token for a private access token and store with the item.
     const response = await plaid.itemPublicTokenExchange({
       public_token: publicToken,
     });

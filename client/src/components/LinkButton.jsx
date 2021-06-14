@@ -5,7 +5,7 @@ import Touchable from 'plaid-threads/Touchable';
 import { usePlaidLink } from 'react-plaid-link';
 import { useHistory } from 'react-router-dom';
 
-import { logEvent, logSuccess, logExit } from '../util';
+import { logEvent, logSuccess, logExit } from '../util'; // functions to log and save errors and metadata from Link events.
 import { exchangeToken, setItemState } from '../services/api';
 import { useItems, useLink } from '../services';
 
@@ -23,7 +23,7 @@ LinkButton.defaultProps = {
   token: '',
 };
 
-// Uses the usePlaidLink hook in order to create a Link instance.  See https://github.com/plaid/react-plaid-link for full usage instructions.
+// Uses the usePlaidLink hook to manage the Plaid Link creation.  See https://github.com/plaid/react-plaid-link for full usage instructions.
 
 export default function LinkButton({
   isOauth,
@@ -38,6 +38,7 @@ export default function LinkButton({
 
   // define onSuccess, onExit and onEvent functions as configs for creation of Plaid Link instance
   const onSuccess = async (publicToken, metadata) => {
+    // log and save metatdata
     logSuccess(metadata, userId);
     if (itemId != null) {
       // update mode: no need to exchange public token
@@ -48,11 +49,11 @@ export default function LinkButton({
       await exchangeToken(publicToken, metadata, userId);
       getItemsByUser(userId, true);
     }
-
     history.push(`/user/${userId}`);
   };
 
   const onExit = async (error, metadata) => {
+    // log and save error and metatdata
     logExit(error, metadata, userId);
     if (error != null && error.error_code === 'INVALID_LINK_TOKEN') {
       await generateLinkToken(userId, itemId);

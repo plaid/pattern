@@ -61,7 +61,8 @@ export default function LinkButton({
     if (error != null && error.error_code === 'INVALID_LINK_TOKEN') {
       await generateLinkToken(userId, itemId);
     }
-    // to handle other error codes, see https://plaid.com/docs/errors/institution/
+
+    // to handle other error codes, see https://plaid.com/docs/errors/
   };
 
   const config = {

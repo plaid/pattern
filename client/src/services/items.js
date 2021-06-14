@@ -44,7 +44,6 @@ export function ItemsProvider(props) {
    */
   const getItemById = useCallback(async (id, refresh) => {
     if (!hasRequested.current.byId[id] || refresh) {
-      console.log(hasRequested);
       hasRequested.current.byId[id] = true;
       const { data: payload } = await apiGetItemById(id);
       dispatch([types.SUCCESSFUL_REQUEST, payload]);

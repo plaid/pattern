@@ -21,7 +21,7 @@ const types = {
 };
 
 /**
- * @desc Maintains the currentUser context state
+ * @desc Maintains the currentUser context state and provides functions to update that state
  */
 export function CurrentUserProvider(props) {
   const [userState, dispatch] = useReducer(reducer, {

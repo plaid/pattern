@@ -40,7 +40,7 @@ const UserPage = ({ match }) => {
   const { getAccountsByUser, accountsByUser } = useAccounts();
   const { assetsByUser, getAssetsByUser } = useAssets();
   const { usersById, getUserById } = useUsers();
-  const { itemsByUser, getItemsByUser } = useItems();
+  const { itemsByUser, getItemsByUser, itemsById } = useItems();
   const userId = Number(match.params.userId);
   const { generateLinkToken, linkTokens } = useLink();
 
@@ -117,6 +117,8 @@ const UserPage = ({ match }) => {
   useEffect(() => {
     setToken(linkTokens.byUser[userId]);
   }, [linkTokens, userId, numOfItems]);
+
+  document.getElementsByTagName('body')[0].style.overflow = 'auto'; // to override overflow:hidden from link pane
 
   return (
     <div>

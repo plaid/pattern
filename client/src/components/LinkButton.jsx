@@ -20,8 +20,10 @@ LinkButton.defaultProps = {
   isOauth: false,
   userId: null,
   itemId: null,
-  token: null,
+  token: '',
 };
+
+// Uses the usePlaidLink hook in order to create a Link instance.  See https://github.com/plaid/react-plaid-link for full usage instructions.
 
 export default function LinkButton({
   isOauth,
@@ -34,6 +36,7 @@ export default function LinkButton({
   const { getItemsByUser, getItemById } = useItems();
   const { generateLinkToken } = useLink();
 
+  // define onSuccess, onExit and onEvent functions as configs for creation of Plaid Link instance
   const onSuccess = async (publicToken, metadata) => {
     logSuccess(metadata, userId);
     if (itemId != null) {
@@ -47,7 +50,6 @@ export default function LinkButton({
     }
 
     history.push(`/user/${userId}`);
-    document.getElementsByTagName('body')[0].style.overflow = 'auto';
   };
 
   const onExit = async (error, metadata) => {
@@ -91,7 +93,7 @@ export default function LinkButton({
         // no link button rendered: OAuth will open automatically by useEffect on line 70
         <></>
       ) : itemId != null ? (
-        // update mode: link is launched from dropdown menu in the
+        // update mode: Link is launched from dropdown menu in the
         // item card after item is set to "bad state"
         <Touchable
           className="menuOption"

@@ -54,32 +54,36 @@ export default function UserCard({ user, removeButton, linkButton }) {
   }, [linkTokens, user.id, numOfItems]);
 
   const handleDeleteUser = () => {
-    deleteUserById(user.id); // this will delete user and all items associated with them
+    deleteUserById(user.id); // this will delete all items associated with a user
   };
   return (
-    <div
-      className="box user-card__box"
-      onMouseEnter={() => {
-        setHovered(true);
-      }}
-      onMouseLeave={() => {
-        setHovered(false);
-      }}
-    >
+    <div className="box user-card__box">
       <div className=" card user-card">
-        <Touchable
-          className="user-card-clickable"
-          component={HashLink}
-          to={`/user/${user.id}#itemCards`}
+        <div
+          className="hoverable"
+          onMouseEnter={() => {
+            if (numOfItems > 0) {
+              setHovered(true);
+            }
+          }}
+          onMouseLeave={() => {
+            setHovered(false);
+          }}
         >
-          <div className="user-card__detail">
-            <UserDetails
-              hovered={hovered}
-              user={user}
-              numOfItems={numOfItems}
-            />
-          </div>
-        </Touchable>
+          <Touchable
+            className="user-card-clickable"
+            component={HashLink}
+            to={`/user/${user.id}#itemCards`}
+          >
+            <div className="user-card__detail">
+              <UserDetails
+                hovered={hovered}
+                user={user}
+                numOfItems={numOfItems}
+              />
+            </div>
+          </Touchable>
+        </div>
 
         <div className="user-card__buttons">
           {token != null && linkButton && (

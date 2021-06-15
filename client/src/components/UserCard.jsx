@@ -54,7 +54,7 @@ export default function UserCard({ user, removeButton, linkButton }) {
   }, [linkTokens, user.id, numOfItems]);
 
   const handleDeleteUser = () => {
-    deleteUserById(user.id); // this will delete user and all items associated with them
+    deleteUserById(user.id); // this will delete all items associated with a user
   };
   return (
     <div

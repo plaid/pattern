@@ -64,8 +64,44 @@ export function diffBetweenCurrentTime(timestamp) {
   }).replace(/^(about|less than)\s/i, '');
 }
 
-export const logEvent = (eventName, extra) => {
-  console.log(`Link Event: ${eventName}`, extra);
+enum PlaidLinkStableEvent {
+  OPEN = 'OPEN',
+  EXIT = 'EXIT',
+  HANDOFF = 'HANDOFF',
+  SELECT_INSTITUTION = 'SELECT_INSTITUTION',
+  ERROR = 'ERROR',
+}
+
+interface PlaidLinkOnEventMetadata {
+  error_type: null | string;
+  error_code: null | string;
+  error_message: null | string;
+  exit_status: null | string;
+  institution_id: null | string;
+  institution_name: null | string;
+  institution_search_query: null | string;
+  mfa_type: null | string;
+  // see possible values for view_name at https://plaid.com/docs/link/web/#link-web-onevent-view-name
+  view_name: null | string;
+  // see possible values for selection at https://plaid.com/docs/link/web/#link-web-onevent-selection
+  selection: null | string;
+  // ISO 8601 format timestamp
+  timestamp: string;
+  link_session_id: string;
+  request_id: string;
+}
+
+type PlaidLinkOnEvent = (
+  // see possible values for eventName at
+  // https://plaid.com/docs/link/web/#link-web-onevent-eventName.
+  // Events other than stable events are informational and subject to change,
+  // and therefore should not be used to customize your product experience.
+  eventName: PlaidLinkStableEvent | string,
+  metadata: PlaidLinkOnEventMetadata
+) => void;
+
+export const logEvent = (eventName, metadata) => {
+  console.log(`Link Event: ${eventName}`, metadata);
 };
 
 export const logSuccess = async (

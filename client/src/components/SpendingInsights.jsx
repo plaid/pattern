@@ -55,7 +55,7 @@ export default function SpendingInsights({ transactions }) {
     namesArray.sort((a, b) => b[1] - a[1]);
     namesArray.splice(5); // top 5
     return namesArray;
-  }, [transactions, namesObject]);
+  }, [namesObject]);
 
   return (
     <div>
@@ -69,11 +69,11 @@ export default function SpendingInsights({ transactions }) {
             <h4 className="holdingsHeading">Top 5 Vendors</h4>
             <div className="data">
               <p className="title">Vendor</p> <p className="title">Amount</p>
-              {sortedNames.map(vendor => (
-                <>
+              {sortedNames.map((vendor, index) => (
+                <div key={index}>
                   <p>{vendor[0]}</p>
                   <p>{currencyFilter(vendor[1])}</p>
-                </>
+                </div>
               ))}
             </div>
           </div>

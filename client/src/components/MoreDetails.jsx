@@ -45,7 +45,7 @@ export function MoreDetails({
 
   useEffect(() => {
     setToken(linkTokens.byItem[itemId]);
-  }, [linkTokens, userId]);
+  }, [linkTokens, userId, itemId]);
 
   // display choice, depending on whether item is in "good" or "bad" state
   const linkChoice = setBadStateShown ? (

@@ -5,7 +5,7 @@ import Touchable from 'plaid-threads/Touchable';
 import { usePlaidLink } from 'react-plaid-link';
 import { useHistory } from 'react-router-dom';
 
-import { logEvent, logSuccess, logExit } from '../util';
+import { logEvent, logSuccess, logExit } from '../util'; // functions to log and save errors and metadata from Link events.
 import { exchangeToken, setItemState } from '../services/api';
 import { useItems, useLink } from '../services';
 
@@ -20,8 +20,12 @@ LinkButton.defaultProps = {
   isOauth: false,
   userId: null,
   itemId: null,
-  token: null,
+  token: '',
 };
+
+// Uses the usePlaidLink hook to manage the Plaid Link creation.  See https://github.com/plaid/react-plaid-link for full usage instructions.
+// The link token passed to usePlaidLink cannot be null.  It must be generated outside of this component.  In this sample app, the link token
+// is generated in the link context in client/src/services/link.js.
 
 export default function LinkButton({
   isOauth,
@@ -34,7 +38,9 @@ export default function LinkButton({
   const { getItemsByUser, getItemById } = useItems();
   const { generateLinkToken } = useLink();
 
+  // define onSuccess, onExit and onEvent functions as configs for Plaid Link creation
   const onSuccess = async (publicToken, metadata) => {
+    // log and save metatdata
     logSuccess(metadata, userId);
     if (itemId != null) {
       // update mode: no need to exchange public token
@@ -42,18 +48,21 @@ export default function LinkButton({
       getItemById(itemId, true);
       // regular link mode: exchange public token for access token
     } else {
+      // call to Plaid api endpoint: /item/public_token/exchange in order to obtain access_token which is then stored with the created item
       await exchangeToken(publicToken, metadata, userId);
       getItemsByUser(userId, true);
     }
-
     history.push(`/user/${userId}`);
   };
 
   const onExit = async (error, metadata) => {
+    // log and save error and metatdata
     logExit(error, metadata, userId);
     if (error != null && error.error_code === 'INVALID_LINK_TOKEN') {
       await generateLinkToken(userId, itemId);
     }
+
+    // to handle other error codes, see https://plaid.com/docs/errors/
   };
 
   const config = {
@@ -71,7 +80,7 @@ export default function LinkButton({
     if (isOauth && ready) {
       open();
     }
-  }, [ready, open]);
+  }, [ready, open, isOauth]);
 
   const handleClick = () => {
     // regular, non-OAuth case:
@@ -86,10 +95,10 @@ export default function LinkButton({
   return (
     <>
       {isOauth ? (
-        // no link button rendered: OAuth will open automatically by useEffect on line 103
+        // no link button rendered: OAuth will open automatically by useEffect above
         <></>
       ) : itemId != null ? (
-        // update mode: link is launched from dropdown menu in the
+        // update mode: Link is launched from dropdown menu in the
         // item card after item is set to "bad state"
         <Touchable
           className="menuOption"

@@ -38,14 +38,14 @@ export function MoreDetails({
   });
 
   const { generateLinkToken, linkTokens } = useLink();
-
+  // creates new link token for each item in bad state
   useEffect(() => {
     generateLinkToken(userId, itemId); // itemId is set because link is in update mode
-  }, [userId]);
+  }, [userId, itemId, generateLinkToken]);
 
   useEffect(() => {
     setToken(linkTokens.byItem[itemId]);
-  }, [linkTokens, userId]);
+  }, [linkTokens, userId, itemId]);
 
   // display choice, depending on whether item is in "good" or "bad" state
   const linkChoice = setBadStateShown ? (

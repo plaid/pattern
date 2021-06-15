@@ -10,16 +10,16 @@ const AddUserForm = ({ hideForm }) => {
   const { addNewUser, getUsers } = useUsers();
   const { setNewUser } = useCurrentUser();
 
-  function handleSubmit(e) {
+  const handleSubmit = async e => {
     e.preventDefault();
-    addNewUser(username);
+    await addNewUser(username);
     hideForm();
     setNewUser(username);
-  }
+  };
 
   useEffect(() => {
     getUsers();
-  }, [addNewUser]);
+  }, [addNewUser, getUsers]);
 
   return (
     <div className="box addUserForm">

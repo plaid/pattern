@@ -7,12 +7,10 @@ import { Login, Banner, AddUserForm } from './';
 
 import { useBoolean } from '../hooks';
 
-const PLAID_ENV = process.env.REACT_APP_PLAID_ENV;
-
-export default function Landing({}) {
+export default function Landing() {
   const { getUsers, usersById } = useUsers();
   const { userState, setCurrentUser } = useCurrentUser();
-  const [isAdding, showForm, hideForm, toggleForm] = useBoolean(false);
+  const [isAdding, hideForm, toggleForm] = useBoolean(false);
   const history = useHistory();
 
   useEffect(() => {
@@ -23,7 +21,7 @@ export default function Landing({}) {
     if (userState.newUser != null) {
       setCurrentUser(userState.newUser);
     }
-  }, [getUsers, usersById]);
+  }, [getUsers, usersById, setCurrentUser, userState.newUser]);
 
   const returnToCurrentUser = () => {
     history.push(`/user/${userState.currentUser.id}`);
@@ -32,6 +30,8 @@ export default function Landing({}) {
   return (
     <div>
       <Banner initialSubheading />
+      If you don't have an account, please click "Add New User." Once created,
+      you can add as many example Link items as you like.
       <div className="btnsContainer">
         <Login />
         <Button className="btnWithMargin" onClick={toggleForm} centered inline>

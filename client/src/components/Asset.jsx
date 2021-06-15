@@ -12,6 +12,8 @@ Asset.propTypes = {
   userId: PropTypes.number,
 };
 
+//  Allows user to input their personal assets such as a house or car.
+
 export default function Asset({ userId }) {
   const [show, setShow] = useState(false);
   const [description, setDescription] = useState('');

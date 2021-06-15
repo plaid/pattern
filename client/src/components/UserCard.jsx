@@ -30,7 +30,9 @@ export default function UserCard({ user, removeButton, linkButton }) {
 
   // update data store with the user's items
   useEffect(() => {
-    getItemsByUser(user.id);
+    if (user.id) {
+      getItemsByUser(user.id);
+    }
   }, [getItemsByUser, user.id]);
 
   // update no of items from data store
@@ -42,9 +44,10 @@ export default function UserCard({ user, removeButton, linkButton }) {
     }
   }, [itemsByUser, user.id]);
 
+  // creates new link token upon change in user or number of items
   useEffect(() => {
     generateLinkToken(user.id, null); // itemId is null
-  }, [user.id, numOfItems]);
+  }, [user.id, numOfItems, generateLinkToken]);
 
   useEffect(() => {
     setToken(linkTokens.byUser[user.id]);
@@ -54,29 +57,33 @@ export default function UserCard({ user, removeButton, linkButton }) {
     deleteUserById(user.id); // this will delete all items associated with a user
   };
   return (
-    <div
-      className="box user-card__box"
-      onMouseEnter={() => {
-        setHovered(true);
-      }}
-      onMouseLeave={() => {
-        setHovered(false);
-      }}
-    >
+    <div className="box user-card__box">
       <div className=" card user-card">
-        <Touchable
-          className="user-card-clickable"
-          component={HashLink}
-          to={`/user/${user.id}#itemCards`}
+        <div
+          className="hoverable"
+          onMouseEnter={() => {
+            if (numOfItems > 0) {
+              setHovered(true);
+            }
+          }}
+          onMouseLeave={() => {
+            setHovered(false);
+          }}
         >
-          <div className="user-card__detail">
-            <UserDetails
-              hovered={hovered}
-              user={user}
-              numOfItems={numOfItems}
-            />
-          </div>
-        </Touchable>
+          <Touchable
+            className="user-card-clickable"
+            component={HashLink}
+            to={`/user/${user.id}#itemCards`}
+          >
+            <div className="user-card__detail">
+              <UserDetails
+                hovered={hovered}
+                user={user}
+                numOfItems={numOfItems}
+              />
+            </div>
+          </Touchable>
+        </div>
 
         <div className="user-card__buttons">
           {token != null && linkButton && (

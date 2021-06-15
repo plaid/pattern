@@ -7,7 +7,7 @@ import React, {
 } from 'react';
 import { toast } from 'react-toastify';
 import { useHistory } from 'react-router-dom';
-import { login as apiLogin } from './api';
+import { getLoginUser as apiGetLoginUser } from './api';
 
 const CurrentUserContext = createContext();
 
@@ -21,7 +21,7 @@ const types = {
 };
 
 /**
- * @desc Maintains the currentUser context state
+ * @desc Maintains the currentUser context state and provides functions to update that state
  */
 export function CurrentUserProvider(props) {
   const [userState, dispatch] = useReducer(reducer, {
@@ -33,35 +33,41 @@ export function CurrentUserProvider(props) {
   /**
    * @desc Requests details for a single User.
    */
-  const login = useCallback(async (username, refresh) => {
-    try {
-      const { data: payload } = await apiLogin(username);
-      if (payload != null) {
-        toast.success(`Successful login.  Welcome back ${username}`);
-        dispatch([types.SUCCESSFUL_GET, payload]);
-        history.push(`/user/${payload[0].id}`);
-      } else {
-        toast.error(`Username ${username} is invalid.  Try again. `);
-        dispatch([types.FAILED_GET]);
+  const login = useCallback(
+    async (username, refresh) => {
+      try {
+        const { data: payload } = await apiGetLoginUser(username);
+        if (payload != null) {
+          toast.success(`Successful login.  Welcome back ${username}`);
+          dispatch([types.SUCCESSFUL_GET, payload]);
+          history.push(`/user/${payload[0].id}`);
+        } else {
+          toast.error(`Username ${username} is invalid.  Try again. `);
+          dispatch([types.FAILED_GET]);
+        }
+      } catch (err) {
+        console.log(err);
       }
-    } catch (err) {
-      console.log(err);
-    }
-  }, []);
+    },
+    [history]
+  );
 
-  const setCurrentUser = useCallback(async username => {
-    try {
-      const { data: payload } = await apiLogin(username);
-      if (payload != null) {
-        dispatch([types.SUCCESSFUL_GET, payload]);
-        history.push(`/user/${payload[0].id}`);
-      } else {
-        dispatch([types.FAILED_GET]);
+  const setCurrentUser = useCallback(
+    async username => {
+      try {
+        const { data: payload } = await apiGetLoginUser(username);
+        if (payload != null) {
+          dispatch([types.SUCCESSFUL_GET, payload]);
+          history.push(`/user/${payload[0].id}`);
+        } else {
+          dispatch([types.FAILED_GET]);
+        }
+      } catch (err) {
+        console.log(err);
       }
-    } catch (err) {
-      console.log(err);
-    }
-  }, []);
+    },
+    [history]
+  );
 
   const setNewUser = useCallback(async username => {
     dispatch([types.ADD_USER, username]);

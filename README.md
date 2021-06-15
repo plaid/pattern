@@ -2,7 +2,7 @@
 
 ![Plaid Pattern client][client-img]
 
-This is a reference application demonstrating an end-to-end [Plaid][plaid] integration, focused on linking items and fetching transaction data.
+This is a sample Personal Finance Manager application demonstrating an end-to-end [Plaid][plaid] integration, focused on linking items and fetching transaction data.
 
 **This is not meant to be run as a production application.**
 
@@ -24,12 +24,19 @@ Note: We recommend running these commands in a unix terminal. Windows users can 
     ```shell
     cp .env.template .env
     ```
-1. Update the `.env` file with your [Plaid API keys][plaid-keys].
+1. Update the `.env` file with your [Plaid API keys][plaid-keys] and [OAuth redirect uri](https://github.com/plaid/pattern/tree/master/server#testing-oauth).
+
+1. You will also need to configure an allowed redirect URI for your client ID through the [Plaid developer dashboard](https://dashboard.plaid.com/team/api).
+
 1. Start the services. The first run may take a few minutes as Docker images are pulled/built for the first time.
     ```shell
     make start
     ```
 1. Open http://localhost:3000 in a web browser.
+1. View the logs
+    ```shell
+    make logs
+    ```
 1. When you're finished, stop the services.
     ```shell
     make stop
@@ -67,7 +74,7 @@ See [`docs/troubleshooting.md`][troubleshooting].
 
 [MIT](LICENSE)
 
-[client-img]: docs/pattern_screenshot.png
+[client-img]: docs/pattern_screenshot.jpg
 [client-readme]: client/README.md
 [database-readme]: database/README.md
 [docker]: https://docs.docker.com/
@@ -83,6 +90,7 @@ See [`docs/troubleshooting.md`][troubleshooting].
 [plaid-quickstart]: https://plaid.com/docs/quickstart/
 [plaid-signup]: https://dashboard.plaid.com/signup
 [plaid-support-ticket]: https://dashboard.plaid.com/support/new
+[plaid-redirect-uri]: https://plaid.com/docs/link/oauth/#redirect-uri-configuration
 [postgres]: https://www.postgresql.org/
 [react]: http://reactjs.org/
 [server-readme]: server/README.md

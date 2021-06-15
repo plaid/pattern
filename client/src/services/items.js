@@ -24,11 +24,8 @@ const ItemsContext = createContext();
  */
 const types = {
   SUCCESSFUL_GET: 0,
-  // FAILED_GET: 1,
-  // DELETE_BY_ID: 2,
-  DELETE_BY_USER: 3,
-  SUCCESSFUL_DELETE: 4,
-  // FAILED_DELETE: 5,
+  DELETE_BY_USER: 1,
+  SUCCESSFUL_DELETE: 2,
 };
 
 /**
@@ -36,10 +33,8 @@ const types = {
  */
 export function ItemsProvider(props) {
   const [itemsById, dispatch] = useReducer(reducer, {});
-
   const hasRequested = useRef({
     byId: {},
-    byUser: {},
   });
 
   /**
@@ -58,26 +53,24 @@ export function ItemsProvider(props) {
   /**
    * @desc Requests all Items that belong to an individual User.
    */
-  const getItemsByUser = useCallback(async (userId, refresh) => {
-    if (!hasRequested.current.byUser[userId] || refresh) {
-      hasRequested.current.byUser[userId] = true;
-      const { data: payload } = await apiGetItemsByUser(userId);
-      dispatch([types.SUCCESSFUL_REQUEST, payload]);
-    }
+  const getItemsByUser = useCallback(async userId => {
+    const { data: payload } = await apiGetItemsByUser(userId);
+    dispatch([types.SUCCESSFUL_REQUEST, payload]);
   }, []);
 
   /**
    * @desc Will deletes Item by itemId.
-   * The api request will be bypassed if the data has already been fetched.
-   * A 'refresh' parameter can force a request for new data even if local state exists.
    */
-  const deleteItemById = useCallback(async (id, userId) => {
-    await apiDeleteItemById(id);
-    dispatch([types.SUCCESSFUL_DELETE, id]);
-    // Update items list after deletion.
-    await getItemsByUser(userId);
-    delete hasRequested.current.byId[id];
-  }, []);
+  const deleteItemById = useCallback(
+    async (id, userId) => {
+      await apiDeleteItemById(id);
+      dispatch([types.SUCCESSFUL_DELETE, id]);
+      // Update items list after deletion.
+      await getItemsByUser(userId);
+      delete hasRequested.current.byId[id];
+    },
+    [getItemsByUser]
+  );
 
   /**
    * @desc Will delete all items that belong to an individual User.

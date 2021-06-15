@@ -111,6 +111,7 @@ const retrieveAccountsByItemId = async itemId => {
  * Retrieves all accounts for a single user.
  *
  * @param {number} userId the ID of the user.
+ *
  * @returns {Object[]} an array of accounts.
  */
 const retrieveAccountsByUserId = async userId => {

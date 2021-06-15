@@ -1,6 +1,6 @@
 import { distanceInWords, parse } from 'date-fns';
 
-import { postLinkEvent } from '../services/api';
+import { postLinkEvent as apiPostLinkEvent } from '../services/api';
 
 /**
  * @desc small helper for pluralizing words for display given a number of items
@@ -77,7 +77,7 @@ export const logSuccess = async (
     accounts,
     link_session_id,
   });
-  await postLinkEvent({
+  await apiPostLinkEvent({
     userId,
     link_session_id,
     type: 'success',
@@ -86,21 +86,23 @@ export const logSuccess = async (
 
 export const logExit = async (
   error,
-  { institution, link_session_id, request_id },
+  { institution, status, link_session_id, request_id },
   userId
 ) => {
   logEvent('onExit', {
     error,
     institution,
+    status,
     link_session_id,
     request_id,
   });
   const eventError = error || {};
-  await postLinkEvent({
+  await apiPostLinkEvent({
     userId,
     link_session_id,
     request_id,
     type: 'exit',
     ...eventError,
+    status,
   });
 };

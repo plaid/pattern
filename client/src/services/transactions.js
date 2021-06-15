@@ -23,23 +23,21 @@ const TransactionsContext = createContext();
  */
 const types = {
   SUCCESSFUL_GET: 0,
-  // FAILED_GET: 1,
-  DELETE_BY_ITEM: 2,
-  DELETE_BY_USER: 3,
-  // SUCCESSFUL_DELETE: 4,
-  // FAILED_DELETE: 5,
+  DELETE_BY_ITEM: 1,
+  DELETE_BY_USER: 2,
 };
 
 /**
  * @desc Maintains the Transactions context state and provides functions to update that state.
+ *
+ *  The transactions requests below are made from the database only.  Calls to the Plaid transactions/get endpoint are only
+ *  made following receipt of transactions webhooks such as 'DEFAULT_UPDATE' or 'INITIAL_UPDATE'.
  */
 export function TransactionsProvider(props) {
   const [transactionsById, dispatch] = useReducer(reducer, {});
 
   const hasRequested = useRef({
     byAccount: {},
-    byItem: {},
-    byUser: {},
   });
 
   /**
@@ -57,28 +55,18 @@ export function TransactionsProvider(props) {
 
   /**
    * @desc Requests all Transactions that belong to an individual Item.
-   * The api request will be bypassed if the data has already been fetched.
-   * A 'refresh' parameter can force a request for new data even if local state exists.
    */
-  const getTransactionsByItem = useCallback(async (itemId, refresh) => {
-    if (!hasRequested.current.byItem[itemId] || refresh) {
-      hasRequested.current.byItem[itemId] = true;
-      const { data: payload } = await apiGetTransactionsByItem(itemId);
-      dispatch([types.SUCCESSFUL_GET, payload]);
-    }
+  const getTransactionsByItem = useCallback(async itemId => {
+    const { data: payload } = await apiGetTransactionsByItem(itemId);
+    dispatch([types.SUCCESSFUL_GET, payload]);
   }, []);
 
   /**
    * @desc Requests all Transactions that belong to an individual User.
-   * The api request will be bypassed if the data has already been fetched.
-   * A 'refresh' parameter can force a request for new data even if local state exists.
    */
-  const getTransactionsByUser = useCallback(async (userId, refresh) => {
-    if (!hasRequested.current.byUser[userId] || refresh) {
-      hasRequested.current.byUser[userId] = true;
-      const { data: payload } = await apiGetTransactionsByUser(userId);
-      dispatch([types.SUCCESSFUL_GET, payload]);
-    }
+  const getTransactionsByUser = useCallback(async userId => {
+    const { data: payload } = await apiGetTransactionsByUser(userId);
+    dispatch([types.SUCCESSFUL_GET, payload]);
   }, []);
 
   /**
@@ -137,7 +125,6 @@ function reducer(state, [type, payload]) {
       if (!payload.length) {
         return state;
       }
-
       return {
         ...state,
         ...keyBy(payload, 'id'),

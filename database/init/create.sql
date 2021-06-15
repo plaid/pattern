@@ -230,6 +230,7 @@ CREATE TABLE link_events_table
   request_id text UNIQUE,
   error_type text,
   error_code text,
+  status text,
   created_at timestamptz default now()
 );
 
@@ -241,6 +242,7 @@ CREATE TABLE plaid_api_events_table
 (
   id SERIAL PRIMARY KEY,
   item_id integer,
+  user_id integer,
   plaid_method text NOT NULL,
   arguments text,
   request_id text UNIQUE,

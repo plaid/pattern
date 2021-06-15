@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import sortBy from 'lodash/sortBy';
 import NavigationLink from 'plaid-threads/NavigationLink';
+import Callout from 'plaid-threads/Callout';
 
 import {
   useItems,
@@ -22,6 +23,9 @@ import {
   ItemCard,
   UserCard,
 } from '.';
+
+// provides view of user's net worth, spending by category and allows them to explore
+// account and transactions details for linked items
 
 const UserPage = ({ match }) => {
   const [user, setUser] = useState({});
@@ -51,6 +55,9 @@ const UserPage = ({ match }) => {
   }, [usersById, userId]);
 
   useEffect(() => {
+    // This gets transactions from the database only.
+    // Note that calls to Plaid's transactions/get endpoint are only made in response
+    // to receipt of a transactions webhook.
     getTransactionsByUser(userId);
   }, [getTransactionsByUser, userId]);
 
@@ -58,6 +65,7 @@ const UserPage = ({ match }) => {
     setTransactions(transactionsByUser[userId] || []);
   }, [transactionsByUser, userId]);
 
+  // update data store with the user's assets
   useEffect(() => {
     getAssetsByUser(userId);
   }, [getAssetsByUser, userId]);
@@ -68,7 +76,9 @@ const UserPage = ({ match }) => {
 
   // update data store with the user's items
   useEffect(() => {
-    getItemsByUser(userId);
+    if (userId != null) {
+      getItemsByUser(userId);
+    }
   }, [getItemsByUser, userId]);
 
   // update state items from data store
@@ -99,13 +109,18 @@ const UserPage = ({ match }) => {
     setAccounts(accountsByUser[userId] || []);
   }, [accountsByUser, userId]);
 
+  // creates new link token upon new user or change in number of items
   useEffect(() => {
-    generateLinkToken(userId, null); // itemId is null
-  }, [userId, numOfItems]);
+    if (userId != null) {
+      generateLinkToken(userId, null); // itemId is null
+    }
+  }, [userId, numOfItems, generateLinkToken]);
 
   useEffect(() => {
     setToken(linkTokens.byUser[userId]);
   }, [linkTokens, userId, numOfItems]);
+
+  document.getElementsByTagName('body')[0].style.overflow = 'auto'; // to override overflow:hidden from link pane
 
   return (
     <div>
@@ -113,6 +128,21 @@ const UserPage = ({ match }) => {
         BACK TO LOGIN
       </NavigationLink>
       <Banner />
+      {linkTokens.error.error_code != null && (
+        <Callout warning>
+          <div>
+            Unable to fetch link_token: please make sure your backend server is
+            running and that your .env file has been configured correctly.
+          </div>
+          <div>
+            Error Code: <code>{linkTokens.error.error_code}</code>
+          </div>
+          <div>
+            Error Type: <code>{linkTokens.error.error_type}</code>{' '}
+          </div>
+          <div>Error Message: {linkTokens.error.error_message}</div>
+        </Callout>
+      )}
       <UserCard user={user} removeButton={false} />
       {numOfItems > 0 && (
         <>
@@ -142,7 +172,7 @@ const UserPage = ({ match }) => {
                 </p>
               )}
             </div>
-            {token != null && (
+            {token != null && ( // Link will not render unless there is a link token
               <LinkButton token={token} userId={userId} itemId={null}>
                 Add Another Item
               </LinkButton>

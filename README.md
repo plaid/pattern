@@ -25,6 +25,7 @@ Note: We recommend running these commands in a unix terminal. Windows users can 
     cp .env.template .env
     ```
 1. Update the `.env` file with your [Plaid API keys][plaid-keys].
+1. Configure the Oauth redirect URI: `http://localhost:3000/oauth-link` on your [dashboard][plaid-dashboard].
 1. Start the services. The first run may take a few minutes as Docker images are pulled/built for the first time.
     ```shell
     make start
@@ -77,6 +78,7 @@ See [`docs/troubleshooting.md`][troubleshooting].
 [ngrok-readme]: ngrok/README.md
 [nodejs]: https://nodejs.org/en/
 [plaid]: https://plaid.com
+[plaid-dashboard]: https://dashboard.plaid.com/team/api
 [plaid-docs]: https://plaid.com/docs/
 [plaid-help]: https://support.plaid.com/hc/en-us
 [plaid-keys]: https://dashboard.plaid.com/account/keys

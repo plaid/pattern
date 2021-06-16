@@ -25,7 +25,7 @@ Note: We recommend running these commands in a unix terminal. Windows users can 
     cp .env.template .env
     ```
 1. Update the `.env` file with your [Plaid API keys][plaid-keys].
-1. Configure your dashboard with the Oauth redirect Uri `http://localhost:3000/oauth-link` on your [dashboard][plaid-dashboard].
+1. Configure your dashboard with the Oauth redirect URI: `http://localhost:3000/oauth-link` on your [dashboard][plaid-dashboard].
 1. Start the services. The first run may take a few minutes as Docker images are pulled/built for the first time.
     ```shell
     make start

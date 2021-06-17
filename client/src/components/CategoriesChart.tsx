@@ -1,16 +1,18 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { PieChart, Pie, Cell, Legend } from 'recharts';
-import colors from 'plaid-threads/scss/colors.ts';
+import colors from 'plaid-threads/scss/colors';
 
-CategoriesChart.propTypes = {
-  categories: PropTypes.object,
-};
+interface Props {
+  categories: {
+    [key: string]: number;
+  };
+}
 
-export default function CategoriesChart({ categories }) {
+export default function CategoriesChart(props: Props) {
   const data = [];
-  const labels = Object.keys(categories);
-  const values = Object.values(categories);
+  const labels = Object.keys(props.categories);
+  const values = Object.values(props.categories);
   for (let i = 0; i < labels.length; i++) {
     data.push({ name: labels[i], value: Math.round(values[i]) });
   }
@@ -39,11 +41,7 @@ export default function CategoriesChart({ categories }) {
           dataKey="value"
         >
           {data.map((entry, index) => (
-            <Cell
-              label={true}
-              key={`cell-${index}`}
-              fill={COLORS[index % COLORS.length]}
-            />
+            <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
           ))}
         </Pie>
       </PieChart>

@@ -5,6 +5,7 @@ import sortBy from 'lodash/sortBy';
 import NavigationLink from 'plaid-threads/NavigationLink';
 import Callout from 'plaid-threads/Callout';
 
+import { RouteInfo, ItemType } from './types';
 import {
   useItems,
   useAccounts,
@@ -25,29 +26,19 @@ import {
   UserCard,
 } from '.';
 
-interface RouteInfo {
-  userId: string;
-}
-
-interface itemsType {
-  id: number;
-  plaid_item_id: string;
-  user_id: number;
-  plaid_access_token: string;
-  plaid_institution_id: string;
-  status: string;
-  created_at: string;
-  updated_at: string;
-}
-
 interface ComponentProps extends RouteComponentProps<RouteInfo> {}
 // provides view of user's net worth, spending by category and allows them to explore
 // account and transactions details for linked items
 
 const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
-  const [user, setUser] = useState({});
-  const [items, setItems] = useState<itemsType[]>([]);
-  const [token, setToken] = useState(null);
+  const [user, setUser] = useState({
+    id: 0,
+    username: '',
+    created_at: '',
+    updated_at: '',
+  });
+  const [items, setItems] = useState<ItemType[]>([]);
+  const [token, setToken] = useState('');
   const [numOfItems, setNumOfItems] = useState(0);
   const [transactions, setTransactions] = useState([]);
   const [accounts, setAccounts] = useState([]);
@@ -100,8 +91,7 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
 
   // update state items from data store
   useEffect(() => {
-    const newItems: Array<itemsType> = itemsByUser[userId] || [];
-    console.log(newItems);
+    const newItems: Array<ItemType> = itemsByUser[userId] || [];
     const orderedItems = sortBy(
       newItems,
       item => new Date(item.updated_at)
@@ -161,7 +151,7 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
           <div>Error Message: {linkTokens.error.error_message}</div>
         </Callout>
       )}
-      <UserCard user={user} removeButton={false} />
+      <UserCard user={user} removeButton={false} linkButton />
       {numOfItems > 0 && (
         <>
           <NetWorth
@@ -190,11 +180,12 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
                 </p>
               )}
             </div>
-            {token != null && ( // Link will not render unless there is a link token
-              <LinkButton token={token} userId={userId} itemId={null}>
-                Add Another Item
-              </LinkButton>
-            )}
+            {token != null &&
+              token.length > 0 && ( // Link will not render unless there is a link token
+                <LinkButton token={token} userId={userId} itemId={null}>
+                  Add Another Item
+                </LinkButton>
+              )}
           </div>
           {items.map(item => (
             <div id="itemCards" key={item.id}>

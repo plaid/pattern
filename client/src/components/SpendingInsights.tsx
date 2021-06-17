@@ -3,15 +3,25 @@ import PropTypes from 'prop-types';
 
 import { currencyFilter } from '../util';
 import { CategoriesChart } from '.';
+import { TransactionType } from './types';
 
 SpendingInsights.propTypes = {
   transactions: PropTypes.array,
 };
 
-export default function SpendingInsights({ transactions }) {
+interface Props {
+  transactions: TransactionType[];
+}
+
+interface Categories {
+  [key: string]: number;
+}
+
+export default function SpendingInsights(props: Props) {
   // grab transactions from most recent month and filter out transfers and payments
   const today = new Date();
-  const oneMonthAgo = new Date().setDate(today.getDate() - 30);
+  const transactions = props.transactions;
+  const oneMonthAgo = new Date(new Date().setDate(today.getDate() - 30));
   const monthlyTransactions = useMemo(
     () =>
       transactions.filter(tx => {
@@ -28,8 +38,8 @@ export default function SpendingInsights({ transactions }) {
 
   // create category and name objects from transactions
 
-  const categoriesObject = useMemo(() => {
-    return monthlyTransactions.reduce((obj, tx) => {
+  const categoriesObject = useMemo((): Categories => {
+    return monthlyTransactions.reduce((obj: Categories, tx) => {
       tx.category in obj
         ? (obj[tx.category] = tx.amount + obj[tx.category])
         : (obj[tx.category] = tx.amount);
@@ -37,8 +47,8 @@ export default function SpendingInsights({ transactions }) {
     }, {});
   }, [monthlyTransactions]);
 
-  const namesObject = useMemo(() => {
-    return monthlyTransactions.reduce((obj, tx) => {
+  const namesObject = useMemo((): Categories => {
+    return monthlyTransactions.reduce((obj: Categories, tx) => {
       tx.name in obj
         ? (obj[tx.name] = tx.amount + obj[tx.name])
         : (obj[tx.name] = tx.amount);
@@ -52,7 +62,7 @@ export default function SpendingInsights({ transactions }) {
     for (const name in namesObject) {
       namesArray.push([name, namesObject[name]]);
     }
-    namesArray.sort((a, b) => b[1] - a[1]);
+    namesArray.sort((a: any[], b: any[]) => b[1] - a[1]);
     namesArray.splice(5); // top 5
     return namesArray;
   }, [namesObject]);
@@ -69,11 +79,11 @@ export default function SpendingInsights({ transactions }) {
             <h4 className="holdingsHeading">Top 5 Vendors</h4>
             <div className="data">
               <p className="title">Vendor</p> <p className="title">Amount</p>
-              {sortedNames.map((vendor, index) => (
-                <div key={index}>
+              {sortedNames.map((vendor: any[]) => (
+                <>
                   <p>{vendor[0]}</p>
                   <p>{currencyFilter(vendor[1])}</p>
-                </div>
+                </>
               ))}
             </div>
           </div>

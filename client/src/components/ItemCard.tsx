@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import PropTypes from 'prop-types';
 import Note from 'plaid-threads/Note';
 import Touchable from 'plaid-threads/Touchable';
+import { Institution } from 'plaid/dist/api';
 
+import { ItemType, AccountType } from './types';
 import { AccountCard, MoreDetails } from '.';
 import {
   useAccounts,
@@ -15,16 +16,25 @@ import { diffBetweenCurrentTime } from '../util';
 
 const PLAID_ENV = process.env.REACT_APP_PLAID_ENV || 'sandbox';
 
-const propTypes = {
-  item: PropTypes.object.isRequired,
-};
+interface Props {
+  item: ItemType;
+  userId: number;
+}
 
-const ItemCard = ({ item, userId }) => {
-  const [accounts, setAccounts] = useState([]);
-  const [institution, setInstitution] = useState({});
+const ItemCard = (props: Props) => {
+  const [accounts, setAccounts] = useState<AccountType[]>([]);
+  const [institution, setInstitution] = useState<Institution>({
+    logo: '',
+    name: '',
+    institution_id: '',
+    oauth: false,
+    products: [],
+    country_codes: [],
+  });
   const [showAccounts, setShowAccounts] = useState(false);
 
-  const { accountsByItem, deleteAccountsByItemId } = useAccounts();
+  const accountsByItem: any = useAccounts();
+  const deleteAccountsByItemId: any = useAccounts();
   const { deleteItemById } = useItems();
   const { deleteTransactionsByItemId } = useTransactions();
   const {
@@ -33,7 +43,7 @@ const ItemCard = ({ item, userId }) => {
     formatLogoSrc,
   } = useInstitutions();
 
-  const { id, plaid_institution_id, status } = item;
+  const { id, plaid_institution_id, status } = props.item;
   const isSandbox = PLAID_ENV === 'sandbox';
   const isGoodState = status === 'good';
 
@@ -53,7 +63,7 @@ const ItemCard = ({ item, userId }) => {
     setItemToBadState(id);
   };
   const handleDeleteItem = () => {
-    deleteItemById(id, userId);
+    deleteItemById(id, props.userId);
     deleteAccountsByItemId(id);
     deleteTransactionsByItemId(id);
   };
@@ -93,14 +103,16 @@ const ItemCard = ({ item, userId }) => {
           </div>
           <div className="item-card__column-4">
             <h3 className="heading">LAST_UPDATED</h3>
-            <p className="value">{diffBetweenCurrentTime(item.updated_at)}</p>
+            <p className="value">
+              {diffBetweenCurrentTime(props.item.updated_at)}
+            </p>
           </div>
         </Touchable>
         <MoreDetails // The MoreDetails component allows developer to test the ITEM_LOGIN_REQUIRED webhook and Link update mode
           setBadStateShown={isSandbox && isGoodState}
           handleDelete={handleDeleteItem}
           handleSetBadState={handleSetBadState}
-          userId={userId}
+          userId={props.userId}
           itemId={id}
         />
       </div>
@@ -116,7 +128,5 @@ const ItemCard = ({ item, userId }) => {
     </div>
   );
 };
-
-ItemCard.propTypes = propTypes;
 
 export default ItemCard;

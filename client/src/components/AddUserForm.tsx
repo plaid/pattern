@@ -4,16 +4,19 @@ import TextInput from 'plaid-threads/TextInput';
 
 import { useUsers, useCurrentUser } from '../services';
 
-const AddUserForm = ({ hideForm }) => {
+interface Props {
+  hideForm: () => void;
+}
+const AddUserForm = (props: Props) => {
   const [username, setUsername] = useState('');
 
   const { addNewUser, getUsers } = useUsers();
   const { setNewUser } = useCurrentUser();
-
-  const handleSubmit = async e => {
+  const handleSubmit = async (e: any) => {
+    console.log(e.type);
     e.preventDefault();
     await addNewUser(username);
-    hideForm();
+    props.hideForm();
     setNewUser(username);
   };
 
@@ -34,9 +37,8 @@ const AddUserForm = ({ hideForm }) => {
           <div className="add-user__column-2">
             <TextInput
               id="username"
-              type="text"
               name="username"
-              required="required"
+              required
               autoComplete="off"
               className="input_field"
               value={username}
@@ -54,8 +56,7 @@ const AddUserForm = ({ hideForm }) => {
               centered
               small
               secondary
-              type="cancel"
-              onClick={hideForm}
+              onClick={props.hideForm}
             >
               Cancel
             </Button>

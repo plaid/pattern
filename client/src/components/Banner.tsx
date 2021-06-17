@@ -1,25 +1,20 @@
 import React from 'react';
 import Button from 'plaid-threads/Button';
-import PropTypes from 'prop-types';
 
 const PLAID_ENV = process.env.REACT_APP_PLAID_ENV;
 
-const propTypes = {
-  initialSubheading: PropTypes.bool,
-};
+interface Props {
+  initialSubheading?: boolean;
+}
 
-const defaultProps = {
-  initialSubheading: false,
-};
-
-const Banner = ({ initialSubheading }) => {
+const Banner = (props: Props) => {
   const initialText =
     'This is an example app that shows a Plaid integration for a Personal Finance Manager Use Case.';
 
   const successText =
     "This page shows a user's net worth, spending by category, and allows them to explore account and transactions details for linked items.";
 
-  const subheadingText = initialSubheading ? initialText : successText;
+  const subheadingText = props.initialSubheading ? initialText : successText;
 
   return (
     <div id="banner" className="bottom-border-content">
@@ -43,8 +38,5 @@ const Banner = ({ initialSubheading }) => {
     </div>
   );
 };
-
-Banner.propTypes = propTypes;
-Banner.defaultProps = defaultProps;
 
 export default Banner;

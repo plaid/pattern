@@ -2,12 +2,13 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import { currencyFilter } from '../util';
+import { TransactionType } from './types';
 
-TransactionsTable.propTypes = {
-  transactions: PropTypes.array.isRequired,
-};
+interface Props {
+  transactions: TransactionType[];
+}
 
-export default function TransactionsTable({ transactions }) {
+export default function TransactionsTable(props: Props) {
   return (
     <div className="transactions">
       <table className="transactions-table">
@@ -20,7 +21,7 @@ export default function TransactionsTable({ transactions }) {
           </tr>
         </thead>
         <tbody className="transactions-body">
-          {transactions.map(tx => (
+          {props.transactions.map(tx => (
             <tr key={tx.id} className="transactions-data-rows">
               <td className="table-name">{tx.name}</td>
               <td className="table-category">{tx.category}</td>

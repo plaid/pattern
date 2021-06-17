@@ -1,8 +1,12 @@
 import React from 'react';
 
-const DuplicateItemToastMessage = ({ institutionName }) => (
+interface Props {
+  institutionName: string;
+}
+
+const DuplicateItemToastMessage = (props: Props) => (
   <>
-    <div>{`${institutionName} already linked.`}</div>
+    <div>{`${props.institutionName} already linked.`}</div>
     <a
       className="toast__link"
       href="https://github.com/plaid/pattern/tree/master/server#preventing-item-duplication"

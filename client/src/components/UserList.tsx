@@ -2,11 +2,12 @@ import React, { useState, useEffect } from 'react';
 
 import { useUsers } from '../services';
 import UserCard from './UserCard';
+import { UserType } from './types';
 // This provides developers with a view of all users, and ability to delete a user.
 // View at path: "/admin"
 const UserList = () => {
   const { allUsers, getUsers, usersById } = useUsers();
-  const [users, setUsers] = useState([]);
+  const [users, setUsers] = useState<UserType[]>([]);
 
   useEffect(() => {
     getUsers();
@@ -23,7 +24,7 @@ const UserList = () => {
       <div>
         {users.map(user => (
           <div key={user.id}>
-            <UserCard user={user} linkButton={false} />
+            <UserCard user={user} removeButton linkButton={false} />
           </div>
         ))}
       </div>

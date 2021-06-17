@@ -1,24 +1,24 @@
 import React, { useEffect, useState } from 'react';
-import PropTypes from 'prop-types';
 import startCase from 'lodash/startCase';
 import toLower from 'lodash/toLower';
 import Button from 'plaid-threads/Button';
 
+import { AccountType } from './types';
 import { useTransactions } from '../services';
 import { currencyFilter } from '../util';
 import { TransactionsTable } from '.';
 
-AccountCard.propTypes = {
-  account: PropTypes.object.isRequired,
-};
+interface Props {
+  account: AccountType;
+}
 
-export default function AccountCard({ account }) {
+export default function AccountCard(props: Props) {
   const [transactions, setTransactions] = useState([]);
   const [transactionsShown, setTransactionsShown] = useState(false);
 
   const { transactionsByAccount, getTransactionsByAccount } = useTransactions();
 
-  const { id } = account;
+  const { id } = props.account;
 
   const toggleShowTransactions = () => {
     setTransactionsShown(shown => !shown);
@@ -36,10 +36,10 @@ export default function AccountCard({ account }) {
     <div>
       <div className="account-data-row">
         <div className="account-data-row__left">
-          <div className="account-data-row__name">{account.name}</div>
+          <div className="account-data-row__name">{props.account.name}</div>
           <div className="account-data-row__balance">{`${startCase(
-            toLower(account.subtype)
-          )} • Balance ${currencyFilter(account.current_balance)}`}</div>
+            toLower(props.account.subtype)
+          )} • Balance ${currencyFilter(props.account.current_balance)}`}</div>
         </div>
         <div className="account-data-row__right">
           {transactions.length !== 0 && (

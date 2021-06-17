@@ -1,27 +1,21 @@
 import React, { useEffect, useState } from 'react';
-import PropTypes from 'prop-types';
 import { HashLink } from 'react-router-hash-link';
 import Button from 'plaid-threads/Button';
 import Touchable from 'plaid-threads/Touchable';
 
 import { UserDetails, LinkButton } from '.';
 import { useItems, useUsers, useLink } from '../services';
+import { UserType } from './types';
 
-UserCard.propTypes = {
-  user: PropTypes.object.isRequired,
-  removeButton: PropTypes.bool,
-  linkButton: PropTypes.bool,
-};
+interface Props {
+  user: UserType;
+  removeButton: boolean;
+  linkButton: boolean;
+}
 
-UserCard.defaultProps = {
-  user: {},
-  removeButton: true,
-  linkButton: true,
-};
-
-export default function UserCard({ user, removeButton, linkButton }) {
+export default function UserCard(props: Props) {
   const [numOfItems, setNumOfItems] = useState(0);
-  const [token, setToken] = useState(null);
+  const [token, setToken] = useState('');
   const [hovered, setHovered] = useState(false);
 
   const { itemsByUser, getItemsByUser } = useItems();
@@ -30,31 +24,31 @@ export default function UserCard({ user, removeButton, linkButton }) {
 
   // update data store with the user's items
   useEffect(() => {
-    if (user.id) {
-      getItemsByUser(user.id);
+    if (props.user.id) {
+      getItemsByUser(props.user.id);
     }
-  }, [getItemsByUser, user.id]);
+  }, [getItemsByUser, props.user.id]);
 
   // update no of items from data store
   useEffect(() => {
-    if (itemsByUser[user.id] != null) {
-      setNumOfItems(itemsByUser[user.id].length);
+    if (itemsByUser[props.user.id] != null) {
+      setNumOfItems(itemsByUser[props.user.id].length);
     } else {
       setNumOfItems(0);
     }
-  }, [itemsByUser, user.id]);
+  }, [itemsByUser, props.user.id]);
 
   // creates new link token upon change in user or number of items
   useEffect(() => {
-    generateLinkToken(user.id, null); // itemId is null
-  }, [user.id, numOfItems, generateLinkToken]);
+    generateLinkToken(props.user.id, null); // itemId is null
+  }, [props.user.id, numOfItems, generateLinkToken]);
 
   useEffect(() => {
-    setToken(linkTokens.byUser[user.id]);
-  }, [linkTokens, user.id, numOfItems]);
+    setToken(linkTokens.byUser[props.user.id]);
+  }, [linkTokens, props.user.id, numOfItems]);
 
   const handleDeleteUser = () => {
-    deleteUserById(user.id); // this will delete all items associated with a user
+    deleteUserById(props.user.id); // this will delete all items associated with a user
   };
   return (
     <div
@@ -70,24 +64,24 @@ export default function UserCard({ user, removeButton, linkButton }) {
         <Touchable
           className="user-card-clickable"
           component={HashLink}
-          to={`/user/${user.id}#itemCards`}
+          to={`/user/${props.user.id}#itemCards`}
         >
           <div className="user-card__detail">
             <UserDetails
               hovered={hovered}
-              user={user}
+              user={props.user}
               numOfItems={numOfItems}
             />
           </div>
         </Touchable>
 
         <div className="user-card__buttons">
-          {token != null && linkButton && (
-            <LinkButton userId={user.id} token={token} itemId={null}>
+          {token != null && token.length > 0 && props.linkButton && (
+            <LinkButton userId={props.user.id} token={token} itemId={null}>
               Link an Item
             </LinkButton>
           )}
-          {removeButton && (
+          {props.removeButton && (
             <Button
               className="remove"
               onClick={handleDeleteUser}

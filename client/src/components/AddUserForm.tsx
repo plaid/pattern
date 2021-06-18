@@ -13,11 +13,10 @@ const AddUserForm = (props: Props) => {
   const { addNewUser, getUsers } = useUsers();
   const { setNewUser } = useCurrentUser();
   const handleSubmit = async (e: any) => {
-    console.log(e.type);
     e.preventDefault();
     await addNewUser(username);
-    props.hideForm();
     setNewUser(username);
+    props.hideForm();
   };
 
   useEffect(() => {

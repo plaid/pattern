@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-// @ts-ignore
 import { Link, RouteComponentProps } from 'react-router-dom';
 import sortBy from 'lodash/sortBy';
 import NavigationLink from 'plaid-threads/NavigationLink';

@@ -32,15 +32,25 @@ const Login = () => {
             // TODO: file ticket in threads to fix body type
             // @ts-ignore
             body={
-              <TextInput
-                label=""
-                id="id-6"
-                placeholder="Enter User Name"
-                value={value}
-                onChange={e => setValue(e.currentTarget.value)}
-              />
+              <>
+                <TextInput
+                  label=""
+                  id="id-6"
+                  placeholder="Enter User Name"
+                  value={value}
+                  onChange={e => setValue(e.currentTarget.value)}
+                />
+              </>
             }
-          />
+          >
+            <TextInput
+              label=""
+              id="id-6"
+              placeholder="Enter User Name"
+              value={value}
+              onChange={e => setValue(e.currentTarget.value)}
+            />
+          </ModalBody>
         </>
       </Modal>
     </div>

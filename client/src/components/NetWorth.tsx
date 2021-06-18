@@ -5,12 +5,6 @@ import { currencyFilter, pluralize } from '../util';
 import { Asset } from '.';
 import { AccountType, AssetType } from './types';
 
-NetWorth.propTypes = {
-  accounts: PropTypes.array,
-  numOfItems: PropTypes.number,
-  personalAssets: PropTypes.array,
-  userId: PropTypes.number,
-};
 interface Props {
   numOfItems: number;
   accounts: AccountType[];
@@ -38,13 +32,13 @@ interface Loan {
 interface Credit {
   'credit card': number;
 }
-type AccountTypes = Depository | Investment | Loan | Credit;
 
+type AccountTypes = Depository | Investment | Loan | Credit;
+// interface IObjectKeys {
+//   [key: string]: AccountTypes;
+// }
 interface BankAccountTypes {
-  depository: Depository;
-  investment: Investment;
-  loan: Loan;
-  credit: Credit;
+  [propName: string]: AccountTypes;
 }
 
 export default function NetWorth(props: Props) {
@@ -60,20 +54,21 @@ export default function NetWorth(props: Props) {
       '401k': 0,
     },
     loan: {
-      student: 0,
+      student: 52,
       mortgage: 0,
     },
     credit: {
-      'credit card': 0,
+      'credit card': 98,
     },
   };
 
   //create accountTypes balances object
+
   props.accounts.forEach(account => {
-    const type: string = account.type;
-    const subtype: string = account.subtype;
-    // @ts-ignore
-    accountTypes[type][subtype] += account.current_balance;
+    //@ts-ignore
+    accountTypes[account.type as keyof BankAccountTypes][
+      account.subtype as keyof AccountTypes
+    ] += account.current_balance;
   });
 
   // sums of account types

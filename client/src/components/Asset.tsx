@@ -57,7 +57,24 @@ export default function Asset(props: Props) {
                 />
               </>
             }
-          />
+          >
+            <>
+              <TextInput
+                label=""
+                id="id-6"
+                placeholder="Enter Asset Description (e.g. house or car)"
+                value={description}
+                onChange={e => setDescription(e.currentTarget.value)}
+              />
+              <NumberInput
+                label=""
+                id="id-6"
+                placeholder="Enter Asset Value (in dollars $)"
+                value={value}
+                onChange={e => setValue(e.currentTarget.value)}
+              />
+            </>
+          </ModalBody>
         </>
       </Modal>
     </div>

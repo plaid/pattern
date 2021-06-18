@@ -14,12 +14,6 @@ import { logEvent, logSuccess, logExit } from '../util'; // functions to log and
 import { exchangeToken, setItemState } from '../services/api';
 import { useItems, useLink } from '../services';
 
-LinkButton.defaultProps = {
-  isOauth: false,
-  userId: null,
-  itemId: null,
-};
-
 interface Props {
   isOauth?: boolean;
   token: string;
@@ -33,10 +27,6 @@ interface Props {
 // is generated in the link context in client/src/services/link.js.
 
 export default function LinkButton(props: Props) {
-  const token = props.token;
-  const isOauth = props.isOauth;
-  const userId = props.userId;
-  const itemId = props.itemId;
   const history = useHistory();
   const { getItemsByUser, getItemById } = useItems();
   const { generateLinkToken } = useLink();
@@ -47,18 +37,18 @@ export default function LinkButton(props: Props) {
     metadata: PlaidLinkOnSuccessMetadata
   ) => {
     // log and save metatdata
-    logSuccess(metadata, userId);
-    if (itemId != null) {
+    logSuccess(metadata, props.userId);
+    if (props.itemId != null) {
       // update mode: no need to exchange public token
-      await setItemState(itemId, 'good');
-      getItemById(itemId, true);
+      await setItemState(props.itemId, 'good');
+      getItemById(props.itemId, true);
       // regular link mode: exchange public token for access token
     } else {
       // call to Plaid api endpoint: /item/public_token/exchange in order to obtain access_token which is then stored with the created item
-      await exchangeToken(publicToken, metadata, userId);
-      getItemsByUser(userId, true);
+      await exchangeToken(publicToken, metadata, props.userId);
+      getItemsByUser(props.userId, true);
     }
-    history.push(`/user/${userId}`);
+    history.push(`/user/${props.userId}`);
   };
 
   const onExit = async (
@@ -66,9 +56,9 @@ export default function LinkButton(props: Props) {
     metadata: PlaidLinkOnExitMetadata
   ) => {
     // log and save error and metatdata
-    logExit(error, metadata, userId);
+    logExit(error, metadata, props.userId);
     if (error != null && error.error_code === 'INVALID_LINK_TOKEN') {
-      await generateLinkToken(userId, itemId);
+      await generateLinkToken(props.userId, props.itemId);
     }
 
     // to handle other error codes, see https://plaid.com/docs/errors/
@@ -78,10 +68,10 @@ export default function LinkButton(props: Props) {
     onSuccess,
     onExit,
     onEvent: logEvent,
-    token,
+    token: props.token,
   };
 
-  if (isOauth) {
+  if (props.isOauth) {
     config.receivedRedirectUri = window.location.href; // add additional receivedRedirectUri config when handling an OAuth reidrect
   }
 
@@ -89,27 +79,32 @@ export default function LinkButton(props: Props) {
 
   useEffect(() => {
     // initiallizes Link automatically if it is handling an OAuth reidrect
-    if (isOauth && ready) {
+    if (props.isOauth && ready) {
       open();
     }
-  }, [ready, open, isOauth]);
+  }, [ready, open, props.isOauth]);
 
   const handleClick = () => {
     // regular, non-OAuth case:
     // set link token, userId and itemId in local storage for use if needed later by OAuth
+
     localStorage.setItem(
       'oauthConfig',
-      JSON.stringify({ userId, itemId, token })
+      JSON.stringify({
+        userId: props.userId,
+        itemId: props.itemId,
+        token: props.token,
+      })
     );
     open();
   };
 
   return (
     <>
-      {isOauth ? (
+      {props.isOauth ? (
         // no link button rendered: OAuth will open automatically by useEffect above
         <></>
-      ) : itemId != null ? (
+      ) : props.itemId != null ? (
         // update mode: Link is launched from dropdown menu in the
         // item card after item is set to "bad state"
         <Touchable

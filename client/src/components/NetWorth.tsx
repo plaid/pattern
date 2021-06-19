@@ -32,9 +32,6 @@ interface Credit {
 }
 
 type AccountTypes = Depository | Investment | Loan | Credit;
-// interface IObjectKeys {
-//   [key: string]: AccountTypes;
-// }
 interface BankAccountTypes {
   [propName: string]: AccountTypes;
 }
@@ -64,9 +61,8 @@ export default function NetWorth(props: Props) {
 
   props.accounts.forEach(account => {
     //@ts-ignore
-    accountTypes[account.type as keyof BankAccountTypes][
-      account.subtype as keyof AccountTypes
-    ] += account.current_balance;
+    accountTypes[account.type][account.subtype as keyof AccountTypes] +=
+      account.current_balance;
   });
 
   // sums of account types

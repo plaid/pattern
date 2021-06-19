@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 import { LinkButton } from '.';
 
@@ -6,11 +6,16 @@ import { LinkButton } from '.';
 // It initiates link immediately with the original link token that was set in local storage
 // from the initial link initialization.
 const OAuthLink = () => {
-  let { userId, itemId, token } = JSON.parse(
-    // ignore typescript when itemId=null
-    // @ts-ignore
-    localStorage.getItem('oauthConfig')
-  );
+  const [token, setToken] = useState<string>();
+  const [userId, setUserId] = useState<number>(-100); // set for typescript
+  const [itemId, setItemId] = useState<number>();
+
+  const oauthObject = localStorage.getItem('oauthConfig');
+  if (typeof oauthObject === 'string') {
+    setUserId(JSON.parse(oauthObject).userId);
+    setItemId(JSON.parse(oauthObject).itemId);
+    setToken(JSON.parse(oauthObject).token);
+  }
 
   return (
     <>

@@ -12,15 +12,6 @@ import { getLoginUser as apiGetLoginUser } from './api';
 const CurrentUserContext = createContext();
 
 /**
- * @desc Enumerated action types
- */
-const types = {
-  SUCCESSFUL_GET: 0,
-  FAILED_GET: 1,
-  ADD_USER: 2,
-};
-
-/**
  * @desc Maintains the currentUser context state and provides functions to update that state
  */
 export function CurrentUserProvider(props) {
@@ -39,11 +30,11 @@ export function CurrentUserProvider(props) {
         const { data: payload } = await apiGetLoginUser(username);
         if (payload != null) {
           toast.success(`Successful login.  Welcome back ${username}`);
-          dispatch([types.SUCCESSFUL_GET, payload]);
+          dispatch({ type: 'SUCCESSFUL_GET', payload: payload });
           history.push(`/user/${payload[0].id}`);
         } else {
           toast.error(`Username ${username} is invalid.  Try again. `);
-          dispatch([types.FAILED_GET]);
+          dispatch({ type: 'FAILED_GET' });
         }
       } catch (err) {
         console.log(err);
@@ -57,10 +48,10 @@ export function CurrentUserProvider(props) {
       try {
         const { data: payload } = await apiGetLoginUser(username);
         if (payload != null) {
-          dispatch([types.SUCCESSFUL_GET, payload]);
+          dispatch({ type: 'SUCCESSFUL_GET', payload: payload });
           history.push(`/user/${payload[0].id}`);
         } else {
-          dispatch([types.FAILED_GET]);
+          dispatch({ type: 'FAILED_GET' });
         }
       } catch (err) {
         console.log(err);
@@ -70,7 +61,7 @@ export function CurrentUserProvider(props) {
   );
 
   const setNewUser = useCallback(async username => {
-    dispatch([types.ADD_USER, username]);
+    dispatch({ type: 'ADD_USER', payload: username });
   }, []);
 
   /**
@@ -92,25 +83,25 @@ export function CurrentUserProvider(props) {
 /**
  * @desc Handles updates to the Users state as dictated by dispatched actions.
  */
-function reducer(state, [type, payload]) {
-  switch (type) {
-    case types.SUCCESSFUL_GET:
+function reducer(state, action) {
+  switch (action.type) {
+    case 'SUCCESSFUL_GET':
       return {
-        currentUser: payload[0],
+        currentUser: action.payload[0],
         newUser: null,
       };
-    case types.FAILED_GET:
+    case 'FAILED_GET':
       return {
         ...state,
         newUser: null,
       };
-    case types.ADD_USER:
+    case 'ADD_USER':
       return {
         ...state,
-        newUser: payload,
+        newUser: action.payload,
       };
     default:
-      console.warn('unknown action: ', { type, payload });
+      console.warn('unknown action: ', action.type, action.payload);
       return state;
   }
 }

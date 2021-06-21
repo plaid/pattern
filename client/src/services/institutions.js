@@ -11,13 +11,6 @@ import { getInstitutionById as apiGetInstitutionById } from './api';
 const InstitutionsContext = createContext();
 
 /**
- * @desc Enumerated action types
- */
-const types = {
-  SUCCESSFUL_GET: 0,
-};
-
-/**
  * @desc Maintains the Institutions context state and provides functions to update that state.
  */
 export function InstitutionsProvider(props) {
@@ -29,7 +22,7 @@ export function InstitutionsProvider(props) {
   const getInstitutionById = useCallback(async id => {
     const { data: payload } = await apiGetInstitutionById(id);
     const institution = payload[0];
-    dispatch([types.SUCCESSFUL_GET, institution]);
+    dispatch({ type: 'SUCCESSFUL_GET', payload: institution });
   }, []);
 
   /**
@@ -53,19 +46,19 @@ export function InstitutionsProvider(props) {
 /**
  * @desc Handles updates to the Institutions state as dictated by dispatched actions.
  */
-function reducer(state, [type, payload]) {
-  switch (type) {
-    case types.SUCCESSFUL_GET:
-      if (!payload) {
+function reducer(state, action) {
+  switch (action.type) {
+    case 'SUCCESSFUL_GET':
+      if (!action.payload) {
         return state;
       }
 
       return {
         ...state,
-        [payload.institution_id]: payload,
+        [action.payload.institution_id]: action.payload,
       };
     default:
-      console.warn('unknown action: ', { type, payload });
+      console.warn('unknown action: ', action.type, action.payload);
       return state;
   }
 }

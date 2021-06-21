@@ -5,11 +5,13 @@ import React, {
   useRef,
   useReducer,
   useCallback,
+  Dispatch,
 } from 'react';
 import keyBy from 'lodash/keyBy';
 import omit from 'lodash/omit';
 import { toast } from 'react-toastify';
 
+import { UserType } from '../components/types';
 import { useAccounts, useItems, useTransactions } from '.';
 import {
   getUsers as apiGetUsers,
@@ -18,20 +20,29 @@ import {
   deleteUserById as apiDeleteUserById,
 } from './api';
 
-const UsersContext = createContext();
+interface UsersState {
+  [key: string]: UserType | any;
+}
 
-/**
- * @desc Enumerated action types
- */
-const types = {
-  SUCCESSFUL_GET: 0,
-  SUCCESSFUL_DELETE: 1,
-};
+const initialState = {};
+type UsersAction =
+  | {
+      type: 'SUCCESSFUL_GET';
+      payload: UserType;
+    }
+  | { type: 'SUCCESSFUL_DELETE'; payload: number };
+
+interface UsersContextShape extends UsersState {
+  dispatch: Dispatch<UsersAction>;
+}
+const UsersContext = createContext<UsersContextShape>(
+  initialState as UsersContextShape
+);
 
 /**
  * @desc Maintains the Users context state and provides functions to update that state.
  */
-export function UsersProvider(props) {
+export function UsersProvider(props: any) {
   const [usersById, dispatch] = useReducer(reducer, {});
   const { deleteAccountsByUserId } = useAccounts();
   const { deleteItemsByUserId } = useItems();
@@ -48,7 +59,7 @@ export function UsersProvider(props) {
   const addNewUser = useCallback(async username => {
     try {
       const { data: payload } = await apiAddNewUser(username);
-      dispatch([types.SUCCESSFUL_GET, payload]);
+      dispatch({ type: 'SUCCESSFUL_GET', payload: payload });
     } catch (err) {
       const { response } = err;
       if (response && response.status === 409) {
@@ -68,7 +79,7 @@ export function UsersProvider(props) {
     if (!hasRequested.current.all || refresh) {
       hasRequested.current.all = true;
       const { data: payload } = await apiGetUsers();
-      dispatch([types.SUCCESSFUL_GET, payload]);
+      dispatch({ type: 'SUCCESSFUL_GET', payload: payload });
     }
   }, []);
 
@@ -78,10 +89,12 @@ export function UsersProvider(props) {
    * A 'refresh' parameter can force a request for new data even if local state exists.
    */
   const getUserById = useCallback(async (id, refresh) => {
+    //@ts-ignore
     if (!hasRequested.current.byId[id] || refresh) {
+      //@ts-ignore
       hasRequested.current.byId[id] = true;
       const { data: payload } = await apiGetUserById(id);
-      dispatch([types.SUCCESSFUL_GET, payload]);
+      dispatch({ type: 'SUCCESSFUL_GET', payload: payload });
     }
   }, []);
 
@@ -94,7 +107,8 @@ export function UsersProvider(props) {
       deleteItemsByUserId(id);
       deleteAccountsByUserId(id);
       deleteTransactionsByUserId(id);
-      dispatch([types.SUCCESSFUL_DELETE, id]);
+      dispatch({ type: 'SUCCESSFUL_DELETE', payload: id });
+      //@ts-ignore
       delete hasRequested.current.byId[id];
     },
     [deleteItemsByUserId, deleteAccountsByUserId, deleteTransactionsByUserId]
@@ -123,20 +137,20 @@ export function UsersProvider(props) {
 /**
  * @desc Handles updates to the Users state as dictated by dispatched actions.
  */
-function reducer(state, [type, payload]) {
-  switch (type) {
-    case types.SUCCESSFUL_GET:
-      if (!payload.length) {
+function reducer(state: UsersState, action: UsersAction | any) {
+  switch (action.type) {
+    case 'SUCCESSFUL_GET':
+      if (!action.payload.length) {
         return state;
       }
       return {
         ...state,
-        ...keyBy(payload, 'id'),
+        ...keyBy(action.payload, 'id'),
       };
-    case types.SUCCESSFUL_DELETE:
-      return omit(state, [payload]);
+    case 'SUCCESSFUL_DELETE':
+      return omit(state, [action.payload]);
     default:
-      console.warn('unknown action: ', { type, payload });
+      console.warn('unknown action: ', action.type, action.payload);
       return state;
   }
 }

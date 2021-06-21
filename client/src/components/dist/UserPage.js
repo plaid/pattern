@@ -46,6 +46,7 @@ var UserPage = function (_a) {
         getTransactionsByUser(userId);
     }, [getTransactionsByUser, userId]);
     react_1.useEffect(function () {
+        //@ts-ignore
         setTransactions(transactionsByUser[userId] || []);
     }, [transactionsByUser, userId]);
     // update data store with the user's assets

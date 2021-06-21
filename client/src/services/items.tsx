@@ -5,11 +5,14 @@ import React, {
   useRef,
   useReducer,
   useCallback,
+  Dispatch,
 } from 'react';
 import groupBy from 'lodash/groupBy';
 import keyBy from 'lodash/keyBy';
 import omit from 'lodash/omit';
 import omitBy from 'lodash/omitBy';
+
+import { ItemType } from '../components/types';
 
 import {
   getItemsByUser as apiGetItemsByUser,
@@ -17,12 +20,31 @@ import {
   deleteItemById as apiDeleteItemById,
 } from './api';
 
-const ItemsContext = createContext();
+interface ItemsState {
+  [key: string]: any;
+}
+
+const initialState = {};
+type ItemsAction =
+  | {
+      type: 'SUCCESSFUL_REQUEST';
+      payload: ItemType[];
+    }
+  | { type: 'SUCCESSFUL_DELETE'; payload: number }
+  | { type: 'DELETE_BY_USER'; payload: number };
+
+interface ItemsContextShape extends ItemsState {
+  dispatch: Dispatch<ItemsAction>;
+  deleteItemById: (id: number, userId: number) => void;
+}
+const ItemsContext = createContext<ItemsContextShape>(
+  initialState as ItemsContextShape
+);
 
 /**
  * @desc Maintains the Items context state and provides functions to update that state.
  */
-export function ItemsProvider(props) {
+export function ItemsProvider(props: any) {
   const [itemsById, dispatch] = useReducer(reducer, {});
   const hasRequested = useRef({
     byId: {},
@@ -34,7 +56,9 @@ export function ItemsProvider(props) {
    * A 'refresh' parameter can force a request for new data even if local state exists.
    */
   const getItemById = useCallback(async (id, refresh) => {
+    //@ts-ignore
     if (!hasRequested.current.byId[id] || refresh) {
+      //@ts-ignore
       hasRequested.current.byId[id] = true;
       const { data: payload } = await apiGetItemById(id);
       dispatch({ type: 'SUCCESSFUL_REQUEST', payload: payload });
@@ -58,6 +82,7 @@ export function ItemsProvider(props) {
       dispatch({ type: 'SUCCESSFUL_DELETE', payload: id });
       // Update items list after deletion.
       await getItemsByUser(userId);
+      //@ts-ignore
       delete hasRequested.current.byId[id];
     },
     [getItemsByUser]
@@ -101,7 +126,7 @@ export function ItemsProvider(props) {
 /**
  * @desc Handles updates to the Items state as dictated by dispatched actions.
  */
-function reducer(state, action) {
+function reducer(state: ItemsState, action: ItemsAction | any) {
   switch (action.type) {
     case 'SUCCESSFUL_REQUEST':
       if (!action.payload.length) {

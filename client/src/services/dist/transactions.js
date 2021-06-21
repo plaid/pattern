@@ -47,27 +47,56 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 exports.__esModule = true;
-exports.AccountsProvider = void 0;
+exports.TransactionsProvider = void 0;
 var react_1 = require("react");
 var groupBy_1 = require("lodash/groupBy");
 var keyBy_1 = require("lodash/keyBy");
 var omitBy_1 = require("lodash/omitBy");
 var api_1 = require("./api");
 var initialState = {};
-var AccountsContext = react_1.createContext(initialState);
+var TransactionsContext = react_1.createContext(initialState);
 /**
- * @desc Maintains the Accounts context state and provides functions to update that state.
+ * @desc Maintains the Transactions context state and provides functions to update that state.
+ *
+ *  The transactions requests below are made from the database only.  Calls to the Plaid transactions/get endpoint are only
+ *  made following receipt of transactions webhooks such as 'DEFAULT_UPDATE' or 'INITIAL_UPDATE'.
  */
-exports.AccountsProvider = function (props) {
-    var _a = react_1.useReducer(reducer, initialState), accountsById = _a[0], dispatch = _a[1];
+function TransactionsProvider(props) {
+    var _this = this;
+    var _a = react_1.useReducer(reducer, initialState), transactionsById = _a[0], dispatch = _a[1];
+    var hasRequested = react_1.useRef({
+        byAccount: {}
+    });
     /**
-     * @desc Requests all Accounts that belong to an individual Item.
+     * @desc Requests all Transactions that belong to an individual Account.
+     * The api request will be bypassed if the data has already been fetched.
+     * A 'refresh' parameter can force a request for new data even if local state exists.
      */
-    var getAccountsByItem = react_1.useCallback(function (itemId) { return __awaiter(void 0, void 0, void 0, function () {
+    var getTransactionsByAccount = react_1.useCallback(function (accountId, refresh) { return __awaiter(_this, void 0, void 0, function () {
         var payload;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, api_1.getAccountsByItem(itemId)];
+                case 0:
+                    if (!(!hasRequested.current.byAccount[accountId] || refresh)) return [3 /*break*/, 2];
+                    //@ts-ignore
+                    hasRequested.current.byAccount[accountId] = true;
+                    return [4 /*yield*/, api_1.getTransactionsByAccount(accountId)];
+                case 1:
+                    payload = (_a.sent()).data;
+                    dispatch({ type: 'SUCCESSFUL_GET', payload: payload });
+                    _a.label = 2;
+                case 2: return [2 /*return*/];
+            }
+        });
+    }); }, []);
+    /**
+     * @desc Requests all Transactions that belong to an individual Item.
+     */
+    var getTransactionsByItem = react_1.useCallback(function (itemId) { return __awaiter(_this, void 0, void 0, function () {
+        var payload;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, api_1.getTransactionsByItem(itemId)];
                 case 1:
                     payload = (_a.sent()).data;
                     dispatch({ type: 'SUCCESSFUL_GET', payload: payload });
@@ -76,13 +105,13 @@ exports.AccountsProvider = function (props) {
         });
     }); }, []);
     /**
-     * @desc Requests all Accounts that belong to an individual User.
+     * @desc Requests all Transactions that belong to an individual User.
      */
-    var getAccountsByUser = react_1.useCallback(function (userId) { return __awaiter(void 0, void 0, void 0, function () {
+    var getTransactionsByUser = react_1.useCallback(function (userId) { return __awaiter(_this, void 0, void 0, function () {
         var payload;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, api_1.getAccountsByUser(userId)];
+                case 0: return [4 /*yield*/, api_1.getTransactionsByUser(userId)];
                 case 1:
                     payload = (_a.sent()).data;
                     dispatch({ type: 'SUCCESSFUL_GET', payload: payload });
@@ -91,46 +120,50 @@ exports.AccountsProvider = function (props) {
         });
     }); }, []);
     /**
-     * @desc Will delete all accounts that belong to an individual Item.
+     * @desc Will Delete all transactions that belong to an individual Item.
      * There is no api request as apiDeleteItemById in items delete all related transactions
      */
-    var deleteAccountsByItemId = react_1.useCallback(function (itemId) {
+    var deleteTransactionsByItemId = react_1.useCallback(function (itemId) {
         dispatch({ type: 'DELETE_BY_ITEM', payload: itemId });
     }, []);
     /**
-     * @desc Will delete all accounts that belong to an individual User.
+     * @desc Will Delete all transactions that belong to an individual User.
      * There is no api request as apiDeleteItemById in items delete all related transactions
      */
-    var deleteAccountsByUserId = react_1.useCallback(function (userId) {
+    var deleteTransactionsByUserId = react_1.useCallback(function (userId) {
         dispatch({ type: 'DELETE_BY_USER', payload: userId });
     }, []);
     /**
-     * @desc Builds a more accessible state shape from the Accounts data. useMemo will prevent
-     * these from being rebuilt on every render unless accountsById is updated in the reducer.
+     * @desc Builds a more accessible state shape from the Transactions data. useMemo will prevent
+     * these from being rebuilt on every render unless transactionsById is updated in the reducer.
      */
     var value = react_1.useMemo(function () {
-        var allAccounts = Object.values(accountsById);
+        var allTransactions = Object.values(transactionsById);
         return {
-            allAccounts: allAccounts,
-            accountsById: accountsById,
-            accountsByItem: groupBy_1["default"](allAccounts, 'item_id'),
-            accountsByUser: groupBy_1["default"](allAccounts, 'user_id'),
-            getAccountsByItem: getAccountsByItem,
-            getAccountsByUser: getAccountsByUser,
-            deleteAccountsByItemId: deleteAccountsByItemId,
-            deleteAccountsByUserId: deleteAccountsByUserId
+            allTransactions: allTransactions,
+            transactionsById: transactionsById,
+            transactionsByAccount: groupBy_1["default"](allTransactions, 'account_id'),
+            transactionsByItem: groupBy_1["default"](allTransactions, 'item_id'),
+            transactionsByUser: groupBy_1["default"](allTransactions, 'user_id'),
+            getTransactionsByAccount: getTransactionsByAccount,
+            getTransactionsByItem: getTransactionsByItem,
+            getTransactionsByUser: getTransactionsByUser,
+            deleteTransactionsByItemId: deleteTransactionsByItemId,
+            deleteTransactionsByUserId: deleteTransactionsByUserId
         };
     }, [
-        accountsById,
-        getAccountsByItem,
-        getAccountsByUser,
-        deleteAccountsByItemId,
-        deleteAccountsByUserId,
+        transactionsById,
+        getTransactionsByAccount,
+        getTransactionsByItem,
+        getTransactionsByUser,
+        deleteTransactionsByItemId,
+        deleteTransactionsByUserId,
     ]);
-    return react_1["default"].createElement(AccountsContext.Provider, __assign({ value: value }, props));
-};
+    return react_1["default"].createElement(TransactionsContext.Provider, __assign({ value: value }, props));
+}
+exports.TransactionsProvider = TransactionsProvider;
 /**
- * @desc Handles updates to the Accounts state as dictated by dispatched actions.
+ * @desc Handles updates to the Transactions state as dictated by dispatched actions.
  */
 function reducer(state, action) {
     switch (action.type) {
@@ -149,13 +182,13 @@ function reducer(state, action) {
     }
 }
 /**
- * @desc A convenience hook to provide access to the Accounts context state in components.
+ * @desc A convenience hook to provide access to the Transactions context state in components.
  */
-function useAccounts() {
-    var context = react_1.useContext(AccountsContext);
+function useTransactions() {
+    var context = react_1.useContext(TransactionsContext);
     if (!context) {
-        throw new Error("useAccounts must be used within an AccountsProvider");
+        throw new Error("useTransactions must be used within a TransactionsProvider");
     }
     return context;
 }
-exports["default"] = useAccounts;
+exports["default"] = useTransactions;

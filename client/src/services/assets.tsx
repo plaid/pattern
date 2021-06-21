@@ -4,22 +4,42 @@ import React, {
   useMemo,
   useReducer,
   useCallback,
+  Dispatch,
 } from 'react';
 import { toast } from 'react-toastify';
 import { addAsset as apiAddAsset } from './api';
 import { getAssetsByUser as apiGetAssetsByUser } from './api';
 
-const AssetsContext = createContext();
+interface AssetsState {
+  assets: any;
+}
+
+const initialState = { assets: [] };
+
+type AssetsAction =
+  | {
+      type: 'SUCCESSFUL_GET';
+      payload: string;
+    }
+  | { type: 'FAILED_GET'; payload: number };
+
+interface AssetsContextShape extends AssetsState {
+  dispatch: Dispatch<AssetsAction>;
+  addAsset: (userId: number, description: string, value: number) => void;
+  assetsByUser: AssetsState;
+  getAssetsByUser: (userId: number) => void;
+}
+const AssetsContext = createContext<AssetsContextShape>(
+  initialState as AssetsContextShape
+);
 
 /**
  * @desc Maintains the Properties context state
  */
-export function AssetsProvider(props) {
-  const [assetsByUser, dispatch] = useReducer(reducer, {
-    assets: [],
-  });
+export function AssetsProvider(props: any) {
+  const [assetsByUser, dispatch] = useReducer(reducer, initialState);
 
-  const getAssetsByUser = useCallback(async userId => {
+  const getAssetsByUser = useCallback(async (userId: number) => {
     try {
       const { data: payload } = await apiGetAssetsByUser(userId);
       if (payload != null) {
@@ -63,7 +83,7 @@ export function AssetsProvider(props) {
 /**
  * @desc Handles updates to the propertiesByUser as dictated by dispatched actions.
  */
-function reducer(state, action) {
+function reducer(state: AssetsState, action: AssetsAction | any) {
   switch (action.type) {
     case 'SUCCESSFUL_GET':
       return {

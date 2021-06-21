@@ -47,115 +47,141 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 exports.__esModule = true;
-exports.AccountsProvider = void 0;
+exports.ItemsProvider = void 0;
 var react_1 = require("react");
 var groupBy_1 = require("lodash/groupBy");
 var keyBy_1 = require("lodash/keyBy");
+var omit_1 = require("lodash/omit");
 var omitBy_1 = require("lodash/omitBy");
 var api_1 = require("./api");
 var initialState = {};
-var AccountsContext = react_1.createContext(initialState);
+var ItemsContext = react_1.createContext(initialState);
 /**
- * @desc Maintains the Accounts context state and provides functions to update that state.
+ * @desc Maintains the Items context state and provides functions to update that state.
  */
-exports.AccountsProvider = function (props) {
-    var _a = react_1.useReducer(reducer, initialState), accountsById = _a[0], dispatch = _a[1];
+function ItemsProvider(props) {
+    var _this = this;
+    var _a = react_1.useReducer(reducer, {}), itemsById = _a[0], dispatch = _a[1];
+    var hasRequested = react_1.useRef({
+        byId: {}
+    });
     /**
-     * @desc Requests all Accounts that belong to an individual Item.
+     * @desc Requests details for a single Item.
+     * The api request will be bypassed if the data has already been fetched.
+     * A 'refresh' parameter can force a request for new data even if local state exists.
      */
-    var getAccountsByItem = react_1.useCallback(function (itemId) { return __awaiter(void 0, void 0, void 0, function () {
+    var getItemById = react_1.useCallback(function (id, refresh) { return __awaiter(_this, void 0, void 0, function () {
         var payload;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, api_1.getAccountsByItem(itemId)];
+                case 0:
+                    if (!(!hasRequested.current.byId[id] || refresh)) return [3 /*break*/, 2];
+                    //@ts-ignore
+                    hasRequested.current.byId[id] = true;
+                    return [4 /*yield*/, api_1.getItemById(id)];
                 case 1:
                     payload = (_a.sent()).data;
-                    dispatch({ type: 'SUCCESSFUL_GET', payload: payload });
+                    dispatch({ type: 'SUCCESSFUL_REQUEST', payload: payload });
+                    _a.label = 2;
+                case 2: return [2 /*return*/];
+            }
+        });
+    }); }, []);
+    /**
+     * @desc Requests all Items that belong to an individual User.
+     */
+    var getItemsByUser = react_1.useCallback(function (userId) { return __awaiter(_this, void 0, void 0, function () {
+        var payload;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, api_1.getItemsByUser(userId)];
+                case 1:
+                    payload = (_a.sent()).data;
+                    dispatch({ type: 'SUCCESSFUL_REQUEST', payload: payload });
                     return [2 /*return*/];
             }
         });
     }); }, []);
     /**
-     * @desc Requests all Accounts that belong to an individual User.
+     * @desc Will deletes Item by itemId.
      */
-    var getAccountsByUser = react_1.useCallback(function (userId) { return __awaiter(void 0, void 0, void 0, function () {
-        var payload;
+    var deleteItemById = react_1.useCallback(function (id, userId) { return __awaiter(_this, void 0, void 0, function () {
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, api_1.getAccountsByUser(userId)];
+                case 0: return [4 /*yield*/, api_1.deleteItemById(id)];
                 case 1:
-                    payload = (_a.sent()).data;
-                    dispatch({ type: 'SUCCESSFUL_GET', payload: payload });
+                    _a.sent();
+                    dispatch({ type: 'SUCCESSFUL_DELETE', payload: id });
+                    // Update items list after deletion.
+                    return [4 /*yield*/, getItemsByUser(userId)];
+                case 2:
+                    // Update items list after deletion.
+                    _a.sent();
+                    //@ts-ignore
+                    delete hasRequested.current.byId[id];
                     return [2 /*return*/];
             }
         });
-    }); }, []);
+    }); }, [getItemsByUser]);
     /**
-     * @desc Will delete all accounts that belong to an individual Item.
+     * @desc Will delete all items that belong to an individual User.
      * There is no api request as apiDeleteItemById in items delete all related transactions
      */
-    var deleteAccountsByItemId = react_1.useCallback(function (itemId) {
-        dispatch({ type: 'DELETE_BY_ITEM', payload: itemId });
-    }, []);
-    /**
-     * @desc Will delete all accounts that belong to an individual User.
-     * There is no api request as apiDeleteItemById in items delete all related transactions
-     */
-    var deleteAccountsByUserId = react_1.useCallback(function (userId) {
+    var deleteItemsByUserId = react_1.useCallback(function (userId) {
         dispatch({ type: 'DELETE_BY_USER', payload: userId });
     }, []);
     /**
-     * @desc Builds a more accessible state shape from the Accounts data. useMemo will prevent
-     * these from being rebuilt on every render unless accountsById is updated in the reducer.
+     * @desc Builds a more accessible state shape from the Items data. useMemo will prevent
+     * these from being rebuilt on every render unless itemsById is updated in the reducer.
      */
     var value = react_1.useMemo(function () {
-        var allAccounts = Object.values(accountsById);
+        var allItems = Object.values(itemsById);
         return {
-            allAccounts: allAccounts,
-            accountsById: accountsById,
-            accountsByItem: groupBy_1["default"](allAccounts, 'item_id'),
-            accountsByUser: groupBy_1["default"](allAccounts, 'user_id'),
-            getAccountsByItem: getAccountsByItem,
-            getAccountsByUser: getAccountsByUser,
-            deleteAccountsByItemId: deleteAccountsByItemId,
-            deleteAccountsByUserId: deleteAccountsByUserId
+            allItems: allItems,
+            itemsById: itemsById,
+            itemsByUser: groupBy_1["default"](allItems, 'user_id'),
+            getItemById: getItemById,
+            getItemsByUser: getItemsByUser,
+            deleteItemById: deleteItemById,
+            deleteItemsByUserId: deleteItemsByUserId
         };
     }, [
-        accountsById,
-        getAccountsByItem,
-        getAccountsByUser,
-        deleteAccountsByItemId,
-        deleteAccountsByUserId,
+        itemsById,
+        getItemById,
+        getItemsByUser,
+        deleteItemById,
+        deleteItemsByUserId,
     ]);
-    return react_1["default"].createElement(AccountsContext.Provider, __assign({ value: value }, props));
-};
+    return react_1["default"].createElement(ItemsContext.Provider, __assign({ value: value }, props));
+}
+exports.ItemsProvider = ItemsProvider;
 /**
- * @desc Handles updates to the Accounts state as dictated by dispatched actions.
+ * @desc Handles updates to the Items state as dictated by dispatched actions.
  */
 function reducer(state, action) {
     switch (action.type) {
-        case 'SUCCESSFUL_GET':
+        case 'SUCCESSFUL_REQUEST':
             if (!action.payload.length) {
                 return state;
             }
             return __assign(__assign({}, state), keyBy_1["default"](action.payload, 'id'));
-        case 'DELETE_BY_ITEM':
-            return omitBy_1["default"](state, function (transaction) { return transaction.item_id === action.payload; });
+        case 'SUCCESSFUL_DELETE':
+            return omit_1["default"](state, [action.payload]);
         case 'DELETE_BY_USER':
-            return omitBy_1["default"](state, function (transaction) { return transaction.user_id === action.payload; });
+            return omitBy_1["default"](state, function (items) { return items.user_id === action.payload; });
         default:
             console.warn('unknown action: ', action.type, action.payload);
             return state;
     }
 }
 /**
- * @desc A convenience hook to provide access to the Accounts context state in components.
+ * @desc A convenience hook to provide access to the Items context state in components.
  */
-function useAccounts() {
-    var context = react_1.useContext(AccountsContext);
+function useItems() {
+    var context = react_1.useContext(ItemsContext);
     if (!context) {
-        throw new Error("useAccounts must be used within an AccountsProvider");
+        throw new Error("useItems must be used within an ItemsProvider");
     }
     return context;
 }
-exports["default"] = useAccounts;
+exports["default"] = useItems;

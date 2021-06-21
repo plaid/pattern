@@ -177,12 +177,12 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
                 </p>
               )}
             </div>
-            {token != null &&
-              token.length > 0 && ( // Link will not render unless there is a link token
-                <LinkButton token={token} userId={userId} itemId={null}>
-                  Add Another Item
-                </LinkButton>
-              )}
+            {token != null && token.length > 0 && (
+              // Link will not render unless there is a link token
+              <LinkButton token={token} userId={userId} itemId={null}>
+                Add Another Item
+              </LinkButton>
+            )}
           </div>
           {items.map(item => (
             <div id="itemCards" key={item.id}>

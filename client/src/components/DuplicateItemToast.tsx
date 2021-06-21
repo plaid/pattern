@@ -1,7 +1,7 @@
 import React from 'react';
 
 interface Props {
-  institutionName: string;
+  institutionName: string | undefined;
 }
 
 const DuplicateItemToastMessage = (props: Props) => (

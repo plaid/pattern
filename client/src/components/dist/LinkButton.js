@@ -69,7 +69,7 @@ function LinkButton(props) {
                     return [3 /*break*/, 4];
                 case 2: 
                 // call to Plaid api endpoint: /item/public_token/exchange in order to obtain access_token which is then stored with the created item
-                return [4 /*yield*/, api_1.exchangeToken(publicToken, metadata, props.userId)];
+                return [4 /*yield*/, api_1.exchangeToken(publicToken, metadata.institution, metadata.accounts, props.userId)];
                 case 3:
                     // call to Plaid api endpoint: /item/public_token/exchange in order to obtain access_token which is then stored with the created item
                     _a.sent();

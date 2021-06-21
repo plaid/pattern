@@ -12,14 +12,6 @@ import { getAssetsByUser as apiGetAssetsByUser } from './api';
 const AssetsContext = createContext();
 
 /**
- * @desc Enumerated action types
- */
-const types = {
-  SUCCESSFUL_GET: 0,
-  FAILED_GET: 1,
-};
-
-/**
  * @desc Maintains the Properties context state
  */
 export function AssetsProvider(props) {
@@ -31,9 +23,9 @@ export function AssetsProvider(props) {
     try {
       const { data: payload } = await apiGetAssetsByUser(userId);
       if (payload != null) {
-        dispatch([types.SUCCESSFUL_GET, payload]);
+        dispatch({ type: 'SUCCESSFUL_GET', payload: payload });
       } else {
-        dispatch([types.FAILED_GET]);
+        dispatch({ type: 'FAILED_GET' });
       }
     } catch (err) {
       console.log(err);
@@ -71,19 +63,19 @@ export function AssetsProvider(props) {
 /**
  * @desc Handles updates to the propertiesByUser as dictated by dispatched actions.
  */
-function reducer(state, [type, payload]) {
-  switch (type) {
-    case types.SUCCESSFUL_GET:
+function reducer(state, action) {
+  switch (action.type) {
+    case 'SUCCESSFUL_GET':
       return {
-        assets: payload,
+        assets: action.payload,
       };
-    case types.FAILED_GET:
+    case 'FAILED_GET':
       return {
         ...state,
       };
 
     default:
-      console.warn('unknown action: ', { type, payload });
+      console.warn('unknown action: ', action.type, action.payload);
       return state;
   }
 }

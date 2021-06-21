@@ -35,7 +35,7 @@ interface Credit {
 
 type AccountTypes = Depository | Investment | Loan | Credit;
 interface BankAccountTypes {
-  [propName: string]: AccountTypes;
+  [key: string]: AccountTypes;
 }
 
 export default function NetWorth(props: Props) {

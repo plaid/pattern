@@ -5,10 +5,13 @@ import React, {
   useRef,
   useReducer,
   useCallback,
+  Dispatch,
 } from 'react';
 import groupBy from 'lodash/groupBy';
 import keyBy from 'lodash/keyBy';
 import omitBy from 'lodash/omitBy';
+
+import { TransactionType } from '../components/types';
 
 import {
   getTransactionsByAccount as apiGetTransactionsByAccount,
@@ -16,16 +19,31 @@ import {
   getTransactionsByUser as apiGetTransactionsByUser,
 } from './api';
 
-const TransactionsContext = createContext();
+interface TransactionsState {
+  [key: number]: TransactionType[] | any;
+}
 
-/**
- * @desc Enumerated action types
- */
-const types = {
-  SUCCESSFUL_GET: 0,
-  DELETE_BY_ITEM: 1,
-  DELETE_BY_USER: 2,
-};
+const initialState = {};
+type TransactionsAction =
+  | {
+      type: 'SUCCESSFUL_GET';
+      payload: TransactionType[];
+    }
+  | { type: 'DELETE_BY_ITEM'; payload: number }
+  | { type: 'DELETE_BY_USER'; payload: number };
+
+interface TransactionsContextShape extends TransactionsState {
+  dispatch: Dispatch<TransactionsAction>;
+  transactionsByAccount: TransactionType[];
+  getTransactionsByAccount: (accountId: number, refresh?: boolean) => void;
+  deleteTransactionsByItemId: (itemId: number) => void;
+  deleteTransactionsByUserId: (userId: number) => void;
+  transactionsByUser: TransactionType[];
+  getTransactionsByUser: (userId: number) => void;
+}
+const TransactionsContext = createContext<TransactionsContextShape>(
+  initialState as TransactionsContextShape
+);
 
 /**
  * @desc Maintains the Transactions context state and provides functions to update that state.
@@ -33,8 +51,8 @@ const types = {
  *  The transactions requests below are made from the database only.  Calls to the Plaid transactions/get endpoint are only
  *  made following receipt of transactions webhooks such as 'DEFAULT_UPDATE' or 'INITIAL_UPDATE'.
  */
-export function TransactionsProvider(props) {
-  const [transactionsById, dispatch] = useReducer(reducer, {});
+export function TransactionsProvider(props: any) {
+  const [transactionsById, dispatch] = useReducer(reducer, initialState);
 
   const hasRequested = useRef({
     byAccount: {},
@@ -46,10 +64,12 @@ export function TransactionsProvider(props) {
    * A 'refresh' parameter can force a request for new data even if local state exists.
    */
   const getTransactionsByAccount = useCallback(async (accountId, refresh) => {
+    //@ts-ignore
     if (!hasRequested.current.byAccount[accountId] || refresh) {
+      //@ts-ignore
       hasRequested.current.byAccount[accountId] = true;
       const { data: payload } = await apiGetTransactionsByAccount(accountId);
-      dispatch([types.SUCCESSFUL_GET, payload]);
+      dispatch({ type: 'SUCCESSFUL_GET', payload: payload });
     }
   }, []);
 
@@ -58,7 +78,7 @@ export function TransactionsProvider(props) {
    */
   const getTransactionsByItem = useCallback(async itemId => {
     const { data: payload } = await apiGetTransactionsByItem(itemId);
-    dispatch([types.SUCCESSFUL_GET, payload]);
+    dispatch({ type: 'SUCCESSFUL_GET', payload: payload });
   }, []);
 
   /**
@@ -66,7 +86,7 @@ export function TransactionsProvider(props) {
    */
   const getTransactionsByUser = useCallback(async userId => {
     const { data: payload } = await apiGetTransactionsByUser(userId);
-    dispatch([types.SUCCESSFUL_GET, payload]);
+    dispatch({ type: 'SUCCESSFUL_GET', payload: payload });
   }, []);
 
   /**
@@ -74,7 +94,7 @@ export function TransactionsProvider(props) {
    * There is no api request as apiDeleteItemById in items delete all related transactions
    */
   const deleteTransactionsByItemId = useCallback(itemId => {
-    dispatch([types.DELETE_BY_ITEM, itemId]);
+    dispatch({ type: 'DELETE_BY_ITEM', payload: itemId });
   }, []);
 
   /**
@@ -82,7 +102,7 @@ export function TransactionsProvider(props) {
    * There is no api request as apiDeleteItemById in items delete all related transactions
    */
   const deleteTransactionsByUserId = useCallback(userId => {
-    dispatch([types.DELETE_BY_ITEM, userId]);
+    dispatch({ type: 'DELETE_BY_USER', payload: userId });
   }, []);
 
   /**
@@ -119,22 +139,28 @@ export function TransactionsProvider(props) {
 /**
  * @desc Handles updates to the Transactions state as dictated by dispatched actions.
  */
-function reducer(state, [type, payload]) {
-  switch (type) {
-    case types.SUCCESSFUL_GET:
-      if (!payload.length) {
+function reducer(state: TransactionsState, action: TransactionsAction | any) {
+  switch (action.type) {
+    case 'SUCCESSFUL_GET':
+      if (!action.payload.length) {
         return state;
       }
       return {
         ...state,
-        ...keyBy(payload, 'id'),
+        ...keyBy(action.payload, 'id'),
       };
-    case types.DELETE_BY_ITEM:
-      return omitBy(state, transaction => transaction.item_id === payload);
-    case types.DELETE_BY_USER:
-      return omitBy(state, transaction => transaction.user_id === payload);
+    case 'DELETE_BY_ITEM':
+      return omitBy(
+        state,
+        transaction => transaction.item_id === action.payload
+      );
+    case 'DELETE_BY_USER':
+      return omitBy(
+        state,
+        transaction => transaction.user_id === action.payload
+      );
     default:
-      console.warn('unknown action: ', { type, payload });
+      console.warn('unknown action: ', action.type, action.payload);
       return state;
   }
 }

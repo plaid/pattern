@@ -4,28 +4,53 @@ import React, {
   useMemo,
   useReducer,
   useCallback,
+  Dispatch,
 } from 'react';
 import { toast } from 'react-toastify';
 import { useHistory } from 'react-router-dom';
 import { getLoginUser as apiGetLoginUser } from './api';
+import { UserType } from '../components/types';
 
-const CurrentUserContext = createContext();
+interface CurrentUserState {
+  currentUser: UserType;
+  newUser: string | null;
+}
+
+const initialState = {
+  currentUser: {},
+  newUser: null,
+};
+type CurrentUserAction =
+  | {
+      type: 'SUCCESSFUL_GET';
+      payload: UserType;
+    }
+  | { type: 'ADD_USER'; payload: string }
+  | { type: 'FAILED_GET' };
+
+interface CurrentUserContextShape extends CurrentUserState {
+  dispatch: Dispatch<CurrentUserAction>;
+  setNewUser: (username: string) => void;
+  userState: CurrentUserState;
+  setCurrentUser: (username: string) => void;
+  login: (username: string) => void;
+}
+const CurrentUserContext = createContext<CurrentUserContextShape>(
+  initialState as CurrentUserContextShape
+);
 
 /**
  * @desc Maintains the currentUser context state and provides functions to update that state
  */
-export function CurrentUserProvider(props) {
-  const [userState, dispatch] = useReducer(reducer, {
-    currentUser: {},
-    newUser: null,
-  });
+export function CurrentUserProvider(props: any) {
+  const [userState, dispatch] = useReducer(reducer, initialState);
   const history = useHistory();
 
   /**
    * @desc Requests details for a single User.
    */
   const login = useCallback(
-    async (username, refresh) => {
+    async username => {
       try {
         const { data: payload } = await apiGetLoginUser(username);
         if (payload != null) {
@@ -48,7 +73,7 @@ export function CurrentUserProvider(props) {
       try {
         const { data: payload } = await apiGetLoginUser(username);
         if (payload != null) {
-          dispatch({ type: 'SUCCESSFUL_GET', payload: payload });
+          dispatch({ type: 'SUCCESSFUL_GET', payload: payload[0] });
           history.push(`/user/${payload[0].id}`);
         } else {
           dispatch({ type: 'FAILED_GET' });
@@ -83,11 +108,11 @@ export function CurrentUserProvider(props) {
 /**
  * @desc Handles updates to the Users state as dictated by dispatched actions.
  */
-function reducer(state, action) {
+function reducer(state: CurrentUserState, action: CurrentUserAction | any) {
   switch (action.type) {
     case 'SUCCESSFUL_GET':
       return {
-        currentUser: action.payload[0],
+        currentUser: action.payload,
         newUser: null,
       };
     case 'FAILED_GET':

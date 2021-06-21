@@ -29,6 +29,7 @@ export default function AccountCard(props: Props) {
   }, [getTransactionsByAccount, id]);
 
   useEffect(() => {
+    //@ts-ignore
     setTransactions(transactionsByAccount[id] || []);
   }, [transactionsByAccount, id]);
 

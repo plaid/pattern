@@ -16,17 +16,16 @@ import {
   getAccountsByItem as apiGetAccountsByItem,
   getAccountsByUser as apiGetAccountsByUser,
 } from './api';
-import { AssetReportTransactionTransactionTypeEnum } from 'plaid/dist/api';
 
 interface AccountsState {
-  [key: string]: any;
+  [key: string]: AccountType | any;
 }
 
 const initialState = {};
 type AccountsAction =
   | {
       type: 'SUCCESSFUL_GET';
-      payload: AssetReportTransactionTransactionTypeEnum;
+      payload: AccountType[];
     }
   | { type: 'DELETE_BY_ITEM'; payload: number }
   | { type: 'DELETE_BY_USER'; payload: number };
@@ -44,7 +43,7 @@ const AccountsContext = createContext<AccountsContextShape>(
 export const AccountsProvider: React.FC<{ children: ReactNode }> = (
   props: any
 ) => {
-  const [accountsById, dispatch] = useReducer(reducer, {});
+  const [accountsById, dispatch] = useReducer(reducer, initialState);
 
   /**
    * @desc Requests all Accounts that belong to an individual Item.
@@ -109,7 +108,7 @@ export const AccountsProvider: React.FC<{ children: ReactNode }> = (
 /**
  * @desc Handles updates to the Accounts state as dictated by dispatched actions.
  */
-function reducer(state: any, action: any) {
+function reducer(state: AccountsState, action: AccountsAction | any) {
   switch (action.type) {
     case 'SUCCESSFUL_GET':
       if (!action.payload.length) {

@@ -46,7 +46,7 @@ const ItemsContext = createContext<ItemsContextShape>(
  */
 export function ItemsProvider(props: any) {
   const [itemsById, dispatch] = useReducer(reducer, {});
-  const hasRequested = useRef({
+  const hasRequested = useRef<{ byId: { [id: number]: boolean } }>({
     byId: {},
   });
 
@@ -56,9 +56,7 @@ export function ItemsProvider(props: any) {
    * A 'refresh' parameter can force a request for new data even if local state exists.
    */
   const getItemById = useCallback(async (id, refresh) => {
-    //@ts-ignore
     if (!hasRequested.current.byId[id] || refresh) {
-      //@ts-ignore
       hasRequested.current.byId[id] = true;
       const { data: payload } = await apiGetItemById(id);
       dispatch({ type: 'SUCCESSFUL_REQUEST', payload: payload });
@@ -82,7 +80,7 @@ export function ItemsProvider(props: any) {
       dispatch({ type: 'SUCCESSFUL_DELETE', payload: id });
       // Update items list after deletion.
       await getItemsByUser(userId);
-      //@ts-ignore
+
       delete hasRequested.current.byId[id];
     },
     [getItemsByUser]

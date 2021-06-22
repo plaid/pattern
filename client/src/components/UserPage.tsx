@@ -69,7 +69,6 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
   }, [getTransactionsByUser, userId]);
 
   useEffect(() => {
-    //@ts-ignore
     setTransactions(transactionsByUser[userId] || []);
   }, [transactionsByUser, userId]);
 

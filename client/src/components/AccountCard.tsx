@@ -11,7 +11,10 @@ import { TransactionsTable } from '.';
 interface Props {
   account: AccountType;
 }
+// const ClientMetrics: React.FC<Props> = (props: Props) => ()
 
+// ClientMetrics.displayName = 'ClientMetrics';
+// export default ClientMetrics;
 export default function AccountCard(props: Props) {
   const [transactions, setTransactions] = useState([]);
   const [transactionsShown, setTransactionsShown] = useState(false);

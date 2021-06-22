@@ -10,6 +10,17 @@ const plaid = require('../plaid');
 const fetch = require('node-fetch');
 const { retrieveItemById } = require('../db/queries');
 
+const {
+  PLAID_SANDBOX_REDIRECT_URI,
+  PLAID_DEVELOPMENT_REDIRECT_URI,
+  PLAID_ENV,
+} = process.env;
+
+const redirect_uri =
+  PLAID_ENV == 'sandbox'
+    ? PLAID_SANDBOX_REDIRECT_URI
+    : PLAID_DEVELOPMENT_REDIRECT_URI;
+
 const router = express.Router();
 
 router.post(
@@ -38,7 +49,7 @@ router.post(
         language: 'en',
         webhook: httpTunnel.public_url + '/services/webhook',
         access_token: accessToken,
-        redirect_uri: 'http://localhost:3000/oauth-link',
+        redirect_uri: redirect_uri,
       };
       const createResponse = await plaid.linkTokenCreate(linkTokenParams);
       res.json(createResponse.data);

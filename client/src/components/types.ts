@@ -27,14 +27,25 @@ export interface AccountType {
   available_balance: number;
   iso_currency_code: string;
   unofficial_currency_code: string;
-  type: string;
-  subtype: string;
+  type: 'depository' | 'investment' | 'loan' | 'credit';
+  subtype:
+    | 'checking'
+    | 'savings'
+    | 'cd'
+    | 'money market'
+    | 'ira'
+    | '401k'
+    | 'student'
+    | 'mortgage'
+    | 'credit card';
   created_at: string;
   updated_at: string;
 }
 export interface TransactionType {
   id: number;
   account_id: number;
+  item_id: number;
+  user_id: number;
   plaid_transaction_id: string;
   plaid_category_id: string;
   category: string;

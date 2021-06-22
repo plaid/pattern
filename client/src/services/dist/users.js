@@ -129,7 +129,6 @@ function UsersProvider(props) {
             switch (_a.label) {
                 case 0:
                     if (!(!hasRequested.current.byId[id] || refresh)) return [3 /*break*/, 2];
-                    //@ts-ignore
                     hasRequested.current.byId[id] = true;
                     return [4 /*yield*/, api_1.getUserById(id)];
                 case 1:
@@ -153,7 +152,6 @@ function UsersProvider(props) {
                     deleteAccountsByUserId(id);
                     deleteTransactionsByUserId(id);
                     dispatch({ type: 'SUCCESSFUL_DELETE', payload: id });
-                    //@ts-ignore
                     delete hasRequested.current.byId[id];
                     return [2 /*return*/];
             }

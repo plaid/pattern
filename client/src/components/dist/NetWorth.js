@@ -4,39 +4,21 @@ var react_1 = require("react");
 var util_1 = require("../util");
 var _1 = require(".");
 function NetWorth(props) {
-    var accountTypes = {
-        depository: {
-            checking: 0,
-            savings: 0,
-            cd: 0,
-            'money market': 0
-        },
-        investment: {
-            ira: 0,
-            '401k': 0
-        },
-        loan: {
-            student: 52,
-            mortgage: 0
-        },
-        credit: {
-            'credit card': 98
-        }
-    };
-    //create accountTypes balances object
-    props.accounts.forEach(function (account) {
-        //@ts-ignore
-        accountTypes[account.type][account.subtype] +=
-            account.current_balance;
-    });
     // sums of account types
-    var addAllAccounts = function (accountType) {
-        return Object.values(accountType).reduce(function (a, b) { return a + b; });
+    var addAllAccounts = function (accountSubtypes) {
+        return props.accounts
+            .filter(function (a) { return accountSubtypes.includes(a.subtype); })
+            .reduce(function (acc, val) { return acc + val.current_balance; }, 0);
     };
-    var depository = addAllAccounts(accountTypes.depository);
-    var investment = addAllAccounts(accountTypes.investment);
-    var loan = addAllAccounts(accountTypes.loan);
-    var credit = addAllAccounts(accountTypes.credit);
+    var depository = addAllAccounts([
+        'checking',
+        'savings',
+        'cd',
+        'money market',
+    ]);
+    var investment = addAllAccounts(['ira', '401k']);
+    var loan = addAllAccounts(['student', 'mortgage']);
+    var credit = addAllAccounts(['credit card']);
     var personalAssetValue = props.personalAssets.reduce(function (a, b) {
         return a + b.value;
     }, 0);

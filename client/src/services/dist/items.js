@@ -76,7 +76,6 @@ function ItemsProvider(props) {
             switch (_a.label) {
                 case 0:
                     if (!(!hasRequested.current.byId[id] || refresh)) return [3 /*break*/, 2];
-                    //@ts-ignore
                     hasRequested.current.byId[id] = true;
                     return [4 /*yield*/, api_1.getItemById(id)];
                 case 1:
@@ -117,7 +116,6 @@ function ItemsProvider(props) {
                 case 2:
                     // Update items list after deletion.
                     _a.sent();
-                    //@ts-ignore
                     delete hasRequested.current.byId[id];
                     return [2 /*return*/];
             }

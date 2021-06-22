@@ -78,7 +78,6 @@ function TransactionsProvider(props) {
             switch (_a.label) {
                 case 0:
                     if (!(!hasRequested.current.byAccount[accountId] || refresh)) return [3 /*break*/, 2];
-                    //@ts-ignore
                     hasRequested.current.byAccount[accountId] = true;
                     return [4 /*yield*/, api_1.getTransactionsByAccount(accountId)];
                 case 1:
@@ -140,6 +139,7 @@ function TransactionsProvider(props) {
     var value = react_1.useMemo(function () {
         var allTransactions = Object.values(transactionsById);
         return {
+            dispatch: dispatch,
             allTransactions: allTransactions,
             transactionsById: transactionsById,
             transactionsByAccount: groupBy_1["default"](allTransactions, 'account_id'),
@@ -152,6 +152,7 @@ function TransactionsProvider(props) {
             deleteTransactionsByUserId: deleteTransactionsByUserId
         };
     }, [
+        dispatch,
         transactionsById,
         getTransactionsByAccount,
         getTransactionsByItem,

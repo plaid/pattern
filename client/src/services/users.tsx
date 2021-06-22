@@ -48,7 +48,10 @@ export function UsersProvider(props: any) {
   const { deleteItemsByUserId } = useItems();
   const { deleteTransactionsByUserId } = useTransactions();
 
-  const hasRequested = useRef({
+  const hasRequested = useRef<{
+    all: Boolean;
+    byId: { [id: number]: boolean };
+  }>({
     all: false,
     byId: {},
   });
@@ -89,9 +92,7 @@ export function UsersProvider(props: any) {
    * A 'refresh' parameter can force a request for new data even if local state exists.
    */
   const getUserById = useCallback(async (id, refresh) => {
-    //@ts-ignore
     if (!hasRequested.current.byId[id] || refresh) {
-      //@ts-ignore
       hasRequested.current.byId[id] = true;
       const { data: payload } = await apiGetUserById(id);
       dispatch({ type: 'SUCCESSFUL_GET', payload: payload });
@@ -108,7 +109,6 @@ export function UsersProvider(props: any) {
       deleteAccountsByUserId(id);
       deleteTransactionsByUserId(id);
       dispatch({ type: 'SUCCESSFUL_DELETE', payload: id });
-      //@ts-ignore
       delete hasRequested.current.byId[id];
     },
     [deleteItemsByUserId, deleteAccountsByUserId, deleteTransactionsByUserId]

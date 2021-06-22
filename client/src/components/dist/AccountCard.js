@@ -7,6 +7,9 @@ var Button_1 = require("plaid-threads/Button");
 var services_1 = require("../services");
 var util_1 = require("../util");
 var _1 = require(".");
+// const ClientMetrics: React.FC<Props> = (props: Props) => ()
+// ClientMetrics.displayName = 'ClientMetrics';
+// export default ClientMetrics;
 function AccountCard(props) {
     var _a = react_1.useState([]), transactions = _a[0], setTransactions = _a[1];
     var _b = react_1.useState(false), transactionsShown = _b[0], setTransactionsShown = _b[1];

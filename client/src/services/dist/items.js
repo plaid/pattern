@@ -168,7 +168,7 @@ function reducer(state, action) {
         case 'DELETE_BY_USER':
             return omitBy_1["default"](state, function (items) { return items.user_id === action.payload; });
         default:
-            console.warn('unknown action: ', action.type, action.payload);
+            console.warn('unknown action');
             return state;
     }
 }

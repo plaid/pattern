@@ -21,10 +21,10 @@ import {
 } from './api';
 
 interface ItemsState {
-  [key: string]: any;
+  [itemId: number]: ItemType;
 }
 
-const initialState = {};
+const initialState: ItemsState = {};
 type ItemsAction =
   | {
       type: 'SUCCESSFUL_REQUEST';
@@ -36,6 +36,8 @@ type ItemsAction =
 interface ItemsContextShape extends ItemsState {
   dispatch: Dispatch<ItemsAction>;
   deleteItemById: (id: number, userId: number) => void;
+  getItemsByUser: (userId: number, refresh: boolean) => void;
+  getItemById: (id: number, refresh: boolean) => void;
 }
 const ItemsContext = createContext<ItemsContextShape>(
   initialState as ItemsContextShape
@@ -124,7 +126,7 @@ export function ItemsProvider(props: any) {
 /**
  * @desc Handles updates to the Items state as dictated by dispatched actions.
  */
-function reducer(state: ItemsState, action: ItemsAction | any) {
+function reducer(state: ItemsState, action: ItemsAction) {
   switch (action.type) {
     case 'SUCCESSFUL_REQUEST':
       if (!action.payload.length) {
@@ -137,7 +139,7 @@ function reducer(state: ItemsState, action: ItemsAction | any) {
     case 'DELETE_BY_USER':
       return omitBy(state, items => items.user_id === action.payload);
     default:
-      console.warn('unknown action: ', action.type, action.payload);
+      console.warn('unknown action');
       return state;
   }
 }

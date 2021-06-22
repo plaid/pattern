@@ -11,10 +11,10 @@ import { addAsset as apiAddAsset } from './api';
 import { getAssetsByUser as apiGetAssetsByUser } from './api';
 
 interface AssetsState {
-  assets: any;
+  assets: string[];
 }
 
-const initialState = { assets: [] };
+const initialState: AssetsState = { assets: [] };
 
 type AssetsAction =
   | {

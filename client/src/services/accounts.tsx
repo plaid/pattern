@@ -18,10 +18,10 @@ import {
 } from './api';
 
 interface AccountsState {
-  [key: string]: AccountType | any;
+  [accountId: number]: AccountType;
 }
 
-const initialState = {};
+const initialState: AccountsState = {};
 type AccountsAction =
   | {
       type: 'SUCCESSFUL_GET';
@@ -32,6 +32,8 @@ type AccountsAction =
 
 interface AccountsContextShape extends AccountsState {
   dispatch: Dispatch<AccountsAction>;
+  accountsByItem: AccountType[];
+  deleteAccountsByItemId: (itemId: number) => void;
 }
 const AccountsContext = createContext<AccountsContextShape>(
   initialState as AccountsContextShape
@@ -108,7 +110,7 @@ export const AccountsProvider: React.FC<{ children: ReactNode }> = (
 /**
  * @desc Handles updates to the Accounts state as dictated by dispatched actions.
  */
-function reducer(state: AccountsState, action: AccountsAction | any) {
+function reducer(state: AccountsState, action: AccountsAction) {
   switch (action.type) {
     case 'SUCCESSFUL_GET':
       if (!action.payload.length) {
@@ -129,7 +131,7 @@ function reducer(state: AccountsState, action: AccountsAction | any) {
         transaction => transaction.user_id === action.payload
       );
     default:
-      console.warn('unknown action: ', action.type, action.payload);
+      console.warn('unknown action');
       return state;
   }
 }

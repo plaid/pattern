@@ -91,7 +91,7 @@ export function LinkProvider(props: any) {
 /**
  * @desc Handles updates to the LinkTokens state as dictated by dispatched actions.
  */
-function reducer(state: any, action: LinkAction | any) {
+function reducer(state: any, action: LinkAction) {
   switch (action.type) {
     case 'LINK_TOKEN_CREATED':
       return {
@@ -117,7 +117,7 @@ function reducer(state: any, action: LinkAction | any) {
         error: action.error,
       };
     default:
-      console.warn('unknown action: ', action.type, action.id, action.token);
+      console.warn('unknown action');
       return state;
   }
 }

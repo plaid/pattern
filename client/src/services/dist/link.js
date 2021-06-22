@@ -116,7 +116,7 @@ function reducer(state, action) {
         case 'LINK_TOKEN_ERROR':
             return __assign(__assign({}, state), { error: action.error });
         default:
-            console.warn('unknown action: ', action.type, action.id, action.token);
+            console.warn('unknown action');
             return state;
     }
 }

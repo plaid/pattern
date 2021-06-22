@@ -18,7 +18,7 @@ import {
   getTransactionsByItem as apiGetTransactionsByItem,
   getTransactionsByUser as apiGetTransactionsByUser,
 } from './api';
-import { Dictionary, identity } from 'lodash';
+import { Dictionary } from 'lodash';
 
 interface TransactionsState {
   [transactionId: number]: TransactionType;

@@ -28,7 +28,9 @@ var ItemCard = function (props) {
     var isSandbox = PLAID_ENV === 'sandbox';
     var isGoodState = status === 'good';
     react_1.useEffect(function () {
-        setAccounts(accountsByItem[id] || []);
+        console.log(accountsByItem);
+        // const itemAccounts: AccountType = accountsByItem[id];
+        // setAccounts(itemAccounts || []);
     }, [accountsByItem, id]);
     react_1.useEffect(function () {
         setInstitution(institutionsById[plaid_institution_id] || {});

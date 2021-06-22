@@ -47,7 +47,9 @@ const ItemCard = (props: Props) => {
   const isGoodState = status === 'good';
 
   useEffect(() => {
-    setAccounts(accountsByItem[id] || []);
+    console.log(accountsByItem);
+    // const itemAccounts: AccountType = accountsByItem[id];
+    // setAccounts(itemAccounts || []);
   }, [accountsByItem, id]);
 
   useEffect(() => {

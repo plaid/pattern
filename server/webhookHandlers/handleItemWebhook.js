@@ -71,7 +71,7 @@ const itemsHandler = async (requestBody, io) => {
 
   switch (webhookCode) {
     case 'WEBHOOK_UPDATE_ACKNOWLEDGED':
-      serverLogAndEmitSocket('is updated');
+      serverLogAndEmitSocket('is updated', plaidItemId, error);
       break;
     case 'ERROR': {
       itemErrorHandler(plaidItemId, error);
@@ -84,7 +84,7 @@ const itemsHandler = async (requestBody, io) => {
       break;
     }
     default:
-      serverLogAndEmitSocket('unhandled webhook type received.');
+      serverLogAndEmitSocket('unhandled webhook type received.', plaidItemId, error);
   }
 };
 

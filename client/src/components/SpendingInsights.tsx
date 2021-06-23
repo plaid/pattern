@@ -14,13 +14,13 @@ interface Categories {
 
 export default function SpendingInsights(props: Props) {
   // grab transactions from most recent month and filter out transfers and payments
-  const today = new Date();
   const transactions = props.transactions;
-  const oneMonthAgo = new Date(new Date().setDate(today.getDate() - 30));
   const monthlyTransactions = useMemo(
     () =>
       transactions.filter(tx => {
         const date = new Date(tx.date);
+        const today = new Date();
+        const oneMonthAgo = new Date(new Date().setDate(today.getDate() - 30));
         return (
           date > oneMonthAgo &&
           tx.category !== 'Payment' &&
@@ -28,7 +28,7 @@ export default function SpendingInsights(props: Props) {
           tx.category !== 'Interest'
         );
       }),
-    [transactions, oneMonthAgo]
+    [transactions]
   );
 
   // create category and name objects from transactions

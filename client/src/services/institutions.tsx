@@ -80,7 +80,7 @@ function reducer(state: InstitutionsById, action: InstitutionsAction) {
         [action.payload.institution_id]: action.payload,
       };
     default:
-      console.warn('unknown action: ', action.type, action.payload);
+      console.warn('unknown action');
       return state;
   }
 }

@@ -4,7 +4,7 @@ import sortBy from 'lodash/sortBy';
 import NavigationLink from 'plaid-threads/NavigationLink';
 import Callout from 'plaid-threads/Callout';
 
-import { RouteInfo, ItemType } from './types';
+import { RouteInfo, ItemType, AccountType, AssetType } from './types';
 import {
   useItems,
   useAccounts,
@@ -25,7 +25,6 @@ import {
   UserCard,
 } from '.';
 
-interface ComponentProps extends RouteComponentProps<RouteInfo> {}
 // provides view of user's net worth, spending by category and allows them to explore
 // account and transactions details for linked items
 
@@ -40,8 +39,8 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
   const [token, setToken] = useState('');
   const [numOfItems, setNumOfItems] = useState(0);
   const [transactions, setTransactions] = useState([]);
-  const [accounts, setAccounts] = useState([]);
-  const [assets, setAssets] = useState([]);
+  const [accounts, setAccounts] = useState<AccountType[]>([]);
+  const [assets, setAssets] = useState<AssetType[]>([]);
 
   const { getTransactionsByUser, transactionsByUser } = useTransactions();
   const { getAccountsByUser, accountsByUser } = useAccounts();
@@ -53,7 +52,7 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
 
   // update data store with user
   useEffect(() => {
-    getUserById(userId);
+    getUserById(userId, false);
   }, [getUserById, userId]);
 
   // set state user from data store
@@ -84,7 +83,7 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
   // update data store with the user's items
   useEffect(() => {
     if (userId != null) {
-      getItemsByUser(userId);
+      getItemsByUser(userId, true);
     }
   }, [getItemsByUser, userId]);
 

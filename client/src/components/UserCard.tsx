@@ -51,15 +51,7 @@ export default function UserCard(props: Props) {
     deleteUserById(props.user.id); // this will delete all items associated with a user
   };
   return (
-    <div
-      className="box user-card__box"
-      onMouseEnter={() => {
-        setHovered(true);
-      }}
-      onMouseLeave={() => {
-        setHovered(false);
-      }}
-    >
+    <div className="box user-card__box">
       <div className=" card user-card">
         <Touchable
           className="user-card-clickable"

@@ -8,11 +8,11 @@ const express = require('express');
 const plaid = require('../plaid');
 const fetch = require('node-fetch');
 const { retrieveItemById } = require('../db/queries');
-const {
-  PLAID_SANDBOX_REDIRECT_URI,
-  PLAID_DEVELOPMENT_REDIRECT_URI,
-  PLAID_ENV,
-} = process.env;
+
+const PLAID_SANDBOX_REDIRECT_URI = process.env.PLAID_SANDBOX_REDIRECT_URI;
+const PLAID_DEVELOPMENT_REDIRECT_URI =
+  process.env.PLAID_DEVELOPMENT_REDIRECT_URI;
+const PLAID_ENV = process.env.PLAID_ENV;
 
 const redirect_uri =
   PLAID_ENV == 'sandbox'
@@ -33,6 +33,8 @@ router.post(
         accessToken = itemIdResponse.plaid_access_token;
         products = [];
       }
+      console.log('redirect', redirect_uri);
+      console.log('environment', PLAID_ENV);
       const response = await fetch('http://ngrok:4040/api/tunnels');
       const { tunnels } = await response.json();
       const httpTunnel = tunnels.find(t => t.proto === 'http');

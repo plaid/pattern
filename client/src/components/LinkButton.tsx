@@ -1,5 +1,4 @@
 import React, { useEffect } from 'react';
-import propTypes from 'prop-types';
 import Button from 'plaid-threads/Button';
 import Touchable from 'plaid-threads/Touchable';
 import { usePlaidLink } from 'react-plaid-link';
@@ -9,13 +8,6 @@ import { logEvent, logSuccess, logExit } from '../util'; // functions to log and
 import { exchangeToken, setItemState } from '../services/api';
 import { useItems, useLink } from '../services';
 
-LinkButton.propTypes = {
-  isOauth: propTypes.bool,
-  userId: propTypes.number,
-  itemId: propTypes.number || null,
-  token: propTypes.string,
-};
-
 LinkButton.defaultProps = {
   isOauth: false,
   userId: null,
@@ -23,23 +15,67 @@ LinkButton.defaultProps = {
   token: '',
 };
 
+interface Props {
+  isOauth: boolean;
+  token: string;
+  userId: number;
+  itemId: number | null;
+  children: React.ReactNode;
+}
+
+interface PlaidInstitution {
+  name: string;
+  institution_id: string;
+}
+
+interface PlaidAccount {
+  id: string;
+  name: string;
+  mask: string;
+  type: string;
+  subtype: string;
+  verification_status: string;
+}
+
+interface PlaidLinkOnSuccessMetadata {
+  institution: null | PlaidInstitution;
+  accounts: Array<PlaidAccount>;
+  link_session_id: string;
+}
+
+interface PlaidLinkError {
+  error_type: string;
+  error_code: string;
+  error_message: string;
+  display_message: string;
+}
+
+interface PlaidLinkOnExitMetadata {
+  institution: null | PlaidInstitution;
+  // see possible values for status at https://plaid.com/docs/link/web/#link-web-onexit-status
+  status: null | string;
+  link_session_id: string;
+  request_id: string;
+}
+
 // Uses the usePlaidLink hook to manage the Plaid Link creation.  See https://github.com/plaid/react-plaid-link for full usage instructions.
 // The link token passed to usePlaidLink cannot be null.  It must be generated outside of this component.  In this sample app, the link token
 // is generated in the link context in client/src/services/link.js.
 
-export default function LinkButton({
-  isOauth,
-  children,
-  token,
-  userId,
-  itemId,
-}) {
+export default function LinkButton(props: Props) {
+  const token = props.token;
+  const isOauth = props.isOauth;
+  const userId = props.userId;
+  const itemId = props.itemId;
   const history = useHistory();
   const { getItemsByUser, getItemById } = useItems();
   const { generateLinkToken } = useLink();
 
   // define onSuccess, onExit and onEvent functions as configs for Plaid Link creation
-  const onSuccess = async (publicToken, metadata) => {
+  const onSuccess = async (
+    publicToken: string,
+    metadata: PlaidLinkOnSuccessMetadata
+  ) => {
     // log and save metatdata
     logSuccess(metadata, userId);
     if (itemId != null) {
@@ -55,7 +91,10 @@ export default function LinkButton({
     history.push(`/user/${userId}`);
   };
 
-  const onExit = async (error, metadata) => {
+  const onExit = async (
+    error: PlaidLinkError,
+    metadata: PlaidLinkOnExitMetadata
+  ) => {
     // log and save error and metatdata
     logExit(error, metadata, userId);
     if (error != null && error.error_code === 'INVALID_LINK_TOKEN') {
@@ -107,7 +146,7 @@ export default function LinkButton({
             handleClick();
           }}
         >
-          {children}
+          {props.children}
         </Touchable>
       ) : (
         // regular case for initializing Link from user card or from "add another item" button
@@ -120,7 +159,7 @@ export default function LinkButton({
             handleClick();
           }}
         >
-          {children}
+          {props.children}
         </Button>
       )}
     </>

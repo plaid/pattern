@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+// @ts-ignore
+import { Link, RouteComponentProps } from 'react-router-dom';
 import sortBy from 'lodash/sortBy';
 import NavigationLink from 'plaid-threads/NavigationLink';
 import Callout from 'plaid-threads/Callout';
@@ -24,12 +25,28 @@ import {
   UserCard,
 } from '.';
 
+interface RouteInfo {
+  userId: string;
+}
+
+interface itemsType {
+  id: number;
+  plaid_item_id: string;
+  user_id: number;
+  plaid_access_token: string;
+  plaid_institution_id: string;
+  status: string;
+  created_at: string;
+  updated_at: string;
+}
+
+interface ComponentProps extends RouteComponentProps<RouteInfo> {}
 // provides view of user's net worth, spending by category and allows them to explore
 // account and transactions details for linked items
 
-const UserPage = ({ match }) => {
+const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
   const [user, setUser] = useState({});
-  const [items, setItems] = useState([]);
+  const [items, setItems] = useState<itemsType[]>([]);
   const [token, setToken] = useState(null);
   const [numOfItems, setNumOfItems] = useState(0);
   const [transactions, setTransactions] = useState([]);
@@ -83,7 +100,8 @@ const UserPage = ({ match }) => {
 
   // update state items from data store
   useEffect(() => {
-    const newItems = itemsByUser[userId] || [];
+    const newItems: Array<itemsType> = itemsByUser[userId] || [];
+    console.log(newItems);
     const orderedItems = sortBy(
       newItems,
       item => new Date(item.updated_at)
@@ -180,7 +198,7 @@ const UserPage = ({ match }) => {
           </div>
           {items.map(item => (
             <div id="itemCards" key={item.id}>
-              <ItemCard item={item} userId={userId} removeButton={false} />
+              <ItemCard item={item} userId={userId} />
             </div>
           ))}
         </>

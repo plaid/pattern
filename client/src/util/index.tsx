@@ -64,8 +64,8 @@ export function diffBetweenCurrentTime(timestamp) {
   }).replace(/^(about|less than)\s/i, '');
 }
 
-export const logEvent = (eventName, extra) => {
-  console.log(`Link Event: ${eventName}`, extra);
+export const logEvent = (eventName, metadata) => {
+  console.log(`Link Event: ${eventName}`, metadata);
 };
 
 export const logSuccess = async (

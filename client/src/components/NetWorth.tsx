@@ -90,9 +90,9 @@ export default function NetWorth(props: Props) {
       <h4 className="tableSubHeading">
         A summary of your assets and liabilities
       </h4>
-      <div className="netWorthText">{`Your total Across ${
+      <div className="netWorthText">{`Your total across ${
         props.numOfItems
-      } ${pluralize('Account', props.numOfItems)}`}</div>
+      } bank ${pluralize('account', props.numOfItems)}`}</div>
       <h2 className="netWorthDollars">
         {currencyFilter(assets - liabilities)}
       </h2>

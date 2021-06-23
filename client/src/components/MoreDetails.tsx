@@ -20,8 +20,8 @@ interface Props {
 export function MoreDetails(props: Props) {
   const [menuShown, setmenuShown] = useState(false);
   const [token, setToken] = useState('');
-  const refToButton = useRef();
-  const refToMenu = useOnClickOutside({
+  const refToButton = useRef<HTMLDivElement>(null);
+  const refToMenu: React.RefObject<HTMLDivElement> = useOnClickOutside({
     callback: () => {
       setmenuShown(false);
     },
@@ -57,7 +57,6 @@ export function MoreDetails(props: Props) {
   );
 
   const icon = (
-    // @ts-ignore
     <div className="icon-button-container" ref={refToButton}>
       <IconButton
         accessibilityLabel="Navigation"
@@ -68,7 +67,6 @@ export function MoreDetails(props: Props) {
   );
 
   return (
-    // @ts-ignore
     <div className="more-details" ref={refToMenu}>
       <Dropdown isOpen={menuShown} target={icon}>
         {linkChoice}

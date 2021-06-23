@@ -37,27 +37,24 @@ export default function Asset(props: Props) {
             isLoading={false}
             onClickConfirm={handleSubmit}
             confirmText="Submit"
-            // TODO: file ticket in threads to fix body type
-            // @ts-ignore
-            body={
-              <>
-                <TextInput
-                  label=""
-                  id="id-6"
-                  placeholder="Enter Asset Description (e.g. house or car)"
-                  value={description}
-                  onChange={e => setDescription(e.currentTarget.value)}
-                />
-                <NumberInput
-                  label=""
-                  id="id-6"
-                  placeholder="Enter Asset Value (in dollars $)"
-                  value={value}
-                  onChange={e => setValue(e.currentTarget.value)}
-                />
-              </>
-            }
-          />
+          >
+            <>
+              <TextInput
+                label=""
+                id="id-6"
+                placeholder="Enter Asset Description (e.g. house or car)"
+                value={description}
+                onChange={e => setDescription(e.currentTarget.value)}
+              />
+              <NumberInput
+                label=""
+                id="id-6"
+                placeholder="Enter Asset Value (in dollars $)"
+                value={value}
+                onChange={e => setValue(e.currentTarget.value)}
+              />
+            </>
+          </ModalBody>
         </>
       </Modal>
     </div>

@@ -30,13 +30,10 @@ interface Loan {
 interface Credit {
   'credit card': number;
 }
-type AccountTypes = Depository | Investment | Loan | Credit;
 
+type AccountTypes = Depository | Investment | Loan | Credit;
 interface BankAccountTypes {
-  depository: Depository;
-  investment: Investment;
-  loan: Loan;
-  credit: Credit;
+  [propName: string]: AccountTypes;
 }
 
 export default function NetWorth(props: Props) {
@@ -52,20 +49,20 @@ export default function NetWorth(props: Props) {
       '401k': 0,
     },
     loan: {
-      student: 0,
+      student: 52,
       mortgage: 0,
     },
     credit: {
-      'credit card': 0,
+      'credit card': 98,
     },
   };
 
   //create accountTypes balances object
+
   props.accounts.forEach(account => {
-    const type: string = account.type;
-    const subtype: string = account.subtype;
-    // @ts-ignore
-    accountTypes[type][subtype] += account.current_balance;
+    //@ts-ignore
+    accountTypes[account.type][account.subtype as keyof AccountTypes] +=
+      account.current_balance;
   });
 
   // sums of account types

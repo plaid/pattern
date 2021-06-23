@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 
 import { currencyFilter } from '../util';
 import { TransactionType } from './types';

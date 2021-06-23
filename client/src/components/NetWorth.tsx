@@ -1,16 +1,8 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 
 import { currencyFilter, pluralize } from '../util';
 import { Asset } from '.';
 import { AccountType, AssetType } from './types';
-
-NetWorth.propTypes = {
-  accounts: PropTypes.array,
-  numOfItems: PropTypes.number,
-  personalAssets: PropTypes.array,
-  userId: PropTypes.number,
-};
 interface Props {
   numOfItems: number;
   accounts: AccountType[];

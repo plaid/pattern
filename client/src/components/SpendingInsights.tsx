@@ -1,13 +1,8 @@
 import React, { useMemo } from 'react';
-import PropTypes from 'prop-types';
 
 import { currencyFilter } from '../util';
 import { CategoriesChart } from '.';
 import { TransactionType } from './types';
-
-SpendingInsights.propTypes = {
-  transactions: PropTypes.array,
-};
 
 interface Props {
   transactions: TransactionType[];

@@ -20,7 +20,7 @@ const OAuthLink = () => {
           userId={userId}
           itemId={itemId}
           token={token}
-        ></LinkButton>
+        />
       )}
     </>
   );

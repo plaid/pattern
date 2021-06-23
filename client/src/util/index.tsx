@@ -5,14 +5,14 @@ import { postLinkEvent as apiPostLinkEvent } from '../services/api';
 /**
  * @desc small helper for pluralizing words for display given a number of items
  */
-export function pluralize(noun, count) {
+export function pluralize(noun: string, count: number) {
   return count === 1 ? noun : `${noun}s`;
 }
 
 /**
  * @desc converts number values into $ currency strings
  */
-export function currencyFilter(value) {
+export function currencyFilter(value: number) {
   if (typeof value !== 'number') {
     return '-';
   }
@@ -43,7 +43,7 @@ const months = [
 /**
  * @desc Returns formatted date.
  */
-export function formatDate(timestamp) {
+export function formatDate(timestamp: string) {
   if (timestamp) {
     // slice will return the first 10 char(date)of timestamp
     // coming in as: 2019-05-07T15:41:30.520Z
@@ -57,19 +57,21 @@ export function formatDate(timestamp) {
 /**
  * @desc Checks the difference between the current time and a provided time
  */
-export function diffBetweenCurrentTime(timestamp) {
+export function diffBetweenCurrentTime(timestamp: string) {
   return distanceInWords(new Date(), parse(timestamp), {
     addSuffix: true,
     includeSeconds: true,
   }).replace(/^(about|less than)\s/i, '');
 }
 
-export const logEvent = (eventName, metadata) => {
+export const logEvent = (eventName: string, metadata: any) => {
   console.log(`Link Event: ${eventName}`, metadata);
 };
 
 export const logSuccess = async (
+  //@ts-ignore
   { institution, accounts, link_session_id },
+  //@ts-ignore
   userId
 ) => {
   logEvent('onSuccess', {
@@ -85,8 +87,11 @@ export const logSuccess = async (
 };
 
 export const logExit = async (
+  //@ts-ignore
   error,
+  //@ts-ignore
   { institution, status, link_session_id, request_id },
+  //@ts-ignore
   userId
 ) => {
   logEvent('onExit', {

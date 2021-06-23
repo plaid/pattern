@@ -1,7 +1,13 @@
 import React, { useEffect } from 'react';
 import Button from 'plaid-threads/Button';
 import Touchable from 'plaid-threads/Touchable';
-import { usePlaidLink } from 'react-plaid-link';
+import {
+  usePlaidLink,
+  PlaidLinkOnSuccessMetadata,
+  PlaidLinkOnExitMetadata,
+  PlaidLinkError,
+  PlaidLinkOptionsWithLinkToken,
+} from 'react-plaid-link';
 import { useHistory } from 'react-router-dom';
 
 import { logEvent, logSuccess, logExit } from '../util'; // functions to log and save errors and metadata from Link events.
@@ -12,50 +18,14 @@ LinkButton.defaultProps = {
   isOauth: false,
   userId: null,
   itemId: null,
-  token: '',
 };
 
 interface Props {
-  isOauth: boolean;
+  isOauth?: boolean;
   token: string;
   userId: number;
-  itemId: number | null;
-  children: React.ReactNode;
-}
-
-interface PlaidInstitution {
-  name: string;
-  institution_id: string;
-}
-
-interface PlaidAccount {
-  id: string;
-  name: string;
-  mask: string;
-  type: string;
-  subtype: string;
-  verification_status: string;
-}
-
-interface PlaidLinkOnSuccessMetadata {
-  institution: null | PlaidInstitution;
-  accounts: Array<PlaidAccount>;
-  link_session_id: string;
-}
-
-interface PlaidLinkError {
-  error_type: string;
-  error_code: string;
-  error_message: string;
-  display_message: string;
-}
-
-interface PlaidLinkOnExitMetadata {
-  institution: null | PlaidInstitution;
-  // see possible values for status at https://plaid.com/docs/link/web/#link-web-onexit-status
-  status: null | string;
-  link_session_id: string;
-  request_id: string;
+  itemId?: number | null;
+  children?: React.ReactNode;
 }
 
 // Uses the usePlaidLink hook to manage the Plaid Link creation.  See https://github.com/plaid/react-plaid-link for full usage instructions.
@@ -92,7 +62,7 @@ export default function LinkButton(props: Props) {
   };
 
   const onExit = async (
-    error: PlaidLinkError,
+    error: PlaidLinkError | null,
     metadata: PlaidLinkOnExitMetadata
   ) => {
     // log and save error and metatdata
@@ -104,13 +74,17 @@ export default function LinkButton(props: Props) {
     // to handle other error codes, see https://plaid.com/docs/errors/
   };
 
-  const config = {
+  const config: PlaidLinkOptionsWithLinkToken = {
     onSuccess,
     onExit,
     onEvent: logEvent,
     token,
-    receivedRedirectUri: isOauth ? window.location.href : null, // add additional receivedRedirectUri config when handling an OAuth reidrect
-  }; //@ts-ignore
+  };
+
+  if (isOauth) {
+    config.receivedRedirectUri = window.location.href; // add additional receivedRedirectUri config when handling an OAuth reidrect
+  }
+
   const { open, ready } = usePlaidLink(config);
 
   useEffect(() => {

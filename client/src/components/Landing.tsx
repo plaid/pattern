@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react';
 import Button from 'plaid-threads/Button';
-// @ts-ignore
 import { useHistory } from 'react-router-dom';
 
 import { useUsers, useCurrentUser } from '../services';

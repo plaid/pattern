@@ -1,4 +1,11 @@
 import { distanceInWords, parse } from 'date-fns';
+import {
+  PlaidLinkOnSuccessMetadata,
+  PlaidLinkOnExitMetadata,
+  PlaidLinkStableEvent,
+  PlaidLinkOnEventMetadata,
+  PlaidLinkError,
+} from 'react-plaid-link';
 
 import { postLinkEvent as apiPostLinkEvent } from '../services/api';
 
@@ -64,15 +71,20 @@ export function diffBetweenCurrentTime(timestamp: string) {
   }).replace(/^(about|less than)\s/i, '');
 }
 
-export const logEvent = (eventName: string, metadata: any) => {
-  console.log(`Link Event: ${eventName}`, metadata);
+export const logEvent = (
+  eventName: PlaidLinkStableEvent | string,
+  metadata:
+    | PlaidLinkOnEventMetadata
+    | PlaidLinkOnSuccessMetadata
+    | PlaidLinkOnExitMetadata,
+  error?: PlaidLinkError | null
+) => {
+  console.log(`Link Event: ${eventName}`, metadata, error);
 };
 
 export const logSuccess = async (
-  //@ts-ignore
-  { institution, accounts, link_session_id },
-  //@ts-ignore
-  userId
+  { institution, accounts, link_session_id }: PlaidLinkOnSuccessMetadata,
+  userId: number
 ) => {
   logEvent('onSuccess', {
     institution,
@@ -87,20 +99,20 @@ export const logSuccess = async (
 };
 
 export const logExit = async (
-  //@ts-ignore
-  error,
-  //@ts-ignore
-  { institution, status, link_session_id, request_id },
-  //@ts-ignore
-  userId
+  error: PlaidLinkError | null,
+  { institution, status, link_session_id, request_id }: PlaidLinkOnExitMetadata,
+  userId: number
 ) => {
-  logEvent('onExit', {
-    error,
-    institution,
-    status,
-    link_session_id,
-    request_id,
-  });
+  logEvent(
+    'onExit',
+    {
+      institution,
+      status,
+      link_session_id,
+      request_id,
+    },
+    error
+  );
   const eventError = error || {};
   await apiPostLinkEvent({
     userId,

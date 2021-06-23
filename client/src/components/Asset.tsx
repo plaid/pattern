@@ -4,17 +4,16 @@ import ModalBody from 'plaid-threads/ModalBody';
 import Button from 'plaid-threads/Button';
 import TextInput from 'plaid-threads/TextInput';
 import NumberInput from 'plaid-threads/NumberInput';
-import PropTypes from 'prop-types';
 
 import { useAssets } from '../services';
 
-Asset.propTypes = {
-  userId: PropTypes.number,
-};
+interface Props {
+  userId: number;
+}
 
 //  Allows user to input their personal assets such as a house or car.
 
-export default function Asset({ userId }) {
+export default function Asset(props: Props) {
   const [show, setShow] = useState(false);
   const [description, setDescription] = useState('');
   const [value, setValue] = useState('');
@@ -22,7 +21,7 @@ export default function Asset({ userId }) {
 
   const handleSubmit = () => {
     setShow(false);
-    addAsset(userId, description, parseInt(value));
+    addAsset(props.userId, description, parseInt(value));
   };
 
   return (
@@ -38,15 +37,19 @@ export default function Asset({ userId }) {
             isLoading={false}
             onClickConfirm={handleSubmit}
             confirmText="Submit"
+            // TODO: file ticket in threads to fix body type
+            // @ts-ignore
             body={
               <>
                 <TextInput
+                  label=""
                   id="id-6"
                   placeholder="Enter Asset Description (e.g. house or car)"
                   value={description}
                   onChange={e => setDescription(e.currentTarget.value)}
                 />
                 <NumberInput
+                  label=""
                   id="id-6"
                   placeholder="Enter Asset Value (in dollars $)"
                   value={value}

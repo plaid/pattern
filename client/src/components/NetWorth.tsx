@@ -1,23 +1,46 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 
 import { currencyFilter, pluralize } from '../util';
 import { Asset } from '.';
+import { AccountType, AssetType } from './types';
+interface Props {
+  numOfItems: number;
+  accounts: AccountType[];
+  personalAssets: AssetType[];
+  userId: number;
+}
 
-NetWorth.propTypes = {
-  accounts: PropTypes.array,
-  numOfItems: PropTypes.number,
-  personalAssets: PropTypes.array,
-  userId: PropTypes.number,
-};
+interface Depository {
+  checking: number;
+  savings: number;
+  cd: number;
+  'money market': number;
+}
 
-export default function NetWorth({
-  numOfItems,
-  accounts,
-  personalAssets,
-  userId,
-}) {
-  const accountTypes = {
+interface Investment {
+  ira: number;
+  '401k': number;
+}
+
+interface Loan {
+  student: number;
+  mortgage: number;
+}
+
+interface Credit {
+  'credit card': number;
+}
+type AccountTypes = Depository | Investment | Loan | Credit;
+
+interface BankAccountTypes {
+  depository: Depository;
+  investment: Investment;
+  loan: Loan;
+  credit: Credit;
+}
+
+export default function NetWorth(props: Props) {
+  const accountTypes: BankAccountTypes = {
     depository: {
       checking: 0,
       savings: 0,
@@ -38,20 +61,23 @@ export default function NetWorth({
   };
 
   //create accountTypes balances object
-  accounts.forEach(account => {
-    accountTypes[account.type][account.subtype] += account.current_balance;
+  props.accounts.forEach(account => {
+    const type: string = account.type;
+    const subtype: string = account.subtype;
+    // @ts-ignore
+    accountTypes[type][subtype] += account.current_balance;
   });
 
   // sums of account types
-  const addAllAccounts = accountType =>
-    Object.values(accountType).reduce((a, b) => a + b);
+  const addAllAccounts = (accountType: AccountTypes): number =>
+    Object.values(accountType).reduce((a: number, b: number) => a + b);
 
-  const depository = addAllAccounts(accountTypes.depository);
-  const investment = addAllAccounts(accountTypes.investment);
-  const loan = addAllAccounts(accountTypes.loan);
-  const credit = addAllAccounts(accountTypes.credit);
+  const depository: number = addAllAccounts(accountTypes.depository);
+  const investment: number = addAllAccounts(accountTypes.investment);
+  const loan: number = addAllAccounts(accountTypes.loan);
+  const credit: number = addAllAccounts(accountTypes.credit);
 
-  const personalAssetValue = personalAssets.reduce((a, b) => {
+  const personalAssetValue = props.personalAssets.reduce((a, b) => {
     return a + b.value;
   }, 0);
 
@@ -64,10 +90,9 @@ export default function NetWorth({
       <h4 className="tableSubHeading">
         A summary of your assets and liabilities
       </h4>
-      <div className="netWorthText">{`Your total Across ${numOfItems} ${pluralize(
-        'Account',
-        numOfItems
-      )}`}</div>
+      <div className="netWorthText">{`Your total across ${
+        props.numOfItems
+      } bank ${pluralize('account', props.numOfItems)}`}</div>
       <h2 className="netWorthDollars">
         {currencyFilter(assets - liabilities)}
       </h2>
@@ -76,7 +101,7 @@ export default function NetWorth({
           <div className="holdingsList">
             <div className="assetsHeaderContainer">
               <h4 className="dollarsHeading">{currencyFilter(assets)}</h4>
-              <Asset userId={userId} />
+              <Asset userId={props.userId} />
             </div>
 
             <div className="data">
@@ -86,7 +111,7 @@ export default function NetWorth({
               <p className="dataItem">{currencyFilter(depository)}</p>
               <p className="dataItem">Investment</p>
               <p className="dataItem">{currencyFilter(investment)}</p>
-              {personalAssets.map(asset => (
+              {props.personalAssets.map(asset => (
                 <>
                   <p className="dataItem">{asset.description}</p>
                   <p className="dataItem">{currencyFilter(asset.value)}</p>

@@ -26,7 +26,7 @@ const AddUserForm = ({ hideForm }) => {
       <form onSubmit={handleSubmit}>
         <div className="card">
           <div className="add-user__column-1">
-            <h3 className="heading add-user__heading">Add a new user</h3>
+            <h3 className="heading add-user__heading">New Account</h3>
             <p className="value add-user__value">
               Enter your name in the input field.
             </p>
@@ -47,7 +47,7 @@ const AddUserForm = ({ hideForm }) => {
           </div>
           <div className="add-user__column-3">
             <Button className="add-user__button" centered small type="submit">
-              Add User
+              Create
             </Button>
             <Button
               className="add-user__button"

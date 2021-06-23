@@ -9,9 +9,10 @@ import React, {
 import { toast } from 'react-toastify';
 import { addAsset as apiAddAsset } from './api';
 import { getAssetsByUser as apiGetAssetsByUser } from './api';
+import { AssetType } from '../components/types';
 
 interface AssetsState {
-  assets: string[];
+  assets: AssetType[];
 }
 
 const initialState: AssetsState = { assets: [] };

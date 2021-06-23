@@ -38,6 +38,9 @@ interface ItemsContextShape extends ItemsState {
   deleteItemById: (id: number, userId: number) => void;
   getItemsByUser: (userId: number, refresh: boolean) => void;
   getItemById: (id: number, refresh: boolean) => void;
+  itemsById: { [itemId: number]: ItemType[] };
+  itemsByUser: { [userId: number]: ItemType[] };
+  deleteItemsByUserId: (userId: number) => void;
 }
 const ItemsContext = createContext<ItemsContextShape>(
   initialState as ItemsContextShape

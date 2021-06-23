@@ -17,7 +17,7 @@ export default function UserCard(props: Props) {
   const [numOfItems, setNumOfItems] = useState(0);
   const [token, setToken] = useState('');
   const [hovered, setHovered] = useState(false);
-
+  //@ts-ignore
   const { itemsByUser, getItemsByUser } = useItems();
   const { deleteUserById } = useUsers();
   const { generateLinkToken, linkTokens } = useLink();
@@ -25,7 +25,7 @@ export default function UserCard(props: Props) {
   // update data store with the user's items
   useEffect(() => {
     if (props.user.id) {
-      getItemsByUser(props.user.id);
+      getItemsByUser(props.user.id, true);
     }
   }, [getItemsByUser, props.user.id]);
 

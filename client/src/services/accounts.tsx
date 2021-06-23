@@ -32,8 +32,11 @@ type AccountsAction =
 
 interface AccountsContextShape extends AccountsState {
   dispatch: Dispatch<AccountsAction>;
-  accountsByItem: AccountType[];
+  accountsByItem: { [itemId: number]: AccountType[] };
   deleteAccountsByItemId: (itemId: number) => void;
+  getAccountsByUser: (userId: number) => void;
+  accountsByUser: { [user_id: number]: AccountType[] };
+  deleteAccountsByUserId: (userId: number) => void;
 }
 const AccountsContext = createContext<AccountsContextShape>(
   initialState as AccountsContextShape

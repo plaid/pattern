@@ -194,7 +194,7 @@ const handleTransactionsWebhook = async (requestBody, io) => {
       break;
     }
     default:
-      serverLogAndEmitSocket(`unhandled webhook type received.`);
+      serverLogAndEmitSocket(`unhandled webhook type received.`, plaidItemId);
   }
 };
 

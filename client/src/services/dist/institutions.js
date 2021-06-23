@@ -103,7 +103,7 @@ function reducer(state, action) {
             }
             return __assign(__assign({}, state), (_a = {}, _a[action.payload.institution_id] = action.payload, _a));
         default:
-            console.warn('unknown action: ', action.type, action.payload);
+            console.warn('unknown action');
             return state;
     }
 }

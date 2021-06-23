@@ -27,7 +27,7 @@ function MoreDetails(props) {
     }, [props.userId, props.itemId, generateLinkToken]);
     react_1.useEffect(function () {
         setToken(linkTokens.byItem[props.itemId]);
-    }, [linkTokens, props.userId]);
+    }, [linkTokens, props.itemId]);
     // display choice, depending on whether item is in "good" or "bad" state
     var linkChoice = props.setBadStateShown ? (
     // handleSetBadState uses sandbox/item/reset_login to send the ITEM_LOGIN_REQUIRED webhook;

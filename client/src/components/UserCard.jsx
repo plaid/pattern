@@ -88,7 +88,7 @@ export default function UserCard({ user, removeButton, linkButton }) {
         <div className="user-card__buttons">
           {token != null && linkButton && (
             <LinkButton userId={user.id} token={token} itemId={null}>
-              Link an Item
+              Add a Bank
             </LinkButton>
           )}
           {removeButton && (

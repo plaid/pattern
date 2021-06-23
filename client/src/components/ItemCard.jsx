@@ -88,7 +88,7 @@ const ItemCard = ({ item, userId }) => {
             )}
           </div>
           <div className="item-card__column-3">
-            <h3 className="heading">ITEM_ID</h3>
+            <h3 className="heading">BANK ID</h3>
             <p className="value">{id}</p>
           </div>
           <div className="item-card__column-4">

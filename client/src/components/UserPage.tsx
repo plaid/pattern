@@ -174,25 +174,19 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
           <div className="item__header">
             <div>
               <h2 className="item__header-heading">
-                {`${items.length} ${pluralize('Item', items.length)} Linked`}
+                {`${items.length} ${pluralize('Bank', items.length)} Connected`}
               </h2>
               {!!items.length && (
                 <p className="item__header-subheading">
-                  Below is a list of all the&nbsp;
-                  <a
-                    href="https://plaid.com/docs/quickstart/#item-overview"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    items
-                  </a>
-                  . Click on an item to view its associated accounts.
+                  Below is a list of all your connected banks. Click on a bank
+                  to view your associated accounts.
                 </p>
               )}
             </div>
             {token != null && ( // Link will not render unless there is a link token
+              //@ts-ignore
               <LinkButton token={token} userId={userId} itemId={null}>
-                Add Another Item
+                Add Another Bank
               </LinkButton>
             )}
           </div>

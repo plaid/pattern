@@ -110,8 +110,7 @@ export default function LinkButton(props: Props) {
     onEvent: logEvent,
     token,
     receivedRedirectUri: isOauth ? window.location.href : null, // add additional receivedRedirectUri config when handling an OAuth reidrect
-  };
-
+  }; //@ts-ignore
   const { open, ready } = usePlaidLink(config);
 
   useEffect(() => {

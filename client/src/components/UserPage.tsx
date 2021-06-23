@@ -191,6 +191,7 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
               )}
             </div>
             {token != null && ( // Link will not render unless there is a link token
+              //@ts-ignore
               <LinkButton token={token} userId={userId} itemId={null}>
                 Add Another Item
               </LinkButton>

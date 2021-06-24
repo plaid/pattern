@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import { LinkButton } from '.';
 
@@ -11,11 +11,14 @@ const OAuthLink = () => {
   const [itemId, setItemId] = useState<number>();
 
   const oauthObject = localStorage.getItem('oauthConfig');
-  if (typeof oauthObject === 'string') {
-    setUserId(JSON.parse(oauthObject).userId);
-    setItemId(JSON.parse(oauthObject).itemId);
-    setToken(JSON.parse(oauthObject).token);
-  }
+
+  useEffect(() => {
+    if (oauthObject != null) {
+      setUserId(JSON.parse(oauthObject).userId);
+      setItemId(JSON.parse(oauthObject).itemId);
+      setToken(JSON.parse(oauthObject).token);
+    }
+  }, [userId, itemId, token]);
 
   return (
     <>

@@ -11,7 +11,6 @@ interface Props {
 }
 
 const UserDetails = (props: Props) => {
-  console.log(props.numOfItems);
   return (
     <>
       <div className="user-card__column-1">

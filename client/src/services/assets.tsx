@@ -4,36 +4,48 @@ import React, {
   useMemo,
   useReducer,
   useCallback,
+  Dispatch,
 } from 'react';
 import { toast } from 'react-toastify';
 import { addAsset as apiAddAsset } from './api';
 import { getAssetsByUser as apiGetAssetsByUser } from './api';
 
-const AssetsContext = createContext();
+interface AssetsState {
+  assets: any;
+}
 
-/**
- * @desc Enumerated action types
- */
-const types = {
-  SUCCESSFUL_GET: 0,
-  FAILED_GET: 1,
-};
+const initialState = { assets: [] };
+
+type AssetsAction =
+  | {
+      type: 'SUCCESSFUL_GET';
+      payload: string;
+    }
+  | { type: 'FAILED_GET'; payload: number };
+
+interface AssetsContextShape extends AssetsState {
+  dispatch: Dispatch<AssetsAction>;
+  addAsset: (userId: number, description: string, value: number) => void;
+  assetsByUser: AssetsState;
+  getAssetsByUser: (userId: number) => void;
+}
+const AssetsContext = createContext<AssetsContextShape>(
+  initialState as AssetsContextShape
+);
 
 /**
  * @desc Maintains the Properties context state
  */
-export function AssetsProvider(props) {
-  const [assetsByUser, dispatch] = useReducer(reducer, {
-    assets: [],
-  });
+export function AssetsProvider(props: any) {
+  const [assetsByUser, dispatch] = useReducer(reducer, initialState);
 
-  const getAssetsByUser = useCallback(async userId => {
+  const getAssetsByUser = useCallback(async (userId: number) => {
     try {
       const { data: payload } = await apiGetAssetsByUser(userId);
       if (payload != null) {
-        dispatch([types.SUCCESSFUL_GET, payload]);
+        dispatch({ type: 'SUCCESSFUL_GET', payload: payload });
       } else {
-        dispatch([types.FAILED_GET]);
+        dispatch({ type: 'FAILED_GET' });
       }
     } catch (err) {
       console.log(err);
@@ -71,19 +83,19 @@ export function AssetsProvider(props) {
 /**
  * @desc Handles updates to the propertiesByUser as dictated by dispatched actions.
  */
-function reducer(state, [type, payload]) {
-  switch (type) {
-    case types.SUCCESSFUL_GET:
+function reducer(state: AssetsState, action: AssetsAction | any) {
+  switch (action.type) {
+    case 'SUCCESSFUL_GET':
       return {
-        assets: payload,
+        assets: action.payload,
       };
-    case types.FAILED_GET:
+    case 'FAILED_GET':
       return {
         ...state,
       };
 
     default:
-      console.warn('unknown action: ', { type, payload });
+      console.warn('unknown action: ', action.type, action.payload);
       return state;
   }
 }

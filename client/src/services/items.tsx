@@ -5,11 +5,14 @@ import React, {
   useRef,
   useReducer,
   useCallback,
+  Dispatch,
 } from 'react';
 import groupBy from 'lodash/groupBy';
 import keyBy from 'lodash/keyBy';
 import omit from 'lodash/omit';
 import omitBy from 'lodash/omitBy';
+
+import { ItemType } from '../components/types';
 
 import {
   getItemsByUser as apiGetItemsByUser,
@@ -17,21 +20,31 @@ import {
   deleteItemById as apiDeleteItemById,
 } from './api';
 
-const ItemsContext = createContext();
+interface ItemsState {
+  [key: string]: any;
+}
 
-/**
- * @desc Enumerated action types
- */
-const types = {
-  SUCCESSFUL_GET: 0,
-  DELETE_BY_USER: 1,
-  SUCCESSFUL_DELETE: 2,
-};
+const initialState = {};
+type ItemsAction =
+  | {
+      type: 'SUCCESSFUL_REQUEST';
+      payload: ItemType[];
+    }
+  | { type: 'SUCCESSFUL_DELETE'; payload: number }
+  | { type: 'DELETE_BY_USER'; payload: number };
+
+interface ItemsContextShape extends ItemsState {
+  dispatch: Dispatch<ItemsAction>;
+  deleteItemById: (id: number, userId: number) => void;
+}
+const ItemsContext = createContext<ItemsContextShape>(
+  initialState as ItemsContextShape
+);
 
 /**
  * @desc Maintains the Items context state and provides functions to update that state.
  */
-export function ItemsProvider(props) {
+export function ItemsProvider(props: any) {
   const [itemsById, dispatch] = useReducer(reducer, {});
   const hasRequested = useRef({
     byId: {},
@@ -43,10 +56,12 @@ export function ItemsProvider(props) {
    * A 'refresh' parameter can force a request for new data even if local state exists.
    */
   const getItemById = useCallback(async (id, refresh) => {
+    //@ts-ignore
     if (!hasRequested.current.byId[id] || refresh) {
+      //@ts-ignore
       hasRequested.current.byId[id] = true;
       const { data: payload } = await apiGetItemById(id);
-      dispatch([types.SUCCESSFUL_REQUEST, payload]);
+      dispatch({ type: 'SUCCESSFUL_REQUEST', payload: payload });
     }
   }, []);
 
@@ -55,7 +70,7 @@ export function ItemsProvider(props) {
    */
   const getItemsByUser = useCallback(async userId => {
     const { data: payload } = await apiGetItemsByUser(userId);
-    dispatch([types.SUCCESSFUL_REQUEST, payload]);
+    dispatch({ type: 'SUCCESSFUL_REQUEST', payload: payload });
   }, []);
 
   /**
@@ -64,9 +79,10 @@ export function ItemsProvider(props) {
   const deleteItemById = useCallback(
     async (id, userId) => {
       await apiDeleteItemById(id);
-      dispatch([types.SUCCESSFUL_DELETE, id]);
+      dispatch({ type: 'SUCCESSFUL_DELETE', payload: id });
       // Update items list after deletion.
       await getItemsByUser(userId);
+      //@ts-ignore
       delete hasRequested.current.byId[id];
     },
     [getItemsByUser]
@@ -77,7 +93,7 @@ export function ItemsProvider(props) {
    * There is no api request as apiDeleteItemById in items delete all related transactions
    */
   const deleteItemsByUserId = useCallback(userId => {
-    dispatch([types.DELETE_BY_USER, userId]);
+    dispatch({ type: 'DELETE_BY_USER', payload: userId });
   }, []);
 
   /**
@@ -110,20 +126,20 @@ export function ItemsProvider(props) {
 /**
  * @desc Handles updates to the Items state as dictated by dispatched actions.
  */
-function reducer(state, [type, payload]) {
-  switch (type) {
-    case types.SUCCESSFUL_REQUEST:
-      if (!payload.length) {
+function reducer(state: ItemsState, action: ItemsAction | any) {
+  switch (action.type) {
+    case 'SUCCESSFUL_REQUEST':
+      if (!action.payload.length) {
         return state;
       }
 
-      return { ...state, ...keyBy(payload, 'id') };
-    case types.SUCCESSFUL_DELETE:
-      return omit(state, [payload]);
-    case types.DELETE_BY_USER:
-      return omitBy(state, items => items.user_id === payload);
+      return { ...state, ...keyBy(action.payload, 'id') };
+    case 'SUCCESSFUL_DELETE':
+      return omit(state, [action.payload]);
+    case 'DELETE_BY_USER':
+      return omitBy(state, items => items.user_id === action.payload);
     default:
-      console.warn('unknown action: ', { type, payload });
+      console.warn('unknown action: ', action.type, action.payload);
       return state;
   }
 }

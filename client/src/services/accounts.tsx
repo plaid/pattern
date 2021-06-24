@@ -4,39 +4,53 @@ import React, {
   useMemo,
   useReducer,
   useCallback,
+  Dispatch,
+  ReactNode,
 } from 'react';
 import groupBy from 'lodash/groupBy';
 import keyBy from 'lodash/keyBy';
 import omitBy from 'lodash/omitBy';
+import { AccountType } from '../components/types';
 
 import {
   getAccountsByItem as apiGetAccountsByItem,
   getAccountsByUser as apiGetAccountsByUser,
 } from './api';
 
-const AccountsContext = createContext();
+interface AccountsState {
+  [key: string]: AccountType | any;
+}
 
-/**
- * @desc Enumerated action types
- */
-const types = {
-  SUCCESSFUL_GET: 0,
-  DELETE_BY_ITEM: 1,
-  DELETE_BY_USER: 2,
-};
+const initialState = {};
+type AccountsAction =
+  | {
+      type: 'SUCCESSFUL_GET';
+      payload: AccountType[];
+    }
+  | { type: 'DELETE_BY_ITEM'; payload: number }
+  | { type: 'DELETE_BY_USER'; payload: number };
+
+interface AccountsContextShape extends AccountsState {
+  dispatch: Dispatch<AccountsAction>;
+}
+const AccountsContext = createContext<AccountsContextShape>(
+  initialState as AccountsContextShape
+);
 
 /**
  * @desc Maintains the Accounts context state and provides functions to update that state.
  */
-export function AccountsProvider(props) {
-  const [accountsById, dispatch] = useReducer(reducer, {});
+export const AccountsProvider: React.FC<{ children: ReactNode }> = (
+  props: any
+) => {
+  const [accountsById, dispatch] = useReducer(reducer, initialState);
 
   /**
    * @desc Requests all Accounts that belong to an individual Item.
    */
   const getAccountsByItem = useCallback(async itemId => {
     const { data: payload } = await apiGetAccountsByItem(itemId);
-    dispatch([types.SUCCESSFUL_GET, payload]);
+    dispatch({ type: 'SUCCESSFUL_GET', payload: payload });
   }, []);
 
   /**
@@ -44,7 +58,7 @@ export function AccountsProvider(props) {
    */
   const getAccountsByUser = useCallback(async userId => {
     const { data: payload } = await apiGetAccountsByUser(userId);
-    dispatch([types.SUCCESSFUL_GET, payload]);
+    dispatch({ type: 'SUCCESSFUL_GET', payload: payload });
   }, []);
 
   /**
@@ -52,7 +66,7 @@ export function AccountsProvider(props) {
    * There is no api request as apiDeleteItemById in items delete all related transactions
    */
   const deleteAccountsByItemId = useCallback(itemId => {
-    dispatch([types.DELETE_BY_ITEM, itemId]);
+    dispatch({ type: 'DELETE_BY_ITEM', payload: itemId });
   }, []);
 
   /**
@@ -60,7 +74,7 @@ export function AccountsProvider(props) {
    * There is no api request as apiDeleteItemById in items delete all related transactions
    */
   const deleteAccountsByUserId = useCallback(userId => {
-    dispatch([types.DELETE_BY_USER, userId]);
+    dispatch({ type: 'DELETE_BY_USER', payload: userId });
   }, []);
 
   /**
@@ -89,27 +103,33 @@ export function AccountsProvider(props) {
   ]);
 
   return <AccountsContext.Provider value={value} {...props} />;
-}
+};
 
 /**
  * @desc Handles updates to the Accounts state as dictated by dispatched actions.
  */
-function reducer(state, [type, payload]) {
-  switch (type) {
-    case types.SUCCESSFUL_GET:
-      if (!payload.length) {
+function reducer(state: AccountsState, action: AccountsAction | any) {
+  switch (action.type) {
+    case 'SUCCESSFUL_GET':
+      if (!action.payload.length) {
         return state;
       }
       return {
         ...state,
-        ...keyBy(payload, 'id'),
+        ...keyBy(action.payload, 'id'),
       };
-    case types.DELETE_BY_ITEM:
-      return omitBy(state, transaction => transaction.item_id === payload);
-    case types.DELETE_BY_USER:
-      return omitBy(state, transaction => transaction.user_id === payload);
+    case 'DELETE_BY_ITEM':
+      return omitBy(
+        state,
+        transaction => transaction.item_id === action.payload
+      );
+    case 'DELETE_BY_USER':
+      return omitBy(
+        state,
+        transaction => transaction.user_id === action.payload
+      );
     default:
-      console.warn('unknown action: ', { type, payload });
+      console.warn('unknown action: ', action.type, action.payload);
       return state;
   }
 }

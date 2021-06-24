@@ -4,24 +4,39 @@ import React, {
   useMemo,
   useReducer,
   useCallback,
+  Dispatch,
 } from 'react';
+import { Institution } from 'plaid/dist/api';
 
 import { getInstitutionById as apiGetInstitutionById } from './api';
 
-const InstitutionsContext = createContext();
+interface InstitutionsById {
+  [key: string]: Institution;
+}
+interface InstitutionsState {
+  institutionsById: InstitutionsById;
+}
 
-/**
- * @desc Enumerated action types
- */
-const types = {
-  SUCCESSFUL_GET: 0,
+const initialState = {};
+type InstitutionsAction = {
+  type: 'SUCCESSFUL_GET';
+  payload: Institution;
 };
+
+interface InstitutionsContextShape extends InstitutionsState {
+  dispatch: Dispatch<InstitutionsAction>;
+  getInstitutionById: (id: string) => void;
+  formatLogoSrc: (src: string | null | undefined) => string;
+}
+const InstitutionsContext = createContext<InstitutionsContextShape>(
+  initialState as InstitutionsContextShape
+);
 
 /**
  * @desc Maintains the Institutions context state and provides functions to update that state.
  */
-export function InstitutionsProvider(props) {
-  const [institutionsById, dispatch] = useReducer(reducer, {});
+export function InstitutionsProvider(props: any) {
+  const [institutionsById, dispatch] = useReducer(reducer, initialState);
 
   /**
    * @desc Requests details for a single Institution.
@@ -29,7 +44,7 @@ export function InstitutionsProvider(props) {
   const getInstitutionById = useCallback(async id => {
     const { data: payload } = await apiGetInstitutionById(id);
     const institution = payload[0];
-    dispatch([types.SUCCESSFUL_GET, institution]);
+    dispatch({ type: 'SUCCESSFUL_GET', payload: institution });
   }, []);
 
   /**
@@ -53,19 +68,19 @@ export function InstitutionsProvider(props) {
 /**
  * @desc Handles updates to the Institutions state as dictated by dispatched actions.
  */
-function reducer(state, [type, payload]) {
-  switch (type) {
-    case types.SUCCESSFUL_GET:
-      if (!payload) {
+function reducer(state: InstitutionsById, action: InstitutionsAction) {
+  switch (action.type) {
+    case 'SUCCESSFUL_GET':
+      if (!action.payload) {
         return state;
       }
 
       return {
         ...state,
-        [payload.institution_id]: payload,
+        [action.payload.institution_id]: action.payload,
       };
     default:
-      console.warn('unknown action: ', { type, payload });
+      console.warn('unknown action: ', action.type, action.payload);
       return state;
   }
 }
@@ -88,6 +103,6 @@ export default function useInstitutions() {
 /**
  * @desc Prepends base64 encoded logo src for use in image tags
  */
-function formatLogoSrc(src) {
+function formatLogoSrc(src: string) {
   return src && `data:image/jpeg;base64,${src}`;
 }

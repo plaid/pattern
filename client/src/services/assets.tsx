@@ -12,10 +12,10 @@ import { getAssetsByUser as apiGetAssetsByUser } from './api';
 import { AssetType } from '../components/types';
 
 interface AssetsState {
-  assets: AssetType[];
+  assets: AssetType[] | null;
 }
 
-const initialState = { assets: [] };
+const initialState = { assets: null };
 
 type AssetsAction =
   | {

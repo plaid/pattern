@@ -11,6 +11,8 @@ import { TransactionsTable } from '.';
 interface Props {
   account: AccountType;
 }
+
+// TODO: update all components to look like this:
 // const ClientMetrics: React.FC<Props> = (props: Props) => ()
 
 // ClientMetrics.displayName = 'ClientMetrics';

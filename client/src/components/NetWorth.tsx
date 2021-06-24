@@ -10,69 +10,24 @@ interface Props {
   userId: number;
 }
 
-interface Depository {
-  checking: number;
-  savings: number;
-  cd: number;
-  'money market': number;
-}
-
-interface Investment {
-  ira: number;
-  '401k': number;
-}
-
-interface Loan {
-  student: number;
-  mortgage: number;
-}
-
-interface Credit {
-  'credit card': number;
-}
-
-type AccountTypes = Depository | Investment | Loan | Credit;
-interface BankAccountTypes {
-  [key: string]: AccountTypes;
-}
-
 export default function NetWorth(props: Props) {
-  const accountTypes: BankAccountTypes = {
-    depository: {
-      checking: 0,
-      savings: 0,
-      cd: 0,
-      'money market': 0,
-    },
-    investment: {
-      ira: 0,
-      '401k': 0,
-    },
-    loan: {
-      student: 52,
-      mortgage: 0,
-    },
-    credit: {
-      'credit card': 98,
-    },
-  };
-
-  //create accountTypes balances object
-
-  props.accounts.forEach(account => {
-    //@ts-ignore
-    accountTypes[account.type][account.subtype as keyof AccountTypes] +=
-      account.current_balance;
-  });
-
   // sums of account types
-  const addAllAccounts = (accountType: AccountTypes): number =>
-    Object.values(accountType).reduce((a: number, b: number) => a + b);
+  const addAllAccounts = (
+    accountSubtypes: Array<AccountType['subtype']>
+  ): number =>
+    props.accounts
+      .filter(a => accountSubtypes.includes(a.subtype))
+      .reduce((acc: number, val: AccountType) => acc + val.current_balance, 0);
 
-  const depository: number = addAllAccounts(accountTypes.depository);
-  const investment: number = addAllAccounts(accountTypes.investment);
-  const loan: number = addAllAccounts(accountTypes.loan);
-  const credit: number = addAllAccounts(accountTypes.credit);
+  const depository: number = addAllAccounts([
+    'checking',
+    'savings',
+    'cd',
+    'money market',
+  ]);
+  const investment: number = addAllAccounts(['ira', '401k']);
+  const loan: number = addAllAccounts(['student', 'mortgage']);
+  const credit: number = addAllAccounts(['credit card']);
 
   const personalAssetValue = props.personalAssets.reduce((a, b) => {
     return a + b.value;

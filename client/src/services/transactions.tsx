@@ -18,9 +18,10 @@ import {
   getTransactionsByItem as apiGetTransactionsByItem,
   getTransactionsByUser as apiGetTransactionsByUser,
 } from './api';
+import { Dictionary, identity } from 'lodash';
 
 interface TransactionsState {
-  [key: number]: TransactionType[] | any;
+  [transactionId: number]: TransactionType;
 }
 
 const initialState = {};
@@ -34,12 +35,13 @@ type TransactionsAction =
 
 interface TransactionsContextShape extends TransactionsState {
   dispatch: Dispatch<TransactionsAction>;
-  transactionsByAccount: TransactionType[];
+  transactionsByAccount: Dictionary<any>;
   getTransactionsByAccount: (accountId: number, refresh?: boolean) => void;
   deleteTransactionsByItemId: (itemId: number) => void;
   deleteTransactionsByUserId: (userId: number) => void;
-  transactionsByUser: TransactionType[];
+  transactionsByUser: Dictionary<any>;
   getTransactionsByUser: (userId: number) => void;
+  transactionsByItem: Dictionary<any>;
 }
 const TransactionsContext = createContext<TransactionsContextShape>(
   initialState as TransactionsContextShape
@@ -54,7 +56,9 @@ const TransactionsContext = createContext<TransactionsContextShape>(
 export function TransactionsProvider(props: any) {
   const [transactionsById, dispatch] = useReducer(reducer, initialState);
 
-  const hasRequested = useRef({
+  const hasRequested = useRef<{
+    byAccount: { [accountId: number]: boolean };
+  }>({
     byAccount: {},
   });
 
@@ -64,9 +68,7 @@ export function TransactionsProvider(props: any) {
    * A 'refresh' parameter can force a request for new data even if local state exists.
    */
   const getTransactionsByAccount = useCallback(async (accountId, refresh) => {
-    //@ts-ignore
     if (!hasRequested.current.byAccount[accountId] || refresh) {
-      //@ts-ignore
       hasRequested.current.byAccount[accountId] = true;
       const { data: payload } = await apiGetTransactionsByAccount(accountId);
       dispatch({ type: 'SUCCESSFUL_GET', payload: payload });
@@ -113,6 +115,7 @@ export function TransactionsProvider(props: any) {
     const allTransactions = Object.values(transactionsById);
 
     return {
+      dispatch,
       allTransactions,
       transactionsById,
       transactionsByAccount: groupBy(allTransactions, 'account_id'),
@@ -125,6 +128,7 @@ export function TransactionsProvider(props: any) {
       deleteTransactionsByUserId,
     };
   }, [
+    dispatch,
     transactionsById,
     getTransactionsByAccount,
     getTransactionsByItem,

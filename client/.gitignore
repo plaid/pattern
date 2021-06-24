@@ -24,4 +24,6 @@ yarn-error.log*
 
 # typescript
 
-*/dist/*
+src/components/dist/
+src/services/dist/
+src/hooks/dist/

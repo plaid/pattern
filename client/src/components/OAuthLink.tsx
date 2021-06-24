@@ -18,7 +18,7 @@ const OAuthLink = () => {
       setItemId(JSON.parse(oauthObject).itemId);
       setToken(JSON.parse(oauthObject).token);
     }
-  }, [userId, itemId, token]);
+  }, [oauthObject]);
 
   return (
     <>

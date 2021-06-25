@@ -53,24 +53,36 @@ export default function UserCard(props: Props) {
   return (
     <div className="box user-card__box">
       <div className=" card user-card">
-        <Touchable
-          className="user-card-clickable"
-          component={HashLink}
-          to={`/user/${props.user.id}#itemCards`}
+        <div
+          className="hoverable"
+          onMouseEnter={() => {
+            if (numOfItems > 0) {
+              setHovered(true);
+            }
+          }}
+          onMouseLeave={() => {
+            setHovered(false);
+          }}
         >
-          <div className="user-card__detail">
-            <UserDetails
-              hovered={hovered}
-              user={props.user}
-              numOfItems={numOfItems}
-            />
-          </div>
-        </Touchable>
+          <Touchable
+            className="user-card-clickable"
+            component={HashLink}
+            to={`/user/${props.user.id}#itemCards`}
+          >
+            <div className="user-card__detail">
+              <UserDetails
+                hovered={hovered}
+                user={props.user}
+                numOfItems={numOfItems}
+              />
+            </div>
+          </Touchable>
+        </div>
 
         <div className="user-card__buttons">
           {token != null && token.length > 0 && props.linkButton && (
             <LinkButton userId={props.user.id} token={token} itemId={null}>
-              Link an Item
+              Add a Bank
             </LinkButton>
           )}
           {props.removeButton && (

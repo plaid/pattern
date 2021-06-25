@@ -13,22 +13,18 @@ interface Props {
 const UserDetails = (props: Props) => (
   <>
     <div className="user-card__column-1">
-      <h3 className="heading">User_ID</h3>
-      <p className="value">{props.user.id}</p>
-    </div>
-    <div className="user-card__column-2">
-      <h3 className="heading">User_NAME</h3>
+      <h3 className="heading">User name</h3>
       <p className="value">{props.user.username}</p>
     </div>
-    <div className="user-card__column-3">
-      <h3 className="heading">CREATED_AT</h3>
+    <div className="user-card__column-2">
+      <h3 className="heading">Created onT</h3>
       <p className="value">{formatDate(props.user.created_at)}</p>
     </div>
-    <div className="user-card__column-4">
-      <h3 className="heading">LINKED_ITEMS</h3>
+    <div className="user-card__column-3">
+      <h3 className="heading">Number of banks connected</h3>
       <p className="value">
         {props.hovered ? 'View ' : ''}{' '}
-        {`${props.numOfItems} ${pluralize('item', props.numOfItems)}`}
+        {`${props.numOfItems} ${pluralize('bank', props.numOfItems)}`}
       </p>
     </div>
   </>

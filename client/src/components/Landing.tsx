@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import Button from 'plaid-threads/Button';
+// @ts-ignore
 import { useHistory } from 'react-router-dom';
 
 import { useUsers, useCurrentUser } from '../services';
@@ -26,16 +27,16 @@ export default function Landing() {
   const returnToCurrentUser = () => {
     history.push(`/user/${userState.currentUser.id}`);
   };
-
+  console.log(userState);
   return (
     <div>
       <Banner initialSubheading />
-      If you don't have an account, please click "Add New User." Once created,
+      If you don't have an account, please click "Create Account". Once created,
       you can add as many example Link items as you like.
       <div className="btnsContainer">
         <Login />
         <Button className="btnWithMargin" onClick={toggleForm} centered inline>
-          Add New User
+          Create Account
         </Button>
         {userState.currentUser.username != null && (
           <Button

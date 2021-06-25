@@ -14,7 +14,7 @@ export default function Landing() {
   const history = useHistory();
 
   useEffect(() => {
-    getUsers();
+    getUsers(true);
   }, [getUsers, usersById]);
 
   useEffect(() => {

@@ -10,7 +10,7 @@ const UserList = () => {
   const [users, setUsers] = useState<UserType[]>([]);
 
   useEffect(() => {
-    getUsers();
+    getUsers(true);
   }, [getUsers, usersById]);
 
   useEffect(() => {

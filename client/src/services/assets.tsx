@@ -9,12 +9,13 @@ import React, {
 import { toast } from 'react-toastify';
 import { addAsset as apiAddAsset } from './api';
 import { getAssetsByUser as apiGetAssetsByUser } from './api';
+import { AssetType } from '../components/types';
 
 interface AssetsState {
-  assets: any;
+  assets: AssetType[] | null;
 }
 
-const initialState = { assets: [] };
+const initialState = { assets: null };
 
 type AssetsAction =
   | {

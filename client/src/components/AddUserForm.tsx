@@ -20,7 +20,7 @@ const AddUserForm = (props: Props) => {
   };
 
   useEffect(() => {
-    getUsers();
+    getUsers(true);
   }, [addNewUser, getUsers]);
 
   return (

@@ -27,3 +27,4 @@ yarn-error.log*
 src/components/dist/
 src/services/dist/
 src/hooks/dist/
+src/util/dist/

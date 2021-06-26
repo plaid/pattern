@@ -8,20 +8,15 @@ import { Login, Banner, AddUserForm } from '.';
 import { useBoolean } from '../hooks';
 
 export default function Landing() {
-  const { getUsers, usersById } = useUsers();
   const { userState, setCurrentUser } = useCurrentUser();
   const [isAdding, hideForm, toggleForm] = useBoolean(false);
   const history = useHistory();
 
   useEffect(() => {
-    getUsers(true);
-  }, [getUsers, usersById]);
-
-  useEffect(() => {
     if (userState.newUser != null) {
       setCurrentUser(userState.newUser);
     }
-  }, [getUsers, usersById, setCurrentUser, userState.newUser]);
+  }, [setCurrentUser, userState.newUser]);
 
   const returnToCurrentUser = () => {
     history.push(`/user/${userState.currentUser.id}`);

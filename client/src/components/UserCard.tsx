@@ -11,41 +11,41 @@ interface Props {
   user: UserType;
   removeButton: boolean;
   linkButton: boolean;
+  userId: number;
 }
 
 export default function UserCard(props: Props) {
   const [numOfItems, setNumOfItems] = useState(0);
   const [token, setToken] = useState('');
   const [hovered, setHovered] = useState(false);
-  //@ts-ignore
   const { itemsByUser, getItemsByUser } = useItems();
   const { deleteUserById } = useUsers();
   const { generateLinkToken, linkTokens } = useLink();
 
   // update data store with the user's items
   useEffect(() => {
-    if (props.user.id) {
-      getItemsByUser(props.user.id, true);
+    if (props.userId) {
+      getItemsByUser(props.userId, true);
     }
-  }, [getItemsByUser, props.user.id]);
+  }, [getItemsByUser, props.userId]);
 
   // update no of items from data store
   useEffect(() => {
-    if (itemsByUser[props.user.id] != null) {
-      setNumOfItems(itemsByUser[props.user.id].length);
+    if (itemsByUser[props.userId] != null) {
+      setNumOfItems(itemsByUser[props.userId].length);
     } else {
       setNumOfItems(0);
     }
-  }, [itemsByUser, props.user.id]);
+  }, [itemsByUser, props.userId]);
 
   // creates new link token upon change in user or number of items
   useEffect(() => {
-    generateLinkToken(props.user.id, null); // itemId is null
-  }, [props.user.id, numOfItems, generateLinkToken]);
+    generateLinkToken(props.userId, null); // itemId is null
+  }, [props.userId, numOfItems, generateLinkToken]);
 
   useEffect(() => {
-    setToken(linkTokens.byUser[props.user.id]);
-  }, [linkTokens, props.user.id, numOfItems]);
+    setToken(linkTokens.byUser[props.userId]);
+  }, [linkTokens, props.userId, numOfItems]);
 
   const handleDeleteUser = () => {
     deleteUserById(props.user.id); // this will delete all items associated with a user
@@ -67,7 +67,7 @@ export default function UserCard(props: Props) {
           <Touchable
             className="user-card-clickable"
             component={HashLink}
-            to={`/user/${props.user.id}#itemCards`}
+            to={`/user/${props.userId}#itemCards`}
           >
             <div className="user-card__detail">
               <UserDetails
@@ -81,7 +81,7 @@ export default function UserCard(props: Props) {
 
         <div className="user-card__buttons">
           {token != null && token.length > 0 && props.linkButton && (
-            <LinkButton userId={props.user.id} token={token} itemId={null}>
+            <LinkButton userId={props.userId} token={token} itemId={null}>
               Add a Bank
             </LinkButton>
           )}

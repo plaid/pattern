@@ -11,7 +11,7 @@ const UserList = () => {
 
   useEffect(() => {
     getUsers(true);
-  }, []);
+  }, [getUsers]);
 
   useEffect(() => {
     setUsers(allUsers);

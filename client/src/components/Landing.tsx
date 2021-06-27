@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import Button from 'plaid-threads/Button';
 import { useHistory } from 'react-router-dom';
 
-import { useUsers, useCurrentUser } from '../services';
+import { useCurrentUser } from '../services';
 import { Login, Banner, AddUserForm } from '.';
 
 import { useBoolean } from '../hooks';

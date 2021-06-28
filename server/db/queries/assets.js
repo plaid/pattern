@@ -46,7 +46,7 @@ const retrieveAssetsByUser = async userId => {
  * Removes asset by asset id.
  *to
  *
- * @param {string[]} id the desired asset be deleted.
+ * @param {number} id the desired asset be deleted.
  */
 
 const deleteAssetByAssetId = async assetId => {

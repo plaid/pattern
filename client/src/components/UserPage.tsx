@@ -149,7 +149,7 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
           <div>Error Message: {linkTokens.error.error_message}</div>
         </Callout>
       )}
-      <UserCard user={user} removeButton={false} linkButton />
+      <UserCard user={user} userId={userId} removeButton={false} linkButton />
       {numOfItems > 0 && (
         <>
           <NetWorth

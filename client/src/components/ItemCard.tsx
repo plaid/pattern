@@ -48,8 +48,8 @@ const ItemCard = (props: Props) => {
 
   useEffect(() => {
     console.log(accountsByItem);
-    // const itemAccounts: AccountType = accountsByItem[id];
-    // setAccounts(itemAccounts || []);
+    const itemAccounts: AccountType[] = accountsByItem[id];
+    setAccounts(itemAccounts || []);
   }, [accountsByItem, id]);
 
   useEffect(() => {

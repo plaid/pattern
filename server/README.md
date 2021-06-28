@@ -24,9 +24,9 @@ Upon receipt of a transactions webhook a call will be made to Plaid's transactio
 
 ### Testing OAuth
 
-A redirect_uri parameter is included in the linkTokenCreate call and set in this sample app to the PLAID_SANDBOX_REDIRECT_URI you have set in the .env file (`http://localhost:3000/oauth-link`). This is the page that the user will be redirected to upon completion of the OAuth flow at their OAuth institution. When running in Production or Development, you will need to use an `https://` redirect URI, but a localhost http URI will work for Sandbox.
+A redirect_uri parameter is included in the linkTokenCreate call and set in this sample app to the PLAID_SANDBOX_REDIRECT_URI you have set in the .env file (`http://localhost:3001/oauth-link`). This is the page that the user will be redirected to upon completion of the OAuth flow at their OAuth institution. When running in Production or Development, you will need to use an `https://` redirect URI, but a localhost http URI will work for Sandbox.
 
-You will also need to configure `http://localhost:3000/oauth-link` as an allowed redirect URI for your client ID through the [Plaid developer dashboard](https://dashboard.plaid.com/team/api).
+You will also need to configure `http://localhost:3001/oauth-link` as an allowed redirect URI for your client ID through the [Plaid developer dashboard](https://dashboard.plaid.com/team/api).
 
 To test the OAuth flow, choose 'Playtypus OAuth Bank' from the list of financial instutions in Plaid Link.
 

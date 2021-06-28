@@ -11,7 +11,7 @@ const UserList = () => {
 
   useEffect(() => {
     getUsers(true);
-  }, [getUsers, usersById]);
+  }, [getUsers]);
 
   useEffect(() => {
     setUsers(allUsers);
@@ -24,7 +24,7 @@ const UserList = () => {
       <div>
         {users.map(user => (
           <div key={user.id}>
-            <UserCard user={user} removeButton linkButton={false} />
+            <UserCard user={user} userId={0} removeButton linkButton={false} />
           </div>
         ))}
       </div>

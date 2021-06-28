@@ -99,11 +99,11 @@ const ItemCard = (props: Props) => {
             )}
           </div>
           <div className="item-card__column-3">
-            <h3 className="heading">ITEM_ID</h3>
+            <h3 className="heading">Bank ID</h3>
             <p className="value">{id}</p>
           </div>
           <div className="item-card__column-4">
-            <h3 className="heading">LAST_UPDATED</h3>
+            <h3 className="heading">LAST UPDATED</h3>
             <p className="value">
               {diffBetweenCurrentTime(props.item.updated_at)}
             </p>

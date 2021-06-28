@@ -55,7 +55,7 @@ export function CurrentUserProvider(props: any) {
         const { data: payload } = await apiGetLoginUser(username);
         if (payload != null) {
           toast.success(`Successful login.  Welcome back ${username}`);
-          dispatch({ type: 'SUCCESSFUL_GET', payload: payload });
+          dispatch({ type: 'SUCCESSFUL_GET', payload: payload[0] });
           history.push(`/user/${payload[0].id}`);
         } else {
           toast.error(`Username ${username} is invalid.  Try again. `);

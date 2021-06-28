@@ -21,7 +21,7 @@ import {
 } from './api';
 
 interface UsersState {
-  [id: number]: UserType;
+  [key: string]: UserType | any;
 }
 
 const initialState = {};
@@ -34,12 +34,6 @@ type UsersAction =
 
 interface UsersContextShape extends UsersState {
   dispatch: Dispatch<UsersAction>;
-  addNewUser: (username: string) => void;
-  getUsers: (refresh: boolean) => void;
-  getUserById: (id: number, refresh: boolean) => void;
-  deleteUserById: (id: number) => void;
-  usersById: { [id: number]: UserType };
-  allUsers: UserType[];
 }
 const UsersContext = createContext<UsersContextShape>(
   initialState as UsersContextShape

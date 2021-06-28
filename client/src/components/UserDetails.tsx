@@ -17,7 +17,7 @@ const UserDetails = (props: Props) => (
       <p className="value">{props.user.username}</p>
     </div>
     <div className="user-card__column-2">
-      <h3 className="heading">Created onT</h3>
+      <h3 className="heading">Created on</h3>
       <p className="value">{formatDate(props.user.created_at)}</p>
     </div>
     <div className="user-card__column-3">

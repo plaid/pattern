@@ -1,5 +1,4 @@
 import React from 'react';
-import Button from 'plaid-threads/Button';
 import IconButton from 'plaid-threads/IconButton';
 import Trash from 'plaid-threads/Icons/Trash';
 
@@ -70,17 +69,20 @@ export default function NetWorth(props: Props) {
             <div className="data">
               <p className="title">Assets</p>
               <p>{''}</p>
+              <p>{''}</p>
               <p className="dataItem">Cash</p>{' '}
               <p className="dataItem">{currencyFilter(depository)}</p>
+              <p>{''}</p>
               <p className="dataItem">Investment</p>
               <p className="dataItem">{currencyFilter(investment)}</p>
+              <p>{''}</p>
             </div>
             <div className="personalAssets">
               {props.personalAssets.map(asset => (
-                <div className="asset">
+                <div className="personalAsset">
                   <p className="dataItem">{asset.description}</p>
-                  <p className="dataItem deleteAsset">
-                    {currencyFilter(asset.value)}
+                  <p className="dataItem">{currencyFilter(asset.value)}</p>
+                  <p>
                     <IconButton
                       accessibilityLabel="Navigation"
                       icon={<Trash />}
@@ -101,10 +103,13 @@ export default function NetWorth(props: Props) {
             <div className="data">
               <p className="title">Liabilities</p>
               <p>{''}</p>
+              <p>{''}</p>
               <p className="dataItem">Credit Cards</p>{' '}
               <p className="dataItem">{currencyFilter(credit)}</p>
+              <p>{''}</p>
               <p className="dataItem">Loans</p>
               <p className="dataItem">{currencyFilter(loan)}</p>
+              <p>{''}</p>
             </div>
           </div>
         </div>

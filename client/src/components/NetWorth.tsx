@@ -1,8 +1,12 @@
 import React from 'react';
+import Button from 'plaid-threads/Button';
+import IconButton from 'plaid-threads/IconButton';
+import Trash from 'plaid-threads/Icons/Trash';
 
 import { currencyFilter, pluralize } from '../util';
 import { Asset } from '.';
 import { AccountType, AssetType } from './types';
+import { useAssets } from '../services';
 interface Props {
   numOfItems: number;
   accounts: AccountType[];
@@ -11,6 +15,7 @@ interface Props {
 }
 
 export default function NetWorth(props: Props) {
+  const { deleteAssetByAssetId } = useAssets();
   // sums of account types
   const addAllAccounts = (
     accountSubtypes: Array<AccountType['subtype']>
@@ -35,6 +40,12 @@ export default function NetWorth(props: Props) {
 
   const assets = depository + investment + personalAssetValue;
   const liabilities = loan + credit;
+
+  const handleDelete = (assetId: number, userId: number) => {
+    deleteAssetByAssetId(assetId, userId);
+  };
+
+  console.log(props.personalAssets);
 
   return (
     <div className="netWorthContainer">
@@ -63,11 +74,22 @@ export default function NetWorth(props: Props) {
               <p className="dataItem">{currencyFilter(depository)}</p>
               <p className="dataItem">Investment</p>
               <p className="dataItem">{currencyFilter(investment)}</p>
+            </div>
+            <div className="personalAssets">
               {props.personalAssets.map(asset => (
-                <>
+                <div className="asset">
                   <p className="dataItem">{asset.description}</p>
-                  <p className="dataItem">{currencyFilter(asset.value)}</p>
-                </>
+                  <p className="dataItem deleteAsset">
+                    {currencyFilter(asset.value)}
+                    <IconButton
+                      accessibilityLabel="Navigation"
+                      icon={<Trash />}
+                      onClick={() => {
+                        handleDelete(asset.id, props.userId);
+                      }}
+                    />
+                  </p>
+                </div>
               ))}
             </div>
           </div>

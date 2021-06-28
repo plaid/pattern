@@ -448,6 +448,15 @@ net worth
   }
 }
 
+.asset {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  .deleteAsset {
+    display: flex;
+    justify-content: space-between;
+  }
+}
+
 /*
 
 Monthly Spending

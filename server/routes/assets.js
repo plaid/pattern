@@ -3,7 +3,11 @@
  */
 
 const express = require('express');
-const { retrieveAssetsByUser, createAsset } = require('../db/queries');
+const {
+  retrieveAssetsByUser,
+  createAsset,
+  deleteAssetByAssetId,
+} = require('../db/queries');
 const { asyncWrapper } = require('../middleware');
 
 const router = express.Router();
@@ -36,6 +40,21 @@ router.get(
     const assets = await retrieveAssetsByUser(userId);
 
     res.json(assets);
+  })
+);
+
+/**
+ * Deletes an asset by its id
+ *
+ * @param {string} assetId the ID of the asset.
+ */
+router.delete(
+  '/:assetId',
+  asyncWrapper(async (req, res) => {
+    const { assetId } = req.params;
+    await deleteAssetByAssetId(assetId);
+
+    res.sendStatus(204);
   })
 );
 

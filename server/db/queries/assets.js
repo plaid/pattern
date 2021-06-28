@@ -42,7 +42,23 @@ const retrieveAssetsByUser = async userId => {
   return assets;
 };
 
+/**
+ * Removes asset by asset id.
+ *to
+ *
+ * @param {string[]} id the desired asset be deleted.
+ */
+
+const deleteAssetByAssetId = async assetId => {
+  const query = {
+    text: 'DELETE FROM assets_table WHERE id = $1;',
+    values: [assetId],
+  };
+  await db.query(query);
+};
+
 module.exports = {
   createAsset,
   retrieveAssetsByUser,
+  deleteAssetByAssetId,
 };

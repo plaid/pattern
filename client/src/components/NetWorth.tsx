@@ -44,8 +44,6 @@ export default function NetWorth(props: Props) {
     deleteAssetByAssetId(assetId, userId);
   };
 
-  console.log(props.personalAssets);
-
   return (
     <div className="netWorthContainer">
       <h2 className="netWorthHeading">Net Worth</h2>

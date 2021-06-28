@@ -108,7 +108,6 @@ function reducer(state: AssetsState, action: AssetsAction | any) {
       return {
         ...state,
       };
-
     default:
       console.warn('unknown action: ', action.type, action.payload);
       return state;

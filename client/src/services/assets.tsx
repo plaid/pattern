@@ -9,6 +9,7 @@ import React, {
 import { toast } from 'react-toastify';
 import { addAsset as apiAddAsset } from './api';
 import { getAssetsByUser as apiGetAssetsByUser } from './api';
+import { deleteAssetByAssetId as apiDeleteAssetByAssetId } from './api';
 import { AssetType } from '../components/types';
 
 interface AssetsState {
@@ -29,6 +30,7 @@ interface AssetsContextShape extends AssetsState {
   addAsset: (userId: number, description: string, value: number) => void;
   assetsByUser: AssetsState;
   getAssetsByUser: (userId: number) => void;
+  deleteAssetByAssetId: (assetId: number, userId: number) => void;
 }
 const AssetsContext = createContext<AssetsContextShape>(
   initialState as AssetsContextShape
@@ -70,13 +72,25 @@ export function AssetsProvider(props: any) {
     [getAssetsByUser]
   );
 
+  const deleteAssetByAssetId = useCallback(
+    async (assetId, userId) => {
+      try {
+        await apiDeleteAssetByAssetId(assetId);
+        await getAssetsByUser(userId);
+      } catch (err) {
+        console.log(err);
+      }
+    },
+    [getAssetsByUser]
+  );
   const value = useMemo(() => {
     return {
       assetsByUser,
       addAsset,
       getAssetsByUser,
+      deleteAssetByAssetId,
     };
-  }, [assetsByUser, addAsset, getAssetsByUser]);
+  }, [assetsByUser, addAsset, getAssetsByUser, deleteAssetByAssetId]);
 
   return <AssetsContext.Provider value={value} {...props} />;
 }
@@ -94,7 +108,6 @@ function reducer(state: AssetsState, action: AssetsAction | any) {
       return {
         ...state,
       };
-
     default:
       console.warn('unknown action: ', action.type, action.payload);
       return state;

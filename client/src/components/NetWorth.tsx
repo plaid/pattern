@@ -1,8 +1,11 @@
 import React from 'react';
+import IconButton from 'plaid-threads/IconButton';
+import Trash from 'plaid-threads/Icons/Trash';
 
 import { currencyFilter, pluralize } from '../util';
 import { Asset } from '.';
 import { AccountType, AssetType } from './types';
+import { useAssets } from '../services';
 interface Props {
   numOfItems: number;
   accounts: AccountType[];
@@ -11,6 +14,7 @@ interface Props {
 }
 
 export default function NetWorth(props: Props) {
+  const { deleteAssetByAssetId } = useAssets();
   // sums of account types
   const addAllAccounts = (
     accountSubtypes: Array<AccountType['subtype']>
@@ -36,6 +40,10 @@ export default function NetWorth(props: Props) {
   const assets = depository + investment + personalAssetValue;
   const liabilities = loan + credit;
 
+  const handleDelete = (assetId: number, userId: number) => {
+    deleteAssetByAssetId(assetId, userId);
+  };
+
   return (
     <div className="netWorthContainer">
       <h2 className="netWorthHeading">Net Worth</h2>
@@ -57,17 +65,32 @@ export default function NetWorth(props: Props) {
             </div>
 
             <div className="data">
+              {/* 3 columns */}
               <p className="title">Assets</p>
+              <p>{''}</p>
               <p>{''}</p>
               <p className="dataItem">Cash</p>{' '}
               <p className="dataItem">{currencyFilter(depository)}</p>
+              <p>{''}</p>
               <p className="dataItem">Investment</p>
               <p className="dataItem">{currencyFilter(investment)}</p>
+              <p>{''}</p>
+            </div>
+            <div className="personalAssets">
               {props.personalAssets.map(asset => (
-                <>
+                <div className="personalAsset">
                   <p className="dataItem">{asset.description}</p>
                   <p className="dataItem">{currencyFilter(asset.value)}</p>
-                </>
+                  <p>
+                    <IconButton
+                      accessibilityLabel="Navigation"
+                      icon={<Trash />}
+                      onClick={() => {
+                        handleDelete(asset.id, props.userId);
+                      }}
+                    />
+                  </p>
+                </div>
               ))}
             </div>
           </div>
@@ -77,12 +100,16 @@ export default function NetWorth(props: Props) {
             <h4 className="dollarsHeading">{currencyFilter(liabilities)}</h4>
 
             <div className="data">
+              {/* 3 columns */}
               <p className="title">Liabilities</p>
+              <p>{''}</p>
               <p>{''}</p>
               <p className="dataItem">Credit Cards</p>{' '}
               <p className="dataItem">{currencyFilter(credit)}</p>
+              <p>{''}</p>
               <p className="dataItem">Loans</p>
               <p className="dataItem">{currencyFilter(loan)}</p>
+              <p>{''}</p>
             </div>
           </div>
         </div>

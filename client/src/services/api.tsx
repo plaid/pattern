@@ -25,6 +25,8 @@ export const getLoginUser = (username: string) =>
 export const addAsset = (userId: number, description: string, value: number) =>
   api.post('/assets', { userId, description, value });
 export const getAssetsByUser = (userId: number) => api.get(`/assets/${userId}`);
+export const deleteAssetByAssetId = (assetId: number) =>
+  api.delete(`/assets/${assetId}`);
 
 // users
 export const getUsers = () => api.get('/users');

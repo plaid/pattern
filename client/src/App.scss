@@ -435,9 +435,10 @@ net worth
   margin-top: 0;
 }
 
-.data {
+.data,
+.personalAsset {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 5fr 5fr 1fr;
 
   .title {
     font-weight: bold;

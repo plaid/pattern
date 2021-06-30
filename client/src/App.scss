@@ -466,3 +466,8 @@ Monthly Spending
 .recharts-wrapper {
   margin: 0 2 * $unit;
 }
+
+.spendingInsightData {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}

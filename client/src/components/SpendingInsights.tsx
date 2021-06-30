@@ -72,7 +72,7 @@ export default function SpendingInsights(props: Props) {
         <div className="userDataBox">
           <div className="holdingsList">
             <h4 className="holdingsHeading">Top 5 Vendors</h4>
-            <div className="data">
+            <div className="spendingInsightData">
               <p className="title">Vendor</p> <p className="title">Amount</p>
               {sortedNames.map((vendor: any[]) => (
                 <>

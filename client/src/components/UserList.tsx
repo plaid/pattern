@@ -26,9 +26,8 @@ const UserList = () => {
           <div key={user.id}>
             <UserCard
               user={user}
-              userId={0}
+              userId={user.id}
               removeButton
-              numOfItems={0}
               linkButton={false}
             />
           </div>

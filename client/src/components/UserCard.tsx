@@ -12,6 +12,7 @@ interface Props {
   removeButton: boolean;
   linkButton: boolean;
   userId: number;
+  numOfItems: number;
 }
 
 export default function UserCard(props: Props) {
@@ -80,11 +81,14 @@ export default function UserCard(props: Props) {
         </div>
 
         <div className="user-card__buttons">
-          {token != null && token.length > 0 && props.linkButton && (
-            <LinkButton userId={props.userId} token={token} itemId={null}>
-              Add a Bank
-            </LinkButton>
-          )}
+          {token != null &&
+            token.length > 0 &&
+            props.linkButton &&
+            numOfItems === 0 && (
+              <LinkButton userId={props.userId} token={token} itemId={null}>
+                Add a Bank
+              </LinkButton>
+            )}
           {props.removeButton && (
             <Button
               className="remove"

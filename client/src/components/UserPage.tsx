@@ -149,7 +149,13 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
           <div>Error Message: {linkTokens.error.error_message}</div>
         </Callout>
       )}
-      <UserCard user={user} userId={userId} removeButton={false} linkButton />
+      <UserCard
+        user={user}
+        userId={userId}
+        removeButton={false}
+        linkButton
+        numOfItems={numOfItems}
+      />
       {numOfItems > 0 && (
         <>
           <NetWorth
@@ -158,7 +164,10 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
             personalAssets={assets}
             userId={userId}
           />
-          <SpendingInsights transactions={transactions} />
+          <SpendingInsights
+            transactions={transactions}
+            numOfItems={numOfItems}
+          />
           <div className="item__header">
             <div>
               <h2 className="item__header-heading">

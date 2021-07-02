@@ -133,6 +133,9 @@ export default function NetWorth(props: Props) {
                   <h4 className="dollarsHeading">{currencyFilter(assets)}</h4>
                   <Asset userId={props.userId} />
                 </div>
+                <div className="data">
+                  <p className="title">Assets</p>
+                </div>
                 <div className="personalAssets">
                   {props.personalAssets.map(asset => (
                     <div className="personalAsset">

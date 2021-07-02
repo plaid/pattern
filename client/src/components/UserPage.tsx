@@ -174,9 +174,24 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
             assetsOnly={false}
           />
           <SpendingInsights
-            transactions={transactions}
             numOfItems={numOfItems}
+            transactions={transactions}
           />
+        </>
+      )}
+      {numOfItems === 0 && transactions.length === 0 && assets.length > 0 && (
+        <>
+          <NetWorth
+            accounts={accounts}
+            numOfItems={numOfItems}
+            personalAssets={assets}
+            userId={userId}
+            assetsOnly
+          />
+        </>
+      )}
+      {numOfItems > 0 && (
+        <>
           <div className="item__header">
             <div>
               <h2 className="item__header-heading">

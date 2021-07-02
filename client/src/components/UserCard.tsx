@@ -78,26 +78,30 @@ export default function UserCard(props: Props) {
             </div>
           </Touchable>
         </div>
-
-        <div className="user-card__buttons">
-          {token != null && token.length > 0 && props.linkButton && (
-            <LinkButton userId={props.userId} token={token} itemId={null}>
-              Add a Bank
-            </LinkButton>
-          )}
-          {props.removeButton && (
-            <Button
-              className="remove"
-              onClick={handleDeleteUser}
-              small
-              inline
-              centered
-              secondary
-            >
-              Delete user
-            </Button>
-          )}
-        </div>
+        {(props.removeButton || (props.linkButton && numOfItems === 0)) && (
+          <div className="user-card__buttons">
+            {token != null &&
+              token.length > 0 &&
+              props.linkButton &&
+              numOfItems === 0 && (
+                <LinkButton userId={props.userId} token={token} itemId={null}>
+                  Add a Bank
+                </LinkButton>
+              )}
+            {props.removeButton && (
+              <Button
+                className="remove"
+                onClick={handleDeleteUser}
+                small
+                inline
+                centered
+                secondary
+              >
+                Delete user
+              </Button>
+            )}
+          </div>
+        )}
       </div>
     </div>
   );

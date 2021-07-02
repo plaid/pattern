@@ -158,7 +158,10 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
             personalAssets={assets}
             userId={userId}
           />
-          <SpendingInsights transactions={transactions} />
+          <SpendingInsights
+            transactions={transactions}
+            numOfItems={numOfItems}
+          />
           <div className="item__header">
             <div>
               <h2 className="item__header-heading">

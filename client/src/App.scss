@@ -161,8 +161,7 @@ UserCard
   border-bottom: $border;
 }
 .user-card {
-  display: grid;
-  grid-template-columns: 6fr 1fr;
+  display: flex;
 }
 
 .user-card-clickable {
@@ -170,20 +169,23 @@ UserCard
 }
 
 .user-card__detail {
-  width: 100%;
-  padding-right: 12 * $unit;
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
+  display: flex;
+  justify-content: space-around;
+  margin-left: 3 * $unit;
 }
 
 .hoverable {
   width: 100%;
+  flex: 3;
+  display: flex;
 }
 
 .user-card__buttons {
+  padding-left: 3 * $unit;
   display: grid;
   grid-row-gap: $unit;
   justify-content: center;
+  flex: 1;
 }
 
 /*
@@ -454,15 +456,23 @@ net worth
 Monthly Spending
 
 */
+
 .monthlySpendingContainer {
   display: flex;
 }
 
 .monthlySpendingHeading {
-  margin-top: 10 * $unit;
-  margin-bottom: 7 * $unit;
+  margin-top: 7 * $unit;
+  margin-bottom: 0;
 }
 
+.monthlySpendingText {
+  margin-bottom: 4 * $unit;
+  font-family: $font-stack-monospace;
+  font-size: 2 * $unit;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
 .recharts-wrapper {
   margin: 0 2 * $unit;
 }

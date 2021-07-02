@@ -24,7 +24,12 @@ const UserList = () => {
       <div>
         {users.map(user => (
           <div key={user.id}>
-            <UserCard user={user} userId={0} removeButton linkButton={false} />
+            <UserCard
+              user={user}
+              userId={user.id}
+              removeButton
+              linkButton={false}
+            />
           </div>
         ))}
       </div>

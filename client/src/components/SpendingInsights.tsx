@@ -1,11 +1,12 @@
 import React, { useMemo } from 'react';
 
-import { currencyFilter } from '../util';
+import { currencyFilter, pluralize } from '../util';
 import { CategoriesChart } from '.';
 import { TransactionType } from './types';
 
 interface Props {
   transactions: TransactionType[];
+  numOfItems: number;
 }
 
 interface Categories {
@@ -65,6 +66,10 @@ export default function SpendingInsights(props: Props) {
   return (
     <div>
       <h2 className="monthlySpendingHeading">Monthly Spending</h2>
+      <h4 className="tableSubHeading">A breakdown of your monthly spending</h4>
+      <div className="monthlySpendingText">{`Monthly breakdown across ${
+        props.numOfItems
+      } bank ${pluralize('account', props.numOfItems)}`}</div>
       <div className="monthlySpendingContainer">
         <div className="userDataBox">
           <CategoriesChart categories={categoriesObject} />

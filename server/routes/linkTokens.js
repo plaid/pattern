@@ -51,7 +51,6 @@ router.post(
         redirect_uri: redirect_uri,
       };
       const createResponse = await plaid.linkTokenCreate(linkTokenParams);
-      console.log('link response', createResponse.data);
       res.json(createResponse.data);
     } catch (err) {
       console.log('error while fetching client token', err.response.data);

@@ -62,6 +62,7 @@ export function LinkProvider(props: any) {
     const linkTokenResponse = await getLinkToken(userId, itemId);
     if (linkTokenResponse.data.link_token) {
       const token = await linkTokenResponse.data.link_token;
+      console.log('success', linkTokenResponse.data);
 
       if (itemId != null) {
         dispatch({
@@ -74,6 +75,7 @@ export function LinkProvider(props: any) {
       }
     } else {
       dispatch({ type: 'LINK_TOKEN_ERROR', error: linkTokenResponse.data });
+      console.log('error', linkTokenResponse.data);
     }
   }, []);
 

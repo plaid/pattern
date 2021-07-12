@@ -17,14 +17,16 @@ export default function CategoriesChart(props: Props) {
   }
 
   const COLORS = [
-    colors.blue900,
-    colors.green900,
     colors.yellow900,
     colors.red900,
+    colors.blue900,
+    colors.green900,
+    colors.black1000,
+    colors.purple600,
   ];
 
   const renderLabel = (value: any) => {
-    return `$${value.value}`;
+    return `$${value.value.toLocaleString()}`;
   };
 
   return (

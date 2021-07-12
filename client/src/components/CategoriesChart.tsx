@@ -23,6 +23,10 @@ export default function CategoriesChart(props: Props) {
     colors.red900,
   ];
 
+  const renderLabel = (value: any) => {
+    return `$${value.value}`;
+  };
+
   return (
     <div className="holdingsList">
       <h4 className="holdingsHeading">Spending Categories</h4>
@@ -34,7 +38,7 @@ export default function CategoriesChart(props: Props) {
           cy="50%"
           isAnimationActive={false}
           paddingAngle={5}
-          label
+          label={renderLabel}
           innerRadius={70}
           outerRadius={90}
           dataKey="value"

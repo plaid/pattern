@@ -49,10 +49,6 @@ All available commands can be seen by calling `make help`.
 ## Architecture
 
 As a modern full-stack application, Pattern consists of multiple services handling different segments of the stack, as described in the following sections:
-Plaid Pattern - Client
-Plaid Pattern - Server
-Plaid Pattern - Databse
-Plaid Pattern - ngrok
 
 -   [`database`][database-readme] runs a [PostgreSQL][postgres] database
 -   [`server`][server-readme] runs an application back-end server using [NodeJS] and [Express]
@@ -219,10 +215,10 @@ See [`docs/troubleshooting.md`][troubleshooting].
 [plaid-oauth]: https://plaid.com/docs/link/oauth/#introduction-to-oauth
 [plaid-link-update-mode]: https://plaid.com/docs/link/update-mode/
 [react]: https://reactjs.org/
-[database-readme]: ../database/README.md
+[database-readme]: #plaid-pattern---database
 [expressjs]: http://expressjs.com/
 [items-routes]: routes/items.js
-[ngrok-readme]: ../ngrok/README.md
+[ngrok-readme]: #plaid-pattern---ngrok
 [node-pg]: https://github.com/brianc/node-postgres
 [nodejs]: https://nodejs.org/en/
 [plaid-node]: https://github.com/plaid/plaid-node
@@ -232,12 +228,10 @@ See [`docs/troubleshooting.md`][troubleshooting].
 [vscode-debugging]: https://code.visualstudio.com/docs/editor/debugging
 [client-img]: docs/pattern_screenshot.jpg
 [client-readme]: #plaid-pattern---client
-[database-readme]: database/README.md
 [docker]: https://docs.docker.com/
 [docker-compose]: https://docs.docker.com/compose/
 [express]: https://expressjs.com/
 [ngrok]: https://ngrok.com/
-[ngrok-readme]: ngrok/README.md
 [nodejs]: https://nodejs.org/en/
 [plaid]: https://plaid.com
 [plaid-docs]: https://plaid.com/docs/
@@ -249,6 +243,6 @@ See [`docs/troubleshooting.md`][troubleshooting].
 [plaid-redirect-uri]: https://plaid.com/docs/link/oauth/#redirect-uri-configuration
 [postgres]: https://www.postgresql.org/
 [react]: http://reactjs.org/
-[server-readme]: server/README.md
+[server-readme]: #plaid-pattern---server
 [troubleshooting]: docs/troubleshooting.md
 [wsl]: https://nickjanetakis.com/blog/setting-up-docker-for-windows-and-wsl-to-work-flawlessly

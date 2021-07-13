@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
 import Modal from 'plaid-threads/Modal';
 import ModalBody from 'plaid-threads/ModalBody';
 import Button from 'plaid-threads/Button';
@@ -18,7 +18,6 @@ export default function Asset(props: Props) {
   const [description, setDescription] = useState('');
   const [value, setValue] = useState('');
   const { addAsset } = useAssets();
-  // const inputRef: React.RefObject<HTMLInputElement> = useRef(null);
 
   const handleSubmit = (e: any) => {
     e.preventDefault();
@@ -35,15 +34,10 @@ export default function Asset(props: Props) {
       </Button>
       <Modal isOpen={show} onRequestClose={() => setShow(false)}>
         <>
-          <ModalBody
-            onClickCancel={() => setShow(false)}
-            header="Enter Your Asset"
-            isLoading={false}
-            onClickConfirm={handleSubmit}
-            confirmText="Submit"
-          >
-            <>
+          <ModalBody header="Enter Your Asset" isLoading={false}>
+            <form onSubmit={handleSubmit}>
               <TextInput
+                required
                 label=""
                 id="id-6"
                 placeholder="Enter Asset Description (e.g. house or car)"
@@ -51,13 +45,15 @@ export default function Asset(props: Props) {
                 onChange={e => setDescription(e.currentTarget.value)}
               />
               <NumberInput
+                required
                 label=""
                 id="id-6"
                 placeholder="Enter Asset Value (in dollars $)"
                 value={value}
                 onChange={e => setValue(e.currentTarget.value)}
               />
-            </>
+              <Button type="submit">Submit</Button>
+            </form>
           </ModalBody>
         </>
       </Modal>

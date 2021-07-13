@@ -25,6 +25,7 @@ import {
   NetWorth,
   ItemCard,
   UserCard,
+  LoadingCallout,
 } from '.';
 
 // provides view of user's net worth, spending by category and allows them to explore
@@ -154,14 +155,7 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
       {numOfItems > 0 && transactions.length === 0 && (
         <div className="loading">
           <LoadingSpinner />
-          <Callout>
-            Waiting to receive transactions webhook. See the{' '}
-            <InlineLink href="https://github.com/plaid/pattern/blob/master/docs/troubleshooting.md">
-              {' '}
-              troubleshooting guide{' '}
-            </InlineLink>{' '}
-            to learn about receiving transactions webhooks with this sample app.
-          </Callout>
+          <LoadingCallout />
         </div>
       )}
       {numOfItems > 0 && transactions.length > 0 && (

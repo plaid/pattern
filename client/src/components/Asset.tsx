@@ -34,7 +34,11 @@ export default function Asset(props: Props) {
       </Button>
       <Modal isOpen={show} onRequestClose={() => setShow(false)}>
         <>
-          <ModalBody header="Enter Your Asset" isLoading={false}>
+          <ModalBody
+            header="Enter Your Asset"
+            isLoading={false}
+            onClickCancel={() => setShow(false)}
+          >
             <form onSubmit={handleSubmit}>
               <TextInput
                 required

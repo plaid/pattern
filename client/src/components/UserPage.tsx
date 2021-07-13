@@ -2,7 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { Link, RouteComponentProps } from 'react-router-dom';
 import sortBy from 'lodash/sortBy';
 import NavigationLink from 'plaid-threads/NavigationLink';
+import LoadingSpinner from 'plaid-threads/LoadingSpinner';
 import Callout from 'plaid-threads/Callout';
+import { InlineLink } from 'plaid-threads/InlineLink';
 
 import { RouteInfo, ItemType, AccountType, AssetType } from './types';
 import {
@@ -23,6 +25,7 @@ import {
   NetWorth,
   ItemCard,
   UserCard,
+  LoadingCallout,
 } from '.';
 
 // provides view of user's net worth, spending by category and allows them to explore
@@ -127,7 +130,6 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
   }, [linkTokens, userId, numOfItems]);
 
   document.getElementsByTagName('body')[0].style.overflow = 'auto'; // to override overflow:hidden from link pane
-  console.log(assetsByUser);
   return (
     <div>
       <NavigationLink component={Link} to="/">
@@ -150,18 +152,40 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
         </Callout>
       )}
       <UserCard user={user} userId={userId} removeButton={false} linkButton />
-      {numOfItems > 0 && (
+      {numOfItems > 0 && transactions.length === 0 && (
+        <div className="loading">
+          <LoadingSpinner />
+          <LoadingCallout />
+        </div>
+      )}
+      {numOfItems > 0 && transactions.length > 0 && (
         <>
           <NetWorth
             accounts={accounts}
             numOfItems={numOfItems}
             personalAssets={assets}
             userId={userId}
+            assetsOnly={false}
           />
           <SpendingInsights
-            transactions={transactions}
             numOfItems={numOfItems}
+            transactions={transactions}
           />
+        </>
+      )}
+      {numOfItems === 0 && transactions.length === 0 && assets.length > 0 && (
+        <>
+          <NetWorth
+            accounts={accounts}
+            numOfItems={numOfItems}
+            personalAssets={assets}
+            userId={userId}
+            assetsOnly
+          />
+        </>
+      )}
+      {numOfItems > 0 && (
+        <>
           <div className="item__header">
             <div>
               <h2 className="item__header-heading">

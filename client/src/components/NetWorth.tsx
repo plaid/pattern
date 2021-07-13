@@ -11,6 +11,7 @@ interface Props {
   accounts: AccountType[];
   personalAssets: AssetType[];
   userId: number;
+  assetsOnly: boolean;
 }
 
 export default function NetWorth(props: Props) {
@@ -50,70 +51,113 @@ export default function NetWorth(props: Props) {
       <h4 className="tableSubHeading">
         A summary of your assets and liabilities
       </h4>
-      <div className="netWorthText">{`Your total across ${
-        props.numOfItems
-      } bank ${pluralize('account', props.numOfItems)}`}</div>
-      <h2 className="netWorthDollars">
-        {currencyFilter(assets - liabilities)}
-      </h2>
-      <div className="holdingsContainer">
-        <div className="userDataBox">
-          <div className="holdingsList">
-            <div className="assetsHeaderContainer">
-              <h4 className="dollarsHeading">{currencyFilter(assets)}</h4>
-              <Asset userId={props.userId} />
-            </div>
-
-            <div className="data">
-              {/* 3 columns */}
-              <p className="title">Assets</p>
-              <p>{''}</p>
-              <p>{''}</p>
-              <p className="dataItem">Cash</p>{' '}
-              <p className="dataItem">{currencyFilter(depository)}</p>
-              <p>{''}</p>
-              <p className="dataItem">Investment</p>
-              <p className="dataItem">{currencyFilter(investment)}</p>
-              <p>{''}</p>
-            </div>
-            <div className="personalAssets">
-              {props.personalAssets.map(asset => (
-                <div className="personalAsset">
-                  <p className="dataItem">{asset.description}</p>
-                  <p className="dataItem">{currencyFilter(asset.value)}</p>
-                  <p>
-                    <IconButton
-                      accessibilityLabel="Navigation"
-                      icon={<Trash />}
-                      onClick={() => {
-                        handleDelete(asset.id, props.userId);
-                      }}
-                    />
-                  </p>
+      {!props.assetsOnly && (
+        <>
+          <div className="netWorthText">{`Your total across ${
+            props.numOfItems
+          } bank ${pluralize('account', props.numOfItems)}`}</div>
+          <h2 className="netWorthDollars">
+            {currencyFilter(assets - liabilities)}
+          </h2>
+          <div className="holdingsContainer">
+            <div className="userDataBox">
+              <div className="holdingsList">
+                <div className="assetsHeaderContainer">
+                  <h4 className="dollarsHeading">{currencyFilter(assets)}</h4>
+                  <Asset userId={props.userId} />
                 </div>
-              ))}
-            </div>
-          </div>
-        </div>
-        <div className="userDataBox">
-          <div className="holdingsList">
-            <h4 className="dollarsHeading">{currencyFilter(liabilities)}</h4>
 
-            <div className="data">
-              {/* 3 columns */}
-              <p className="title">Liabilities</p>
-              <p>{''}</p>
-              <p>{''}</p>
-              <p className="dataItem">Credit Cards</p>{' '}
-              <p className="dataItem">{currencyFilter(credit)}</p>
-              <p>{''}</p>
-              <p className="dataItem">Loans</p>
-              <p className="dataItem">{currencyFilter(loan)}</p>
-              <p>{''}</p>
+                <div className="data">
+                  {/* 3 columns */}
+                  <p className="title">Assets</p>
+                  <p>{''}</p>
+                  <p>{''}</p>
+                  <p className="dataItem">Cash</p>{' '}
+                  <p className="dataItem">{currencyFilter(depository)}</p>
+                  <p>{''}</p>
+                  <p className="dataItem">Investment</p>
+                  <p className="dataItem">{currencyFilter(investment)}</p>
+                  <p>{''}</p>
+                </div>
+                <div className="personalAssets">
+                  {props.personalAssets.map(asset => (
+                    <div className="personalAsset">
+                      <p className="dataItem">{asset.description}</p>
+                      <p className="dataItem">{currencyFilter(asset.value)}</p>
+                      <p>
+                        <IconButton
+                          accessibilityLabel="Navigation"
+                          icon={<Trash />}
+                          onClick={() => {
+                            handleDelete(asset.id, props.userId);
+                          }}
+                        />
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+            <div className="userDataBox">
+              <div className="holdingsList">
+                <h4 className="dollarsHeading">
+                  {currencyFilter(liabilities)}
+                </h4>
+
+                <div className="data">
+                  {/* 3 columns */}
+                  <p className="title">Liabilities</p>
+                  <p>{''}</p>
+                  <p>{''}</p>
+                  <p className="dataItem">Credit Cards</p>{' '}
+                  <p className="dataItem">{currencyFilter(credit)}</p>
+                  <p>{''}</p>
+                  <p className="dataItem">Loans</p>
+                  <p className="dataItem">{currencyFilter(loan)}</p>
+                  <p>{''}</p>
+                </div>
+              </div>
             </div>
           </div>
-        </div>
-      </div>
+        </>
+      )}
+      {props.assetsOnly && (
+        <>
+          <h2 className="netWorthDollars">
+            {currencyFilter(assets - liabilities)}
+          </h2>
+          <div className="holdingsContainer">
+            <div className="userDataBox">
+              <div className="holdingsList">
+                <div className="assetsHeaderContainer">
+                  <h4 className="dollarsHeading">{currencyFilter(assets)}</h4>
+                  <Asset userId={props.userId} />
+                </div>
+                <div className="data">
+                  <p className="title">Assets</p>
+                </div>
+                <div className="personalAssets">
+                  {props.personalAssets.map(asset => (
+                    <div className="personalAsset">
+                      <p className="dataItem">{asset.description}</p>
+                      <p className="dataItem">{currencyFilter(asset.value)}</p>
+                      <p>
+                        <IconButton
+                          accessibilityLabel="Navigation"
+                          icon={<Trash />}
+                          onClick={() => {
+                            handleDelete(asset.id, props.userId);
+                          }}
+                        />
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        </>
+      )}
     </div>
   );
 }

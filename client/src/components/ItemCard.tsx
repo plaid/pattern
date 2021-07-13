@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import Note from 'plaid-threads/Note';
 import Touchable from 'plaid-threads/Touchable';
+import { InlineLink } from 'plaid-threads/InlineLink';
+import { Callout } from 'plaid-threads/Callout';
 import { Institution } from 'plaid/dist/api';
 
 import { ItemType, AccountType } from './types';
@@ -116,7 +118,7 @@ const ItemCard = (props: Props) => {
           itemId={id}
         />
       </div>
-      {showAccounts && (
+      {showAccounts && accounts.length > 0 && (
         <div>
           {accounts.map(account => (
             <div key={account.id}>
@@ -124,6 +126,16 @@ const ItemCard = (props: Props) => {
             </div>
           ))}
         </div>
+      )}
+      {showAccounts && accounts.length === 0 && (
+        <Callout>
+          No transactions or accounts have been retrieved for this item. See the{' '}
+          <InlineLink href="https://github.com/plaid/pattern/blob/master/docs/troubleshooting.md">
+            {' '}
+            troubleshooting guide{' '}
+          </InlineLink>{' '}
+          to learn about receiving transactions webhooks with this sample app.
+        </Callout>
       )}
     </div>
   );

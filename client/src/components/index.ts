@@ -18,3 +18,4 @@ export { default as Login } from './Login';
 export { default as CategoriesChart } from './CategoriesChart';
 export { default as NetWorth } from './NetWorth';
 export { default as Asset } from './Asset';
+export { default as LoadingCallout } from './LoadingCallout';

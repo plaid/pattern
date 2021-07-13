@@ -481,3 +481,19 @@ Monthly Spending
   display: grid;
   grid-template-columns: 1fr 1fr;
 }
+
+/*
+
+Loading
+
+*/
+
+.loading {
+  display: grid;
+  grid-template-rows: 150px 100px;
+  grid-row-gap: 50px;
+  justify-items: space-around;
+  width: 50%;
+  margin: auto;
+  margin-top: -125px;
+}

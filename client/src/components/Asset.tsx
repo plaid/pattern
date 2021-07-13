@@ -56,7 +56,9 @@ export default function Asset(props: Props) {
                 value={value}
                 onChange={e => setValue(e.currentTarget.value)}
               />
-              <Button type="submit">Submit</Button>
+              <Button wide type="submit">
+                Submit
+              </Button>
             </form>
           </ModalBody>
         </>

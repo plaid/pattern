@@ -50,9 +50,9 @@ All available commands can be seen by calling `make help`.
 
 As a modern full-stack application, Pattern consists of multiple services handling different segments of the stack, as described in the following sections:
 
--   [`database`][database-readme] runs a [PostgreSQL][postgres] database
--   [`server`][server-readme] runs an application back-end server using [NodeJS] and [Express]
 -   [`client`][client-readme] runs a [React]-based single-page web frontend
+-   [`server`][server-readme] runs an application back-end server using [NodeJS] and [Express]
+-   [`database`][database-readme] runs a [PostgreSQL][postgres] database
 -   [`ngrok`][ngrok-readme] exposes a [ngrok] tunnel from your local machine to the Internet to receive webhooks
 
 We use [Docker Compose][docker-compose] to orchestrate these services. As such, each individual service has its own Dockerfile, which Docker Compose reads when bringing up the services.

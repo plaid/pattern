@@ -48,7 +48,7 @@ All available commands can be seen by calling `make help`.
 
 ## Architecture
 
-As a modern full-stack application, Pattern consists of multiple services handling different segments of the stack, as described in the following sections:
+As a modern full-stack application, Pattern consists of multiple services handling different segments of the stack:
 
 -   [`client`][client-readme] runs a [React]-based single-page web frontend
 -   [`server`][server-readme] runs an application back-end server using [NodeJS] and [Express]
@@ -57,7 +57,7 @@ As a modern full-stack application, Pattern consists of multiple services handli
 
 We use [Docker Compose][docker-compose] to orchestrate these services. As such, each individual service has its own Dockerfile, which Docker Compose reads when bringing up the services.
 
-For more information about the individual services, see their readmes, linked in the list above.
+More information about the individual services is given below.
 
 # Plaid Pattern - Client
 

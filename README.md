@@ -48,7 +48,11 @@ All available commands can be seen by calling `make help`.
 
 ## Architecture
 
-As a modern full-stack application, Pattern consists of multiple services handling different segments of the stack:
+As a modern full-stack application, Pattern consists of multiple services handling different segments of the stack, as described in the following sections:
+Plaid Pattern - Client
+Plaid Pattern - Server
+Plaid Pattern - Databse
+Plaid Pattern - ngrok
 
 -   [`database`][database-readme] runs a [PostgreSQL][postgres] database
 -   [`server`][server-readme] runs an application back-end server using [NodeJS] and [Express]
@@ -227,7 +231,7 @@ See [`docs/troubleshooting.md`][troubleshooting].
 [users-routes]: routes/users.js
 [vscode-debugging]: https://code.visualstudio.com/docs/editor/debugging
 [client-img]: docs/pattern_screenshot.jpg
-[client-readme]: client/README.md
+[client-readme]: #plaid-pattern---client
 [database-readme]: database/README.md
 [docker]: https://docs.docker.com/
 [docker-compose]: https://docs.docker.com/compose/

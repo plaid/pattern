@@ -19,9 +19,12 @@ export default function Asset(props: Props) {
   const [value, setValue] = useState('');
   const { addAsset } = useAssets();
 
-  const handleSubmit = () => {
+  const handleSubmit = (e: any) => {
+    e.preventDefault();
     setShow(false);
-    addAsset(props.userId, description, parseInt(value));
+    addAsset(props.userId, description, parseFloat(value));
+    setDescription('');
+    setValue('');
   };
 
   return (
@@ -32,14 +35,13 @@ export default function Asset(props: Props) {
       <Modal isOpen={show} onRequestClose={() => setShow(false)}>
         <>
           <ModalBody
-            onClickCancel={() => setShow(false)}
             header="Enter Your Asset"
             isLoading={false}
-            onClickConfirm={handleSubmit}
-            confirmText="Submit"
+            onClickCancel={() => setShow(false)}
           >
-            <>
+            <form onSubmit={handleSubmit}>
               <TextInput
+                required
                 label=""
                 id="id-6"
                 placeholder="Enter Asset Description (e.g. house or car)"
@@ -47,13 +49,17 @@ export default function Asset(props: Props) {
                 onChange={e => setDescription(e.currentTarget.value)}
               />
               <NumberInput
+                required
                 label=""
                 id="id-6"
                 placeholder="Enter Asset Value (in dollars $)"
                 value={value}
                 onChange={e => setValue(e.currentTarget.value)}
               />
-            </>
+              <Button wide type="submit">
+                Submit
+              </Button>
+            </form>
           </ModalBody>
         </>
       </Modal>

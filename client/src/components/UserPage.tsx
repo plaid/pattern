@@ -127,7 +127,7 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
   }, [linkTokens, userId, numOfItems]);
 
   document.getElementsByTagName('body')[0].style.overflow = 'auto'; // to override overflow:hidden from link pane
-
+  console.log(assetsByUser);
   return (
     <div>
       <NavigationLink component={Link} to="/">

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import Modal from 'plaid-threads/Modal';
 import ModalBody from 'plaid-threads/ModalBody';
 import Button from 'plaid-threads/Button';
@@ -18,10 +18,14 @@ export default function Asset(props: Props) {
   const [description, setDescription] = useState('');
   const [value, setValue] = useState('');
   const { addAsset } = useAssets();
+  // const inputRef: React.RefObject<HTMLInputElement> = useRef(null);
 
-  const handleSubmit = () => {
+  const handleSubmit = (e: any) => {
+    e.preventDefault();
     setShow(false);
-    addAsset(props.userId, description, parseInt(value));
+    addAsset(props.userId, description, parseFloat(value));
+    setDescription('');
+    setValue('');
   };
 
   return (

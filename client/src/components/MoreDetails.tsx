@@ -43,7 +43,7 @@ export function MoreDetails(props: Props) {
     // handleSetBadState uses sandbox/item/reset_login to send the ITEM_LOGIN_REQUIRED webhook;
     // app responds to this webhook by setting item to "bad" state (server/webhookHandlers/handleItemWebhook.js)
     <Touchable className="menuOption" onClick={props.handleSetBadState}>
-      Reset Login
+      Test Item Login Required Webhook
     </Touchable>
   ) : token != null && token.length > 0 ? (
     // item is in "bad" state;  launch link to login and return to "good" state

@@ -234,6 +234,7 @@ See [`docs/troubleshooting.md`][troubleshooting].
 [ngrok]: https://ngrok.com/
 [nodejs]: https://nodejs.org/en/
 [plaid]: https://plaid.com
+[plaid-dashboard]: https://dashboard.plaid.com/team/api
 [plaid-docs]: https://plaid.com/docs/
 [plaid-help]: https://support.plaid.com/hc/en-us
 [plaid-keys]: https://dashboard.plaid.com/account/keys

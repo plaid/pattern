@@ -61,7 +61,7 @@ More information about the individual services is given below.
 
 # Plaid Pattern - Client
 
-The Pattern web client is written in JavaScript using [React]. It presents a basic [Link][plaid-link] workflow to the user, including an implementation of [OAuth][plaid-oauth] as well as a demonstration of [Link update mode][plaid-link-update-mode]. The sample app presents a user's net worth, categorized spending as well as a simple dashboard displaying linked accounts and transactions. The app runs on port 3000 by default, although you can modify this in [docker-compose.yml](../docker-compose.yml).
+The Pattern web client is written in JavaScript using [React]. It presents a basic [Link][plaid-link] workflow to the user, including an implementation of [OAuth][plaid-oauth] as well as a demonstration of [Link update mode][plaid-link-update-mode]. The sample app presents a user's net worth, categorized spending as well as a simple dashboard displaying linked accounts and transactions. The app runs on port 3001 by default, although you can modify this in [docker-compose.yml](../docker-compose.yml).
 
 ## Key concepts
 
@@ -71,7 +71,7 @@ Aside from websocket listeners (see below), all HTTP calls to the Pattern server
 
 ### Webhooks and Websockets
 
-The Pattern server is configured to send a message over a websocket whenever it receives a webhook from Plaid. On the client side have websocket listeners defined in `src/components/Sockets.jsx` that wait for these messages and update data in real time accordingly.
+The Pattern server is configured to send a message over a websocket whenever it receives a webhook from Plaid. On the client side websocket listeners defined in `src/components/Sockets.jsx` wait for these messages, update data in real time and display a message to say that a webhook has been received.
 
 # Plaid Pattern - Server
 
@@ -189,18 +189,18 @@ This image is a copy of the Docker Hub image [wernight/ngrok](https://hub.docker
 -   https://hub.docker.com/r/wernight/ngrok/dockerfile
 -   https://github.com/wernight/docker-ngrok/tree/202c4692cbf1bbfd5059b6ac56bece42e90bfb82
 
-## Troubleshooting
+# Troubleshooting
 
 See [`docs/troubleshooting.md`][troubleshooting].
 
-## Additional Resources
+# Additional Resources
 
 -   For an overview of the Plaid platform and products, refer to this [Quickstart guide][plaid-quickstart].
 -   Check out this high-level [introduction to Plaid Link](https://blog.plaid.com/plaid-link/).
 -   Find comprehensive information on Plaid API endpoints in the [API documentation][plaid-docs].
 -   Questions? Please head to the [Help Center][plaid-help] or [open a Support ticket][plaid-support-ticket].
 
-## License
+# License
 
 [MIT](LICENSE)
 

@@ -48,8 +48,11 @@ router.post(
         language: 'en',
         webhook: httpTunnel.public_url + '/services/webhook',
         access_token: accessToken,
-        redirect_uri: redirect_uri,
       };
+      // If user has entered a redirect uri in the .env file
+      if (redirect_uri.length > 1) {
+        linkTokenParams.redirect_uri = redirect_uri;
+      }
       const createResponse = await plaid.linkTokenCreate(linkTokenParams);
       res.json(createResponse.data);
     } catch (err) {

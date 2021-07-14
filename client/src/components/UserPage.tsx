@@ -4,7 +4,6 @@ import sortBy from 'lodash/sortBy';
 import NavigationLink from 'plaid-threads/NavigationLink';
 import LoadingSpinner from 'plaid-threads/LoadingSpinner';
 import Callout from 'plaid-threads/Callout';
-import { InlineLink } from 'plaid-threads/InlineLink';
 
 import { RouteInfo, ItemType, AccountType, AssetType } from './types';
 import {

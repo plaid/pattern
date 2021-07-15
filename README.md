@@ -73,6 +73,10 @@ Aside from websocket listeners (see below), all HTTP calls to the Pattern server
 
 The Pattern server is configured to send a message over a websocket whenever it receives a webhook from Plaid. On the client side have websocket listeners defined in `src/components/Sockets.jsx` that wait for these messages and update data in real time accordingly.
 
+### Admin
+
+A view of all users is provided to developers on `http://localhost:3001/admin`. Developers have the ability to remove a user here.
+
 # Plaid Pattern - Server
 
 The application server is written in JavaScript using [Node.js][nodejs] and [Express][expressjs]. It interacts with the Plaid API via the [Plaid Node SDK][plaid-node], and with the [database][database-readme] using [`node-postgres`][node-pg]. While we've used Node for the reference implementation, the concepts shown here will apply no matter what language your backend is written in.

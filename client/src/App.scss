@@ -369,12 +369,10 @@ More Details
 }
 
 .menuOption {
-  font-size: 2 * $unit;
-  font-family: $font-stack-sans;
-  background-color: transparent;
-  border: none;
-  color: $black1000;
+  line-height: 1.8rem !important;
+  padding-top: $unit;
 }
+
 /*
 
 net worth

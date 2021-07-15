@@ -9,7 +9,7 @@ interface Props {
 
 const Banner = (props: Props) => {
   const initialText =
-    'This is an example app that shows a Plaid integration for a Personal Finance Manager Use Case.';
+    'This is an example app that outlines an end-to-end integration with Plaid.';
 
   const successText =
     "This page shows a user's net worth, spending by category, and allows them to explore account and transactions details for linked items.";

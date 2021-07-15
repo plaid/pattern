@@ -69,7 +69,7 @@ export default function NetWorth(props: Props) {
 
                 <div className="data">
                   {/* 3 columns */}
-                  <p className="title">Assets</p>
+                  <h4 className="holdingsHeading">Assets</h4>
                   <p>{''}</p>
                   <p>{''}</p>
                   <p className="dataItem">Cash</p>{' '}
@@ -106,7 +106,7 @@ export default function NetWorth(props: Props) {
 
                 <div className="data">
                   {/* 3 columns */}
-                  <p className="title">Liabilities</p>
+                  <h4 className="holdingsHeading">Liabilities</h4>
                   <p>{''}</p>
                   <p>{''}</p>
                   <p className="dataItem">Credit Cards</p>{' '}

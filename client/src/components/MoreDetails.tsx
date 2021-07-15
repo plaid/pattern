@@ -71,7 +71,7 @@ export function MoreDetails(props: Props) {
       <Dropdown isOpen={menuShown} target={icon}>
         {linkChoice}
 
-        <Touchable className="menuOption" onClick={props.handleDelete}>
+        <Touchable className="menuOption2" onClick={props.handleDelete}>
           Remove
         </Touchable>
       </Dropdown>

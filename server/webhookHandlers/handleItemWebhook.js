@@ -24,6 +24,8 @@ const itemErrorHandler = async (plaidItemId, error) => {
       await updateItemStatus(itemId, 'bad');
       break;
     }
+
+    // TODO: handle item error webhook cases
     case 'INVALID_CREDENTIALS':
     case 'INVALID_MFA':
     case 'INVALID_UPDATED_USERNAME':
@@ -69,7 +71,7 @@ const itemsHandler = async (requestBody, io) => {
 
   switch (webhookCode) {
     case 'WEBHOOK_UPDATE_ACKNOWLEDGED':
-      serverLogAndEmitSocket('is updated');
+      serverLogAndEmitSocket('is updated', plaidItemId, error);
       break;
     case 'ERROR': {
       itemErrorHandler(plaidItemId, error);
@@ -82,7 +84,7 @@ const itemsHandler = async (requestBody, io) => {
       break;
     }
     default:
-      serverLogAndEmitSocket('unhandled webhook type received.');
+      serverLogAndEmitSocket('unhandled webhook type received.', plaidItemId, error);
   }
 };
 

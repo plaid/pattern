@@ -121,6 +121,25 @@ Landing overview
   padding-right: 1rem;
 }
 
+.btnsContainer {
+  display: flex;
+  margin: 2 * $unit 0;
+}
+
+.btnWithMargin {
+  margin-left: 2 * $unit;
+}
+
+/*
+
+Modal
+
+*/
+
+input::placeholder {
+  line-height: 1.5;
+}
+
 /*
 
 UserList
@@ -142,19 +161,31 @@ UserCard
   border-bottom: $border;
 }
 .user-card {
-  display: grid;
-  grid-template-columns: 6fr 1fr;
+  display: flex;
+}
+
+.user-card-clickable {
+  width: 100%;
 }
 
 .user-card__detail {
-  padding-right: 12 * $unit;
-  display: grid;
-  grid-template-columns: 2fr 3fr 3fr 2fr;
+  display: flex;
+  justify-content: space-around;
+  margin-left: 3 * $unit;
+}
+
+.hoverable {
+  width: 100%;
+  flex: 3;
+  display: flex;
 }
 
 .user-card__buttons {
+  padding-left: 3 * $unit;
   display: grid;
   grid-row-gap: $unit;
+  justify-content: center;
+  flex: 1;
 }
 
 /*
@@ -191,7 +222,7 @@ Item overview
   padding: (2 * $unit) 0 (2 * $unit) (2 * $unit);
   width: 95%;
   display: grid;
-  grid-template-columns: 8fr 6fr 5fr 4fr;
+  grid-template-columns: 8fr 6fr 9fr;
 }
 
 .item-card__column-1 {
@@ -238,6 +269,10 @@ Account row
 Add User Form
 
 */
+
+.addUserForm {
+  margin-top: 3 * $unit;
+}
 
 .add-user__column-1 {
   width: 30%;
@@ -334,9 +369,129 @@ More Details
 }
 
 .menuOption {
+  line-height: 1.8rem !important;
+  padding-top: $unit;
+}
+
+/*
+
+net worth
+
+*/
+
+.tableSubHeading {
+  margin-top: $unit;
+}
+
+.netWorthText {
+  font-family: $font-stack-monospace;
   font-size: 2 * $unit;
-  font-family: $font-stack-sans;
-  background-color: transparent;
-  border: none;
-  color: $black1000;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.netWorthContainer {
+  .netWorthDollars {
+    margin-top: $unit;
+  }
+
+  .netWorthHeading {
+    margin-top: 7 * $unit;
+    margin-bottom: 0;
+  }
+}
+
+.holdingsContainer {
+  display: flex;
+}
+
+.userDataBox {
+  width: 69 * $unit;
+  min-height: 40 * $unit;
+  border: $border;
+  margin-right: 2 * $unit;
+}
+
+.holdingsList {
+  padding: 4 * $unit;
+
+  .title {
+    font-weight: bold;
+  }
+}
+
+.assetsHeaderContainer {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.dollarsHeading {
+  font-weight: bold;
+  margin-top: 0;
+}
+
+.holdingsHeading {
+  margin-top: 0;
+}
+
+.data,
+.personalAsset {
+  display: grid;
+  grid-template-columns: 5fr 5fr 1fr;
+
+  .title {
+    font-weight: bold;
+  }
+
+  .dataItem {
+    margin-bottom: 0;
+  }
+}
+
+/*
+
+Monthly Spending
+
+*/
+
+.monthlySpendingContainer {
+  display: flex;
+}
+
+.monthlySpendingHeading {
+  margin-top: 7 * $unit;
+  margin-bottom: 0;
+}
+
+.monthlySpendingText {
+  margin-bottom: 4 * $unit;
+  font-family: $font-stack-monospace;
+  font-size: 2 * $unit;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+.recharts-wrapper {
+  margin: 0 2 * $unit;
+}
+
+.spendingInsightData {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+/*
+
+Loading
+
+*/
+
+.loading {
+  display: grid;
+  grid-template-rows: 150px 100px;
+  grid-row-gap: 50px;
+  justify-items: space-around;
+  width: 50%;
+  margin: auto;
+  margin-top: -125px;
 }

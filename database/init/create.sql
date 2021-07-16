@@ -75,6 +75,40 @@ AS
     items_table;
 
 
+-- -- ASSETS
+-- -- This table is used to store the assets associated with each user. The view returns the same data
+-- -- as the table, we're just using both to maintain consistency with our other tables.
+
+CREATE TABLE assets_table
+(
+  id SERIAL PRIMARY KEY,
+  user_id integer REFERENCES users_table(id) ON DELETE CASCADE,
+  value numeric(28,2),
+  description text,
+  created_at timestamptz default now(),
+  updated_at timestamptz default now()
+);
+
+CREATE TRIGGER assets_updated_at_timestamp
+BEFORE UPDATE ON assets_table
+FOR EACH ROW
+EXECUTE PROCEDURE trigger_set_timestamp();
+
+CREATE VIEW assets
+AS
+  SELECT
+    id,
+    user_id,
+    value,
+    description,
+    created_at,
+    updated_at
+  FROM
+    assets_table;
+
+
+
+
 -- ACCOUNTS
 -- This table is used to store the accounts associated with each item. The view returns all the
 -- data from the accounts table and some data from the items view. For more info on the Plaid
@@ -196,6 +230,7 @@ CREATE TABLE link_events_table
   request_id text UNIQUE,
   error_type text,
   error_code text,
+  status text,
   created_at timestamptz default now()
 );
 
@@ -207,6 +242,7 @@ CREATE TABLE plaid_api_events_table
 (
   id SERIAL PRIMARY KEY,
   item_id integer,
+  user_id integer,
   plaid_method text NOT NULL,
   arguments text,
   request_id text UNIQUE,

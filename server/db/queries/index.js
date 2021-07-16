@@ -36,6 +36,12 @@ const {
 } = require('./users');
 const { createLinkEvent } = require('./linkEvents');
 
+const {
+  createAsset,
+  retrieveAssetsByUser,
+  deleteAssetByAssetId,
+} = require('./assets');
+
 module.exports = {
   // accounts
   createAccounts,
@@ -66,6 +72,10 @@ module.exports = {
   retrieveUserById,
   retrieveUserByUsername,
   retrieveUsers,
+  // assets
+  createAsset,
+  retrieveAssetsByUser,
+  deleteAssetByAssetId,
   // link events
   createLinkEvent,
 };

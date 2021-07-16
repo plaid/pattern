@@ -11,6 +11,7 @@ const { errorHandler } = require('./middleware');
 
 const {
   usersRouter,
+  sessionsRouter,
   itemsRouter,
   accountsRouter,
   institutionsRouter,
@@ -18,6 +19,7 @@ const {
   linkEventsRouter,
   linkTokensRouter,
   unhandledRouter,
+  assetsRouter,
 } = require('./routes');
 
 const app = express();
@@ -54,12 +56,14 @@ app.get('/test', (req, res) => {
 });
 
 app.use('/users', usersRouter);
+app.use('/sessions', sessionsRouter);
 app.use('/items', itemsRouter);
 app.use('/accounts', accountsRouter);
 app.use('/institutions', institutionsRouter);
 app.use('/services', serviceRouter);
 app.use('/link-event', linkEventsRouter);
 app.use('/link-token', linkTokensRouter);
+app.use('/assets', assetsRouter);
 app.use('*', unhandledRouter);
 
 // Error handling has to sit at the bottom of the stack.

@@ -3,21 +3,28 @@
   "version": "1.0.7",
   "private": true,
   "dependencies": {
+    "@types/jest": "^26.0.23",
+    "@types/react": "^17.0.11",
+    "@types/react-dom": "^17.0.7",
     "axios": "^0.21.1",
     "date-fns": "^1.30.1",
     "node-sass": "^4.0.0",
-    "plaid-threads": "^11.2.3",
+    "plaid": "^9.0.0-beta.4",
+    "plaid-threads": "^11.4.3",
     "prop-types": "^15.7.2",
     "react": "^16.14.0",
     "react-dom": "^16.14.0",
-    "react-plaid-link": "^3.1.0",
+    "react-plaid-link": "^3.2.0",
     "react-router-dom": "^5.1.2",
-    "react-scripts": "3.1.1",
+    "react-router-hash-link": "^2.4.3",
+    "react-scripts": "4.0.1",
     "react-toastify": "^5.1.0",
-    "socket.io-client": "^2.2.0"
+    "recharts": "^2.0.9",
+    "socket.io-client": "^2.2.0",
+    "typescript": "^4.3.2"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "PORT=3001 react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
@@ -40,6 +47,11 @@
     ]
   },
   "devDependencies": {
+    "@types/lodash": "^4.14.170",
+    "@types/node": "^15.14.0",
+    "@types/react-router-dom": "^5.1.7",
+    "@types/react-router-hash-link": "^2.4.0",
+    "@types/socket.io-client": "^3.0.0",
     "eslint-plugin-prettier": "^3.0.1",
     "prettier": "^1.16.4"
   },

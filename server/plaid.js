@@ -31,7 +31,7 @@ const OPTIONS = { clientApp: 'Plaid-Pattern' };
 
 /**
  * Logging function for Plaid client methods that use an access_token as an argument. Associates
- * the Plaid API event log entry with the item the request is for.
+ * the Plaid API event log entry with the item and user the request is for.
  *
  * @param {string} clientMethod the name of the Plaid client method called.
  * @param {Array} clientMethodArgs the arguments passed to the Plaid client method.
@@ -39,13 +39,21 @@ const OPTIONS = { clientApp: 'Plaid-Pattern' };
  */
 const defaultLogger = async (clientMethod, clientMethodArgs, response) => {
   const accessToken = clientMethodArgs[0].access_token;
-  const { id: itemId } = await retrieveItemByPlaidAccessToken(accessToken);
-  await createPlaidApiEvent(itemId, clientMethod, clientMethodArgs, response);
+  const { id: itemId, user_id: userId } = await retrieveItemByPlaidAccessToken(
+    accessToken
+  );
+  await createPlaidApiEvent(
+    itemId,
+    userId,
+    clientMethod,
+    clientMethodArgs,
+    response
+  );
 };
 
 /**
  * Logging function for Plaid client methods that do not use access_token as an argument. These
- * Plaid API event log entries will not be associated with an item.
+ * Plaid API event log entries will not be associated with an item or user.
  *
  * @param {string} clientMethod the name of the Plaid client method called.
  * @param {Array} clientMethodArgs the arguments passed to the Plaid client method.
@@ -58,83 +66,23 @@ const noAccessTokenLogger = async (
 ) => {
   await createPlaidApiEvent(
     undefined,
+    undefined,
     clientMethod,
     clientMethodArgs,
     response
   );
 };
 
-// All available Plaid client methods as of v9.0.0-beta-release mapped to their appropriate logging functions.
+// Plaid client methods used in this app, mapped to their appropriate logging functions.
 
 const clientMethodLoggingFns = {
-  accountsBalanceGet: defaultLogger,
-  accountsGet: defaultLogger,
-  assetReportAuditCopyCreate: defaultLogger,
-  assetReportAuditCopyGet: noAccessTokenLogger,
-  assetReportAuditCopyRemove: noAccessTokenLogger,
-  assetReportCreate: noAccessTokenLogger,
-  assetReportFilter: noAccessTokenLogger,
-  assetReportGet: noAccessTokenLogger,
-  assetReportPdfGet: noAccessTokenLogger,
-  assetReportRefresh: noAccessTokenLogger,
-  assetReportRemove: noAccessTokenLogger,
-  authGet: defaultLogger,
-  bankTransferBalanceGet: noAccessTokenLogger,
-  bankTransferCancel: noAccessTokenLogger,
-  bankTransferCreate: defaultLogger,
-  bankTransferEventList: noAccessTokenLogger,
-  bankTransferEventSync: noAccessTokenLogger,
-  bankTransferGet: noAccessTokenLogger,
-  bankTransferList: noAccessTokenLogger,
-  bankTransferMigrateAccount: noAccessTokenLogger,
-  categoriesGet: noAccessTokenLogger,
-  depositSwitchAltCreate: noAccessTokenLogger,
-  depositSwitchCreate: noAccessTokenLogger,
-  depositSwitchGet: noAccessTokenLogger,
-  depositSwitchTokenCreate: noAccessTokenLogger,
-  employersSearch: noAccessTokenLogger,
-  transactionsGet: defaultLogger,
-  identityGet: defaultLogger,
   institutionsGet: noAccessTokenLogger,
   institutionsGetById: noAccessTokenLogger,
-  institutionsSearch: noAccessTokenLogger,
-  investmentsHoldingsGet: defaultLogger,
-  investmentsTransactionsGet: defaultLogger,
-  itemAccessTokenInvalidate: defaultLogger,
-  itemCreatePublicToken: defaultLogger,
-  itemGet: defaultLogger,
   itemPublicTokenExchange: noAccessTokenLogger,
   itemRemove: defaultLogger,
-  itemWebhookUpdate: defaultLogger,
-  liabilitiesGet: defaultLogger,
   linkTokenCreate: noAccessTokenLogger,
-  linkTokenGet: noAccessTokenLogger,
-  paymentInitiationPaymentCreate: noAccessTokenLogger,
-  paymentInitiationPaymentGet: noAccessTokenLogger,
-  paymentInitiationPaymentList: noAccessTokenLogger,
-  paymentInitiationRecipientCreate: noAccessTokenLogger,
-  paymentInitiationRecipientGet: noAccessTokenLogger,
-  paymentInitiationRecipientList: noAccessTokenLogger,
-  processorAuthGet: noAccessTokenLogger,
-  processorBalanceGet: noAccessTokenLogger,
-  processorIdentityGet: noAccessTokenLogger,
-  processorStripeBankAccountTokenCreate: defaultLogger,
-  processorTokenCreate: defaultLogger,
-  sandboxBankTransferFireWebhook: noAccessTokenLogger,
   transactionsGet: defaultLogger,
-  sandboxBankTransferSimulate: noAccessTokenLogger,
-  transactionsGet: defaultLogger,
-  transactionsGet: defaultLogger,
-  sandboxPublicTokenCreate: noAccessTokenLogger,
-  transactionsGet: defaultLogger,
-  transactionsRefresh: defaultLogger,
-  webhookVerificationKeyGet: noAccessTokenLogger,
-  transactionsGet: defaultLogger,
-  // remaining methods are only available in the sandbox environment
-  sandboxItemFireWebhook: defaultLogger,
   sandboxItemResetLogin: defaultLogger,
-  sandboxItemSetVerificationStatus: defaultLogger,
-  sandboxProcessorTokenCreate: noAccessTokenLogger,
 };
 // Wrapper for the Plaid client. This allows us to easily log data for all Plaid client requests.
 class PlaidClientWrapper {

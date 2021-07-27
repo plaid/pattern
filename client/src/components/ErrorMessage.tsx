@@ -33,10 +33,24 @@ export default function ErrorMessage() {
           `The connection to ${institution} is currently down.  Please try again in a couple hours.`
         );
         break;
+
+      case 'USER_SETUP_REQUIRED':
+        setShow(true);
+        setMessage(
+          `Please login directly with ${institution} to complete your account setup.  Then return here to re-authenticate. `
+        );
+        break;
       case 'ITEM_LOCKED':
         setShow(true);
         setMessage(
           `Your account is locked.  Please work directly with ${institution} to unlock your account.`
+        );
+        break;
+
+      case 'NO_ACCOUNTS':
+        setShow(true);
+        setMessage(
+          `Although your credentials are correct, there are no associated accounts with ${institution}.  Please try another institution.`
         );
         break;
       default:
@@ -58,7 +72,8 @@ export default function ErrorMessage() {
             }}
             icon={<CloseS2 />}
           />
-          Error: {error.code} - {message}
+          Error: {error.code} <br />
+          {message}
         </Callout>
       )}
     </>

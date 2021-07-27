@@ -502,15 +502,6 @@ ErrorMessage
 
 */
 
-.errorMessage {
-  margin-bottom: 3 * $unit;
-
-  &:hover {
-    cursor: pointer;
-    background-color: $red200;
-  }
-}
-
 .errMsgCallout {
   position: relative;
   margin-bottom: 3 * $unit;

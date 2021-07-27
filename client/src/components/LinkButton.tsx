@@ -32,7 +32,7 @@ export default function LinkButton(props: Props) {
   const history = useHistory();
   const { getItemsByUser, getItemById } = useItems();
   const { generateLinkToken } = useLink();
-  const { setError } = useErrors();
+  const { setError, resetError } = useErrors();
 
   // define onSuccess, onExit and onEvent functions as configs for Plaid Link creation
   const onSuccess = async (
@@ -56,6 +56,7 @@ export default function LinkButton(props: Props) {
       );
       getItemsByUser(props.userId, true);
     }
+    resetError();
     history.push(`/user/${props.userId}`);
   };
 

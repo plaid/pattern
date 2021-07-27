@@ -23,15 +23,21 @@ interface ErrorsState {
 }
 
 const initialState: ErrorsState = {};
-type ErrorsAction = {
-  type: 'SUCCESSFUL_GET';
-  payload: ErrorsState;
-};
+type ErrorsAction =
+  | {
+      type: 'SET_ERROR';
+      payload: ErrorsState;
+    }
+  | {
+      type: 'RESET_ERROR';
+      payload: ErrorsState;
+    };
 
 interface ErrorsContextShape extends ErrorsState {
   dispatch: Dispatch<ErrorsAction>;
   setError: (code: string, institution: string | null) => void;
   error: { code: string; institution: string };
+  resetError: () => void;
 }
 const ErrorsContext = createContext<ErrorsContextShape>(
   initialState as ErrorsContextShape
@@ -50,8 +56,15 @@ export const ErrorsProvider: React.FC<{ children: ReactNode }> = (
    */
   const setError = useCallback(async (code: string, institution: string) => {
     dispatch({
-      type: 'SUCCESSFUL_GET',
+      type: 'SET_ERROR',
       payload: { code: code, institution: institution },
+    });
+  }, []);
+
+  const resetError = useCallback(async () => {
+    dispatch({
+      type: 'RESET_ERROR',
+      payload: {},
     });
   }, []);
 
@@ -63,8 +76,9 @@ export const ErrorsProvider: React.FC<{ children: ReactNode }> = (
     return {
       setError,
       error,
+      resetError,
     };
-  }, [setError, error]);
+  }, [setError, error, resetError]);
 
   return <ErrorsContext.Provider value={value} {...props} />;
 };
@@ -74,7 +88,7 @@ export const ErrorsProvider: React.FC<{ children: ReactNode }> = (
  */
 function reducer(state: ErrorsState, action: ErrorsAction) {
   switch (action.type) {
-    case 'SUCCESSFUL_GET':
+    case 'SET_ERROR':
       if (action.payload == null) {
         return state;
       }
@@ -82,6 +96,8 @@ function reducer(state: ErrorsState, action: ErrorsAction) {
         code: action.payload.code,
         institution: action.payload.institution,
       };
+    case 'RESET_ERROR':
+      return {};
 
     default:
       console.warn('unknown action');

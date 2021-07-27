@@ -153,6 +153,7 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
         </Callout>
       )}
       <UserCard user={user} userId={userId} removeButton={false} linkButton />
+      {numOfItems === 0 && <ErrorMessage />}
       {numOfItems > 0 && transactions.length === 0 && (
         <div className="loading">
           <LoadingSpinner />

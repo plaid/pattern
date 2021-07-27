@@ -19,6 +19,18 @@ export default function ErrorMessage() {
           `${institution} is having technical problems.  Please try again in a couple hours.`
         );
         break;
+      case 'INSTITUTION_DOWN':
+        setShow(true);
+        setMessage(
+          `${institution} is having technical problems.  Please try again in a couple hours.`
+        );
+        break;
+      case 'INSTITUTION_NOT_AVAILABLE':
+        setShow(true);
+        setMessage(
+          `The connection to ${institution} is currently down.  Please try again in a couple hours.`
+        );
+        break;
       case 'ITEM_LOCKED':
         setShow(true);
         setMessage(

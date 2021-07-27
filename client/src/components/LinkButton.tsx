@@ -7,12 +7,14 @@ import {
   PlaidLinkOnExitMetadata,
   PlaidLinkError,
   PlaidLinkOptionsWithLinkToken,
+  PlaidLinkOnEventMetadata,
+  PlaidLinkStableEvent,
 } from 'react-plaid-link';
 import { useHistory } from 'react-router-dom';
 
 import { logEvent, logSuccess, logExit } from '../util'; // functions to log and save errors and metadata from Link events.
 import { exchangeToken, setItemState } from '../services/api';
-import { useItems, useLink } from '../services';
+import { useItems, useLink, useErrors } from '../services';
 
 interface Props {
   isOauth?: boolean;
@@ -30,6 +32,7 @@ export default function LinkButton(props: Props) {
   const history = useHistory();
   const { getItemsByUser, getItemById } = useItems();
   const { generateLinkToken } = useLink();
+  const { setError } = useErrors();
 
   // define onSuccess, onExit and onEvent functions as configs for Plaid Link creation
   const onSuccess = async (
@@ -69,10 +72,25 @@ export default function LinkButton(props: Props) {
     // to handle other error codes, see https://plaid.com/docs/errors/
   };
 
+  const onEvent = async (
+    eventName: PlaidLinkStableEvent | string,
+    metadata: PlaidLinkOnEventMetadata
+  ) => {
+    if (
+      eventName === 'ERROR' &&
+      metadata.error_code != null &&
+      metadata.institution_name != null
+    ) {
+      console.log('onevent:', metadata);
+      setError(metadata.error_code, metadata.institution_name);
+    }
+    logEvent(eventName, metadata);
+  };
+
   const config: PlaidLinkOptionsWithLinkToken = {
     onSuccess,
     onExit,
-    onEvent: logEvent,
+    onEvent,
     token: props.token,
   };
 

@@ -495,3 +495,18 @@ Loading
   margin: auto;
   margin-top: -125px;
 }
+
+/*
+
+ErrorMessage
+
+*/
+
+.errorMessage {
+  margin-bottom: 3 * $unit;
+
+  &:hover {
+    cursor: pointer;
+    background-color: $red200;
+  }
+}

@@ -510,3 +510,13 @@ ErrorMessage
     background-color: $red200;
   }
 }
+
+.errMsgCallout {
+  position: relative;
+
+  .closeBtn {
+    position: absolute;
+    right: 3px;
+    top: 0;
+  }
+}

@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Callout } from 'plaid-threads/Callout';
+import { IconButton } from 'plaid-threads/IconButton';
+import { CloseS2 } from 'plaid-threads/Icons/CloseS2';
 
 import useErrors from '../services/errors';
 
@@ -44,12 +46,18 @@ export default function ErrorMessage() {
   }, [error.code, error.institution]);
 
   return (
-    <div className="errorMessage" onClick={() => setShow(false)}>
+    <>
       {show && (
-        <Callout>
+        <Callout className="errMsgCallout">
+          <IconButton
+            className="closeBtn"
+            accessibilityLabel="close"
+            onClick={() => setShow(false)}
+            icon={<CloseS2 />}
+          />
           Error: {error.code} - {message}
         </Callout>
       )}
-    </div>
+    </>
   );
 }

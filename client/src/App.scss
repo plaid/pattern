@@ -513,10 +513,11 @@ ErrorMessage
 
 .errMsgCallout {
   position: relative;
+  margin-bottom: 3 * $unit;
 
   .closeBtn {
     position: absolute;
-    right: 3px;
+    right: 0;
     top: 0;
   }
 }

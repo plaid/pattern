@@ -10,7 +10,7 @@ import useErrors from '../services/errors';
 export default function ErrorMessage() {
   const [show, setShow] = useState(false);
   const [message, setMessage] = useState('');
-  const { error } = useErrors();
+  const { error, resetError } = useErrors();
 
   useEffect(() => {
     const institution = error.institution;
@@ -52,7 +52,10 @@ export default function ErrorMessage() {
           <IconButton
             className="closeBtn"
             accessibilityLabel="close"
-            onClick={() => setShow(false)}
+            onClick={() => {
+              setShow(false);
+              resetError();
+            }}
             icon={<CloseS2 />}
           />
           Error: {error.code} - {message}

@@ -24,7 +24,7 @@ export default function Landing() {
   return (
     <div>
       <Banner initialSubheading />
-      If you don't have an account, please click "Create Account". Once created,
+      If you don't have an account, please click "Create Account"! Once created,
       you can add as many example Link items as you like.
       <div className="btnsContainer">
         <Login />

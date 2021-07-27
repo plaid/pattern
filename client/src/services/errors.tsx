@@ -7,15 +7,6 @@ import React, {
   Dispatch,
   ReactNode,
 } from 'react';
-import groupBy from 'lodash/groupBy';
-import keyBy from 'lodash/keyBy';
-import omitBy from 'lodash/omitBy';
-import { AccountType } from '../components/types';
-
-import {
-  getAccountsByItem as apiGetAccountsByItem,
-  getAccountsByUser as apiGetAccountsByUser,
-} from './api';
 
 interface ErrorsState {
   code?: string;
@@ -52,7 +43,7 @@ export const ErrorsProvider: React.FC<{ children: ReactNode }> = (
   const [error, dispatch] = useReducer(reducer, initialState);
 
   /**
-   * @desc Requests all Accounts that belong to an individual Item.
+   * @desc Sets error from onEvent callback.
    */
   const setError = useCallback(async (code: string, institution: string) => {
     dispatch({
@@ -61,6 +52,9 @@ export const ErrorsProvider: React.FC<{ children: ReactNode }> = (
     });
   }, []);
 
+  /**
+   * @desc resets error from onSuccess callback.
+   */
   const resetError = useCallback(async () => {
     dispatch({
       type: 'RESET_ERROR',
@@ -69,8 +63,8 @@ export const ErrorsProvider: React.FC<{ children: ReactNode }> = (
   }, []);
 
   /**
-   * @desc Builds a more accessible state shape from the Accounts data. useMemo will prevent
-   * these from being rebuilt on every render unless accountsById is updated in the reducer.
+   * @desc  useMemo will prevent error
+   *  from being rebuilt on every render unless error is updated in the reducer.
    */
   const value = useMemo(() => {
     return {
@@ -84,7 +78,7 @@ export const ErrorsProvider: React.FC<{ children: ReactNode }> = (
 };
 
 /**
- * @desc Handles updates to the Accounts state as dictated by dispatched actions.
+ * @desc Handles updates to the Errors state as dictated by dispatched actions.
  */
 function reducer(state: ErrorsState, action: ErrorsAction) {
   switch (action.type) {
@@ -106,7 +100,7 @@ function reducer(state: ErrorsState, action: ErrorsAction) {
 }
 
 /**
- * @desc A convenience hook to provide access to the Accounts context state in components.
+ * @desc A convenience hook to provide access to the Errors context state in components.
  */
 export default function useErrors() {
   const context = useContext(ErrorsContext);

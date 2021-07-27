@@ -82,7 +82,6 @@ export default function LinkButton(props: Props) {
       metadata.error_code != null &&
       metadata.institution_name != null
     ) {
-      console.log('onevent:', metadata);
       setError(metadata.error_code, metadata.institution_name);
     }
     logEvent(eventName, metadata);

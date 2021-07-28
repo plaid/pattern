@@ -48,6 +48,13 @@ export default function Sockets() {
       getItemById(itemId, true);
     });
 
+    socket.current.on('PENDING_EXPIRATION', ({ itemId } = {}) => {
+      const msg = `New Webhook Event: Item ${itemId}: Access consent is expiring in 7 days. User should re-enter login credentials.`;
+      console.log(msg);
+      toast(msg);
+      getItemById(itemId, true);
+    });
+
     return () => {
       socket.current.removeAllListeners();
       socket.current.close();

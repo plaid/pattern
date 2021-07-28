@@ -33,6 +33,12 @@ export default function ErrorMessage() {
           `The connection to ${institution} is currently down.  Please try again in a couple hours.`
         );
         break;
+      case 'INTERNAL_SERVER_ERROR':
+        setShow(true);
+        setMessage(
+          `We are having technical difficulties.  Please try again in a couple hours.`
+        );
+        break;
 
       case 'USER_SETUP_REQUIRED':
         setShow(true);
@@ -49,6 +55,22 @@ export default function ErrorMessage() {
       case 'INVALID_CREDENTIALS':
         setShow(true);
         setMessage(`Please check your credentials and retry logging in.`);
+        break;
+      case 'INVALID_UPDATED_USERNAME':
+        setShow(true);
+        setMessage(
+          `Please check your username and retry logging in.  Remember to use the same capitalization you used in your original username.`
+        );
+        break;
+      case 'INSUFFICIENT_CREDENTIALS':
+        setShow(true);
+        setMessage(`Please check your credentials and retry logging in.`);
+        break;
+      case 'MFA_NOT_SUPPORTED':
+        setShow(true);
+        setMessage(
+          `The multi-factor authentication used by ${institution} is not supported.  Please try another institution.`
+        );
         break;
 
       case 'NO_ACCOUNTS':

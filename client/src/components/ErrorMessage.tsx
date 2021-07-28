@@ -46,6 +46,10 @@ export default function ErrorMessage() {
           `Your account is locked.  Please work directly with ${institution} to unlock your account.`
         );
         break;
+      case 'INVALID_CREDENTIALS':
+        setShow(true);
+        setMessage(`Please check your credentials and retry logging in.`);
+        break;
 
       case 'NO_ACCOUNTS':
         setShow(true);

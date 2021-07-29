@@ -77,11 +77,7 @@ export default function LinkButton(props: Props) {
     metadata: PlaidLinkOnEventMetadata
   ) => {
     // handle errors
-    if (
-      eventName === 'ERROR' &&
-      metadata.error_code != null &&
-      metadata.institution_name != null
-    ) {
+    if (eventName === 'ERROR' && metadata.error_code != null) {
       setError(metadata.error_code, metadata.institution_name);
     }
     logEvent(eventName, metadata);

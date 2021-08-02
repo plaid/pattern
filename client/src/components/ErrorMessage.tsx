@@ -13,79 +13,25 @@ export default function ErrorMessage() {
   const { error, resetError } = useErrors();
 
   useEffect(() => {
-    const institution = error.institution;
-    if (error.code != null) {
-      switch (error.code) {
-        case 'INSTITUTION_NOT_RESPONDING':
-          setShow(true);
-          setMessage(
-            `${institution} is having technical problems.  Please try again in a couple hours.`
-          );
-          break;
-        case 'INSTITUTION_DOWN':
-          setShow(true);
-          setMessage(
-            `${institution} is having technical problems.  Please try again in a couple hours.`
-          );
-          break;
-        case 'INSTITUTION_NOT_AVAILABLE':
-          setShow(true);
-          setMessage(
-            `The connection to ${institution} is currently down.  Please try again in a couple hours.`
-          );
-          break;
-        case 'INTERNAL_SERVER_ERROR':
-          setShow(true);
-          setMessage(
-            `We are having technical difficulties.  Please try again in a couple hours.`
-          );
-          break;
+    const errors = [
+      'INSTITUTION_NOT_RESPONDING',
+      'INSTITUTION_DOWN',
+      'INSTITUTION_NOT_AVAILABLE',
+      'INTERNAL_SERVER_ERROR',
+      'USER_SETUP_REQUIRED',
+      'ITEM_LOCKED',
+      'INVALID_CREDENTIALS',
+      'INVALID_UPDATED_USERNAME',
+      'INSUFFICIENT_CREDENTIALS',
+      'MFA_NOT_SUPPORTED',
+      'NO_ACCOUNTS',
+    ];
 
-        case 'USER_SETUP_REQUIRED':
-          setShow(true);
-          setMessage(
-            `Please login directly with ${institution} to complete your account setup.  Then return here to re-authenticate. `
-          );
-          break;
-        case 'ITEM_LOCKED':
-          setShow(true);
-          setMessage(
-            `Your account is locked.  Please work directly with ${institution} to unlock your account.`
-          );
-          break;
-        case 'INVALID_CREDENTIALS':
-          setShow(true);
-          setMessage(`Please check your credentials and retry logging in.`);
-          break;
-        case 'INVALID_UPDATED_USERNAME':
-          setShow(true);
-          setMessage(
-            `Please check your username and retry logging in.  Remember to use the same capitalization you used in your original username.`
-          );
-          break;
-        case 'INSUFFICIENT_CREDENTIALS':
-          setShow(true);
-          setMessage(`Please check your credentials and retry logging in.`);
-          break;
-        case 'MFA_NOT_SUPPORTED':
-          setShow(true);
-          setMessage(
-            `The multi-factor authentication used by ${institution} is not supported.  Please try another institution.`
-          );
-          break;
-
-        case 'NO_ACCOUNTS':
-          setShow(true);
-          setMessage(
-            `Although your credentials are correct, there are no associated accounts with ${institution}.  Please try another institution.`
-          );
-          break;
-        default:
-          setShow(false);
-          break;
-      }
+    if (error.code != null && errors.includes(error.code)) {
+      setShow(true);
+      setMessage(error.message);
     }
-  }, [error.code, error.institution]);
+  }, [error.code, error.message]);
 
   return (
     <>

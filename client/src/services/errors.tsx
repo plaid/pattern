@@ -10,7 +10,7 @@ import React, {
 
 interface ErrorsState {
   code?: string;
-  institution?: string;
+  message?: string;
 }
 
 const initialState: ErrorsState = {};
@@ -26,8 +26,8 @@ type ErrorsAction =
 
 interface ErrorsContextShape extends ErrorsState {
   dispatch: Dispatch<ErrorsAction>;
-  setError: (code: string, institution: string | null) => void;
-  error: { code: string; institution: string };
+  setError: (code: string, message: string | null) => void;
+  error: { code: string; message: string };
   resetError: () => void;
 }
 const ErrorsContext = createContext<ErrorsContextShape>(
@@ -45,10 +45,10 @@ export const ErrorsProvider: React.FC<{ children: ReactNode }> = (
   /**
    * @desc Sets error from onEvent callback.
    */
-  const setError = useCallback(async (code: string, institution: string) => {
+  const setError = useCallback(async (code: string, message: string) => {
     dispatch({
       type: 'SET_ERROR',
-      payload: { code: code, institution: institution },
+      payload: { code: code, message: message },
     });
   }, []);
 
@@ -88,7 +88,7 @@ function reducer(state: ErrorsState, action: ErrorsAction) {
       }
       return {
         code: action.payload.code,
-        institution: action.payload.institution,
+        message: action.payload.message,
       };
     case 'RESET_ERROR':
       return {};

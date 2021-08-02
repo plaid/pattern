@@ -69,6 +69,9 @@ export default function LinkButton(props: Props) {
     if (error != null && error.error_code === 'INVALID_LINK_TOKEN') {
       await generateLinkToken(props.userId, props.itemId);
     }
+    if (error != null) {
+      setError(error.error_code, error.display_message || error.error_message);
+    }
     // to handle other error codes, see https://plaid.com/docs/errors/
   };
 
@@ -76,9 +79,9 @@ export default function LinkButton(props: Props) {
     eventName: PlaidLinkStableEvent | string,
     metadata: PlaidLinkOnEventMetadata
   ) => {
-    // handle errors
+    // handle errors in the event end-user does not exit with onExit function error enabled.
     if (eventName === 'ERROR' && metadata.error_code != null) {
-      setError(metadata.error_code, metadata.institution_name);
+      setError(metadata.error_code, ' ');
     }
     logEvent(eventName, metadata);
   };

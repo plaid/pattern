@@ -495,3 +495,20 @@ Loading
   margin: auto;
   margin-top: -125px;
 }
+
+/*
+
+ErrorMessage
+
+*/
+
+.errMsgCallout {
+  position: relative;
+  margin-bottom: 3 * $unit;
+
+  .closeBtn {
+    position: absolute;
+    right: 0;
+    top: 0;
+  }
+}

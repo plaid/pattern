@@ -113,6 +113,7 @@ export const logExit = async (
     },
     error
   );
+
   const eventError = error || {};
   await apiPostLinkEvent({
     userId,

@@ -63,25 +63,25 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
     setUser(usersById[userId] || {});
   }, [usersById, userId]);
 
-  useEffect(() => {
-    // This gets transactions from the database only.
-    // Note that calls to Plaid's transactions/get endpoint are only made in response
-    // to receipt of a transactions webhook.
-    getTransactionsByUser(userId);
-  }, [getTransactionsByUser, userId]);
+  // useEffect(() => {
+  //   // This gets transactions from the database only.
+  //   // Note that calls to Plaid's transactions/get endpoint are only made in response
+  //   // to receipt of a transactions webhook.
+  //   getTransactionsByUser(userId);
+  // }, [getTransactionsByUser, userId]);
 
-  useEffect(() => {
-    setTransactions(transactionsByUser[userId] || []);
-  }, [transactionsByUser, userId]);
+  // useEffect(() => {
+  //   setTransactions(transactionsByUser[userId] || []);
+  // }, [transactionsByUser, userId]);
 
   // update data store with the user's assets
-  useEffect(() => {
-    getAssetsByUser(userId);
-  }, [getAssetsByUser, userId]);
+  // useEffect(() => {
+  //   getAssetsByUser(userId);
+  // }, [getAssetsByUser, userId]);
 
-  useEffect(() => {
-    setAssets(assetsByUser.assets || []);
-  }, [assetsByUser, userId]);
+  // useEffect(() => {
+  //   setAssets(assetsByUser.assets || []);
+  // }, [assetsByUser, userId]);
 
   // update data store with the user's items
   useEffect(() => {
@@ -98,6 +98,7 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
       item => new Date(item.updated_at)
     ).reverse();
     setItems(orderedItems);
+    console.log(orderedItems);
   }, [itemsByUser, userId]);
 
   // update no of items from data store
@@ -116,6 +117,7 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
 
   useEffect(() => {
     setAccounts(accountsByUser[userId] || []);
+    console.log('accounts', accountsByUser[userId]);
   }, [accountsByUser, userId]);
 
   // creates new link token upon new user or change in number of items
@@ -128,6 +130,8 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
   useEffect(() => {
     setToken(linkTokens.byUser[userId]);
   }, [linkTokens, userId, numOfItems]);
+
+  console.log('accounts', accounts);
 
   document.getElementsByTagName('body')[0].style.overflow = 'auto'; // to override overflow:hidden from link pane
   return (
@@ -152,38 +156,7 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
         </Callout>
       )}
       <UserCard user={user} userId={userId} removeButton={false} linkButton />
-      {numOfItems > 0 && transactions.length === 0 && (
-        <div className="loading">
-          <LoadingSpinner />
-          <LoadingCallout />
-        </div>
-      )}
-      {numOfItems > 0 && transactions.length > 0 && (
-        <>
-          <NetWorth
-            accounts={accounts}
-            numOfItems={numOfItems}
-            personalAssets={assets}
-            userId={userId}
-            assetsOnly={false}
-          />
-          <SpendingInsights
-            numOfItems={numOfItems}
-            transactions={transactions}
-          />
-        </>
-      )}
-      {numOfItems === 0 && transactions.length === 0 && assets.length > 0 && (
-        <>
-          <NetWorth
-            accounts={accounts}
-            numOfItems={numOfItems}
-            personalAssets={assets}
-            userId={userId}
-            assetsOnly
-          />
-        </>
-      )}
+
       {numOfItems > 0 && (
         <>
           <div className="item__header">

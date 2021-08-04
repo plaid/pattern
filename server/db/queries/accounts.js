@@ -12,7 +12,7 @@ const db = require('../');
  * @param {Object[]} accounts an array of accounts.
  * @returns {Object[]} an array of new accounts.
  */
-const createAccounts = async (plaidItemId, accounts) => {
+const createAccounts = async (plaidItemId, accounts, numbers) => {
   const { id: itemId } = await retrieveItemByPlaidItemId(plaidItemId);
   const pendingQueries = accounts.map(async account => {
     const {
@@ -29,6 +29,11 @@ const createAccounts = async (plaidItemId, accounts) => {
       subtype,
       type,
     } = account;
+    const {
+      account: achAccount,
+      routing: achRouting,
+      wire_routing: achWireRouting,
+    } = numbers.ach[0];
     const query = {
       // RETURNING is a Postgres-specific clause that returns a list of the inserted items.
       text: `
@@ -43,11 +48,14 @@ const createAccounts = async (plaidItemId, accounts) => {
             available_balance,
             iso_currency_code,
             unofficial_currency_code,
+            ach_account,
+            ach_routing,
+            ach_wire_routing,
             type,
             subtype
           )
         VALUES
-          ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
+          ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14)
         ON CONFLICT
           (plaid_account_id)
         DO UPDATE SET
@@ -66,6 +74,9 @@ const createAccounts = async (plaidItemId, accounts) => {
         availableBalance,
         isoCurrencyCode,
         unofficialCurrencyCode,
+        achAccount,
+        achRouting,
+        achWireRouting,
         type,
         subtype,
       ],

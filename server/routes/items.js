@@ -12,6 +12,7 @@ const {
   createItem,
   deleteItem,
   updateItemStatus,
+  createAccounts,
 } = require('../db/queries');
 const { asyncWrapper } = require('../middleware');
 const plaid = require('../plaid');
@@ -36,7 +37,7 @@ const router = express.Router();
 router.post(
   '/',
   asyncWrapper(async (req, res) => {
-    const { publicToken, institutionId, userId } = req.body;
+    const { publicToken, institutionId, userId, accounts } = req.body;
     // prevent duplicate items for the same institution per user.
     const existingItem = await retrieveItemByPlaidInstitutionId(
       institutionId,
@@ -57,7 +58,21 @@ router.post(
       institutionId,
       accessToken,
       itemId,
-      userId
+      userId,
+      accounts[0].id
+    );
+    const authRequest = {
+      access_token: accessToken,
+      options: {
+        account_ids: [accounts[0].id],
+      },
+    };
+    const authResponse = await plaid.authGet(authRequest);
+    console.log(authResponse.data.numbers.ach);
+    const newAccount = await createAccounts(
+      itemId,
+      authResponse.data.accounts,
+      authResponse.data.numbers
     );
     res.json(sanitizeItems(newItem));
   })

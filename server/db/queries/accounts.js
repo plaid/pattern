@@ -10,10 +10,16 @@ const db = require('../');
  *
  * @param {string} plaidItemId the Plaid ID of the item.
  * @param {Object[]} accounts an array of accounts.
+ * @param {Object} numbers an object of number types.
  * @returns {Object[]} an array of new accounts.
  */
 const createAccounts = async (plaidItemId, accounts, numbers) => {
   const { id: itemId } = await retrieveItemByPlaidItemId(plaidItemId);
+  const {
+    account: achAccount,
+    routing: achRouting,
+    wire_routing: achWireRouting,
+  } = numbers.ach[0];
   const pendingQueries = accounts.map(async account => {
     const {
       account_id: aid,
@@ -29,11 +35,7 @@ const createAccounts = async (plaidItemId, accounts, numbers) => {
       subtype,
       type,
     } = account;
-    const {
-      account: achAccount,
-      routing: achRouting,
-      wire_routing: achWireRouting,
-    } = numbers.ach[0];
+
     const query = {
       // RETURNING is a Postgres-specific clause that returns a list of the inserted items.
       text: `

@@ -38,6 +38,7 @@ router.post(
   '/',
   asyncWrapper(async (req, res) => {
     const { publicToken, institutionId, userId, accounts } = req.body;
+
     // prevent duplicate items for the same institution per user.
     const existingItem = await retrieveItemByPlaidInstitutionId(
       institutionId,
@@ -54,6 +55,7 @@ router.post(
     });
     const accessToken = response.data.access_token;
     const itemId = response.data.item_id;
+    console.log('accountId:', accounts[0].id);
     const newItem = await createItem(
       institutionId,
       accessToken,
@@ -68,11 +70,30 @@ router.post(
       },
     };
     const authResponse = await plaid.authGet(authRequest);
-    console.log(authResponse.data.numbers.ach);
+
     const newAccount = await createAccounts(
       itemId,
       authResponse.data.accounts,
       authResponse.data.numbers
+    );
+    const identityRequest = {
+      access_token: accessToken,
+      options: {
+        account_ids: [accounts[0].id],
+      },
+    };
+    const identityResponse = await plaid.identityGet(identityRequest);
+    const addresses = identityResponse.data.accounts[0].owners[0].addresses;
+    const emails = identityResponse.data.accounts[0].owners[0].emails;
+    const names = identityResponse.data.accounts[0].owners[0].names[0];
+    const phone_numbers =
+      identityResponse.data.accounts[0].owners[0].phone_numbers;
+    console.log(
+      'identity response:',
+      names,
+      addresses[0],
+      emails[0],
+      phone_numbers[0]
     );
     res.json(sanitizeItems(newItem));
   })

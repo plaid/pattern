@@ -11,6 +11,7 @@ const db = require('../');
  * @param {string} plaidAccessToken the Plaid access token of the item.
  * @param {string} plaidItemId the Plaid ID of the item.
  * @param {number} userId the ID of the user.
+ * @param {number} plaidAccountId the ID of the selected account.
  * @returns {Object} the new item.
  */
 const createItem = async (

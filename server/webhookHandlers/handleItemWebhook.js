@@ -24,23 +24,6 @@ const itemErrorHandler = async (plaidItemId, error) => {
       await updateItemStatus(itemId, 'bad');
       break;
     }
-
-    // TODO: handle item error webhook cases
-    case 'INVALID_CREDENTIALS':
-    case 'INVALID_MFA':
-    case 'INVALID_UPDATED_USERNAME':
-    case 'ITEM_LOCKED':
-    case 'ITEM_NO_ERROR':
-    case 'ITEM_NOT_SUPPORTED':
-    case 'ITEM_NO_VERIFICATION':
-    case 'INCORRECT_DEPOSIT_AMOUNTS':
-    case 'TOO_MANY_VERIFICATION_ATTEMPTS':
-    case 'USER_SETUP_REQUIRED':
-    case 'MFA_NOT_SUPPORTED':
-    case 'NO_ACCOUNTS':
-    case 'NO_AUTH_ACCOUNTS':
-    case 'PRODUCT_NOT_READY':
-    case 'PRODUCTS_NOT_SUPPORTED':
     default:
       console.log(
         `WEBHOOK: ITEMS: Plaid item id ${plaidItemId}: unhandled ITEM error`
@@ -83,8 +66,22 @@ const itemsHandler = async (requestBody, io) => {
       );
       break;
     }
+    case 'PENDING_EXPIRATION': {
+      const { id: itemId } = await retrieveItemByPlaidItemId(plaidItemId);
+      await updateItemStatus(itemId, 'bad');
+      serverLogAndEmitSocket(
+        `user needs to re-enter login credentials`,
+        itemId,
+        error
+      );
+      break;
+    }
     default:
-      serverLogAndEmitSocket('unhandled webhook type received.', plaidItemId, error);
+      serverLogAndEmitSocket(
+        'unhandled webhook type received.',
+        plaidItemId,
+        error
+      );
   }
 };
 

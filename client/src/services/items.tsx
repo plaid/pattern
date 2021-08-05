@@ -73,7 +73,6 @@ export function ItemsProvider(props: any) {
    */
   const getItemsByUser = useCallback(async userId => {
     const { data: payload } = await apiGetItemsByUser(userId);
-    console.log('in the context', payload);
     dispatch({ type: 'SUCCESSFUL_REQUEST', payload: payload });
   }, []);
 

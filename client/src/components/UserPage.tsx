@@ -63,26 +63,6 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
     setUser(usersById[userId] || {});
   }, [usersById, userId]);
 
-  // useEffect(() => {
-  //   // This gets transactions from the database only.
-  //   // Note that calls to Plaid's transactions/get endpoint are only made in response
-  //   // to receipt of a transactions webhook.
-  //   getTransactionsByUser(userId);
-  // }, [getTransactionsByUser, userId]);
-
-  // useEffect(() => {
-  //   setTransactions(transactionsByUser[userId] || []);
-  // }, [transactionsByUser, userId]);
-
-  // update data store with the user's assets
-  // useEffect(() => {
-  //   getAssetsByUser(userId);
-  // }, [getAssetsByUser, userId]);
-
-  // useEffect(() => {
-  //   setAssets(assetsByUser.assets || []);
-  // }, [assetsByUser, userId]);
-
   // update data store with the user's items
   useEffect(() => {
     if (userId != null) {

@@ -89,6 +89,15 @@ const sanitizeTransactions = transactions =>
     'updated_at',
   ]);
 
+const checkUserIdentity = userData => {
+  const addresses = userData.addresses;
+  const emails = userData.emails;
+  const names = userData.names[0];
+  const phone_numbers = userData.phone_numbers;
+  // logic to be built to verify user identity
+  return true;
+};
+
 const validItemStatuses = new Set(['good', 'bad']);
 const isValidItemStatus = status => validItemStatuses.has(status);
 
@@ -100,4 +109,5 @@ module.exports = {
   sanitizeTransactions,
   validItemStatuses,
   isValidItemStatus,
+  checkUserIdentity,
 };

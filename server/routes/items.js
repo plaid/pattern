@@ -22,6 +22,7 @@ const {
   sanitizeTransactions,
   isValidItemStatus,
   validItemStatuses,
+  checkUserIdentity,
 } = require('../util');
 
 const router = express.Router();
@@ -83,18 +84,7 @@ router.post(
       },
     };
     const identityResponse = await plaid.identityGet(identityRequest);
-    const addresses = identityResponse.data.accounts[0].owners[0].addresses;
-    const emails = identityResponse.data.accounts[0].owners[0].emails;
-    const names = identityResponse.data.accounts[0].owners[0].names[0];
-    const phone_numbers =
-      identityResponse.data.accounts[0].owners[0].phone_numbers;
-    console.log(
-      'identity response:',
-      names,
-      addresses[0],
-      emails[0],
-      phone_numbers[0]
-    );
+    checkUserIdentity(identityResponse.data.accounts[0].owners[0]);
     res.json(sanitizeItems(newItem));
   })
 );

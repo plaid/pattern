@@ -7,12 +7,14 @@ import {
   PlaidLinkOnExitMetadata,
   PlaidLinkError,
   PlaidLinkOptionsWithLinkToken,
+  PlaidLinkOnEventMetadata,
+  PlaidLinkStableEvent,
 } from 'react-plaid-link';
 import { useHistory } from 'react-router-dom';
 
 import { logEvent, logSuccess, logExit } from '../util'; // functions to log and save errors and metadata from Link events.
 import { exchangeToken, setItemState } from '../services/api';
-import { useItems, useLink } from '../services';
+import { useItems, useLink, useErrors } from '../services';
 
 interface Props {
   isOauth?: boolean;
@@ -30,6 +32,7 @@ export default function LinkButton(props: Props) {
   const history = useHistory();
   const { getItemsByUser, getItemById } = useItems();
   const { generateLinkToken } = useLink();
+  const { setError, resetError } = useErrors();
 
   // define onSuccess, onExit and onEvent functions as configs for Plaid Link creation
   const onSuccess = async (
@@ -53,6 +56,7 @@ export default function LinkButton(props: Props) {
       );
       getItemsByUser(props.userId, true);
     }
+    resetError();
     history.push(`/user/${props.userId}`);
   };
 
@@ -65,14 +69,27 @@ export default function LinkButton(props: Props) {
     if (error != null && error.error_code === 'INVALID_LINK_TOKEN') {
       await generateLinkToken(props.userId, props.itemId);
     }
-
+    if (error != null) {
+      setError(error.error_code, error.display_message || error.error_message);
+    }
     // to handle other error codes, see https://plaid.com/docs/errors/
+  };
+
+  const onEvent = async (
+    eventName: PlaidLinkStableEvent | string,
+    metadata: PlaidLinkOnEventMetadata
+  ) => {
+    // handle errors in the event end-user does not exit with onExit function error enabled.
+    if (eventName === 'ERROR' && metadata.error_code != null) {
+      setError(metadata.error_code, ' ');
+    }
+    logEvent(eventName, metadata);
   };
 
   const config: PlaidLinkOptionsWithLinkToken = {
     onSuccess,
     onExit,
-    onEvent: logEvent,
+    onEvent,
     token: props.token,
   };
 

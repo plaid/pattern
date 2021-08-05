@@ -4,7 +4,6 @@ import sortBy from 'lodash/sortBy';
 import NavigationLink from 'plaid-threads/NavigationLink';
 import LoadingSpinner from 'plaid-threads/LoadingSpinner';
 import Callout from 'plaid-threads/Callout';
-import { InlineLink } from 'plaid-threads/InlineLink';
 
 import { RouteInfo, ItemType, AccountType, AssetType } from './types';
 import {
@@ -26,6 +25,7 @@ import {
   ItemCard,
   UserCard,
   LoadingCallout,
+  ErrorMessage,
 } from '.';
 
 // provides view of user's net worth, spending by category and allows them to explore
@@ -135,6 +135,7 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
       <NavigationLink component={Link} to="/">
         BACK TO LOGIN
       </NavigationLink>
+
       <Banner />
       {linkTokens.error.error_code != null && (
         <Callout warning>
@@ -152,6 +153,7 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
         </Callout>
       )}
       <UserCard user={user} userId={userId} removeButton={false} linkButton />
+      {numOfItems === 0 && <ErrorMessage />}
       {numOfItems > 0 && transactions.length === 0 && (
         <div className="loading">
           <LoadingSpinner />
@@ -205,6 +207,7 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
               </LinkButton>
             )}
           </div>
+          <ErrorMessage />
           {items.map(item => (
             <div id="itemCards" key={item.id}>
               <ItemCard item={item} userId={userId} />

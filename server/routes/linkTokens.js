@@ -26,7 +26,7 @@ router.post(
     try {
       const { userId, itemId } = req.body;
       let accessToken = null;
-      let products = ['transactions']; // must include transactions in order to receive transactions webhooks
+      let products = ['auth', 'identity']; // must include transactions in order to receive transactions webhooks
       if (itemId != null) {
         // for the link update mode, include access token and an empty products array
         const itemIdResponse = await retrieveItemById(itemId);

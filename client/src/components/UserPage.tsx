@@ -63,26 +63,6 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
     setUser(usersById[userId] || {});
   }, [usersById, userId]);
 
-  useEffect(() => {
-    // This gets transactions from the database only.
-    // Note that calls to Plaid's transactions/get endpoint are only made in response
-    // to receipt of a transactions webhook.
-    getTransactionsByUser(userId);
-  }, [getTransactionsByUser, userId]);
-
-  useEffect(() => {
-    setTransactions(transactionsByUser[userId] || []);
-  }, [transactionsByUser, userId]);
-
-  // update data store with the user's assets
-  useEffect(() => {
-    getAssetsByUser(userId);
-  }, [getAssetsByUser, userId]);
-
-  useEffect(() => {
-    setAssets(assetsByUser.assets || []);
-  }, [assetsByUser, userId]);
-
   // update data store with the user's items
   useEffect(() => {
     if (userId != null) {
@@ -153,39 +133,6 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
         </Callout>
       )}
       <UserCard user={user} userId={userId} removeButton={false} linkButton />
-      {numOfItems === 0 && <ErrorMessage />}
-      {numOfItems > 0 && transactions.length === 0 && (
-        <div className="loading">
-          <LoadingSpinner />
-          <LoadingCallout />
-        </div>
-      )}
-      {numOfItems > 0 && transactions.length > 0 && (
-        <>
-          <NetWorth
-            accounts={accounts}
-            numOfItems={numOfItems}
-            personalAssets={assets}
-            userId={userId}
-            assetsOnly={false}
-          />
-          <SpendingInsights
-            numOfItems={numOfItems}
-            transactions={transactions}
-          />
-        </>
-      )}
-      {numOfItems === 0 && transactions.length === 0 && assets.length > 0 && (
-        <>
-          <NetWorth
-            accounts={accounts}
-            numOfItems={numOfItems}
-            personalAssets={assets}
-            userId={userId}
-            assetsOnly
-          />
-        </>
-      )}
       {numOfItems > 0 && (
         <>
           <div className="item__header">

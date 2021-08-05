@@ -11,13 +11,15 @@ const db = require('../');
  * @param {string} plaidAccessToken the Plaid access token of the item.
  * @param {string} plaidItemId the Plaid ID of the item.
  * @param {number} userId the ID of the user.
+ * @param {number} plaidAccountId the ID of the selected account.
  * @returns {Object} the new item.
  */
 const createItem = async (
   plaidInstitutionId,
   plaidAccessToken,
   plaidItemId,
-  userId
+  userId,
+  plaidAccountId
 ) => {
   // this method only gets called on successfully linking an item.
   // We know the status is good.
@@ -26,13 +28,20 @@ const createItem = async (
     // RETURNING is a Postgres-specific clause that returns a list of the inserted items.
     text: `
       INSERT INTO items_table
-        (user_id, plaid_access_token, plaid_item_id, plaid_institution_id, status)
+        (user_id, plaid_access_token, plaid_item_id, plaid_institution_id, plaid_account_id, status)
       VALUES
-        ($1, $2, $3, $4, $5)
+        ($1, $2, $3, $4, $5, $6)
       RETURNING
         *;
     `,
-    values: [userId, plaidAccessToken, plaidItemId, plaidInstitutionId, status],
+    values: [
+      userId,
+      plaidAccessToken,
+      plaidItemId,
+      plaidInstitutionId,
+      plaidAccountId,
+      status,
+    ],
   };
   const { rows } = await db.query(query);
   return rows[0];

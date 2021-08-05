@@ -28,6 +28,7 @@ const sanitizeAccounts = accounts =>
     'id',
     'item_id',
     'user_id',
+    'plaid_account_id',
     'name',
     'mask',
     'official_name',
@@ -35,6 +36,9 @@ const sanitizeAccounts = accounts =>
     'available_balance',
     'iso_currency_code',
     'unofficial_currency_code',
+    'ach_account',
+    'ach_routing',
+    'ach_wire_routing',
     'type',
     'subtype',
     'created_at',
@@ -52,6 +56,7 @@ const sanitizeItems = items =>
     'user_id',
     'plaid_institution_id',
     'status',
+    'plaid_account_id',
     'created_at',
     'updated_at',
   ]);
@@ -84,6 +89,15 @@ const sanitizeTransactions = transactions =>
     'updated_at',
   ]);
 
+const checkUserIdentity = userData => {
+  const addresses = userData.addresses;
+  const emails = userData.emails;
+  const names = userData.names[0];
+  const phone_numbers = userData.phone_numbers;
+  // logic to be built to verify user identity
+  return true;
+};
+
 const validItemStatuses = new Set(['good', 'bad']);
 const isValidItemStatus = status => validItemStatuses.has(status);
 
@@ -95,4 +109,5 @@ module.exports = {
   sanitizeTransactions,
   validItemStatuses,
   isValidItemStatus,
+  checkUserIdentity,
 };

@@ -19,7 +19,6 @@ const plaid = require('../plaid');
 const {
   sanitizeAccounts,
   sanitizeItems,
-  sanitizeTransactions,
   isValidItemStatus,
   validItemStatuses,
   checkUserIdentity,
@@ -182,21 +181,6 @@ router.get(
     const { itemId } = req.params;
     const accounts = await retrieveAccountsByItemId(itemId);
     res.json(sanitizeAccounts(accounts));
-  })
-);
-
-/**
- * Retrieves all transactions associated with a single item.
- *
- * @param {string} itemId the ID of the item.
- * @returns {Object[]} an array of transactions.
- */
-router.get(
-  '/:itemId/transactions',
-  asyncWrapper(async (req, res) => {
-    const { itemId } = req.params;
-    const transactions = await retrieveTransactionsByItemId(itemId);
-    res.json(sanitizeTransactions(transactions));
   })
 );
 

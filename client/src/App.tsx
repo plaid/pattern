@@ -8,10 +8,9 @@ import { AccountsProvider } from './services/accounts';
 import { InstitutionsProvider } from './services/institutions';
 import { ItemsProvider } from './services/items';
 import { LinkProvider } from './services/link';
-import { TransactionsProvider } from './services/transactions';
+
 import { UsersProvider } from './services/users';
 import { CurrentUserProvider } from './services/currentUser';
-import { AssetsProvider } from './services/assets';
 import { ErrorsProvider } from './services/errors';
 
 import './App.scss';
@@ -31,23 +30,19 @@ function App() {
         <ItemsProvider>
           <LinkProvider>
             <AccountsProvider>
-              <TransactionsProvider>
-                <ErrorsProvider>
-                  <UsersProvider>
-                    <CurrentUserProvider>
-                      <AssetsProvider>
-                        <Sockets />
-                        <Switch>
-                          <Route exact path="/" component={Landing} />
-                          <Route path="/user/:userId" component={UserPage} />
-                          <Route path="/oauth-link" component={OAuthLink} />
-                          <Route path="/admin" component={UserList} />
-                        </Switch>
-                      </AssetsProvider>
-                    </CurrentUserProvider>
-                  </UsersProvider>
-                </ErrorsProvider>
-              </TransactionsProvider>
+              <ErrorsProvider>
+                <UsersProvider>
+                  <CurrentUserProvider>
+                    <Sockets />
+                    <Switch>
+                      <Route exact path="/" component={Landing} />
+                      <Route path="/user/:userId" component={UserPage} />
+                      <Route path="/oauth-link" component={OAuthLink} />
+                      <Route path="/admin" component={UserList} />
+                    </Switch>
+                  </CurrentUserProvider>
+                </UsersProvider>
+              </ErrorsProvider>
             </AccountsProvider>
           </LinkProvider>
         </ItemsProvider>

@@ -37,6 +37,7 @@ interface AccountsContextShape extends AccountsState {
   getAccountsByUser: (userId: number) => void;
   accountsByUser: { [user_id: number]: AccountType[] };
   deleteAccountsByUserId: (userId: number) => void;
+  getAccountsByItem: (itemId: number) => void;
 }
 const AccountsContext = createContext<AccountsContextShape>(
   initialState as AccountsContextShape

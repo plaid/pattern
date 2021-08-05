@@ -35,7 +35,6 @@ const createAccounts = async (plaidItemId, accounts, numbers) => {
       subtype,
       type,
     } = account;
-
     const query = {
       // RETURNING is a Postgres-specific clause that returns a list of the inserted items.
       text: `

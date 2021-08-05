@@ -56,7 +56,6 @@ router.post(
     });
     const accessToken = response.data.access_token;
     const itemId = response.data.item_id;
-    console.log('accountId:', accounts[0].id);
     const newItem = await createItem(
       institutionId,
       accessToken,
@@ -64,28 +63,29 @@ router.post(
       userId,
       accounts[0].id
     );
-    const authRequest = {
+    const authAndIdRequest = {
       access_token: accessToken,
       options: {
         account_ids: [accounts[0].id],
       },
     };
-    const authResponse = await plaid.authGet(authRequest);
+    const authResponse = await plaid.authGet(authAndIdRequest);
 
     const newAccount = await createAccounts(
       itemId,
       authResponse.data.accounts,
       authResponse.data.numbers
     );
-    const identityRequest = {
-      access_token: accessToken,
-      options: {
-        account_ids: [accounts[0].id],
-      },
-    };
-    const identityResponse = await plaid.identityGet(identityRequest);
-    checkUserIdentity(identityResponse.data.accounts[0].owners[0]);
-    res.json(sanitizeItems(newItem));
+
+    const identityResponse = await plaid.identityGet(authAndIdRequest);
+    const isUser = checkUserIdentity(
+      identityResponse.data.accounts[0].owners[0]
+    );
+    res.json({
+      items: sanitizeItems(newItem),
+      accounts: sanitizeAccounts(newAccount),
+      identityCheck: isUser,
+    });
   })
 );
 

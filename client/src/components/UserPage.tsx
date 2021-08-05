@@ -78,7 +78,6 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
       item => new Date(item.updated_at)
     ).reverse();
     setItems(orderedItems);
-    console.log(orderedItems);
   }, [itemsByUser, userId]);
 
   // update no of items from data store
@@ -97,7 +96,6 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
 
   useEffect(() => {
     setAccounts(accountsByUser[userId] || []);
-    console.log('accounts', accountsByUser[userId]);
   }, [accountsByUser, userId]);
 
   // creates new link token upon new user or change in number of items
@@ -110,8 +108,6 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
   useEffect(() => {
     setToken(linkTokens.byUser[userId]);
   }, [linkTokens, userId, numOfItems]);
-
-  console.log('accounts', accounts);
 
   document.getElementsByTagName('body')[0].style.overflow = 'auto'; // to override overflow:hidden from link pane
   return (

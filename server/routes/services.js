@@ -42,7 +42,6 @@ router.post(
     // There are five types of webhooks: AUTH, TRANSACTIONS, ITEM, INCOME, and ASSETS.
     // @TODO implement handling for remaining webhook types.
     const webhookHandlerMap = {
-      transactions: handleTransactionsWebhook,
       item: handleItemWebhook,
     };
     const webhookHandler = webhookHandlerMap[type] || unhandledWebhook;

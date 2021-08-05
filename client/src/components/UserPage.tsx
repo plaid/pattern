@@ -2,31 +2,14 @@ import React, { useEffect, useState } from 'react';
 import { Link, RouteComponentProps } from 'react-router-dom';
 import sortBy from 'lodash/sortBy';
 import NavigationLink from 'plaid-threads/NavigationLink';
-import LoadingSpinner from 'plaid-threads/LoadingSpinner';
 import Callout from 'plaid-threads/Callout';
 
-import { RouteInfo, ItemType, AccountType, AssetType } from './types';
-import {
-  useItems,
-  useAccounts,
-  useTransactions,
-  useUsers,
-  useAssets,
-  useLink,
-} from '../services';
+import { RouteInfo, ItemType, AccountType } from './types';
+import { useItems, useAccounts, useUsers, useLink } from '../services';
 
 import { pluralize } from '../util';
 
-import {
-  Banner,
-  LinkButton,
-  SpendingInsights,
-  NetWorth,
-  ItemCard,
-  UserCard,
-  LoadingCallout,
-  ErrorMessage,
-} from '.';
+import { Banner, LinkButton, UserCard, ErrorMessage, ItemCard } from '.';
 
 // provides view of user's net worth, spending by category and allows them to explore
 // account and transactions details for linked items
@@ -41,13 +24,9 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
   const [items, setItems] = useState<ItemType[]>([]);
   const [token, setToken] = useState('');
   const [numOfItems, setNumOfItems] = useState(0);
-  const [transactions, setTransactions] = useState([]);
   const [accounts, setAccounts] = useState<AccountType[]>([]);
-  const [assets, setAssets] = useState<AssetType[]>([]);
 
-  const { getTransactionsByUser, transactionsByUser } = useTransactions();
   const { getAccountsByUser, accountsByUser } = useAccounts();
-  const { assetsByUser, getAssetsByUser } = useAssets();
   const { usersById, getUserById } = useUsers();
   const { itemsByUser, getItemsByUser } = useItems();
   const userId = Number(match.params.userId);

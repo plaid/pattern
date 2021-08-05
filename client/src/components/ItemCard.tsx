@@ -1,18 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import Note from 'plaid-threads/Note';
 import Touchable from 'plaid-threads/Touchable';
-import { InlineLink } from 'plaid-threads/InlineLink';
-import { Callout } from 'plaid-threads/Callout';
 import { Institution } from 'plaid/dist/api';
 
 import { ItemType, AccountType } from './types';
 import { AccountCard, MoreDetails } from '.';
-import {
-  useAccounts,
-  useInstitutions,
-  useItems,
-  useTransactions,
-} from '../services';
+import { useAccounts, useInstitutions, useItems } from '../services';
 import { setItemToBadState } from '../services/api';
 import { diffBetweenCurrentTime } from '../util';
 
@@ -35,10 +28,12 @@ const ItemCard = (props: Props) => {
   });
   const [showAccounts, setShowAccounts] = useState(false);
 
-  const { accountsByItem } = useAccounts();
-  const { deleteAccountsByItemId } = useAccounts();
+  const {
+    deleteAccountsByItemId,
+    accountsByItem,
+    getAccountsByItem,
+  } = useAccounts();
   const { deleteItemById } = useItems();
-  const { deleteTransactionsByItemId } = useTransactions();
   const {
     institutionsById,
     getInstitutionById,
@@ -47,6 +42,10 @@ const ItemCard = (props: Props) => {
   const { id, plaid_institution_id, status } = props.item;
   const isSandbox = PLAID_ENV === 'sandbox';
   const isGoodState = status === 'good';
+
+  useEffect(() => {
+    getAccountsByItem(id);
+  }, [getAccountsByItem, id]);
 
   useEffect(() => {
     const itemAccounts: AccountType[] = accountsByItem[id];
@@ -67,7 +66,6 @@ const ItemCard = (props: Props) => {
   const handleDeleteItem = () => {
     deleteItemById(id, props.userId);
     deleteAccountsByItemId(id);
-    deleteTransactionsByItemId(id);
   };
 
   const cardClassNames = showAccounts
@@ -114,24 +112,14 @@ const ItemCard = (props: Props) => {
           itemId={id}
         />
       </div>
-      {showAccounts && accounts.length > 0 && (
-        <div>
+      {showAccounts && (
+        <div className="accounts">
           {accounts.map(account => (
             <div key={account.id}>
               <AccountCard account={account} />
             </div>
           ))}
         </div>
-      )}
-      {showAccounts && accounts.length === 0 && (
-        <Callout>
-          No transactions or accounts have been retrieved for this item. See the{' '}
-          <InlineLink href="https://github.com/plaid/pattern/blob/master/docs/troubleshooting.md">
-            {' '}
-            troubleshooting guide{' '}
-          </InlineLink>{' '}
-          to learn about receiving transactions webhooks with this sample app.
-        </Callout>
       )}
     </div>
   );

@@ -12,7 +12,7 @@ import omit from 'lodash/omit';
 import { toast } from 'react-toastify';
 
 import { UserType } from '../components/types';
-import { useAccounts, useItems, useTransactions } from '.';
+import { useAccounts, useItems } from '.';
 import {
   getUsers as apiGetUsers,
   getUserById as apiGetUserById,
@@ -46,7 +46,6 @@ export function UsersProvider(props: any) {
   const [usersById, dispatch] = useReducer(reducer, {});
   const { deleteAccountsByUserId } = useAccounts();
   const { deleteItemsByUserId } = useItems();
-  const { deleteTransactionsByUserId } = useTransactions();
 
   const hasRequested = useRef<{
     all: Boolean;
@@ -107,11 +106,10 @@ export function UsersProvider(props: any) {
       await apiDeleteUserById(id); // this will delete all items associated with user
       deleteItemsByUserId(id);
       deleteAccountsByUserId(id);
-      deleteTransactionsByUserId(id);
       dispatch({ type: 'SUCCESSFUL_DELETE', payload: id });
       delete hasRequested.current.byId[id];
     },
-    [deleteItemsByUserId, deleteAccountsByUserId, deleteTransactionsByUserId]
+    [deleteItemsByUserId, deleteAccountsByUserId]
   );
 
   /**

@@ -77,39 +77,6 @@ AS
     items_table;
 
 
--- -- ASSETS
--- -- This table is used to store the assets associated with each user. The view returns the same data
--- -- as the table, we're just using both to maintain consistency with our other tables.
-
-CREATE TABLE assets_table
-(
-  id SERIAL PRIMARY KEY,
-  user_id integer REFERENCES users_table(id) ON DELETE CASCADE,
-  value numeric(28,2),
-  description text,
-  created_at timestamptz default now(),
-  updated_at timestamptz default now()
-);
-
-CREATE TRIGGER assets_updated_at_timestamp
-BEFORE UPDATE ON assets_table
-FOR EACH ROW
-EXECUTE PROCEDURE trigger_set_timestamp();
-
-CREATE VIEW assets
-AS
-  SELECT
-    id,
-    user_id,
-    value,
-    description,
-    created_at,
-    updated_at
-  FROM
-    assets_table;
-
-
-
 
 -- ACCOUNTS
 -- This table is used to store the accounts associated with each item. The view returns all the
@@ -168,62 +135,6 @@ AS
     accounts_table a
     LEFT JOIN items i ON i.id = a.item_id;
 
-
--- TRANSACTIONS
--- This table is used to store the transactions associated with each account. The view returns all
--- the data from the transactions table and some data from the accounts view. For more info on the
--- Plaid Transactions schema, see the docs page: https://plaid.com/docs/#transaction-schema
-
-CREATE TABLE transactions_table
-(
-  id SERIAL PRIMARY KEY,
-  account_id integer REFERENCES accounts_table(id) ON DELETE CASCADE,
-  plaid_transaction_id text UNIQUE NOT NULL,
-  plaid_category_id text,
-  category text,
-  subcategory text,
-  type text NOT NULL,
-  name text NOT NULL,
-  amount numeric(28,10) NOT NULL,
-  iso_currency_code text,
-  unofficial_currency_code text,
-  date date NOT NULL,
-  pending boolean NOT NULL,
-  account_owner text,
-  created_at timestamptz default now(),
-  updated_at timestamptz default now()
-);
-
-CREATE TRIGGER transactions_updated_at_timestamp
-BEFORE UPDATE ON transactions_table
-FOR EACH ROW
-EXECUTE PROCEDURE trigger_set_timestamp();
-
-CREATE VIEW transactions
-AS
-  SELECT
-    t.id,
-    t.plaid_transaction_id,
-    t.account_id,
-    a.plaid_account_id,
-    a.item_id,
-    a.plaid_item_id,
-    a.user_id,
-    t.category,
-    t.subcategory,
-    t.type,
-    t.name,
-    t.amount,
-    t.iso_currency_code,
-    t.unofficial_currency_code,
-    t.date,
-    t.pending,
-    t.account_owner,
-    t.created_at,
-    t.updated_at
-  FROM
-    transactions_table t
-    LEFT JOIN accounts a ON t.account_id = a.id;
 
 
 -- The link_events_table is used to log responses from the Plaid API for client requests to the

@@ -106,21 +106,6 @@ router.get(
 );
 
 /**
- * Retrieves all transactions associated with a single user.
- *
- * @param {string} userId the ID of the user.
- * @returns {Object[]} an array of transactions
- */
-router.get(
-  '/:userId/transactions',
-  asyncWrapper(async (req, res) => {
-    const { userId } = req.params;
-    const transactions = await retrieveTransactionsByUserId(userId);
-    res.json(sanitizeTransactions(transactions));
-  })
-);
-
-/**
  * Deletes a user and its related items
  *
  * @param {string} userId the ID of the user.

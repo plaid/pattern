@@ -10,6 +10,7 @@ export interface ItemType {
   user_id: number;
   plaid_access_token: string;
   plaid_institution_id: string;
+  plaid_account_id: string;
   status: string;
   created_at: string;
   updated_at: string;
@@ -27,6 +28,9 @@ export interface AccountType {
   available_balance: number;
   iso_currency_code: string;
   unofficial_currency_code: string;
+  ach_account: string;
+  ach_routing: string;
+  ach_wire_routing: string;
   type: 'depository' | 'investment' | 'loan' | 'credit';
   subtype:
     | 'checking'
@@ -41,36 +45,6 @@ export interface AccountType {
   created_at: string;
   updated_at: string;
 }
-export interface TransactionType {
-  id: number;
-  account_id: number;
-  item_id: number;
-  user_id: number;
-  plaid_transaction_id: string;
-  plaid_category_id: string;
-  category: string;
-  subcategory: string;
-  type: string;
-  name: string;
-  amount: number;
-  iso_currency_code: string;
-  unofficial_currency_code: string;
-  date: string;
-  pending: boolean;
-  account_owner: string;
-  created_at: string;
-  updated_at: string;
-}
-
-export interface AssetType {
-  id: number;
-  user_id: number;
-  value: number;
-  description: string;
-  created_at: string;
-  updated_at: string;
-}
-
 export interface UserType {
   id: number;
   username: string | null;

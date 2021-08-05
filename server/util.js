@@ -70,25 +70,10 @@ const sanitizeUsers = users =>
   sanitizeWith(users, ['id', 'username', 'created_at', 'updated_at']);
 
 /**
- * Returns an array of transactions
+ * Returns an boolean to check if identity for user is correct
  *
- * @param {(Object|Object[])} transactions a single transaction of an array of transactions.
+ * @param {(Object|Object[])} userData the data obtained from identityGet.
  */
-const sanitizeTransactions = transactions =>
-  sanitizeWith(transactions, [
-    'id',
-    'account_id',
-    'item_id',
-    'user_id',
-    'name',
-    'type',
-    'date',
-    'category',
-    'amount',
-    'created_at',
-    'updated_at',
-  ]);
-
 const checkUserIdentity = userData => {
   const addresses = userData.addresses;
   const emails = userData.emails;
@@ -106,7 +91,6 @@ module.exports = {
   sanitizeAccounts,
   sanitizeItems,
   sanitizeUsers,
-  sanitizeTransactions,
   validItemStatuses,
   isValidItemStatus,
   checkUserIdentity,

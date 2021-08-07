@@ -1,6 +1,8 @@
 const isArray = require('lodash/isArray');
 const pick = require('lodash/pick');
 
+const { retrieveUserById } = require('./db/queries');
+
 /**
  * Wraps input in an array if needed.
  *
@@ -39,6 +41,7 @@ const sanitizeAccounts = accounts =>
     'ach_account',
     'ach_routing',
     'ach_wire_routing',
+    'owner_names',
     'type',
     'subtype',
     'created_at',
@@ -69,20 +72,6 @@ const sanitizeItems = items =>
 const sanitizeUsers = users =>
   sanitizeWith(users, ['id', 'username', 'created_at', 'updated_at']);
 
-/**
- * Returns an boolean to check if identity for user is correct
- *
- * @param {(Object|Object[])} userData the data obtained from identityGet.
- */
-const checkUserIdentity = userData => {
-  const addresses = userData.addresses;
-  const emails = userData.emails;
-  const names = userData.names[0];
-  const phone_numbers = userData.phone_numbers;
-  // logic to be built to verify user identity
-  return true;
-};
-
 const validItemStatuses = new Set(['good', 'bad']);
 const isValidItemStatus = status => validItemStatuses.has(status);
 
@@ -93,5 +82,4 @@ module.exports = {
   sanitizeUsers,
   validItemStatuses,
   isValidItemStatus,
-  checkUserIdentity,
 };

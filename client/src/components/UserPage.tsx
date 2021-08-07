@@ -75,6 +75,7 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
 
   useEffect(() => {
     setAccounts(accountsByUser[userId] || []);
+    console.log(accountsByUser[userId]);
   }, [accountsByUser, userId]);
 
   // creates new link token upon new user or change in number of items
@@ -114,31 +115,8 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
       <UserCard user={user} userId={userId} removeButton={false} linkButton />
       {numOfItems > 0 && (
         <>
-          <div className="item__header">
-            <div>
-              <h2 className="item__header-heading">
-                {`${items.length} ${pluralize('Bank', items.length)} Linked`}
-              </h2>
-              {!!items.length && (
-                <p className="item__header-subheading">
-                  Below is a list of all your connected banks. Click on a bank
-                  to view its associated accounts.
-                </p>
-              )}
-            </div>
-            {token != null && token.length > 0 && (
-              // Link will not render unless there is a link token
-              <LinkButton token={token} userId={userId} itemId={null}>
-                Add Another Bank
-              </LinkButton>
-            )}
-          </div>
           <ErrorMessage />
-          {items.map(item => (
-            <div id="itemCards" key={item.id}>
-              <ItemCard item={item} userId={userId} />
-            </div>
-          ))}
+          <ItemCard item={items[0]} userId={userId} />
         </>
       )}
     </div>

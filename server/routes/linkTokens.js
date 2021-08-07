@@ -36,7 +36,6 @@ router.post(
       const response = await fetch('http://ngrok:4040/api/tunnels');
       const { tunnels } = await response.json();
       const httpTunnel = tunnels.find(t => t.proto === 'http');
-      console.log('redirect:', redirect_uri);
       const linkTokenParams = {
         user: {
           // This should correspond to a unique id for the current user.

@@ -8,6 +8,7 @@ const db = require('../');
  * Creates a single user.
  *
  * @param {string} username the username of the user.
+ * @param {string} email the email of the user.
  * @returns {Object} the new user.
  */
 const createUser = async (username, email) => {

@@ -108,8 +108,6 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
   }, [accounts, checkUserEmail, checkUserName, userId, identityCheck]);
 
   document.getElementsByTagName('body')[0].style.overflow = 'auto'; // to override overflow:hidden from link pane
-  console.log(user);
-  console.log(identityCheck);
   return (
     <div>
       <NavigationLink component={Link} to="/">

@@ -4,7 +4,7 @@ import sortBy from 'lodash/sortBy';
 import NavigationLink from 'plaid-threads/NavigationLink';
 
 import { RouteInfo, ItemType, AccountType } from './types';
-import { useItems, useAccounts, useUsers, useLink } from '../services';
+import { useItems, useAccounts, useUsers } from '../services';
 import { setIdentityCheckById } from '../services/api';
 
 import { Banner, UserCard, ErrorMessage, ItemCard } from '.';
@@ -99,15 +99,17 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
   useEffect(() => {
     // checks identity of user against identity/get data stored in accounts data
     // only checks if identity has not already been verified.
-    if (accounts.length > 0 && user.identity_check === false) {
+    if (accounts.length > 0 && identityCheck === false) {
       const nameCheck = checkUserName(accounts[0].owner_names);
       const emailCheck = checkUserEmail(accounts[0].emails);
-      setIdentityCheckById(userId, nameCheck && emailCheck);
-      setIdentityCheck(nameCheck && emailCheck);
+      setIdentityCheckById(userId, nameCheck && emailCheck); // update user_table in db
+      setIdentityCheck(nameCheck && emailCheck); // set state
     }
-  }, [accounts, checkUserEmail, checkUserName, userId, user.identity_check]);
+  }, [accounts, checkUserEmail, checkUserName, userId, identityCheck]);
 
   document.getElementsByTagName('body')[0].style.overflow = 'auto'; // to override overflow:hidden from link pane
+  console.log(user);
+  console.log(identityCheck);
   return (
     <div>
       <NavigationLink component={Link} to="/">

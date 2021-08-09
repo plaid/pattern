@@ -106,21 +106,6 @@ export default function UserCard(props: Props) {
           )}
         </div>
       </div>
-      {linkTokens.error.error_code != null && (
-        <Callout warning>
-          <div>
-            Unable to fetch link_token: please make sure your backend server is
-            running and that your .env file has been configured correctly.
-          </div>
-          <div>
-            Error Code: <code>{linkTokens.error.error_code}</code>
-          </div>
-          <div>
-            Error Type: <code>{linkTokens.error.error_type}</code>{' '}
-          </div>
-          <div>Error Message: {linkTokens.error.error_message}</div>
-        </Callout>
-      )}
     </>
   );
 }

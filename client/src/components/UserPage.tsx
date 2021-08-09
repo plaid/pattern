@@ -24,7 +24,7 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
   const [items, setItems] = useState<ItemType[]>([]);
   const [numOfItems, setNumOfItems] = useState(0);
   const [accounts, setAccounts] = useState<AccountType[]>([]);
-  const [identityCheck, setIdentityCheck] = useState(false);
+  const [identityCheck, setIdentityCheck] = useState(user.identity_check);
 
   const { getAccountsByUser, accountsByUser } = useAccounts();
   const { usersById, getUserById } = useUsers();
@@ -68,7 +68,7 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
     if (userId != null) {
       getItemsByUser(userId, true);
     }
-  }, [getItemsByUser, userId]);
+  }, [getItemsByUser, getAccountsByUser, userId]);
 
   // update state items from data store
   useEffect(() => {
@@ -78,7 +78,7 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
       item => new Date(item.updated_at)
     ).reverse();
     setItems(orderedItems);
-  }, [itemsByUser, userId]);
+  }, [itemsByUser, accountsByUser, userId]);
 
   // update no of items from data store
   useEffect(() => {
@@ -92,7 +92,7 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
   // update data store with the user's accounts
   useEffect(() => {
     getAccountsByUser(userId);
-  }, [getAccountsByUser, userId]);
+  }, [getAccountsByUser, userId, numOfItems]);
 
   useEffect(() => {
     setAccounts(accountsByUser[userId] || []);
@@ -100,20 +100,13 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
   }, [accountsByUser, userId]);
 
   useEffect(() => {
-    if (accounts.length > 0) {
+    if (accounts.length > 0 && user.identity_check === false) {
       const nameCheck = checkUserName(accounts[0].owner_names);
       const emailCheck = checkUserEmail(accounts[0].emails);
       setIdentityCheckById(userId, nameCheck && emailCheck);
-      setIdentityCheck(user.identity_check);
+      setIdentityCheck(nameCheck && emailCheck);
     }
-  }, [
-    accounts,
-    checkUserEmail,
-    checkUserName,
-    userId,
-    user.identity_check,
-    numOfItems,
-  ]);
+  }, [accounts, checkUserEmail, checkUserName, userId, user.identity_check]);
 
   console.log(user);
 
@@ -129,12 +122,11 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
       {numOfItems > 0 && (
         <>
           <ErrorMessage />
-          {accounts.length > 0 && identityCheck && (
-            <ItemCard item={items[0]} userId={userId} />
-          )}
-          {accounts.length > 0 && !identityCheck && (
-            <div>user not identified. Use another form of identification</div>
-          )}
+          <ItemCard
+            item={items[0]}
+            identityCheck={identityCheck}
+            userId={userId}
+          />
         </>
       )}
     </div>

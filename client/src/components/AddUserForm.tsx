@@ -23,7 +23,6 @@ const AddUserForm = (props: Props) => {
   useEffect(() => {
     getUsers(true);
   }, [addNewUser, getUsers]);
-  console.log("i'm here!!", username, email);
 
   return (
     <div className="box addUserForm">

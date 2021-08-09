@@ -222,7 +222,7 @@ Item overview
   padding: (2 * $unit) 0 (2 * $unit) (2 * $unit);
   width: 95%;
   display: grid;
-  grid-template-columns: 6fr 3fr 3fr 7fr;
+  grid-template-columns: 8fr 3fr 3fr 9fr;
 }
 
 .item-card__column-1 {
@@ -233,6 +233,10 @@ Item overview
 .item-card__column-2 {
   margin-top: $unit;
   margin-right: 2 * $unit;
+}
+
+.item-card__column-3 {
+  margin-top: $unit;
 }
 
 .item-card__img {

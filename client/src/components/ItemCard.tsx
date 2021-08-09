@@ -100,7 +100,7 @@ const ItemCard = (props: Props) => {
               </Note>
             )}
           </div>
-          <div className="item-card__column-2">
+          <div className="item-card__column-3">
             {isGoodState ? (
               <Note info solid>
                 Login
@@ -113,7 +113,7 @@ const ItemCard = (props: Props) => {
               </Note>
             )}
           </div>
-          <div className="item-card__column-3">
+          <div className="item-card__column-4">
             <h3 className="heading">LAST UPDATED</h3>
             <p className="value">
               {diffBetweenCurrentTime(props.item.updated_at)}

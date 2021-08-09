@@ -9,9 +9,6 @@ import { setIdentityCheckById } from '../services/api';
 
 import { Banner, UserCard, ErrorMessage, ItemCard } from '.';
 
-// provides view of user's net worth, spending by category and allows them to explore
-// account and transactions details for linked items
-
 const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
   const [user, setUser] = useState({
     id: 0,

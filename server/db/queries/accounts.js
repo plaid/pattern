@@ -12,6 +12,7 @@ const db = require('../');
  * @param {Object[]} accounts an array of accounts.
  * @param {Object} numbers an object of number types.
  * @param {string[]} ownerNames an array of owner names.
+ * @param {string[]} emails an array of emails.
  * @returns {Object[]} an array of new accounts.
  */
 const createAccounts = async (

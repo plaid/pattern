@@ -14,7 +14,13 @@ const db = require('../');
  * @param {string[]} ownerNames an array of owner names.
  * @returns {Object[]} an array of new accounts.
  */
-const createAccounts = async (plaidItemId, accounts, numbers, ownerNames) => {
+const createAccounts = async (
+  plaidItemId,
+  accounts,
+  numbers,
+  ownerNames,
+  emails
+) => {
   const { id: itemId } = await retrieveItemByPlaidItemId(plaidItemId);
   const {
     account: achAccount,
@@ -54,11 +60,12 @@ const createAccounts = async (plaidItemId, accounts, numbers, ownerNames) => {
             ach_routing,
             ach_wire_routing,
             owner_names,
+            emails,
             type,
             subtype
           )
         VALUES
-          ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15)
+          ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16)
         ON CONFLICT
           (plaid_account_id)
         DO UPDATE SET
@@ -81,6 +88,7 @@ const createAccounts = async (plaidItemId, accounts, numbers, ownerNames) => {
         achRouting,
         achWireRouting,
         ownerNames,
+        emails,
         type,
         subtype,
       ],

@@ -10,11 +10,12 @@ const db = require('../');
  * @param {string} username the username of the user.
  * @returns {Object} the new user.
  */
-const createUser = async username => {
+const createUser = async (username, email) => {
   const query = {
     // RETURNING is a Postgres-specific clause that returns a list of the inserted items.
-    text: 'INSERT INTO users_table (username) VALUES ($1) RETURNING *;',
-    values: [username],
+    text:
+      'INSERT INTO users_table (username, email, identity_check) VALUES ($1, $2, $3) RETURNING *;',
+    values: [username, email, false],
   };
   const { rows } = await db.query(query);
   return rows[0];
@@ -31,6 +32,20 @@ const deleteUsers = async userId => {
   const query = {
     text: 'DELETE FROM users_table WHERE id = $1;',
     values: [userId],
+  };
+  await db.query(query);
+};
+
+/**
+ * Updates the identityCheck for a user.
+ *
+ * @param {number} userId the userID.
+ * @param {boolean} identityCheck true or false for a user.
+ */
+const updateIdentityCheck = async (userId, identityCheck) => {
+  const query = {
+    text: 'UPDATE users SET identity_check = $1 WHERE id = $2',
+    values: [identityCheck, userId],
   };
   await db.query(query);
 };
@@ -86,4 +101,5 @@ module.exports = {
   retrieveUserById,
   retrieveUserByUsername,
   retrieveUsers,
+  updateIdentityCheck,
 };

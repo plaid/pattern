@@ -58,9 +58,9 @@ export function UsersProvider(props: any) {
   /**
    * @desc Creates a new user
    */
-  const addNewUser = useCallback(async username => {
+  const addNewUser = useCallback(async (username, email) => {
     try {
-      const { data: payload } = await apiAddNewUser(username);
+      const { data: payload } = await apiAddNewUser(username, email);
       dispatch({ type: 'SUCCESSFUL_GET', payload: payload });
     } catch (err) {
       const { response } = err;
@@ -97,6 +97,19 @@ export function UsersProvider(props: any) {
       dispatch({ type: 'SUCCESSFUL_GET', payload: payload });
     }
   }, []);
+
+  //   /**
+  //  * @desc Requests details for a single User.
+  //  * The api request will be bypassed if the data has already been fetched.
+  //  * A 'refresh' parameter can force a request for new data even if local state exists.
+  //  */
+  //    const setIdentityCheckByUser = useCallback(async (id, identityCheck refresh) => {
+  //     if (!hasRequested.current.byId[id] || refresh) {
+  //       hasRequested.current.byId[id] = true;
+  //       const { data: payload } = await apiSetIdentityCheckById(id, identityCheck);
+  //       dispatch({ type: 'SUCCESSFUL_GET', payload: payload });
+  //     }
+  //   }, []);
 
   /**
    * @desc Will delete User by userId.

@@ -24,8 +24,10 @@ export const getLoginUser = (username: string) =>
 // users
 export const getUsers = () => api.get('/users');
 export const getUserById = (userId: number) => api.get(`/users/${userId}`);
-export const addNewUser = (username: string) =>
-  api.post('/users', { username });
+export const addNewUser = (username: string, email: string) =>
+  api.post('/users', { username, email });
+export const setIdentityCheckById = (userId: number, identityCheck: boolean) =>
+  api.put(`/users/${userId}`, { identityCheck });
 export const deleteUserById = (userId: number) =>
   api.delete(`/users/${userId}`);
 

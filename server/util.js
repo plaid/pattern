@@ -42,6 +42,7 @@ const sanitizeAccounts = accounts =>
     'ach_routing',
     'ach_wire_routing',
     'owner_names',
+    'emails',
     'type',
     'subtype',
     'created_at',
@@ -70,7 +71,22 @@ const sanitizeItems = items =>
  * @param {(Object|Object[])} users a single user or an array of users.
  */
 const sanitizeUsers = users =>
-  sanitizeWith(users, ['id', 'username', 'created_at', 'updated_at']);
+  sanitizeWith(users, [
+    'id',
+    'username',
+    'email',
+    'identity_check',
+    'created_at',
+    'updated_at',
+  ]);
+
+/**
+ * Returns an boolean to check if identity for user is correct
+ *
+ * @param {number} userId the id of the user.
+ * @param {string[]} names the financial institution's array of all the owners of a particular account
+ * e.g. ["Alberta Bobbeth Charleson", "Plaid Platypus", "Jane Doe"]
+ */
 
 const validItemStatuses = new Set(['good', 'bad']);
 const isValidItemStatus = status => validItemStatuses.has(status);

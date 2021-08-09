@@ -26,6 +26,7 @@ const {
   retrieveUsers,
   retrieveUserById,
   retrieveUserByUsername,
+  updateIdentityCheck,
 } = require('./users');
 const { createLinkEvent } = require('./linkEvents');
 
@@ -52,6 +53,7 @@ module.exports = {
   retrieveUserById,
   retrieveUserByUsername,
   retrieveUsers,
+  updateIdentityCheck,
   // link events
   createLinkEvent,
 };

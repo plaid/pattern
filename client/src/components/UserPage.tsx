@@ -1,15 +1,13 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { Link, RouteComponentProps } from 'react-router-dom';
 import sortBy from 'lodash/sortBy';
 import NavigationLink from 'plaid-threads/NavigationLink';
-import Callout from 'plaid-threads/Callout';
 
 import { RouteInfo, ItemType, AccountType } from './types';
 import { useItems, useAccounts, useUsers, useLink } from '../services';
+import { setIdentityCheckById } from '../services/api';
 
-import { pluralize } from '../util';
-
-import { Banner, LinkButton, UserCard, ErrorMessage, ItemCard } from '.';
+import { Banner, UserCard, ErrorMessage, ItemCard } from '.';
 
 // provides view of user's net worth, spending by category and allows them to explore
 // account and transactions details for linked items
@@ -18,19 +16,42 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
   const [user, setUser] = useState({
     id: 0,
     username: '',
+    email: '',
+    identity_check: false,
     created_at: '',
     updated_at: '',
   });
   const [items, setItems] = useState<ItemType[]>([]);
-  const [token, setToken] = useState('');
   const [numOfItems, setNumOfItems] = useState(0);
   const [accounts, setAccounts] = useState<AccountType[]>([]);
+  const [identityCheck, setIdentityCheck] = useState(false);
 
   const { getAccountsByUser, accountsByUser } = useAccounts();
   const { usersById, getUserById } = useUsers();
   const { itemsByUser, getItemsByUser } = useItems();
   const userId = Number(match.params.userId);
-  const { generateLinkToken, linkTokens } = useLink();
+
+  const checkUserName = useCallback(
+    (names: string[]) => {
+      const usernameArray = user.username.split(' ');
+      // if both the first name and last name of the username in this app are included somewhere in the
+      // financial institution's names array, return true
+      return usernameArray.every(username => {
+        return names.some(identName => {
+          return identName.indexOf(username) > -1;
+        });
+      });
+    },
+    [user.username]
+  );
+
+  const checkUserEmail = useCallback(
+    (emails: string[]) => {
+      const userEmail = user.email;
+      return emails.includes(userEmail);
+    },
+    [user.email]
+  );
 
   // update data store with user
   useEffect(() => {
@@ -78,16 +99,23 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
     console.log(accountsByUser[userId]);
   }, [accountsByUser, userId]);
 
-  // creates new link token upon new user or change in number of items
   useEffect(() => {
-    if (userId != null) {
-      generateLinkToken(userId, null); // itemId is null
+    if (accounts.length > 0) {
+      const nameCheck = checkUserName(accounts[0].owner_names);
+      const emailCheck = checkUserEmail(accounts[0].emails);
+      setIdentityCheckById(userId, nameCheck && emailCheck);
+      setIdentityCheck(user.identity_check);
     }
-  }, [userId, numOfItems, generateLinkToken]);
+  }, [
+    accounts,
+    checkUserEmail,
+    checkUserName,
+    userId,
+    user.identity_check,
+    numOfItems,
+  ]);
 
-  useEffect(() => {
-    setToken(linkTokens.byUser[userId]);
-  }, [linkTokens, userId, numOfItems]);
+  console.log(user);
 
   document.getElementsByTagName('body')[0].style.overflow = 'auto'; // to override overflow:hidden from link pane
   return (
@@ -97,26 +125,16 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
       </NavigationLink>
 
       <Banner />
-      {linkTokens.error.error_code != null && (
-        <Callout warning>
-          <div>
-            Unable to fetch link_token: please make sure your backend server is
-            running and that your .env file has been configured correctly.
-          </div>
-          <div>
-            Error Code: <code>{linkTokens.error.error_code}</code>
-          </div>
-          <div>
-            Error Type: <code>{linkTokens.error.error_type}</code>{' '}
-          </div>
-          <div>Error Message: {linkTokens.error.error_message}</div>
-        </Callout>
-      )}
       <UserCard user={user} userId={userId} removeButton={false} linkButton />
       {numOfItems > 0 && (
         <>
           <ErrorMessage />
-          <ItemCard item={items[0]} userId={userId} />
+          {accounts.length > 0 && identityCheck && (
+            <ItemCard item={items[0]} userId={userId} />
+          )}
+          {accounts.length > 0 && !identityCheck && (
+            <div>user not identified. Use another form of identification</div>
+          )}
         </>
       )}
     </div>

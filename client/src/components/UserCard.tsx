@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { HashLink } from 'react-router-hash-link';
 import Button from 'plaid-threads/Button';
 import Touchable from 'plaid-threads/Touchable';
+import Callout from 'plaid-threads/Callout';
 
 import { UserDetails, LinkButton } from '.';
 import { useItems, useUsers, useLink } from '../services';
@@ -78,6 +79,21 @@ export default function UserCard(props: Props) {
             </div>
           </Touchable>
         </div>
+        {linkTokens.error.error_code != null && (
+          <Callout warning>
+            <div>
+              Unable to fetch link_token: please make sure your backend server
+              is running and that your .env file has been configured correctly.
+            </div>
+            <div>
+              Error Code: <code>{linkTokens.error.error_code}</code>
+            </div>
+            <div>
+              Error Type: <code>{linkTokens.error.error_type}</code>{' '}
+            </div>
+            <div>Error Message: {linkTokens.error.error_message}</div>
+          </Callout>
+        )}
         {(props.removeButton || (props.linkButton && numOfItems === 0)) && (
           <div className="user-card__buttons">
             {token != null &&

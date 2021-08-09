@@ -69,12 +69,17 @@ router.post(
     const authResponse = await plaid.authGet(authAndIdRequest);
 
     const identityResponse = await plaid.identityGet(authAndIdRequest);
-
+    const emails = identityResponse.data.accounts[0].owners[0].emails.map(
+      email => {
+        return email.data;
+      }
+    );
     const newAccount = await createAccounts(
       itemId,
       authResponse.data.accounts,
       authResponse.data.numbers,
-      identityResponse.data.accounts[0].owners[0].names
+      identityResponse.data.accounts[0].owners[0].names,
+      emails
     );
 
     res.json({

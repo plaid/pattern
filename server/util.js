@@ -1,8 +1,6 @@
 const isArray = require('lodash/isArray');
 const pick = require('lodash/pick');
 
-const { retrieveUserById } = require('./db/queries');
-
 /**
  * Wraps input in an array if needed.
  *
@@ -79,14 +77,6 @@ const sanitizeUsers = users =>
     'created_at',
     'updated_at',
   ]);
-
-/**
- * Returns an boolean to check if identity for user is correct
- *
- * @param {number} userId the id of the user.
- * @param {string[]} names the financial institution's array of all the owners of a particular account
- * e.g. ["Alberta Bobbeth Charleson", "Plaid Platypus", "Jane Doe"]
- */
 
 const validItemStatuses = new Set(['good', 'bad']);
 const isValidItemStatus = status => validItemStatuses.has(status);

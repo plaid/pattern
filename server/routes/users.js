@@ -116,7 +116,6 @@ router.put(
   asyncWrapper(async (req, res) => {
     const { userId } = req.params;
     const { identityCheck } = req.body;
-    console.log('identityCheck', identityCheck);
     await updateIdentityCheck(userId, identityCheck);
     const accounts = retrieveAccountsByUserId(userId);
     res.json(sanitizeAccounts(accounts));

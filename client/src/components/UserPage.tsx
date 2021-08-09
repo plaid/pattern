@@ -31,6 +31,7 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
   const { itemsByUser, getItemsByUser } = useItems();
   const userId = Number(match.params.userId);
 
+  // functions to check username and email against data from identity/get
   const checkUserName = useCallback(
     (names: string[]) => {
       const usernameArray = user.username.split(' ');
@@ -68,7 +69,7 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
     if (userId != null) {
       getItemsByUser(userId, true);
     }
-  }, [getItemsByUser, getAccountsByUser, userId]);
+  }, [getItemsByUser, userId]);
 
   // update state items from data store
   useEffect(() => {
@@ -78,7 +79,7 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
       item => new Date(item.updated_at)
     ).reverse();
     setItems(orderedItems);
-  }, [itemsByUser, accountsByUser, userId]);
+  }, [itemsByUser, userId]);
 
   // update no of items from data store
   useEffect(() => {
@@ -96,10 +97,11 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
 
   useEffect(() => {
     setAccounts(accountsByUser[userId] || []);
-    console.log(accountsByUser[userId]);
   }, [accountsByUser, userId]);
 
   useEffect(() => {
+    // checks identity of user against identity/get data stored in accounts data
+    // only checks if identity has not already been verified.
     if (accounts.length > 0 && user.identity_check === false) {
       const nameCheck = checkUserName(accounts[0].owner_names);
       const emailCheck = checkUserEmail(accounts[0].emails);
@@ -107,8 +109,6 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
       setIdentityCheck(nameCheck && emailCheck);
     }
   }, [accounts, checkUserEmail, checkUserName, userId, user.identity_check]);
-
-  console.log(user);
 
   document.getElementsByTagName('body')[0].style.overflow = 'auto'; // to override overflow:hidden from link pane
   return (

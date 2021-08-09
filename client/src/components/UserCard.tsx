@@ -80,7 +80,6 @@ export default function UserCard(props: Props) {
               </div>
             </Touchable>
           </div>
-
           {(props.removeButton || (props.linkButton && numOfItems === 0)) && (
             <div className="user-card__buttons">
               {token != null &&

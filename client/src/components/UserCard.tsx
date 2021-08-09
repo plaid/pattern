@@ -42,7 +42,7 @@ export default function UserCard(props: Props) {
   // creates new link token upon change in user or number of items
   useEffect(() => {
     generateLinkToken(props.userId, null); // itemId is null
-  }, [props.userId, numOfItems, generateLinkToken]);
+  }, [props.userId, generateLinkToken]);
 
   useEffect(() => {
     setToken(linkTokens.byUser[props.userId]);
@@ -82,14 +82,11 @@ export default function UserCard(props: Props) {
           </div>
           {(props.removeButton || (props.linkButton && numOfItems === 0)) && (
             <div className="user-card__buttons">
-              {token != null &&
-                token.length > 0 &&
-                props.linkButton &&
-                numOfItems === 0 && (
-                  <LinkButton userId={props.userId} token={token} itemId={null}>
-                    Add a Bank
-                  </LinkButton>
-                )}
+              {token != null && token.length > 0 && props.linkButton && (
+                <LinkButton userId={props.userId} token={token} itemId={null}>
+                  Add a Bank
+                </LinkButton>
+              )}
               {props.removeButton && (
                 <Button
                   className="remove"

@@ -115,7 +115,12 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
       </NavigationLink>
 
       <Banner />
-      <UserCard user={user} userId={userId} removeButton={false} linkButton />
+      <UserCard
+        user={user}
+        userId={userId}
+        removeButton={false}
+        linkButton={numOfItems === 0}
+      />
       {numOfItems > 0 && (
         <>
           <ErrorMessage />

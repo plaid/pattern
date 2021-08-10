@@ -21,7 +21,9 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
   const [items, setItems] = useState<ItemType[]>([]);
   const [numOfItems, setNumOfItems] = useState(0);
   const [accounts, setAccounts] = useState<AccountType[]>([]);
-  const [identityCheck, setIdentityCheck] = useState(user.identity_check);
+  const [isIdentityChecked, setIsIdentityChecked] = useState(
+    user.identity_check
+  );
 
   const { getAccountsByUser, accountsByUser } = useAccounts();
   const { usersById, getUserById } = useUsers();
@@ -99,13 +101,13 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
   useEffect(() => {
     // checks identity of user against identity/get data stored in accounts data
     // only checks if identity has not already been verified.
-    if (accounts.length > 0 && identityCheck === false) {
+    if (accounts.length > 0 && isIdentityChecked === false) {
       const nameCheck = checkUserName(accounts[0].owner_names);
       const emailCheck = checkUserEmail(accounts[0].emails);
       setIdentityCheckById(userId, nameCheck && emailCheck); // update user_table in db
-      setIdentityCheck(nameCheck && emailCheck); // set state
+      setIsIdentityChecked(nameCheck && emailCheck); // set state
     }
-  }, [accounts, checkUserEmail, checkUserName, userId, identityCheck]);
+  }, [accounts, checkUserEmail, checkUserName, userId, isIdentityChecked]);
 
   document.getElementsByTagName('body')[0].style.overflow = 'auto'; // to override overflow:hidden from link pane
   return (
@@ -126,7 +128,7 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
           <ErrorMessage />
           <ItemCard
             item={items[0]}
-            identityCheck={identityCheck}
+            isIdentityChecked={isIdentityChecked}
             userId={userId}
           />
         </>

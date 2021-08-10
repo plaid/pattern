@@ -14,7 +14,7 @@ const PLAID_ENV = process.env.REACT_APP_PLAID_ENV || 'sandbox';
 interface Props {
   item: ItemType;
   userId: number;
-  identityCheck: boolean;
+  isIdentityChecked: boolean;
 }
 
 const ItemCard = (props: Props) => {
@@ -88,7 +88,7 @@ const ItemCard = (props: Props) => {
             <p>{institution && institution.name}</p>
           </div>
           <div className="item-card__column-2">
-            {props.identityCheck ? (
+            {props.isIdentityChecked ? (
               <Note info solid>
                 identification <br />
                 verified

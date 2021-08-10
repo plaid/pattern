@@ -14,6 +14,7 @@ const PLAID_ENV = process.env.REACT_APP_PLAID_ENV || 'sandbox';
 interface Props {
   item: ItemType;
   userId: number;
+  identityCheck: boolean;
 }
 
 const ItemCard = (props: Props) => {
@@ -87,17 +88,32 @@ const ItemCard = (props: Props) => {
             <p>{institution && institution.name}</p>
           </div>
           <div className="item-card__column-2">
-            {isGoodState ? (
+            {props.identityCheck ? (
               <Note info solid>
-                Updated
+                identification <br />
+                verified
               </Note>
             ) : (
               <Note error solid>
-                Login Required
+                identification <br />
+                not verified
               </Note>
             )}
           </div>
           <div className="item-card__column-3">
+            {isGoodState ? (
+              <Note info solid>
+                Login
+                <br />
+                Updated
+              </Note>
+            ) : (
+              <Note error solid>
+                Login <br /> Required
+              </Note>
+            )}
+          </div>
+          <div className="item-card__column-4">
             <h3 className="heading">LAST UPDATED</h3>
             <p className="value">
               {diffBetweenCurrentTime(props.item.updated_at)}

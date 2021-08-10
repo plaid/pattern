@@ -11,9 +11,17 @@ const db = require('../');
  * @param {string} plaidItemId the Plaid ID of the item.
  * @param {Object[]} accounts an array of accounts.
  * @param {Object} numbers an object of number types.
+ * @param {string[]} ownerNames an array of owner names.
+ * @param {string[]} emails an array of emails.
  * @returns {Object[]} an array of new accounts.
  */
-const createAccounts = async (plaidItemId, accounts, numbers) => {
+const createAccounts = async (
+  plaidItemId,
+  accounts,
+  numbers,
+  ownerNames,
+  emails
+) => {
   const { id: itemId } = await retrieveItemByPlaidItemId(plaidItemId);
   const {
     account: achAccount,
@@ -52,11 +60,13 @@ const createAccounts = async (plaidItemId, accounts, numbers) => {
             ach_account,
             ach_routing,
             ach_wire_routing,
+            owner_names,
+            emails,
             type,
             subtype
           )
         VALUES
-          ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14)
+          ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16)
         ON CONFLICT
           (plaid_account_id)
         DO UPDATE SET
@@ -78,6 +88,8 @@ const createAccounts = async (plaidItemId, accounts, numbers) => {
         achAccount,
         achRouting,
         achWireRouting,
+        ownerNames,
+        emails,
         type,
         subtype,
       ],

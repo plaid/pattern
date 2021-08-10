@@ -54,10 +54,6 @@ export default function LinkButton(props: Props) {
         metadata.accounts,
         props.userId
       );
-
-      if (data.identityCheck) {
-        // confirms that this is the right user and shows something in UI if not
-      }
       getItemsByUser(props.userId, true);
     }
     resetError();

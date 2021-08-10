@@ -39,6 +39,8 @@ const sanitizeAccounts = accounts =>
     'ach_account',
     'ach_routing',
     'ach_wire_routing',
+    'owner_names',
+    'emails',
     'type',
     'subtype',
     'created_at',
@@ -67,21 +69,14 @@ const sanitizeItems = items =>
  * @param {(Object|Object[])} users a single user or an array of users.
  */
 const sanitizeUsers = users =>
-  sanitizeWith(users, ['id', 'username', 'created_at', 'updated_at']);
-
-/**
- * Returns an boolean to check if identity for user is correct
- *
- * @param {(Object|Object[])} userData the data obtained from identityGet.
- */
-const checkUserIdentity = userData => {
-  const addresses = userData.addresses;
-  const emails = userData.emails;
-  const names = userData.names[0];
-  const phone_numbers = userData.phone_numbers;
-  // logic to be built to verify user identity
-  return true;
-};
+  sanitizeWith(users, [
+    'id',
+    'username',
+    'email',
+    'identity_check',
+    'created_at',
+    'updated_at',
+  ]);
 
 const validItemStatuses = new Set(['good', 'bad']);
 const isValidItemStatus = status => validItemStatuses.has(status);
@@ -93,5 +88,4 @@ module.exports = {
   sanitizeUsers,
   validItemStatuses,
   isValidItemStatus,
-  checkUserIdentity,
 };

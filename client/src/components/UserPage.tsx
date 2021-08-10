@@ -1,36 +1,55 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { Link, RouteComponentProps } from 'react-router-dom';
 import sortBy from 'lodash/sortBy';
 import NavigationLink from 'plaid-threads/NavigationLink';
-import Callout from 'plaid-threads/Callout';
 
 import { RouteInfo, ItemType, AccountType } from './types';
-import { useItems, useAccounts, useUsers, useLink } from '../services';
+import { useItems, useAccounts, useUsers } from '../services';
+import { setIdentityCheckById } from '../services/api';
 
-import { pluralize } from '../util';
-
-import { Banner, LinkButton, UserCard, ErrorMessage, ItemCard } from '.';
-
-// provides view of user's net worth, spending by category and allows them to explore
-// account and transactions details for linked items
+import { Banner, UserCard, ErrorMessage, ItemCard } from '.';
 
 const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
   const [user, setUser] = useState({
     id: 0,
     username: '',
+    email: '',
+    identity_check: false,
     created_at: '',
     updated_at: '',
   });
   const [items, setItems] = useState<ItemType[]>([]);
-  const [token, setToken] = useState('');
   const [numOfItems, setNumOfItems] = useState(0);
   const [accounts, setAccounts] = useState<AccountType[]>([]);
+  const [identityCheck, setIdentityCheck] = useState(user.identity_check);
 
   const { getAccountsByUser, accountsByUser } = useAccounts();
   const { usersById, getUserById } = useUsers();
   const { itemsByUser, getItemsByUser } = useItems();
   const userId = Number(match.params.userId);
-  const { generateLinkToken, linkTokens } = useLink();
+
+  // functions to check username and email against data from identity/get
+  const checkUserName = useCallback(
+    (names: string[]) => {
+      const usernameArray = user.username.split(' ');
+      // if both the first name and last name of the username in this app are included somewhere in the
+      // financial institution's names array, return true
+      return usernameArray.every(username => {
+        return names.some(identName => {
+          return identName.indexOf(username) > -1;
+        });
+      });
+    },
+    [user.username]
+  );
+
+  const checkUserEmail = useCallback(
+    (emails: string[]) => {
+      const userEmail = user.email;
+      return emails.includes(userEmail);
+    },
+    [user.email]
+  );
 
   // update data store with user
   useEffect(() => {
@@ -71,22 +90,22 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
   // update data store with the user's accounts
   useEffect(() => {
     getAccountsByUser(userId);
-  }, [getAccountsByUser, userId]);
+  }, [getAccountsByUser, userId, numOfItems]);
 
   useEffect(() => {
     setAccounts(accountsByUser[userId] || []);
   }, [accountsByUser, userId]);
 
-  // creates new link token upon new user or change in number of items
   useEffect(() => {
-    if (userId != null) {
-      generateLinkToken(userId, null); // itemId is null
+    // checks identity of user against identity/get data stored in accounts data
+    // only checks if identity has not already been verified.
+    if (accounts.length > 0 && identityCheck === false) {
+      const nameCheck = checkUserName(accounts[0].owner_names);
+      const emailCheck = checkUserEmail(accounts[0].emails);
+      setIdentityCheckById(userId, nameCheck && emailCheck); // update user_table in db
+      setIdentityCheck(nameCheck && emailCheck); // set state
     }
-  }, [userId, numOfItems, generateLinkToken]);
-
-  useEffect(() => {
-    setToken(linkTokens.byUser[userId]);
-  }, [linkTokens, userId, numOfItems]);
+  }, [accounts, checkUserEmail, checkUserName, userId, identityCheck]);
 
   document.getElementsByTagName('body')[0].style.overflow = 'auto'; // to override overflow:hidden from link pane
   return (
@@ -96,49 +115,20 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
       </NavigationLink>
 
       <Banner />
-      {linkTokens.error.error_code != null && (
-        <Callout warning>
-          <div>
-            Unable to fetch link_token: please make sure your backend server is
-            running and that your .env file has been configured correctly.
-          </div>
-          <div>
-            Error Code: <code>{linkTokens.error.error_code}</code>
-          </div>
-          <div>
-            Error Type: <code>{linkTokens.error.error_type}</code>{' '}
-          </div>
-          <div>Error Message: {linkTokens.error.error_message}</div>
-        </Callout>
-      )}
-      <UserCard user={user} userId={userId} removeButton={false} linkButton />
+      <UserCard
+        user={user}
+        userId={userId}
+        removeButton={false}
+        linkButton={numOfItems === 0}
+      />
       {numOfItems > 0 && (
         <>
-          <div className="item__header">
-            <div>
-              <h2 className="item__header-heading">
-                {`${items.length} ${pluralize('Bank', items.length)} Linked`}
-              </h2>
-              {!!items.length && (
-                <p className="item__header-subheading">
-                  Below is a list of all your connected banks. Click on a bank
-                  to view its associated accounts.
-                </p>
-              )}
-            </div>
-            {token != null && token.length > 0 && (
-              // Link will not render unless there is a link token
-              <LinkButton token={token} userId={userId} itemId={null}>
-                Add Another Bank
-              </LinkButton>
-            )}
-          </div>
           <ErrorMessage />
-          {items.map(item => (
-            <div id="itemCards" key={item.id}>
-              <ItemCard item={item} userId={userId} />
-            </div>
-          ))}
+          <ItemCard
+            item={items[0]}
+            identityCheck={identityCheck}
+            userId={userId}
+          />
         </>
       )}
     </div>

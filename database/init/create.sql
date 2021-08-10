@@ -18,6 +18,8 @@ CREATE TABLE users_table
 (
   id SERIAL PRIMARY KEY,
   username text UNIQUE NOT NULL,
+  email text NOT NULL,
+  identity_check boolean NOT NULL,
   created_at timestamptz default now(),
   updated_at timestamptz default now()
 );
@@ -32,6 +34,8 @@ AS
   SELECT
     id,
     username,
+    email,
+    identity_check,
     created_at,
     updated_at
   FROM
@@ -98,6 +102,8 @@ CREATE TABLE accounts_table
   ach_account text,
   ach_routing text,
   ach_wire_routing text,
+  owner_names text[],
+  emails text[],
   type text NOT NULL,
   subtype text NOT NULL,
   created_at timestamptz default now(),
@@ -127,6 +133,8 @@ AS
     a.ach_account,
     a.ach_routing,
     a.ach_wire_routing,
+    a.owner_names,
+    a.emails,
     a.type,
     a.subtype,
     a.created_at,

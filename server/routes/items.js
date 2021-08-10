@@ -8,7 +8,6 @@ const {
   retrieveItemById,
   retrieveItemByPlaidInstitutionId,
   retrieveAccountsByItemId,
-  retrieveTransactionsByItemId,
   createItem,
   deleteItem,
   updateItemStatus,
@@ -21,7 +20,6 @@ const {
   sanitizeItems,
   isValidItemStatus,
   validItemStatuses,
-  checkUserIdentity,
 } = require('../util');
 
 const router = express.Router();
@@ -70,20 +68,23 @@ router.post(
     };
     const authResponse = await plaid.authGet(authAndIdRequest);
 
+    const identityResponse = await plaid.identityGet(authAndIdRequest);
+    const emails = identityResponse.data.accounts[0].owners[0].emails.map(
+      email => {
+        return email.data;
+      }
+    );
     const newAccount = await createAccounts(
       itemId,
       authResponse.data.accounts,
-      authResponse.data.numbers
+      authResponse.data.numbers,
+      identityResponse.data.accounts[0].owners[0].names,
+      emails
     );
 
-    const identityResponse = await plaid.identityGet(authAndIdRequest);
-    const isUser = checkUserIdentity(
-      identityResponse.data.accounts[0].owners[0]
-    );
     res.json({
       items: sanitizeItems(newItem),
       accounts: sanitizeAccounts(newAccount),
-      identityCheck: isUser,
     });
   })
 );

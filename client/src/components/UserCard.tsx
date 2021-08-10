@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { HashLink } from 'react-router-hash-link';
 import Button from 'plaid-threads/Button';
 import Touchable from 'plaid-threads/Touchable';
+import Callout from 'plaid-threads/Callout';
 
 import { UserDetails, LinkButton } from '.';
 import { useItems, useUsers, useLink } from '../services';
@@ -41,7 +42,7 @@ export default function UserCard(props: Props) {
   // creates new link token upon change in user or number of items
   useEffect(() => {
     generateLinkToken(props.userId, null); // itemId is null
-  }, [props.userId, numOfItems, generateLinkToken]);
+  }, [props.userId, generateLinkToken]);
 
   useEffect(() => {
     setToken(linkTokens.byUser[props.userId]);
@@ -51,58 +52,72 @@ export default function UserCard(props: Props) {
     deleteUserById(props.user.id); // this will delete all items associated with a user
   };
   return (
-    <div className="box user-card__box">
-      <div className=" card user-card">
-        <div
-          className="hoverable"
-          onMouseEnter={() => {
-            if (numOfItems > 0) {
-              setHovered(true);
-            }
-          }}
-          onMouseLeave={() => {
-            setHovered(false);
-          }}
-        >
-          <Touchable
-            className="user-card-clickable"
-            component={HashLink}
-            to={`/user/${props.userId}#itemCards`}
+    <>
+      <div className="box user-card__box">
+        <div className=" card user-card">
+          <div
+            className="hoverable"
+            onMouseEnter={() => {
+              if (numOfItems > 0) {
+                setHovered(true);
+              }
+            }}
+            onMouseLeave={() => {
+              setHovered(false);
+            }}
           >
-            <div className="user-card__detail">
-              <UserDetails
-                hovered={hovered}
-                user={props.user}
-                numOfItems={numOfItems}
-              />
-            </div>
-          </Touchable>
-        </div>
-        {(props.removeButton || (props.linkButton && numOfItems === 0)) && (
-          <div className="user-card__buttons">
-            {token != null &&
-              token.length > 0 &&
-              props.linkButton &&
-              numOfItems === 0 && (
+            <Touchable
+              className="user-card-clickable"
+              component={HashLink}
+              to={`/user/${props.userId}#itemCards`}
+            >
+              <div className="user-card__detail">
+                <UserDetails
+                  hovered={hovered}
+                  user={props.user}
+                  numOfItems={numOfItems}
+                />
+              </div>
+            </Touchable>
+          </div>
+          {(props.removeButton || (props.linkButton && numOfItems === 0)) && (
+            <div className="user-card__buttons">
+              {token != null && token.length > 0 && props.linkButton && (
                 <LinkButton userId={props.userId} token={token} itemId={null}>
                   Add a Bank
                 </LinkButton>
               )}
-            {props.removeButton && (
-              <Button
-                className="remove"
-                onClick={handleDeleteUser}
-                small
-                inline
-                centered
-                secondary
-              >
-                Delete user
-              </Button>
-            )}
-          </div>
-        )}
+              {props.removeButton && (
+                <Button
+                  className="remove"
+                  onClick={handleDeleteUser}
+                  small
+                  inline
+                  centered
+                  secondary
+                >
+                  Delete user
+                </Button>
+              )}
+            </div>
+          )}
+        </div>
       </div>
-    </div>
+      {linkTokens.error.error_code != null && (
+        <Callout warning>
+          <div>
+            Unable to fetch link_token: please make sure your backend server is
+            running and that your .env file has been configured correctly.
+          </div>
+          <div>
+            Error Code: <code>{linkTokens.error.error_code}</code>
+          </div>
+          <div>
+            Error Type: <code>{linkTokens.error.error_type}</code>{' '}
+          </div>
+          <div>Error Message: {linkTokens.error.error_message}</div>
+        </Callout>
+      )}
+    </>
   );
 }

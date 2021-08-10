@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import startCase from 'lodash/startCase';
 import toLower from 'lodash/toLower';
 import Button from 'plaid-threads/Button';

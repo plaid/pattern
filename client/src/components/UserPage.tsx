@@ -90,7 +90,7 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
   // update data store with the user's accounts
   useEffect(() => {
     getAccountsByUser(userId);
-  }, [getAccountsByUser, userId, numOfItems]);
+  }, [getAccountsByUser, userId]);
 
   useEffect(() => {
     setAccounts(accountsByUser[userId] || []);

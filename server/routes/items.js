@@ -12,6 +12,7 @@ const {
   deleteItem,
   updateItemStatus,
   createAccounts,
+  updateBalances,
 } = require('../db/queries');
 const { asyncWrapper } = require('../middleware');
 const plaid = require('../plaid');
@@ -76,6 +77,7 @@ router.post(
     );
     const newAccount = await createAccounts(
       itemId,
+      userId,
       authResponse.data.accounts,
       authResponse.data.numbers,
       identityResponse.data.accounts[0].owners[0].names,
@@ -135,6 +137,36 @@ router.put(
         acceptedKeys: ['status'],
       });
     }
+  })
+);
+
+/**
+ * Updates balances on account
+ *
+ * @param {number} itemId the ID of the item.
+ * @param {string} accountId the account id.
+ * @returns {Object[]} an array containing a single item.
+ */
+router.put(
+  '/:itemId/balance',
+  asyncWrapper(async (req, res) => {
+    const { itemId } = req.params;
+    const { accountId } = req.body;
+    const { plaid_access_token: accessToken } = await retrieveItemById(itemId);
+    const balanceResponse = await plaid.accountsBalanceGet({
+      access_token: accessToken,
+    });
+    const account = balanceResponse.data.accounts.filter(
+      account => account.account_id === accountId
+    );
+    console.log(account);
+    const latestAccount = await updateBalances(
+      accountId,
+      account[0].balances.current,
+      account[0].balances.available
+    );
+    console.log(latestAccount);
+    res.json(latestAccount);
   })
 );
 

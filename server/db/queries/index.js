@@ -7,6 +7,7 @@ const {
   retrieveAccountByPlaidAccountId,
   retrieveAccountsByItemId,
   retrieveAccountsByUserId,
+  updateBalances,
 } = require('./accounts');
 const {
   createItem,
@@ -36,6 +37,7 @@ module.exports = {
   retrieveAccountByPlaidAccountId,
   retrieveAccountsByItemId,
   retrieveAccountsByUserId,
+  updateBalances,
   // items
   createItem,
   deleteItem,

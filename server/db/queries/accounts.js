@@ -17,6 +17,7 @@ const db = require('../');
  */
 const createAccounts = async (
   plaidItemId,
+  userId,
   accounts,
   numbers,
   ownerNames,
@@ -63,10 +64,12 @@ const createAccounts = async (
             owner_names,
             emails,
             type,
-            subtype
+            subtype,
+            user_id,
+            plaid_item_id
           )
         VALUES
-          ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16)
+          ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18)
         ON CONFLICT
           (plaid_account_id)
         DO UPDATE SET
@@ -92,6 +95,8 @@ const createAccounts = async (
         emails,
         type,
         subtype,
+        userId,
+        plaidItemId,
       ],
     };
     const { rows } = await db.query(query);
@@ -132,6 +137,23 @@ const retrieveAccountsByItemId = async itemId => {
 };
 
 /**
+ * Updates the balances for an account.
+ *
+ * @param {string} accountId the accountId.
+ * @param {number} currentBalance current balance of account.
+ * @param {number} availableBalance available balance of account.
+ */
+const updateBalances = async (accountId, currentBalance, availableBalance) => {
+  const query = {
+    text:
+      'UPDATE accounts SET current_balance = $1, available_balance = $2  WHERE plaid_account_id = $3',
+    values: [currentBalance, availableBalance, accountId],
+  };
+  const { rows: accounts } = await db.query(query);
+  return accounts;
+};
+
+/**
  * Retrieves all accounts for a single user.
  *
  * @param {number} userId the ID of the user.
@@ -152,4 +174,5 @@ module.exports = {
   retrieveAccountByPlaidAccountId,
   retrieveAccountsByItemId,
   retrieveAccountsByUserId,
+  updateBalances,
 };

@@ -58,8 +58,7 @@ router.post(
       institutionId,
       accessToken,
       itemId,
-      userId,
-      accounts[0].id
+      userId
     );
     const authAndIdRequest = {
       access_token: accessToken,

@@ -54,7 +54,6 @@ CREATE TABLE items_table
   plaid_access_token text UNIQUE NOT NULL,
   plaid_item_id text UNIQUE NOT NULL,
   plaid_institution_id text NOT NULL,
-  plaid_account_id text UNIQUE NOT NULL,
   status text NOT NULL,
   created_at timestamptz default now(),
   updated_at timestamptz default now()
@@ -73,7 +72,6 @@ AS
     user_id,
     plaid_access_token,
     plaid_institution_id,
-    plaid_account_id,
     status,
     created_at,
     updated_at

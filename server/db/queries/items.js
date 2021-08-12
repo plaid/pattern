@@ -29,7 +29,7 @@ const createItem = async (
       INSERT INTO items_table
         (user_id, plaid_access_token, plaid_item_id, plaid_institution_id, status)
       VALUES
-        ($1, $2, $3, $4, $5, $6)
+        ($1, $2, $3, $4, $5)
       RETURNING
         *;
     `,

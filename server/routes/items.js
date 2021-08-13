@@ -37,7 +37,8 @@ router.post(
   '/',
   asyncWrapper(async (req, res) => {
     const { publicToken, institutionId, userId, accounts } = req.body;
-    // in case developer did not customize their Account Select in the dashboard to enable only one account.
+    // in case developer did not customize their Account Select in the dashboard to enable only one account,
+    // choose the checking or savings account.
     const checkingAccount = accounts.filter(
       account => account.subtype === 'checking'
     );
@@ -87,7 +88,7 @@ router.post(
       }
     );
     const names = identityResponse.data.accounts[0].owners[0].names;
-    const identityAccount = identityResponse.data.accounts[0];
+    const account_info_from_identity_get = identityResponse.data.accounts[0];
 
     let authNumbers = {
       account: null,
@@ -115,7 +116,7 @@ router.post(
     const newAccount = await createAccount(
       itemId,
       userId,
-      identityAccount,
+      account_info_from_identity_get,
       authNumbers,
       names,
       emails,
@@ -183,7 +184,7 @@ router.put(
  *
  * @param {number} itemId the ID of the item.
  * @param {string} accountId the account id.
- * @returns {Object[]} an array containing a single item.
+ * @returns {Object[]} an array containing a single account.
  */
 router.put(
   '/:itemId/balance',

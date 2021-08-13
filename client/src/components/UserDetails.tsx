@@ -20,13 +20,6 @@ const UserDetails = (props: Props) => (
       <h3 className="heading">Created on</h3>
       <p className="value">{formatDate(props.user.created_at)}</p>
     </div>
-    <div className="user-card__column-3">
-      <h3 className="heading">Number of banks connected</h3>
-      <p className="value">
-        {props.hovered ? 'View ' : ''}{' '}
-        {`${props.numOfItems} ${pluralize('bank', props.numOfItems)}`}
-      </p>
-    </div>
   </>
 );
 

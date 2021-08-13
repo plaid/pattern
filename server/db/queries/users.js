@@ -52,6 +52,21 @@ const updateIdentityCheck = async (userId, identityCheck) => {
 };
 
 /**
+ * Updates user information when user confirms identity.
+ *
+ * @param {number} userId the user id of th user.
+ * @param {string} username the username of the user.
+ * @param {string} email the email of the user.
+ */
+const updateUserInfo = async (userId, username, email) => {
+  const query = {
+    text: 'UPDATE users SET username = $2, email = $3 WHERE id = $1',
+    values: [userId, username, email],
+  };
+  await db.query(query);
+};
+
+/**
  * Retrieves a single user.
  *
  * @param {number} userId the ID of the user.
@@ -103,4 +118,5 @@ module.exports = {
   retrieveUserByUsername,
   retrieveUsers,
   updateIdentityCheck,
+  updateUserInfo,
 };

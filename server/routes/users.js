@@ -13,6 +13,7 @@ const {
   retrieveItemsByUser,
   updateIdentityCheck,
   retrieveUserById,
+  updateUserInfo,
 } = require('../db/queries');
 const { asyncWrapper } = require('../middleware');
 const {
@@ -117,8 +118,26 @@ router.put(
     const { userId } = req.params;
     const { identityCheck } = req.body;
     await updateIdentityCheck(userId, identityCheck);
-    const accounts = retrieveAccountsByUserId(userId);
+    const accounts = await retrieveAccountsByUserId(userId);
     res.json(sanitizeAccounts(accounts));
+  })
+);
+
+/**
+ * Updates user info from identity confirmation.
+ *
+ * @param {string} userId the ID of the user.
+ * @returns {Object[]} an array of accounts.
+ */
+router.put(
+  '/:userId/confirmation',
+  asyncWrapper(async (req, res) => {
+    const { userId } = req.params;
+    const { username, email } = req.body;
+    await updateUserInfo(userId, username, email);
+    const user = await retrieveUserByUsername(username);
+
+    res.json(sanitizeUsers(user));
   })
 );
 

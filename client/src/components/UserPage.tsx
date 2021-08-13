@@ -2,12 +2,13 @@ import React, { useEffect, useState, useCallback } from 'react';
 import { Link, RouteComponentProps } from 'react-router-dom';
 import sortBy from 'lodash/sortBy';
 import NavigationLink from 'plaid-threads/NavigationLink';
+import Callout from 'plaid-threads/Callout';
 
-import { RouteInfo, ItemType, AccountType } from './types';
+import { RouteInfo, ItemType, AccountType, UserType } from './types';
 import { useItems, useAccounts, useUsers } from '../services';
 import { setIdentityCheckById } from '../services/api';
 
-import { Banner, UserCard, ErrorMessage, ItemCard } from '.';
+import { Banner, UserCard, ErrorMessage, ItemCard, ConfirmIdentity } from '.';
 
 const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
   const [user, setUser] = useState({
@@ -31,27 +32,35 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
   const userId = Number(match.params.userId);
 
   // functions to check username and email against data from identity/get
-  const checkUserName = useCallback(
-    (names: string[]) => {
-      const usernameArray = user.username.split(' ');
-      // if both the first name and last name of the username in this app are included somewhere in the
-      // financial institution's names array, return true
-      return usernameArray.every(username => {
-        return names.some(identName => {
-          return identName.indexOf(username) > -1;
-        });
+  const checkUserName = useCallback((names: string[], user_name: string) => {
+    const usernameArray = user_name.split(' ');
+    // if both the first name and last name of the username in this app are included somewhere in the
+    // financial institution's names array, return true
+    return usernameArray.every(username => {
+      return names.some(identName => {
+        return identName.indexOf(username) > -1;
       });
-    },
-    [user.username]
-  );
+    });
+  }, []);
 
-  const checkUserEmail = useCallback(
-    (emails: string[]) => {
-      const userEmail = user.email;
-      return emails.includes(userEmail);
-    },
-    [user.email]
-  );
+  const checkUserEmail = useCallback((emails: string[], user_email) => {
+    return emails.includes(user_email);
+  }, []);
+
+  const updateUser = async (user: UserType) => {
+    console.log(user);
+    await getUserById(userId, false);
+    await setUser(usersById[userId] || {});
+
+    if (accounts.length > 0) {
+      const nameCheck = checkUserName(accounts[0]!.owner_names, user.username);
+      const emailCheck = checkUserEmail(accounts[0]!.emails, user.email);
+
+      setIdentityCheckById(userId, nameCheck && emailCheck); // update user_table in db
+      setIsIdentityChecked(nameCheck && emailCheck); // set state
+      console.log(nameCheck && emailCheck);
+    }
+  };
 
   // update data store with user
   useEffect(() => {
@@ -102,13 +111,20 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
     // checks identity of user against identity/get data stored in accounts data
     // only checks if identity has not already been verified.
     if (accounts.length > 0 && isIdentityChecked === false) {
-      const nameCheck = checkUserName(accounts[0].owner_names);
-      const emailCheck = checkUserEmail(accounts[0].emails);
+      const nameCheck = checkUserName(accounts[0]!.owner_names, user.username);
+      const emailCheck = checkUserEmail(accounts[0]!.emails, user.email);
       setIdentityCheckById(userId, nameCheck && emailCheck); // update user_table in db
       setIsIdentityChecked(nameCheck && emailCheck); // set state
     }
-  }, [accounts, checkUserEmail, checkUserName, userId, isIdentityChecked]);
-
+  }, [
+    accounts,
+    checkUserEmail,
+    checkUserName,
+    userId,
+    isIdentityChecked,
+    user,
+  ]);
+  console.log(isIdentityChecked);
   document.getElementsByTagName('body')[0].style.overflow = 'auto'; // to override overflow:hidden from link pane
   return (
     <div>
@@ -126,11 +142,23 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
       {numOfItems > 0 && (
         <>
           <ErrorMessage />
-          <ItemCard
-            item={items[0]}
-            isIdentityChecked={isIdentityChecked}
-            userId={userId}
-          />
+          {isIdentityChecked && (
+            <ItemCard
+              item={items[0]}
+              isIdentityChecked={isIdentityChecked}
+              userId={userId}
+            />
+          )}
+          {!isIdentityChecked && (
+            <>
+              <Callout warning>
+                {' '}
+                We were not able to verify your identity. Please update your
+                name and email address below.{' '}
+              </Callout>
+              <ConfirmIdentity userId={userId} updateUser={updateUser} />
+            </>
+          )}
         </>
       )}
     </div>

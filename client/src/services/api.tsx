@@ -28,6 +28,11 @@ export const addNewUser = (username: string, email: string) =>
   api.post('/users', { username, email });
 export const setIdentityCheckById = (userId: number, identityCheck: boolean) =>
   api.put(`/users/${userId}`, { identityCheck });
+export const updateUserInfo = (
+  userId: number,
+  username: string,
+  email: string
+) => api.put(`/users/${userId}/confirmation`, { username, email });
 export const deleteUserById = (userId: number) =>
   api.delete(`/users/${userId}`);
 

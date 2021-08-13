@@ -24,8 +24,7 @@ export default function Landing() {
   return (
     <div>
       <Banner initialSubheading />
-      If you don't have an account, please click "Create Account". Once created,
-      you can add as many example Link items as you like.
+      If you don't have an account, please click "Create Account".
       <div className="btnsContainer">
         <Login />
         <Button className="btnWithMargin" onClick={toggleForm} centered inline>

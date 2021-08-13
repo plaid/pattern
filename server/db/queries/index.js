@@ -3,7 +3,7 @@
  */
 
 const {
-  createAccounts,
+  createAccount,
   retrieveAccountByPlaidAccountId,
   retrieveAccountsByItemId,
   retrieveAccountsByUserId,
@@ -33,7 +33,7 @@ const { createLinkEvent } = require('./linkEvents');
 
 module.exports = {
   // accounts
-  createAccounts,
+  createAccount,
   retrieveAccountByPlaidAccountId,
   retrieveAccountsByItemId,
   retrieveAccountsByUserId,

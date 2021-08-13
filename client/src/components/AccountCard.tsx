@@ -3,6 +3,7 @@ import React, { useEffect, useCallback } from 'react';
 import { AccountType } from './types';
 import { currencyFilter } from '../util';
 import { getBalanceByItem } from '../services/api';
+import { TransferFunds } from '.';
 
 interface Props {
   account: AccountType;
@@ -32,6 +33,7 @@ export default function AccountCard(props: Props) {
             props.account.available_balance
           )}`}</div>
         </div>
+        <TransferFunds />
       </div>
     </div>
   );

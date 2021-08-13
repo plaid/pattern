@@ -9,11 +9,10 @@ interface Props {
 
 const Banner = (props: Props) => {
   const initialText =
-    'This is an example app that outlines an end-to-end integration with Plaid.';
+    'This is an example account funding app that outlines an end-to-end integration with Plaid.';
 
   const successText =
-    "This page shows a user's net worth, spending by category, and allows them to explore account and transactions details for linked items.";
-
+    "This page shows a user's Plaid Pattern account funding balance and allows them to transfer funds from their financial institution to their Plaid Pattern account.";
   const subheadingText = props.initialSubheading ? initialText : successText;
 
   return (

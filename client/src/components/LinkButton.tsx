@@ -47,6 +47,7 @@ export default function LinkButton(props: Props) {
       getItemById(props.itemId, true);
       // regular link mode: exchange public token for access token
     } else {
+      console.log(metadata.accounts);
       // call to Plaid api endpoint: /item/public_token/exchange in order to obtain access_token which is then stored with the created item
       const data = await exchangeToken(
         publicToken,
@@ -141,10 +142,10 @@ export default function LinkButton(props: Props) {
       ) : (
         // regular case for initializing Link from user card or from "add another item" button
         <Button
-          centered
-          inline
-          small
           disabled={!ready}
+          className="linkButton"
+          large
+          inline
           onClick={() => {
             handleClick();
           }}

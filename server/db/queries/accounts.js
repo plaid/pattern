@@ -15,38 +15,39 @@ const db = require('../');
  * @param {string[]} emails an array of emails.
  * @returns {Object[]} an array of new accounts.
  */
-const createAccounts = async (
+const createAccount = async (
   plaidItemId,
   userId,
-  accounts,
+  account,
   numbers,
   ownerNames,
-  emails
+  emails,
+  processorToken
 ) => {
   const { id: itemId } = await retrieveItemByPlaidItemId(plaidItemId);
   const {
     account: achAccount,
     routing: achRouting,
     wire_routing: achWireRouting,
-  } = numbers.ach[0];
-  const pendingQueries = accounts.map(async account => {
-    const {
-      account_id: aid,
-      name,
-      mask,
-      official_name: officialName,
-      balances: {
-        available: availableBalance,
-        current: currentBalance,
-        iso_currency_code: isoCurrencyCode,
-        unofficial_currency_code: unofficialCurrencyCode,
-      },
-      subtype,
-      type,
-    } = account;
-    const query = {
-      // RETURNING is a Postgres-specific clause that returns a list of the inserted items.
-      text: `
+  } = numbers;
+
+  const {
+    account_id: aid,
+    name,
+    mask,
+    official_name: officialName,
+    balances: {
+      available: availableBalance,
+      current: currentBalance,
+      iso_currency_code: isoCurrencyCode,
+      unofficial_currency_code: unofficialCurrencyCode,
+    },
+    subtype,
+    type,
+  } = account;
+  const query = {
+    // RETURNING is a Postgres-specific clause that returns a list of the inserted items.
+    text: `
         INSERT INTO accounts_table
           (
             item_id,
@@ -63,13 +64,14 @@ const createAccounts = async (
             ach_wire_routing,
             owner_names,
             emails,
+            processor_token,
             type,
             subtype,
             user_id,
             plaid_item_id
           )
         VALUES
-          ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18)
+          ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19)
         ON CONFLICT
           (plaid_account_id)
         DO UPDATE SET
@@ -78,31 +80,30 @@ const createAccounts = async (
         RETURNING
           *
       `,
-      values: [
-        itemId,
-        aid,
-        name,
-        mask,
-        officialName,
-        currentBalance,
-        availableBalance,
-        isoCurrencyCode,
-        unofficialCurrencyCode,
-        achAccount,
-        achRouting,
-        achWireRouting,
-        ownerNames,
-        emails,
-        type,
-        subtype,
-        userId,
-        plaidItemId,
-      ],
-    };
-    const { rows } = await db.query(query);
-    return rows[0];
-  });
-  return await Promise.all(pendingQueries);
+    values: [
+      itemId,
+      aid,
+      name,
+      mask,
+      officialName,
+      currentBalance,
+      availableBalance,
+      isoCurrencyCode,
+      unofficialCurrencyCode,
+      achAccount,
+      achRouting,
+      achWireRouting,
+      ownerNames,
+      emails,
+      processorToken,
+      type,
+      subtype,
+      userId,
+      plaidItemId,
+    ],
+  };
+  const { rows } = await db.query(query);
+  return rows[0];
 };
 
 /**
@@ -170,7 +171,7 @@ const retrieveAccountsByUserId = async userId => {
 };
 
 module.exports = {
-  createAccounts,
+  createAccount,
   retrieveAccountByPlaidAccountId,
   retrieveAccountsByItemId,
   retrieveAccountsByUserId,

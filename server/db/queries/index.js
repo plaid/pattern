@@ -3,10 +3,11 @@
  */
 
 const {
-  createAccounts,
+  createAccount,
   retrieveAccountByPlaidAccountId,
   retrieveAccountsByItemId,
   retrieveAccountsByUserId,
+  updateBalances,
 } = require('./accounts');
 const {
   createItem,
@@ -32,10 +33,11 @@ const { createLinkEvent } = require('./linkEvents');
 
 module.exports = {
   // accounts
-  createAccounts,
+  createAccount,
   retrieveAccountByPlaidAccountId,
   retrieveAccountsByItemId,
   retrieveAccountsByUserId,
+  updateBalances,
   // items
   createItem,
   deleteItem,

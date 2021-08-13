@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import Note from 'plaid-threads/Note';
 import Touchable from 'plaid-threads/Touchable';
 import { Institution } from 'plaid/dist/api';
@@ -6,7 +6,7 @@ import { Institution } from 'plaid/dist/api';
 import { ItemType, AccountType } from './types';
 import { AccountCard, MoreDetails } from '.';
 import { useAccounts, useInstitutions, useItems } from '../services';
-import { setItemToBadState } from '../services/api';
+import { setItemToBadState, getBalanceByItem } from '../services/api';
 import { diffBetweenCurrentTime } from '../util';
 
 const PLAID_ENV = process.env.REACT_APP_PLAID_ENV || 'sandbox';
@@ -44,6 +44,13 @@ const ItemCard = (props: Props) => {
   const isSandbox = PLAID_ENV === 'sandbox';
   const isGoodState = status === 'good';
 
+  const getBalance = useCallback(async () => {
+    await getBalanceByItem(id, accounts[0].plaid_account_id);
+    await getAccountsByItem(id);
+    const itemAccounts: AccountType[] = accountsByItem[id];
+    setAccounts(itemAccounts || []);
+  }, [id, accounts, accountsByItem, getAccountsByItem]);
+
   useEffect(() => {
     getAccountsByItem(id);
   }, [getAccountsByItem, id]);
@@ -77,7 +84,10 @@ const ItemCard = (props: Props) => {
       <div className={cardClassNames}>
         <Touchable
           className="item-card__clickable"
-          onClick={() => setShowAccounts(current => !current)}
+          onClick={() => {
+            setShowAccounts(current => !current);
+            getBalance();
+          }}
         >
           <div className="item-card__column-1">
             <img

@@ -37,7 +37,7 @@ router.post(
   '/',
   asyncWrapper(async (req, res) => {
     const { publicToken, institutionId, userId, accounts } = req.body;
-
+    // in case developer did not customize their Account Select in the dashboard to enable only one account.
     const checkingAccount = accounts.filter(
       account => account.subtype === 'checking'
     );
@@ -47,7 +47,7 @@ router.post(
 
     const account =
       accounts.length === 1
-        ? account[0]
+        ? accounts[0]
         : checkingAccount.length > 0
         ? checkingAccount[0]
         : savingsAccount[0];
@@ -121,8 +121,6 @@ router.post(
       emails,
       processorToken
     );
-
-    console.log('new account', newAccount);
 
     res.json({
       items: sanitizeItems(newItem),
@@ -199,18 +197,14 @@ router.put(
         account_ids: [accountId],
       },
     };
-    const balanceResponse = await plaid.accountsBalanceGet({
-      balanceRequest,
-    });
 
-    const account = balanceResponse.data.accounts.filter(
-      account => account.account_id === accountId
-    );
+    const balanceResponse = await plaid.accountsBalanceGet(balanceRequest);
 
+    const account = balanceResponse.data.accounts[0];
     const latestAccount = await updateBalances(
       accountId,
-      account[0].balances.current,
-      account[0].balances.available
+      account.balances.current,
+      account.balances.available
     );
     res.json(latestAccount);
   })

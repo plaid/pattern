@@ -109,8 +109,6 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
     }
   }, [accounts, checkUserEmail, checkUserName, userId, isIdentityChecked]);
 
-  console.log(accounts);
-
   document.getElementsByTagName('body')[0].style.overflow = 'auto'; // to override overflow:hidden from link pane
   return (
     <div>

@@ -2,13 +2,10 @@ import React, { useState } from 'react';
 
 import { NumberInput } from 'plaid-threads/NumberInput';
 import { Button } from 'plaid-threads/Button';
-
 import { currencyFilter } from '../util';
 
-// Component rendered when user is redirected back to site from Oauth institution site.
-// It initiates link immediately with the original link token that was set in local storage
-// from the initial link initialization.
-const TransferFunds = () => {
+interface Props {}
+const TransferFunds: React.FC<Props> = (props: Props) => {
   const [transferAmount, setTransferAmount] = useState('');
   const handleSubmit = (e: any) => {
     e.preventDefault();
@@ -39,5 +36,5 @@ const TransferFunds = () => {
     </>
   );
 };
-
+TransferFunds.displayName = 'TransferFunds';
 export default TransferFunds;

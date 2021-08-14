@@ -54,7 +54,6 @@ CREATE TABLE items_table
   plaid_access_token text UNIQUE NOT NULL,
   plaid_item_id text UNIQUE NOT NULL,
   plaid_institution_id text NOT NULL,
-  plaid_account_id text UNIQUE NOT NULL,
   status text NOT NULL,
   created_at timestamptz default now(),
   updated_at timestamptz default now()
@@ -73,7 +72,6 @@ AS
     user_id,
     plaid_access_token,
     plaid_institution_id,
-    plaid_account_id,
     status,
     created_at,
     updated_at
@@ -91,6 +89,8 @@ CREATE TABLE accounts_table
 (
   id SERIAL PRIMARY KEY,
   item_id integer REFERENCES items_table(id) ON DELETE CASCADE,
+  user_id integer,
+  plaid_item_id text UNIQUE NOT NULL,
   plaid_account_id text UNIQUE NOT NULL,
   name text NOT NULL,
   mask text NOT NULL,
@@ -104,6 +104,7 @@ CREATE TABLE accounts_table
   ach_wire_routing text,
   owner_names text[],
   emails text[],
+  processor_token text,
   type text NOT NULL,
   subtype text NOT NULL,
   created_at timestamptz default now(),
@@ -118,30 +119,30 @@ EXECUTE PROCEDURE trigger_set_timestamp();
 CREATE VIEW accounts
 AS
   SELECT
-    a.id,
-    a.plaid_account_id,
-    a.item_id,
-    i.plaid_item_id,
-    i.user_id,
-    a.name,
-    a.mask,
-    a.official_name,
-    a.current_balance,
-    a.available_balance,
-    a.iso_currency_code,
-    a.unofficial_currency_code,
-    a.ach_account,
-    a.ach_routing,
-    a.ach_wire_routing,
-    a.owner_names,
-    a.emails,
-    a.type,
-    a.subtype,
-    a.created_at,
-    a.updated_at
+    id,
+    plaid_account_id,
+    item_id,
+    plaid_item_id,
+    user_id,
+    name,
+    mask,
+    official_name,
+    current_balance,
+    available_balance,
+    iso_currency_code,
+    unofficial_currency_code,
+    ach_account,
+    ach_routing,
+    ach_wire_routing,
+    owner_names,
+    emails,
+    processor_token,
+    type,
+    subtype,
+    created_at,
+    updated_at
   FROM
-    accounts_table a
-    LEFT JOIN items i ON i.id = a.item_id;
+    accounts_table;
 
 
 

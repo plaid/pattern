@@ -49,6 +49,8 @@ export const getLinkToken = (userId: number, itemId: number) =>
   });
 
 // accounts
+export const getBalanceByItem = (itemId: number, accountId: string) =>
+  api.put(`/items/${itemId}/balance`, { accountId });
 export const getAccountsByItem = (itemId: number) =>
   api.get(`/items/${itemId}/accounts`);
 export const getAccountsByUser = (userId: number) =>

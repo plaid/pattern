@@ -18,8 +18,7 @@ const createItem = async (
   plaidInstitutionId,
   plaidAccessToken,
   plaidItemId,
-  userId,
-  plaidAccountId
+  userId
 ) => {
   // this method only gets called on successfully linking an item.
   // We know the status is good.
@@ -28,20 +27,13 @@ const createItem = async (
     // RETURNING is a Postgres-specific clause that returns a list of the inserted items.
     text: `
       INSERT INTO items_table
-        (user_id, plaid_access_token, plaid_item_id, plaid_institution_id, plaid_account_id, status)
+        (user_id, plaid_access_token, plaid_item_id, plaid_institution_id, status)
       VALUES
-        ($1, $2, $3, $4, $5, $6)
+        ($1, $2, $3, $4, $5)
       RETURNING
         *;
     `,
-    values: [
-      userId,
-      plaidAccessToken,
-      plaidItemId,
-      plaidInstitutionId,
-      plaidAccountId,
-      status,
-    ],
+    values: [userId, plaidAccessToken, plaidItemId, plaidInstitutionId, status],
   };
   const { rows } = await db.query(query);
   return rows[0];

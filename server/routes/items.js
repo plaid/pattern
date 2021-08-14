@@ -11,7 +11,8 @@ const {
   createItem,
   deleteItem,
   updateItemStatus,
-  createAccounts,
+  createAccount,
+  updateBalances,
 } = require('../db/queries');
 const { asyncWrapper } = require('../middleware');
 const plaid = require('../plaid');
@@ -36,6 +37,21 @@ router.post(
   '/',
   asyncWrapper(async (req, res) => {
     const { publicToken, institutionId, userId, accounts } = req.body;
+    // in case developer did not customize their Account Select in the dashboard to enable only one account,
+    // choose the checking or savings account.
+    const checkingAccount = accounts.filter(
+      account => account.subtype === 'checking'
+    );
+    const savingsAccount = accounts.filter(
+      account => account.subtype === 'savings'
+    );
+
+    const account =
+      accounts.length === 1
+        ? accounts[0]
+        : checkingAccount.length > 0
+        ? checkingAccount[0]
+        : savingsAccount[0];
 
     // prevent duplicate items for the same institution per user.
     const existingItem = await retrieveItemByPlaidInstitutionId(
@@ -57,29 +73,54 @@ router.post(
       institutionId,
       accessToken,
       itemId,
-      userId,
-      accounts[0].id
+      userId
     );
     const authAndIdRequest = {
       access_token: accessToken,
       options: {
-        account_ids: [accounts[0].id],
+        account_ids: [account.id],
       },
     };
-    const authResponse = await plaid.authGet(authAndIdRequest);
-
     const identityResponse = await plaid.identityGet(authAndIdRequest);
     const emails = identityResponse.data.accounts[0].owners[0].emails.map(
       email => {
         return email.data;
       }
     );
-    const newAccount = await createAccounts(
+    const names = identityResponse.data.accounts[0].owners[0].names;
+    const account_info_from_identity_get = identityResponse.data.accounts[0];
+
+    let authNumbers = {
+      account: null,
+      routing: null,
+      wire_routing: null,
+    };
+    let processorToken = null;
+    const IS_PROCESSOR = process.env.IS_PROCESSOR;
+
+    if (IS_PROCESSOR === 'false') {
+      authResponse = await plaid.authGet(authAndIdRequest);
+      authNumbers = authResponse.data.numbers.ach[0];
+    } else {
+      const processorRequest = {
+        access_token: accessToken,
+        account_id: account.id,
+        processor: 'dwolla',
+      };
+      const processorTokenResponse = await plaid.processorTokenCreate(
+        processorRequest
+      );
+      processorToken = processorTokenResponse.processor_token;
+    }
+
+    const newAccount = await createAccount(
       itemId,
-      authResponse.data.accounts,
-      authResponse.data.numbers,
-      identityResponse.data.accounts[0].owners[0].names,
-      emails
+      userId,
+      account_info_from_identity_get,
+      authNumbers,
+      names,
+      emails,
+      processorToken
     );
 
     res.json({
@@ -135,6 +176,38 @@ router.put(
         acceptedKeys: ['status'],
       });
     }
+  })
+);
+
+/**
+ * Updates balances on account
+ *
+ * @param {number} itemId the ID of the item.
+ * @param {string} accountId the account id.
+ * @returns {Object[]} an array containing a single account.
+ */
+router.put(
+  '/:itemId/balance',
+  asyncWrapper(async (req, res) => {
+    const { itemId } = req.params;
+    const { accountId } = req.body;
+    const { plaid_access_token: accessToken } = await retrieveItemById(itemId);
+    const balanceRequest = {
+      access_token: accessToken,
+      options: {
+        account_ids: [accountId],
+      },
+    };
+
+    const balanceResponse = await plaid.accountsBalanceGet(balanceRequest);
+
+    const account = balanceResponse.data.accounts[0];
+    const latestAccount = await updateBalances(
+      accountId,
+      account.balances.current,
+      account.balances.available
+    );
+    res.json(latestAccount);
   })
 );
 

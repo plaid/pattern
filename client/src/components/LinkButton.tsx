@@ -141,10 +141,10 @@ export default function LinkButton(props: Props) {
       ) : (
         // regular case for initializing Link from user card or from "add another item" button
         <Button
-          centered
-          inline
-          small
           disabled={!ready}
+          className="linkButton"
+          large
+          inline
           onClick={() => {
             handleClick();
           }}

@@ -84,7 +84,7 @@ export default function UserCard(props: Props) {
             <div className="user-card__buttons">
               {token != null && token.length > 0 && props.linkButton && (
                 <LinkButton userId={props.userId} token={token} itemId={null}>
-                  Add a Bank
+                  Add your checking or savings account
                 </LinkButton>
               )}
               {props.removeButton && (

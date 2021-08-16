@@ -136,7 +136,6 @@ router.put(
     const { username, email } = req.body;
     await updateUserInfo(userId, username, email);
     const user = await retrieveUserByUsername(username);
-    console.log(user);
     res.json(sanitizeUsers(user));
   })
 );

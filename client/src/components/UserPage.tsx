@@ -25,7 +25,6 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
   const [isIdentityChecked, setIsIdentityChecked] = useState(
     user.identity_check
   );
-
   const { getAccountsByUser, accountsByUser } = useAccounts();
   const { usersById, getUserById } = useUsers();
   const { itemsByUser, getItemsByUser } = useItems();
@@ -47,20 +46,9 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
     return emails.includes(user_email);
   }, []);
 
-  const updateUser = async (user: UserType) => {
-    console.log(user);
-    await getUserById(userId, false);
-    await setUser(usersById[userId] || {});
-
-    if (accounts.length > 0) {
-      const nameCheck = checkUserName(accounts[0]!.owner_names, user.username);
-      const emailCheck = checkUserEmail(accounts[0]!.emails, user.email);
-
-      setIdentityCheckById(userId, nameCheck && emailCheck); // update user_table in db
-      setIsIdentityChecked(nameCheck && emailCheck); // set state
-      console.log(nameCheck && emailCheck);
-    }
-  };
+  const updateUser = useCallback(async (user: UserType) => {
+    setUser(user);
+  }, []);
 
   // update data store with user
   useEffect(() => {
@@ -101,16 +89,20 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
   // update data store with the user's accounts
   useEffect(() => {
     getAccountsByUser(userId);
-  }, [getAccountsByUser, userId]);
+  }, [getAccountsByUser, userId, numOfItems]);
 
   useEffect(() => {
     setAccounts(accountsByUser[userId] || []);
-  }, [accountsByUser, userId]);
+  }, [accountsByUser, userId, numOfItems]);
 
   useEffect(() => {
     // checks identity of user against identity/get data stored in accounts data
     // only checks if identity has not already been verified.
-    if (accounts.length > 0 && isIdentityChecked === false) {
+    if (
+      accounts.length > 0 &&
+      isIdentityChecked === false &&
+      user.username != null
+    ) {
       const nameCheck = checkUserName(accounts[0]!.owner_names, user.username);
       const emailCheck = checkUserEmail(accounts[0]!.emails, user.email);
       setIdentityCheckById(userId, nameCheck && emailCheck); // update user_table in db
@@ -124,8 +116,8 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
     isIdentityChecked,
     user,
   ]);
-  console.log(isIdentityChecked);
   document.getElementsByTagName('body')[0].style.overflow = 'auto'; // to override overflow:hidden from link pane
+  console.log('user:', user);
   return (
     <div>
       <NavigationLink component={Link} to="/">
@@ -133,6 +125,7 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
       </NavigationLink>
 
       <Banner />
+      {user != null && <div>username: {user.username}</div>}
       <UserCard
         user={user}
         userId={userId}

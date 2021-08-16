@@ -111,7 +111,6 @@ router.post(
         processorRequest
       );
       processorToken = processorTokenResponse.data.processor_token;
-      console.log('PT:', processorToken);
     }
 
     const newAccount = await createAccount(

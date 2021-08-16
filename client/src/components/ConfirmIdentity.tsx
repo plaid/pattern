@@ -34,20 +34,20 @@ const ConfirmIdentity: React.FC<Props> = (props: Props) => {
           <div className="add-user__column-1">
             <h3 className="heading add-user__heading">Confirm your identity</h3>
             <p className="value add-user__value">
-              Re-enter you name and email as they are listed at your financial
-              institution.
+              Re-enter your full name and email as they are listed at your
+              financial institution.
             </p>
           </div>
           <div className="add-user__column-2">
             <TextInput
               id="username"
-              name="username"
+              name="full_name"
               required
               autoComplete="off"
               className="input_field"
               value={username}
               placeholder="user name used at financial institution"
-              label="User_Name"
+              label="Full Name"
               onChange={e => setUsername(e.target.value)}
             />
             <TextInput

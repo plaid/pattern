@@ -32,7 +32,9 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
 
   // functions to check username and email against data from identity/get
   const checkUserName = useCallback((names: string[], user_name: string) => {
+    user_name = user_name.replace(',', ' ');
     const usernameArray = user_name.split(' ');
+
     // if both the first name and last name of the username in this app are included somewhere in the
     // financial institution's names array, return true
     return usernameArray.every(username => {

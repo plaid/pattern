@@ -36,14 +36,14 @@ const AddUserForm = (props: Props) => {
           </div>
           <div className="add-user__column-2">
             <TextInput
-              id="username"
-              name="username"
+              id="full_name"
+              name="full_name"
               required
               autoComplete="off"
               className="input_field"
               value={username}
-              placeholder="New user name"
-              label="User_Name"
+              placeholder="First and last name"
+              label="Full Name"
               onChange={e => setUsername(e.target.value)}
             />
             <TextInput

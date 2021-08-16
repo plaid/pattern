@@ -81,7 +81,6 @@ export function UsersProvider(props: any) {
     if (!hasRequested.current.all || refresh) {
       hasRequested.current.all = true;
       const { data: payload } = await apiGetUsers();
-      console.log('in users services', payload);
       dispatch({ type: 'SUCCESSFUL_GET', payload: payload });
     }
   }, []);

@@ -100,11 +100,7 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
   useEffect(() => {
     // checks identity of user against identity/get data stored in accounts data
     // only checks if identity has not already been verified.
-    if (
-      accounts.length > 0 &&
-      isIdentityChecked === false &&
-      user.username != null
-    ) {
+    if (accounts.length > 0 && isIdentityChecked === false) {
       const nameCheck = checkUserName(accounts[0]!.owner_names, user.username);
       const emailCheck = checkUserEmail(accounts[0]!.emails, user.email);
       setIdentityCheckById(userId, nameCheck && emailCheck); // update user_table in db
@@ -119,7 +115,6 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
     user,
   ]);
   document.getElementsByTagName('body')[0].style.overflow = 'auto'; // to override overflow:hidden from link pane
-  console.log('user:', user);
   return (
     <div>
       <NavigationLink component={Link} to="/">

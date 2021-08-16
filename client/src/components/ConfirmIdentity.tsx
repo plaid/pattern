@@ -18,9 +18,9 @@ const ConfirmIdentity: React.FC<Props> = (props: Props) => {
   const { setCurrentUser } = useCurrentUser();
   const handleSubmit = async (e: any) => {
     e.preventDefault();
-    const { data: user } = await updateUserInfo(props.userId, username, email);
+    const { data: users } = await updateUserInfo(props.userId, username, email);
     await setCurrentUser(username);
-    props.updateUser(user);
+    props.updateUser(users[0]);
   };
 
   useEffect(() => {

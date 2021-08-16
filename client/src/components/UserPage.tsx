@@ -125,7 +125,6 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
       </NavigationLink>
 
       <Banner />
-      {user != null && <div>username: {user.username}</div>}
       <UserCard
         user={user}
         userId={userId}

@@ -4,12 +4,14 @@ import { NumberInput } from 'plaid-threads/NumberInput';
 import { Button } from 'plaid-threads/Button';
 import { currencyFilter } from '../util';
 
-interface Props {}
+interface Props {
+  checkAmount: (amount: number) => void;
+}
 const TransferFunds: React.FC<Props> = (props: Props) => {
   const [transferAmount, setTransferAmount] = useState('');
   const handleSubmit = (e: any) => {
     e.preventDefault();
-    // checkAmount(); logic to check if amount is less than balance/get available balance
+    props.checkAmount(parseInt(transferAmount));
     setTransferAmount('');
   };
 

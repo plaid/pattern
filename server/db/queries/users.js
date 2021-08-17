@@ -11,12 +11,12 @@ const db = require('../');
  * @param {string} email the email of the user.
  * @returns {Object} the new user.
  */
-const createUser = async (username, email) => {
+const createUser = async (username, fullname, email) => {
   const query = {
     // RETURNING is a Postgres-specific clause that returns a list of the inserted items.
     text:
-      'INSERT INTO users_table (username, email, identity_check) VALUES ($1, $2, $3) RETURNING *;',
-    values: [username, email, false],
+      'INSERT INTO users_table (username, fullname, email, identity_check) VALUES ($1, $2, $3, $4) RETURNING *;',
+    values: [username, fullname, email, false],
   };
   const { rows } = await db.query(query);
   return rows[0];
@@ -47,6 +47,21 @@ const updateIdentityCheck = async (userId, identityCheck) => {
   const query = {
     text: 'UPDATE users SET identity_check = $1 WHERE id = $2',
     values: [identityCheck, userId],
+  };
+  await db.query(query);
+};
+
+/**
+ * Updates user information when user confirms identity.
+ *
+ * @param {number} userId the user id of th user.
+ * @param {string} username the username of the user.
+ * @param {string} email the email of the user.
+ */
+const updateUserInfo = async (userId, fullname, email) => {
+  const query = {
+    text: 'UPDATE users SET fullname = $2, email = $3 WHERE id = $1',
+    values: [userId, fullname, email],
   };
   await db.query(query);
 };
@@ -103,4 +118,5 @@ module.exports = {
   retrieveUserByUsername,
   retrieveUsers,
   updateIdentityCheck,
+  updateUserInfo,
 };

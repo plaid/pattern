@@ -73,6 +73,7 @@ const sanitizeUsers = users =>
   sanitizeWith(users, [
     'id',
     'username',
+    'fullname',
     'email',
     'identity_check',
     'created_at',

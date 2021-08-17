@@ -49,8 +49,9 @@ export interface AccountType {
 }
 export interface UserType {
   id: number;
-  username: string | null;
-  email: string | null;
+  username: string;
+  fullname: string;
+  email: string;
   identity_check: boolean;
   created_at: string;
   updated_at: string;

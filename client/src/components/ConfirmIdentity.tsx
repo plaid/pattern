@@ -2,60 +2,51 @@ import React, { useState, useEffect } from 'react';
 import Button from 'plaid-threads/Button';
 import TextInput from 'plaid-threads/TextInput';
 
-import { useUsers, useCurrentUser } from '../services';
+import { useUsers } from '../services';
+import { UserType } from './types';
+import { updateUserInfo } from '../services/api';
 
 interface Props {
-  hideForm: () => void;
+  userId: number;
+  updateUser: (user: UserType) => void;
 }
-const AddUserForm = (props: Props) => {
-  const [username, setUsername] = useState('');
+const ConfirmIdentity: React.FC<Props> = (props: Props) => {
   const [fullname, setFullname] = useState('');
   const [email, setEmail] = useState('');
 
-  const { addNewUser, getUsers } = useUsers();
-  const { setNewUser } = useCurrentUser();
+  const { getUsers } = useUsers();
   const handleSubmit = async (e: any) => {
     e.preventDefault();
-    console.log(fullname);
-    await addNewUser(username, fullname, email);
-    setNewUser(username);
-    props.hideForm();
+    const { data: users } = await updateUserInfo(props.userId, fullname, email);
+    props.updateUser(users[0]);
+    setFullname('');
+    setEmail('');
   };
 
   useEffect(() => {
     getUsers(true);
-  }, [addNewUser, getUsers]);
+  }, [getUsers]);
 
   return (
     <div className="box addUserForm">
       <form onSubmit={handleSubmit}>
         <div className="card">
           <div className="add-user__column-1">
-            <h3 className="heading add-user__heading">Add a new user</h3>
+            <h3 className="heading add-user__heading">Confirm your identity</h3>
             <p className="value add-user__value">
-              Enter your name and email address in the input fields.
+              Re-enter your full name and email as they are listed at your
+              financial institution.
             </p>
           </div>
           <div className="add-user__column-2">
             <TextInput
-              id="username"
-              name="username"
-              required
-              autoComplete="off"
-              className="input_field"
-              value={username}
-              placeholder="username"
-              label="Username"
-              onChange={e => setUsername(e.target.value)}
-            />
-            <TextInput
-              id="full_name"
-              name="full_name"
+              id="fullname"
+              name="fullname"
               required
               autoComplete="off"
               className="input_field"
               value={fullname}
-              placeholder="First and last name"
+              placeholder="full name used at financial institution"
               label="Full Name"
               onChange={e => setFullname(e.target.value)}
             />
@@ -66,23 +57,14 @@ const AddUserForm = (props: Props) => {
               autoComplete="off"
               className="input_field"
               value={email}
-              placeholder="email address"
+              placeholder="email used at financial institution"
               label="Email"
               onChange={e => setEmail(e.target.value)}
             />
           </div>
           <div className="add-user__column-3">
             <Button className="add-user__button" centered small type="submit">
-              Add User
-            </Button>
-            <Button
-              className="add-user__button"
-              centered
-              small
-              secondary
-              onClick={props.hideForm}
-            >
-              Cancel
+              Confirm Identity
             </Button>
           </div>
         </div>
@@ -91,4 +73,5 @@ const AddUserForm = (props: Props) => {
   );
 };
 
-export default AddUserForm;
+ConfirmIdentity.displayName = 'ConfirmIdentity';
+export default ConfirmIdentity;

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { AccountType } from './types';
 import { currencyFilter } from '../util';
 
@@ -8,6 +8,10 @@ interface Props {
 }
 
 export default function AccountCard(props: Props) {
+  const [isAmountOkay, setIsAmountOkay] = useState(true);
+  const checkAmount = (amount: number) => {
+    setIsAmountOkay(amount <= props.account.available_balance ? true : false);
+  };
   return (
     <div className="accountContainer">
       <div className="account-data-row">
@@ -20,7 +24,10 @@ export default function AccountCard(props: Props) {
             props.account.available_balance
           )}`}</div>
         </div>
-        <TransferFunds />
+        <div>
+          {!isAmountOkay && <div>Too much!</div>}
+          <TransferFunds checkAmount={checkAmount} />
+        </div>
       </div>
     </div>
   );

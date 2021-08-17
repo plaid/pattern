@@ -13,6 +13,7 @@ const {
   retrieveItemsByUser,
   updateIdentityCheck,
   retrieveUserById,
+  updateUserInfo,
 } = require('../db/queries');
 const { asyncWrapper } = require('../middleware');
 const {
@@ -50,12 +51,12 @@ router.get(
 router.post(
   '/',
   asyncWrapper(async (req, res) => {
-    const { username, email } = req.body;
+    const { username, fullname, email } = req.body;
     const usernameExists = await retrieveUserByUsername(username);
     // prevent duplicates
     if (usernameExists)
       throw new Boom('Username already exists', { statusCode: 409 });
-    const newUser = await createUser(username, email);
+    const newUser = await createUser(username, fullname, email);
     res.json(sanitizeUsers(newUser));
   })
 );
@@ -117,8 +118,25 @@ router.put(
     const { userId } = req.params;
     const { identityCheck } = req.body;
     await updateIdentityCheck(userId, identityCheck);
-    const accounts = retrieveAccountsByUserId(userId);
+    const accounts = await retrieveAccountsByUserId(userId);
     res.json(sanitizeAccounts(accounts));
+  })
+);
+
+/**
+ * Updates user info from identity confirmation.
+ *
+ * @param {string} userId the ID of the user.
+ * @returns {Object[]} an array of accounts.
+ */
+router.put(
+  '/:userId/confirmation',
+  asyncWrapper(async (req, res) => {
+    const { userId } = req.params;
+    const { username, fullname, email } = req.body;
+    await updateUserInfo(userId, fullname, email);
+    const user = await retrieveUserById(userId);
+    res.json(sanitizeUsers(user));
   })
 );
 

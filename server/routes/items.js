@@ -110,7 +110,7 @@ router.post(
       const processorTokenResponse = await plaid.processorTokenCreate(
         processorRequest
       );
-      processorToken = processorTokenResponse.processor_token;
+      processorToken = processorTokenResponse.data.processor_token;
     }
 
     const newAccount = await createAccount(

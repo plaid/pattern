@@ -32,15 +32,15 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
   const userId = Number(match.params.userId);
 
   // functions to check username and email against data from identity/get
-  const checkUserName = useCallback((names: string[], fullname: string) => {
+  const checkFullName = useCallback((names: string[], fullname: string) => {
     // in case user enters "Last name, First name"
     fullname = fullname.replace(',', ' ');
-    const usernameArray = fullname.split(' ');
+    const fullnameArray = fullname.split(' ');
 
     // if both the first name and last name of the username in this app are included somewhere in the
     // financial institution's names array, return true (anything entered by the user (except a comma)
     // must be included in the FI's names array).
-    return usernameArray.every(name => {
+    return fullnameArray.every(name => {
       return names.some(identName => {
         return identName.indexOf(name) > -1;
       });
@@ -104,15 +104,18 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
     // checks identity of user against identity/get data stored in accounts data
     // only checks if identity has not already been verified.
     if (accounts.length > 0 && isIdentityChecked === false) {
-      const nameCheck = checkUserName(accounts[0]!.owner_names, user.fullname);
+      const fullnameCheck = checkFullName(
+        accounts[0]!.owner_names,
+        user.fullname
+      );
       const emailCheck = checkUserEmail(accounts[0]!.emails, user.email);
-      setIdentityCheckById(userId, nameCheck && emailCheck); // update user_table in db
-      setIsIdentityChecked(nameCheck && emailCheck); // set state
+      setIdentityCheckById(userId, fullnameCheck && emailCheck); // update user_table in db
+      setIsIdentityChecked(fullnameCheck && emailCheck); // set state
     }
   }, [
     accounts,
     checkUserEmail,
-    checkUserName,
+    checkFullName,
     userId,
     isIdentityChecked,
     user,

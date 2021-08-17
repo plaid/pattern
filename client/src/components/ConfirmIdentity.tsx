@@ -14,7 +14,7 @@ const ConfirmIdentity: React.FC<Props> = (props: Props) => {
   const [fullname, setFullname] = useState('');
   const [email, setEmail] = useState('');
 
-  const { addNewUser, getUsers } = useUsers();
+  const { getUsers } = useUsers();
   const handleSubmit = async (e: any) => {
     e.preventDefault();
     const { data: users } = await updateUserInfo(props.userId, fullname, email);
@@ -25,7 +25,7 @@ const ConfirmIdentity: React.FC<Props> = (props: Props) => {
 
   useEffect(() => {
     getUsers(true);
-  }, [addNewUser, getUsers]);
+  }, [getUsers]);
 
   return (
     <div className="box addUserForm">

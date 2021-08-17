@@ -39,6 +39,7 @@ const sanitizeAccounts = accounts =>
     'ach_account',
     'ach_routing',
     'ach_wire_routing',
+    'processor_token',
     'owner_names',
     'emails',
     'type',

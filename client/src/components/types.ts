@@ -50,6 +50,7 @@ export interface AccountType {
 export interface UserType {
   id: number;
   username: string;
+  fullname: string;
   email: string;
   identity_check: boolean;
   created_at: string;

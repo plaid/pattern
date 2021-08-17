@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Button from 'plaid-threads/Button';
 import TextInput from 'plaid-threads/TextInput';
 
-import { useUsers, useCurrentUser } from '../services';
+import { useUsers } from '../services';
 import { UserType } from './types';
 import { updateUserInfo } from '../services/api';
 
@@ -11,16 +11,16 @@ interface Props {
   updateUser: (user: UserType) => void;
 }
 const ConfirmIdentity: React.FC<Props> = (props: Props) => {
-  const [username, setUsername] = useState('');
+  const [fullname, setFullname] = useState('');
   const [email, setEmail] = useState('');
 
   const { addNewUser, getUsers } = useUsers();
-  const { setCurrentUser } = useCurrentUser();
   const handleSubmit = async (e: any) => {
     e.preventDefault();
-    const { data: users } = await updateUserInfo(props.userId, username, email);
-    await setCurrentUser(username);
+    const { data: users } = await updateUserInfo(props.userId, fullname, email);
     props.updateUser(users[0]);
+    setFullname('');
+    setEmail('');
   };
 
   useEffect(() => {
@@ -40,15 +40,15 @@ const ConfirmIdentity: React.FC<Props> = (props: Props) => {
           </div>
           <div className="add-user__column-2">
             <TextInput
-              id="username"
-              name="full_name"
+              id="fullname"
+              name="fullname"
               required
               autoComplete="off"
               className="input_field"
-              value={username}
-              placeholder="user name used at financial institution"
+              value={fullname}
+              placeholder="full name used at financial institution"
               label="Full Name"
-              onChange={e => setUsername(e.target.value)}
+              onChange={e => setFullname(e.target.value)}
             />
             <TextInput
               id="email"
@@ -64,7 +64,7 @@ const ConfirmIdentity: React.FC<Props> = (props: Props) => {
           </div>
           <div className="add-user__column-3">
             <Button className="add-user__button" centered small type="submit">
-              Confirm
+              Confirm Identity
             </Button>
           </div>
         </div>

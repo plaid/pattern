@@ -18,6 +18,7 @@ CREATE TABLE users_table
 (
   id SERIAL PRIMARY KEY,
   username text UNIQUE NOT NULL,
+  fullname text UNIQUE NOT NULL,
   email text NOT NULL,
   identity_check boolean NOT NULL,
   created_at timestamptz default now(),
@@ -34,6 +35,7 @@ AS
   SELECT
     id,
     username,
+    fullname,
     email,
     identity_check,
     created_at,

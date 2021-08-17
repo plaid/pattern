@@ -14,6 +14,7 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
   const [user, setUser] = useState({
     id: 0,
     username: '',
+    fullname: '',
     email: '',
     identity_check: false,
     created_at: '',
@@ -31,15 +32,17 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
   const userId = Number(match.params.userId);
 
   // functions to check username and email against data from identity/get
-  const checkUserName = useCallback((names: string[], user_name: string) => {
-    user_name = user_name.replace(',', ' ');
-    const usernameArray = user_name.split(' ');
+  const checkUserName = useCallback((names: string[], fullname: string) => {
+    // in case user enters "Last name, First name"
+    fullname = fullname.replace(',', ' ');
+    const usernameArray = fullname.split(' ');
 
     // if both the first name and last name of the username in this app are included somewhere in the
-    // financial institution's names array, return true
-    return usernameArray.every(username => {
+    // financial institution's names array, return true (anything entered by the user (except a comma)
+    // must be included in the FI's names array).
+    return usernameArray.every(name => {
       return names.some(identName => {
-        return identName.indexOf(username) > -1;
+        return identName.indexOf(name) > -1;
       });
     });
   }, []);
@@ -101,7 +104,7 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
     // checks identity of user against identity/get data stored in accounts data
     // only checks if identity has not already been verified.
     if (accounts.length > 0 && isIdentityChecked === false) {
-      const nameCheck = checkUserName(accounts[0]!.owner_names, user.username);
+      const nameCheck = checkUserName(accounts[0]!.owner_names, user.fullname);
       const emailCheck = checkUserEmail(accounts[0]!.emails, user.email);
       setIdentityCheckById(userId, nameCheck && emailCheck); // update user_table in db
       setIsIdentityChecked(nameCheck && emailCheck); // set state

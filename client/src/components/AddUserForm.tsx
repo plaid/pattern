@@ -9,13 +9,15 @@ interface Props {
 }
 const AddUserForm = (props: Props) => {
   const [username, setUsername] = useState('');
+  const [fullname, setFullname] = useState('');
   const [email, setEmail] = useState('');
 
   const { addNewUser, getUsers } = useUsers();
   const { setNewUser } = useCurrentUser();
   const handleSubmit = async (e: any) => {
     e.preventDefault();
-    await addNewUser(username, email);
+    console.log(fullname);
+    await addNewUser(username, fullname, email);
     setNewUser(username);
     props.hideForm();
   };
@@ -36,15 +38,26 @@ const AddUserForm = (props: Props) => {
           </div>
           <div className="add-user__column-2">
             <TextInput
+              id="username"
+              name="username"
+              required
+              autoComplete="off"
+              className="input_field"
+              value={username}
+              placeholder="username"
+              label="Username"
+              onChange={e => setUsername(e.target.value)}
+            />
+            <TextInput
               id="full_name"
               name="full_name"
               required
               autoComplete="off"
               className="input_field"
-              value={username}
+              value={fullname}
               placeholder="First and last name"
               label="Full Name"
-              onChange={e => setUsername(e.target.value)}
+              onChange={e => setFullname(e.target.value)}
             />
             <TextInput
               id="email"

@@ -13,7 +13,7 @@ interface Props {
 const UserDetails = (props: Props) => (
   <>
     <div className="user-card__column-1">
-      <h3 className="heading">Full name</h3>
+      <h3 className="heading">username</h3>
       <p className="value">{props.user.username}</p>
     </div>
     <div className="user-card__column-2">

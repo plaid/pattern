@@ -51,12 +51,12 @@ router.get(
 router.post(
   '/',
   asyncWrapper(async (req, res) => {
-    const { username, email } = req.body;
+    const { username, fullname, email } = req.body;
     const usernameExists = await retrieveUserByUsername(username);
     // prevent duplicates
     if (usernameExists)
       throw new Boom('Username already exists', { statusCode: 409 });
-    const newUser = await createUser(username, email);
+    const newUser = await createUser(username, fullname, email);
     res.json(sanitizeUsers(newUser));
   })
 );
@@ -133,10 +133,9 @@ router.put(
   '/:userId/confirmation',
   asyncWrapper(async (req, res) => {
     const { userId } = req.params;
-    const { username, email } = req.body;
-    await updateUserInfo(userId, username, email);
-    const user = await retrieveUserByUsername(username);
-    console.log(user);
+    const { username, fullname, email } = req.body;
+    await updateUserInfo(userId, fullname, email);
+    const user = await retrieveUserById(userId);
     res.json(sanitizeUsers(user));
   })
 );

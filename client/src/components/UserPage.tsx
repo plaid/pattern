@@ -6,9 +6,16 @@ import Callout from 'plaid-threads/Callout';
 
 import { RouteInfo, ItemType, AccountType, UserType } from './types';
 import { useItems, useAccounts, useUsers } from '../services';
-import { setIdentityCheckById } from '../services/api';
+import { setIdentityCheckById, getBalanceByItem } from '../services/api';
 
-import { Banner, UserCard, ErrorMessage, ItemCard, ConfirmIdentity } from '.';
+import {
+  Banner,
+  UserCard,
+  ErrorMessage,
+  ItemCard,
+  ConfirmIdentity,
+  MainAccount,
+} from '.';
 
 const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
   const [user, setUser] = useState({
@@ -17,6 +24,7 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
     fullname: '',
     email: '',
     identity_check: false,
+    app_funds_balance: 0,
     created_at: '',
     updated_at: '',
   });
@@ -26,7 +34,13 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
   const [isIdentityChecked, setIsIdentityChecked] = useState(
     user.identity_check
   );
-  const { getAccountsByUser, accountsByUser } = useAccounts();
+  const [showBank, setShowBank] = useState(false);
+  const {
+    getAccountsByUser,
+    accountsByUser,
+    getAccountsByItem,
+    accountsByItem,
+  } = useAccounts();
   const { usersById, getUserById } = useUsers();
   const { itemsByUser, getItemsByUser } = useItems();
   const userId = Number(match.params.userId);
@@ -42,7 +56,7 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
     // must be included in the FI's names array).
     return fullnameArray.every(name => {
       return names.some(identName => {
-        return identName.indexOf(name) > -1;
+        return identName.toUpperCase().indexOf(name.toUpperCase()) > -1;
       });
     });
   }, []);
@@ -54,6 +68,23 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
   const updateUser = useCallback(async (user: UserType) => {
     setUser(user);
   }, []);
+
+  const getBalance = useCallback(async () => {
+    await getBalanceByItem(items[0].id, accounts[0].plaid_account_id);
+    await getAccountsByItem(items[0].id);
+    const itemAccounts: AccountType[] = accountsByItem[items[0].id];
+    setAccounts(itemAccounts || []);
+  }, [accounts, accountsByItem, getAccountsByItem, items]);
+
+  const initiateTransfer = () => {
+    getBalance();
+    setShowBank(true);
+  };
+
+  const closeView = () => {
+    alert('close me!');
+    setShowBank(false);
+  };
 
   // update data store with user
   useEffect(() => {
@@ -120,6 +151,8 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
     isIdentityChecked,
     user,
   ]);
+
+  console.log(accounts);
   document.getElementsByTagName('body')[0].style.overflow = 'auto'; // to override overflow:hidden from link pane
   return (
     <div>
@@ -138,11 +171,22 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
         <>
           <ErrorMessage />
           {isIdentityChecked && (
-            <ItemCard
-              item={items[0]}
-              isIdentityChecked={isIdentityChecked}
-              userId={userId}
-            />
+            <>
+              {showBank && (
+                <ItemCard
+                  item={items[0]}
+                  isIdentityChecked={isIdentityChecked}
+                  userId={userId}
+                  updateUser={updateUser}
+                  closeView={closeView}
+                />
+              )}
+              <MainAccount
+                initiateTransfer={initiateTransfer}
+                user={user}
+                updateUser={updateUser}
+              />
+            </>
           )}
           {!isIdentityChecked && (
             <>

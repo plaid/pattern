@@ -35,6 +35,8 @@ export const updateUserInfo = (
 ) => api.put(`/users/${userId}/confirmation`, { fullname, email });
 export const deleteUserById = (userId: number) =>
   api.delete(`/users/${userId}`);
+export const updateAppFundsBalance = (userId: number, transferAmount: number) =>
+  api.put(`/users/${userId}/bank_transfer`, { transferAmount });
 
 // items
 export const getItemById = (id: number) => api.get(`/items/${id}`);

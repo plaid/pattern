@@ -16,3 +16,4 @@ export { default as Login } from './Login';
 export { default as ErrorMessage } from './ErrorMessage';
 export { default as TransferFunds } from './TransferFunds';
 export { default as ConfirmIdentity } from './ConfirmIdentity';
+export { default as MainAccount } from './MainAccount';

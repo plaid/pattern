@@ -11,7 +11,7 @@ const TransferFunds: React.FC<Props> = (props: Props) => {
   const [transferAmount, setTransferAmount] = useState('');
   const handleSubmit = (e: any) => {
     e.preventDefault();
-    props.checkAmount(parseInt(transferAmount));
+    props.checkAmount(parseFloat(transferAmount));
     setTransferAmount('');
   };
 
@@ -32,7 +32,9 @@ const TransferFunds: React.FC<Props> = (props: Props) => {
             label="transfer_amount"
             onChange={e => setTransferAmount(e.currentTarget.value)}
           />
-          <Button type="submit">Transfer {amt}</Button>
+          <Button small centered type="submit">
+            Submit {amt}
+          </Button>
         </form>
       </div>
     </>

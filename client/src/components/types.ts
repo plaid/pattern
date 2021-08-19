@@ -33,6 +33,7 @@ export interface AccountType {
   ach_wire_routing: string;
   owner_names: string[];
   emails: string[];
+  processor_token: string;
   type: 'depository' | 'investment' | 'loan' | 'credit';
   subtype:
     | 'checking'
@@ -53,6 +54,7 @@ export interface UserType {
   fullname: string;
   email: string;
   identity_check: boolean;
+  app_funds_balance: number;
   created_at: string;
   updated_at: string;
 }

@@ -16,7 +16,6 @@ const AddUserForm = (props: Props) => {
   const { setNewUser } = useCurrentUser();
   const handleSubmit = async (e: any) => {
     e.preventDefault();
-    console.log(fullname);
     await addNewUser(username, fullname, email);
     setNewUser(username);
     props.hideForm();

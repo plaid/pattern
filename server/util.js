@@ -76,6 +76,7 @@ const sanitizeUsers = users =>
     'fullname',
     'email',
     'identity_check',
+    'app_funds_balance',
     'created_at',
     'updated_at',
   ]);

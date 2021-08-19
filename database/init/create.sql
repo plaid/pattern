@@ -21,6 +21,7 @@ CREATE TABLE users_table
   fullname text UNIQUE NOT NULL,
   email text NOT NULL,
   identity_check boolean NOT NULL,
+  app_funds_balance numeric,
   created_at timestamptz default now(),
   updated_at timestamptz default now()
 );
@@ -38,6 +39,7 @@ AS
     fullname,
     email,
     identity_check,
+    app_funds_balance,
     created_at,
     updated_at
   FROM

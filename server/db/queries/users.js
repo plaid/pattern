@@ -15,8 +15,8 @@ const createUser = async (username, fullname, email) => {
   const query = {
     // RETURNING is a Postgres-specific clause that returns a list of the inserted items.
     text:
-      'INSERT INTO users_table (username, fullname, email, identity_check) VALUES ($1, $2, $3, $4) RETURNING *;',
-    values: [username, fullname, email, false],
+      'INSERT INTO users_table (username, fullname, email, identity_check, app_funds_balance) VALUES ($1, $2, $3, $4, $5) RETURNING *;',
+    values: [username, fullname, email, false, 0],
   };
   const { rows } = await db.query(query);
   return rows[0];
@@ -47,6 +47,20 @@ const updateIdentityCheck = async (userId, identityCheck) => {
   const query = {
     text: 'UPDATE users SET identity_check = $1 WHERE id = $2',
     values: [identityCheck, userId],
+  };
+  await db.query(query);
+};
+
+/**
+ * Updates the app funds balance for a user upon transfer of funds
+ *
+ * @param {number} userId the userID.
+ * @param {number} appFundsBalance true or false for a user.
+ */
+const updateAppFundsBalance = async (userId, appFundsBalance) => {
+  const query = {
+    text: 'UPDATE users SET app_funds_balance = $1 WHERE id = $2',
+    values: [appFundsBalance, userId],
   };
   await db.query(query);
 };
@@ -119,4 +133,5 @@ module.exports = {
   retrieveUsers,
   updateIdentityCheck,
   updateUserInfo,
+  updateAppFundsBalance,
 };

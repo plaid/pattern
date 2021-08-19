@@ -15,14 +15,10 @@ const {
   retrieveUserById,
   updateUserInfo,
   updateAppFundsBalance,
+  createAppFund,
 } = require('../db/queries');
 const { asyncWrapper } = require('../middleware');
-const {
-  sanitizeAccounts,
-  sanitizeItems,
-  sanitizeUsers,
-  sanitizeTransactions,
-} = require('../util');
+const { sanitizeAccounts, sanitizeItems, sanitizeUsers } = require('../util');
 
 const router = express.Router();
 
@@ -58,7 +54,7 @@ router.post(
     if (usernameExists)
       throw new Boom('Username already exists', { statusCode: 409 });
     const newUser = await createUser(username, fullname, email);
-    console.log(newUser);
+    await createAppFund(newUser.id);
     res.json(sanitizeUsers(newUser));
   })
 );
@@ -139,26 +135,6 @@ router.put(
     await updateUserInfo(userId, fullname, email);
     const user = await retrieveUserById(userId);
     res.json(sanitizeUsers(user));
-  })
-);
-
-/**
- * Updates user's app funds balance upon bank transfer.
- *
- * @param {string} userId the ID of the user.
- * @returns {Object[]} an array of accounts.
- */
-router.put(
-  '/:userId/bank_transfer',
-  asyncWrapper(async (req, res) => {
-    const { userId } = req.params;
-    const { transferAmount } = req.body;
-    const user = await retrieveUserById(userId);
-    const oldBalance = user.app_funds_balance;
-    const newBalance = oldBalance + transferAmount;
-    await updateAppFundsBalance(userId, newBalance);
-    const newUser = await retrieveUserById(userId);
-    res.json(sanitizeUsers(newUser));
   })
 );
 

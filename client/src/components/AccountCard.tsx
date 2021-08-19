@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-import { AccountType, UserType } from './types';
+import { AccountType, AppFundType } from './types';
 import { currencyFilter } from '../util';
 import { TransferFunds } from '.';
 import { updateAppFundsBalance } from '../services/api';
@@ -9,7 +9,7 @@ const IS_PROCESSOR = process.env.REACT_APP_IS_PROCESSOR;
 interface Props {
   account: AccountType;
   userId: number;
-  updateUser: (user: UserType) => void;
+  updateAppFund: (appFund: AppFundType) => void;
   closeView: () => void;
 }
 
@@ -47,11 +47,11 @@ export default function AccountCard(props: Props) {
           : completeTransfer(amount, account.plaid_account_id);
     }
     if (confirmedAmount > 0) {
-      const { data: users } = await updateAppFundsBalance(
+      const { data: appFunds } = await updateAppFundsBalance(
         props.userId,
         confirmedAmount
       );
-      props.updateUser(users[0]);
+      props.updateAppFund(appFunds[0]);
       props.closeView();
     }
   };

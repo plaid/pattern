@@ -28,9 +28,14 @@ const {
   retrieveUserById,
   retrieveUserByUsername,
   updateIdentityCheck,
-  updateAppFundsBalance,
   updateUserInfo,
 } = require('./users');
+
+const {
+  createAppFund,
+  updateAppFundsBalance,
+  retrieveAppFundsByUser,
+} = require('./appFunds');
 const { createLinkEvent } = require('./linkEvents');
 
 module.exports = {
@@ -59,7 +64,10 @@ module.exports = {
   retrieveUsers,
   updateIdentityCheck,
   updateUserInfo,
+  // app funds
+  createAppFund,
   updateAppFundsBalance,
+  retrieveAppFundsByUser,
   // link events
   createLinkEvent,
 };

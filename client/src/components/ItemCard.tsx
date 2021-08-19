@@ -3,7 +3,7 @@ import Note from 'plaid-threads/Note';
 import Touchable from 'plaid-threads/Touchable';
 import { Institution } from 'plaid/dist/api';
 
-import { ItemType, AccountType, UserType } from './types';
+import { ItemType, AccountType, AppFundType } from './types';
 import { AccountCard, MoreDetails } from '.';
 import { useAccounts, useInstitutions, useItems } from '../services';
 import { setItemToBadState, getBalanceByItem } from '../services/api';
@@ -15,7 +15,7 @@ interface Props {
   item: ItemType;
   userId: number;
   isIdentityChecked: boolean;
-  updateUser: (user: UserType) => void;
+  updateAppFund: (appFund: AppFundType) => void;
   closeView: () => void;
 }
 
@@ -123,7 +123,7 @@ const ItemCard = (props: Props) => {
             <AccountCard
               account={account}
               userId={props.userId}
-              updateUser={props.updateUser}
+              updateAppFund={props.updateAppFund}
               closeView={props.closeView}
             />
           </div>

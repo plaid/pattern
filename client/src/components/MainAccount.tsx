@@ -4,7 +4,7 @@ import Touchable from 'plaid-threads/Touchable';
 import Button from 'plaid-threads/Button';
 import { Institution } from 'plaid/dist/api';
 
-import { ItemType, AccountType, UserType } from './types';
+import { ItemType, AccountType, UserType, AppFundType } from './types';
 import { AccountCard, MoreDetails } from '.';
 import { useAccounts, useInstitutions, useItems } from '../services';
 import { setItemToBadState, getBalanceByItem } from '../services/api';
@@ -16,6 +16,7 @@ interface Props {
   initiateTransfer: () => void;
   updateUser: (user: UserType) => void;
   user: UserType;
+  appFund: AppFundType;
 }
 
 const MainAccount = (props: Props) => {
@@ -33,7 +34,7 @@ const MainAccount = (props: Props) => {
         </div>
         <div>
           <h3 className="accountDollars">
-            {currencyFilter(props.user.app_funds_balance)}
+            {currencyFilter(props.appFund.balance)}
           </h3>
         </div>
       </div>

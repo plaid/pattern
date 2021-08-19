@@ -4,6 +4,7 @@ import { toast } from 'react-toastify';
 import { PlaidLinkOnSuccessMetadata } from 'react-plaid-link';
 
 import { DuplicateItemToastMessage } from '../components';
+import { appendFile } from 'fs';
 
 const baseURL = '/';
 
@@ -35,8 +36,12 @@ export const updateUserInfo = (
 ) => api.put(`/users/${userId}/confirmation`, { fullname, email });
 export const deleteUserById = (userId: number) =>
   api.delete(`/users/${userId}`);
+
+// app Funds
+export const getAppFundsByUser = (userId: number) =>
+  api.get(`/appFunds/${userId}`);
 export const updateAppFundsBalance = (userId: number, transferAmount: number) =>
-  api.put(`/users/${userId}/bank_transfer`, { transferAmount });
+  api.put(`/appFunds/${userId}/bank_transfer`, { transferAmount });
 
 // items
 export const getItemById = (id: number) => api.get(`/items/${id}`);

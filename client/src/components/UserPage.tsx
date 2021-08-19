@@ -4,9 +4,19 @@ import sortBy from 'lodash/sortBy';
 import NavigationLink from 'plaid-threads/NavigationLink';
 import Callout from 'plaid-threads/Callout';
 
-import { RouteInfo, ItemType, AccountType, UserType } from './types';
+import {
+  RouteInfo,
+  ItemType,
+  AccountType,
+  AppFundType,
+  UserType,
+} from './types';
 import { useItems, useAccounts, useUsers } from '../services';
-import { setIdentityCheckById, getBalanceByItem } from '../services/api';
+import {
+  setIdentityCheckById,
+  getBalanceByItem,
+  getAppFundsByUser,
+} from '../services/api';
 
 import {
   Banner,
@@ -28,6 +38,7 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
     created_at: '',
     updated_at: '',
   });
+  const [appFund, setAppFund] = useState<AppFundType>();
   const [items, setItems] = useState<ItemType[]>([]);
   const [numOfItems, setNumOfItems] = useState(0);
   const [accounts, setAccounts] = useState<AccountType[]>([]);
@@ -44,6 +55,11 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
   const { usersById, getUserById } = useUsers();
   const { itemsByUser, getItemsByUser } = useItems();
   const userId = Number(match.params.userId);
+
+  const getAppFund = useCallback(async userId => {
+    const { data: appFunds } = await getAppFundsByUser(userId);
+    setAppFund(appFunds[0]);
+  }, []);
 
   // functions to check username and email against data from identity/get
   const checkFullName = useCallback((names: string[], fullname: string) => {
@@ -63,6 +79,10 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
 
   const checkUserEmail = useCallback((emails: string[], user_email) => {
     return emails.includes(user_email);
+  }, []);
+
+  const updateAppFund = useCallback(async (appFund: AppFundType) => {
+    setAppFund(appFund);
   }, []);
 
   const updateUser = useCallback(async (user: UserType) => {
@@ -131,6 +151,11 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
     setAccounts(accountsByUser[userId] || []);
   }, [accountsByUser, userId, numOfItems]);
 
+  // update data store with the user's accounts
+  useEffect(() => {
+    getAppFund(userId);
+  }, [userId, getAppFund]);
+
   useEffect(() => {
     // checks identity of user against identity/get data stored in accounts data
     // only checks if identity has not already been verified.
@@ -152,7 +177,7 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
     user,
   ]);
 
-  console.log(accounts);
+  console.log('appfund', appFund);
   document.getElementsByTagName('body')[0].style.overflow = 'auto'; // to override overflow:hidden from link pane
   return (
     <div>
@@ -177,15 +202,18 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
                   item={items[0]}
                   isIdentityChecked={isIdentityChecked}
                   userId={userId}
-                  updateUser={updateUser}
+                  updateAppFund={updateAppFund}
                   closeView={closeView}
                 />
               )}
-              <MainAccount
-                initiateTransfer={initiateTransfer}
-                user={user}
-                updateUser={updateUser}
-              />
+              {appFund != null && (
+                <MainAccount
+                  initiateTransfer={initiateTransfer}
+                  user={user}
+                  updateUser={updateUser}
+                  appFund={appFund}
+                />
+              )}
             </>
           )}
           {!isIdentityChecked && (

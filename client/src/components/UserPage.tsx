@@ -102,7 +102,6 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
   };
 
   const closeView = () => {
-    alert('close me!');
     setShowBank(false);
   };
 
@@ -177,7 +176,6 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
     user,
   ]);
 
-  console.log('appfund', appFund);
   document.getElementsByTagName('body')[0].style.overflow = 'auto'; // to override overflow:hidden from link pane
   return (
     <div>
@@ -206,16 +204,9 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
                   closeView={closeView}
                 />
               )}
-              {appFund != null && (
-                <MainAccount
-                  initiateTransfer={initiateTransfer}
-                  user={user}
-                  updateUser={updateUser}
-                  appFund={appFund}
-                />
-              )}
             </>
           )}
+
           {!isIdentityChecked && (
             <>
               <Callout warning>
@@ -227,6 +218,15 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
             </>
           )}
         </>
+      )}
+      {appFund != null && !showBank && (
+        <MainAccount
+          initiateTransfer={initiateTransfer}
+          user={user}
+          updateUser={updateUser}
+          appFund={appFund}
+          numOfItems={numOfItems}
+        />
       )}
     </div>
   );

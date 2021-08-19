@@ -17,6 +17,7 @@ interface Props {
   updateUser: (user: UserType) => void;
   user: UserType;
   appFund: AppFundType;
+  numOfItems: number;
 }
 
 const MainAccount = (props: Props) => {
@@ -28,9 +29,11 @@ const MainAccount = (props: Props) => {
       <div>
         <div className="mainAccountHeader">
           <h3 className="accountBalance">Plaid Pattern Funds Balance</h3>{' '}
-          <Button onClick={handleClick} inline small>
-            Transfer funds
-          </Button>
+          {props.numOfItems > 0 && (
+            <Button onClick={handleClick} inline small>
+              Transfer funds
+            </Button>
+          )}
         </div>
         <div>
           <h3 className="accountDollars">

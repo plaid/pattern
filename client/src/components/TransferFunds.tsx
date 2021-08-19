@@ -5,13 +5,13 @@ import { Button } from 'plaid-threads/Button';
 import { currencyFilter } from '../util';
 
 interface Props {
-  checkAmount: (amount: number) => void;
+  checkAmountAndInitiate: (amount: number) => void;
 }
 const TransferFunds: React.FC<Props> = (props: Props) => {
   const [transferAmount, setTransferAmount] = useState('');
   const handleSubmit = (e: any) => {
     e.preventDefault();
-    props.checkAmount(parseFloat(transferAmount));
+    props.checkAmountAndInitiate(parseFloat(transferAmount));
     setTransferAmount('');
   };
 

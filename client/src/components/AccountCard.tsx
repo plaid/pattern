@@ -1,4 +1,7 @@
 import React, { useState, useEffect } from 'react';
+import Callout from 'plaid-threads/Callout';
+import Button from 'plaid-threads/Button';
+import ChevronS1Left from 'plaid-threads/Icons/ChevronS1Left';
 
 import { AccountType, AppFundType } from './types';
 import { currencyFilter } from '../util';
@@ -14,6 +17,14 @@ interface Props {
 }
 
 export default function AccountCard(props: Props) {
+  const account = props.account;
+  const balance =
+    account.available_balance != null
+      ? account.available_balance
+      : account.current_balance;
+  const [isAmountOkay, setIsAmountOkay] = useState(true);
+  const [showError, setShowError] = useState(false);
+
   const sendRequestToProcessor = (amount: number, processorToken: string) => {
     // api route to send processor_token and amount to transfer to
     // Dwolla or other processor initiate transfer endpoint
@@ -29,30 +40,26 @@ export default function AccountCard(props: Props) {
     );
     return amount;
   };
-  const account = props.account;
-  const balance =
-    account.available_balance != null
-      ? account.available_balance
-      : account.current_balance;
-  const [isAmountOkay, setIsAmountOkay] = useState(true);
 
-  const checkAmount = async (amount: number) => {
+  const checkAmountAndInitiate = async (amount: number) => {
     const amountIsLessThanBalance = amount <= balance ? true : false;
     setIsAmountOkay(amountIsLessThanBalance);
-    let confirmedAmount = 0;
-    if (amountIsLessThanBalance) {
+    let confirmedAmount = null;
+    if (amountIsLessThanBalance && amount > 0) {
       confirmedAmount =
         IS_PROCESSOR === 'true'
           ? sendRequestToProcessor(amount, account.processor_token)
           : completeTransfer(amount, account.plaid_account_id);
     }
-    if (confirmedAmount > 0) {
+    if (confirmedAmount != null && confirmedAmount > 0) {
       const { data: appFunds } = await updateAppFundsBalance(
         props.userId,
         confirmedAmount
       );
       props.updateAppFund(appFunds[0]);
       props.closeView();
+    } else {
+      setShowError(true);
     }
   };
   return (
@@ -65,10 +72,18 @@ export default function AccountCard(props: Props) {
           )}`}</div>
         </div>
         <div>
-          {!isAmountOkay && <div>Too much!</div>}
-          <TransferFunds checkAmount={checkAmount} />
+          <TransferFunds checkAmountAndInitiate={checkAmountAndInitiate} />
         </div>
       </div>
+      {!isAmountOkay && (
+        <Callout warning>
+          {' '}
+          We are unable to verify that amount in your bank account.
+        </Callout>
+      )}
+      <Button small centered onClick={() => props.closeView()}>
+        <ChevronS1Left /> Back
+      </Button>
     </div>
   );
 }

@@ -26,29 +26,18 @@ const MainAccount = (props: Props) => {
   };
   return (
     <div className="mainAccountContainer">
-      <div>
-        <div className="mainAccountHeader">
-          <h3 className="accountBalance">Plaid Pattern Funds Balance</h3>{' '}
-          {props.numOfItems > 0 && (
-            <Button onClick={handleClick} inline small>
-              Transfer funds
-            </Button>
-          )}
-        </div>
-        <div>
-          <h3 className="accountDollars">
-            {currencyFilter(props.appFund.balance)}
-          </h3>
-        </div>
+      <div className="mainAccountHeader">
+        <h3 className="accountBalance">Plaid Pattern Funds Balance</h3>{' '}
+        {props.numOfItems > 0 && (
+          <Button onClick={handleClick} inline small>
+            Transfer funds
+          </Button>
+        )}
       </div>
       <div>
-        <div className="mainAccountHeader">
-          <h3 className="transferHistory">Transfer History</h3>{' '}
-        </div>
-        <p>
-          {' '}
-          No history available. Transfer funds from your bank to see data here.
-        </p>
+        <h3 className="accountDollars">
+          {currencyFilter(props.appFund.balance)}
+        </h3>
       </div>
     </div>
   );

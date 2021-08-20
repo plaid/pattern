@@ -81,9 +81,17 @@ export default function AccountCard(props: Props) {
           We are unable to verify that amount in your bank account.
         </Callout>
       )}
-      <Button small centered onClick={() => props.closeView()}>
-        <ChevronS1Left /> Back
-      </Button>
+      <div className="backBtnHolder">
+        <Button
+          small
+          centered
+          secondary
+          inline
+          onClick={() => props.closeView()}
+        >
+          <ChevronS1Left /> Back
+        </Button>
+      </div>
     </div>
   );
 }

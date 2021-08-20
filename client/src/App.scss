@@ -247,6 +247,12 @@ Account row
 
 */
 
+.accountContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
 .account-data-row {
   border-bottom: $border;
   padding: 3 * $unit;
@@ -265,6 +271,10 @@ Account row
   line-height: 4 * $unit;
   display: inline-block;
   font-weight: 500;
+}
+
+.backBtnHolder {
+  width: 100px;
 }
 
 /*

@@ -33,7 +33,7 @@ export default function AccountCard(props: Props) {
     return amount;
   };
 
-  const completeTransfer = (amount: number, accountId: string) => {
+  const completeAchTransfer = (amount: number, accountId: string) => {
     // api route to complete ach bank transfer
     console.log(
       'completing transfer of' + amount + ' from account # ' + accountId
@@ -49,7 +49,7 @@ export default function AccountCard(props: Props) {
       confirmedAmount =
         IS_PROCESSOR === 'true'
           ? sendRequestToProcessor(amount, account.processor_token)
-          : completeTransfer(amount, account.plaid_account_id);
+          : completeAchTransfer(amount, account.plaid_account_id);
     }
     if (confirmedAmount != null && confirmedAmount > 0) {
       const { data: appFunds } = await updateAppFundsBalance(

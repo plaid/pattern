@@ -102,7 +102,7 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
     setAccounts(itemAccounts || []);
   }, [accounts, accountsByItem, getAccountsByItem, items]);
 
-  const initiateTransfer = () => {
+  const userTransfer = () => {
     getBalance();
     setShowBank(true);
   };
@@ -227,7 +227,7 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
       )}
       {appFund != null && !showBank && (
         <MainAccount
-          initiateTransfer={initiateTransfer}
+          userTransfer={userTransfer}
           user={user}
           updateUser={updateUser}
           appFund={appFund}

@@ -7,7 +7,7 @@ import { UserType, AppFundType } from './types';
 import { currencyFilter } from '../util';
 
 interface Props {
-  initiateTransfer: () => void;
+  userTransfer: () => void;
   updateUser: (user: UserType) => void;
   user: UserType;
   appFund: AppFundType;
@@ -16,7 +16,7 @@ interface Props {
 
 const MainAccount = (props: Props) => {
   const handleClick = () => {
-    props.initiateTransfer();
+    props.userTransfer();
   };
   return (
     <div className="mainAccountContainer">

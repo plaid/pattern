@@ -42,14 +42,17 @@ export default function AccountCard(props: Props) {
   };
 
   const checkAmountAndInitiate = async (amount: number) => {
-    const amountIsLessThanBalance = amount <= balance ? true : false;
-    setIsAmountOkay(amountIsLessThanBalance);
-    let confirmedAmount = null;
-    if (amountIsLessThanBalance && amount > 0) {
+    setIsAmountOkay(amount <= balance);
+    setShowError(false);
+    let confirmedAmount: number | null = 0;
+    if (amount <= balance && amount > 0) {
       confirmedAmount =
         IS_PROCESSOR === 'true'
           ? sendRequestToProcessor(amount, account.processor_token)
           : completeAchTransfer(amount, account.plaid_account_id);
+      if (confirmedAmount == null) {
+        setShowError(true);
+      }
     }
     if (confirmedAmount != null && confirmedAmount > 0) {
       const { data: appFunds } = await updateAppFundsBalance(
@@ -58,8 +61,6 @@ export default function AccountCard(props: Props) {
       );
       props.updateAppFund(appFunds[0]);
       props.closeView();
-    } else {
-      setShowError(true);
     }
   };
   return (
@@ -79,6 +80,12 @@ export default function AccountCard(props: Props) {
         <Callout warning>
           {' '}
           We are unable to verify that amount in your bank account.
+        </Callout>
+      )}
+      {showError && (
+        <Callout warning>
+          {' '}
+          Oops! Something went wrong with the transfer. Try again later.
         </Callout>
       )}
       <div className="backBtnHolder">

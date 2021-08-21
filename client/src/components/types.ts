@@ -50,9 +50,9 @@ export interface AccountType {
 }
 export interface UserType {
   id: number;
-  username: string;
-  fullname: string;
-  email: string;
+  username: string | null;
+  fullname: string | null;
+  email: string | null;
   identity_check: boolean;
   app_funds_balance: number;
   created_at: string;

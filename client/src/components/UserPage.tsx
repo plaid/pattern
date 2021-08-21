@@ -28,11 +28,11 @@ import {
 } from '.';
 
 const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
-  const [user, setUser] = useState({
+  const [user, setUser] = useState<UserType>({
     id: 0,
-    username: '',
-    fullname: '',
-    email: '',
+    username: null,
+    fullname: null,
+    email: null,
     identity_check: false,
     app_funds_balance: 0,
     created_at: '',
@@ -62,20 +62,26 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
   }, []);
 
   // functions to check username and email against data from identity/get
-  const checkFullName = useCallback((names: string[], fullname: string) => {
-    // in case user enters "Last name, First name"
-    fullname = fullname.replace(',', ' ');
-    const fullnameArray = fullname.split(' ');
+  const checkFullName = useCallback(
+    (names: string[], fullname: string | null) => {
+      // in case user enters "Last name, First name"
+      if (fullname != null) {
+        fullname = fullname.replace(',', ' ');
+        const fullnameArray = fullname.split(' ');
 
-    // if both the first name and last name of the username in this app are included somewhere in the
-    // financial institution's names array, return true (anything entered by the user (except a comma)
-    // must be included in the FI's names array).
-    return fullnameArray.every(name => {
-      return names.some(identName => {
-        return identName.toUpperCase().indexOf(name.toUpperCase()) > -1;
-      });
-    });
-  }, []);
+        // if both the first name and last name of the username in this app are included somewhere in the
+        // financial institution's names array, return true (anything entered by the user (except a comma)
+        // must be included in the FI's names array).
+        return fullnameArray.every(name => {
+          return names.some(identName => {
+            return identName.toUpperCase().indexOf(name.toUpperCase()) > -1;
+          });
+        });
+      }
+      return false;
+    },
+    []
+  );
 
   const checkUserEmail = useCallback((emails: string[], user_email) => {
     return emails.includes(user_email);

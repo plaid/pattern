@@ -211,9 +211,9 @@ Item overview
 
 .item-card {
   padding: 0 $unit 0 0;
-  // background-color: $black100;
-  // border-bottom: $border;
-  // box-shadow: $shadow-medium;
+  background-color: $black100;
+  border-bottom: $border;
+  box-shadow: $shadow-medium;
   display: grid;
   grid-template-columns: 3fr 3fr 3fr 3fr;
 

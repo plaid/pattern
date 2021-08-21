@@ -7,9 +7,8 @@ const db = require('../');
 /**
  * Creates an app fund account.
  *
- * @param {string} username the username of the user.
- * @param {string} email the email of the user.
- * @returns {Object} the new user.
+ * @param {number} userId the user id of the user.
+ * @returns {Object} the new app fund for the user.
  */
 const createAppFund = async userId => {
   const query = {
@@ -21,6 +20,13 @@ const createAppFund = async userId => {
   const { rows } = await db.query(query);
   return rows[0];
 };
+
+/**
+ * Updates balance for a single user.
+ *
+ * @param {number} userId the ID of the user.
+ * @param {number} appFundsBalance the updated balance for a user.
+ */
 
 const updateAppFundsBalance = async (userId, appFundsBalance) => {
   const query = {

@@ -4,7 +4,6 @@ import { toast } from 'react-toastify';
 import { PlaidLinkOnSuccessMetadata } from 'react-plaid-link';
 
 import { DuplicateItemToastMessage } from '../components';
-import { appendFile } from 'fs';
 
 const baseURL = '/';
 

@@ -1,16 +1,10 @@
-import React, { useEffect, useState, useCallback } from 'react';
-import Note from 'plaid-threads/Note';
-import Touchable from 'plaid-threads/Touchable';
+import React from 'react';
+
 import Button from 'plaid-threads/Button';
-import { Institution } from 'plaid/dist/api';
 
-import { ItemType, AccountType, UserType, AppFundType } from './types';
-import { AccountCard, MoreDetails } from '.';
-import { useAccounts, useInstitutions, useItems } from '../services';
-import { setItemToBadState, getBalanceByItem } from '../services/api';
+import { UserType, AppFundType } from './types';
+
 import { currencyFilter } from '../util';
-
-const PLAID_ENV = process.env.REACT_APP_PLAID_ENV || 'sandbox';
 
 interface Props {
   initiateTransfer: () => void;

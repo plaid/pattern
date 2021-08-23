@@ -61,7 +61,7 @@ More information about the individual services is given below.
 
 # Plaid Pattern - Client
 
-The Pattern web client is written in JavaScript using [React]. It presents a basic [Link][plaid-link] workflow to the user, including an implementation of [OAuth][plaid-oauth] as well as a demonstration of [Link update mode][plaid-link-update-mode]. The sample app presents a user's net worth, categorized spending as well as a simple dashboard displaying linked accounts and transactions. The app runs on port 3000 by default, although you can modify this in [docker-compose.yml](../docker-compose.yml).
+The Pattern web client is written in JavaScript using [React]. It presents a basic [Link][plaid-link] workflow to the user, including an implementation of [OAuth][plaid-oauth] as well as a demonstration of [Link update mode][plaid-link-update-mode]. The sample app presents a user's net worth, categorized spending as well as a simple dashboard displaying linked accounts and transactions. The app runs on port 3000 by default, although you can modify this in [docker-compose.yml][docker-compose.yml].
 
 ## Key concepts
 
@@ -120,7 +120,7 @@ If you are using Visual Studio Code as your editor, you can use the `Docker: Att
 The database is a [PostgreSQL][postgres] instance running inside a Docker container.
 
 Port 5432 is exposed to the Docker host, so you can connect to the DB using the tool of your choice.
-Username and password can be found in [docker-compose.yml][docker-compose].
+Username and password can be found in [docker-compose.yml][docker-compose.yml].
 
 ## Key Concepts
 
@@ -209,7 +209,6 @@ See [`docs/troubleshooting.md`][troubleshooting].
 [MIT](LICENSE)
 
 [create-script]: init/create.sql
-[docker-compose]: ../docker-compose.yml
 [plaid-docs-api-identifiers]: https://plaid.com/docs/#storing-plaid-api-identifiers
 [plaid-new-support-ticket]: https://dashboard.plaid.com/support/new
 [postgres]: https://www.postgresql.org/
@@ -234,6 +233,7 @@ See [`docs/troubleshooting.md`][troubleshooting].
 [client-readme]: #plaid-pattern---client
 [docker]: https://docs.docker.com/
 [docker-compose]: https://docs.docker.com/compose/
+[docker-compose.yml]: ../master/docker-compose.yml
 [express]: https://expressjs.com/
 [ngrok]: https://ngrok.com/
 [nodejs]: https://nodejs.org/en/

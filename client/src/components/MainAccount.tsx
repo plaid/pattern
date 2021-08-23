@@ -5,6 +5,7 @@ import Button from 'plaid-threads/Button';
 import { UserType, AppFundType } from './types';
 
 import { currencyFilter } from '../util';
+import users from '../services/dist/users';
 
 interface Props {
   userTransfer: () => void;
@@ -22,7 +23,7 @@ const MainAccount = (props: Props) => {
     <div className="mainAccountContainer">
       <div className="mainAccountHeader">
         <h3 className="accountBalance">Plaid Pattern Funds Balance</h3>{' '}
-        {props.numOfItems > 0 && (
+        {props.numOfItems > 0 && props.user.identity_check && (
           <Button onClick={handleClick} inline small>
             Transfer funds
           </Button>

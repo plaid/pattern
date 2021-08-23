@@ -131,7 +131,7 @@ router.put(
   '/:userId/confirmation',
   asyncWrapper(async (req, res) => {
     const { userId } = req.params;
-    const { username, fullname, email } = req.body;
+    const { fullname, email } = req.body;
     await updateUserInfo(userId, fullname, email);
     const user = await retrieveUserById(userId);
     res.json(sanitizeUsers(user));

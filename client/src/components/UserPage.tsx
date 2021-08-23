@@ -225,7 +225,7 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
           )}
         </>
       )}
-      {appFund != null && !showBank && (
+      {appFund != null && !showBank && isIdentityChecked && (
         <MainAccount
           userTransfer={userTransfer}
           user={user}

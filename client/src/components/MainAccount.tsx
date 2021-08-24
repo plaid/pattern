@@ -5,7 +5,6 @@ import Button from 'plaid-threads/Button';
 import { UserType, AppFundType } from './types';
 
 import { currencyFilter } from '../util';
-import users from '../services/dist/users';
 
 interface Props {
   userTransfer: () => void;

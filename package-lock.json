@@ -1,0 +1,19 @@
+{
+  "requires": true,
+  "lockfileVersion": 1,
+  "dependencies": {
+    "git": {
+      "version": "0.1.5",
+      "resolved": "https://registry.npmjs.org/git/-/git-0.1.5.tgz",
+      "integrity": "sha1-nvYt+T+FHCdUIUO/UtHGixAXyhU=",
+      "requires": {
+        "mime": "1.2.9"
+      }
+    },
+    "mime": {
+      "version": "1.2.9",
+      "resolved": "https://registry.npmjs.org/mime/-/mime-1.2.9.tgz",
+      "integrity": "sha1-AJzUCGe9Nd5SGzuWbwTi+NTRPQk="
+    }
+  }
+}

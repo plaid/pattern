@@ -164,14 +164,20 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
   useEffect(() => {
     // checks identity of user against identity/get data stored in accounts data
     // only checks if identity has not already been verified.
-    if (accounts.length > 0 && isIdentityChecked === false) {
-      const fullnameCheck = checkFullName(
-        accounts[0]!.owner_names,
-        user.fullname
-      );
-      const emailCheck = checkUserEmail(accounts[0]!.emails, user.email);
-      setIdentityCheckById(userId, fullnameCheck && emailCheck); // update user_table in db
-      setIsIdentityChecked(fullnameCheck && emailCheck); // set state
+    if (true) {
+      // placeholder for developer setting identityCheck to false
+      setIdentityCheckById(userId, true);
+      setIsIdentityChecked(true);
+    } else {
+      if (accounts.length > 0 && isIdentityChecked === false) {
+        const fullnameCheck = checkFullName(
+          accounts[0]!.owner_names,
+          user.fullname
+        );
+        const emailCheck = checkUserEmail(accounts[0]!.emails, user.email);
+        setIdentityCheckById(userId, fullnameCheck && emailCheck); // update user_table in db
+        setIsIdentityChecked(fullnameCheck && emailCheck); // set state
+      }
     }
   }, [
     accounts,

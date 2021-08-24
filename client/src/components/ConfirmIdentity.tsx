@@ -29,7 +29,7 @@ const ConfirmIdentity: React.FC<Props> = (props: Props) => {
 
   return (
     <div className="box addUserForm">
-      <form onSubmit={handleSubmit}>
+      <form>
         <div className="card">
           <div className="add-user__column-1">
             <h3 className="heading add-user__heading">Confirm your identity</h3>
@@ -63,7 +63,12 @@ const ConfirmIdentity: React.FC<Props> = (props: Props) => {
             />
           </div>
           <div className="add-user__column-3">
-            <Button className="add-user__button" centered small type="submit">
+            <Button
+              className="add-user__button"
+              centered
+              small
+              onClick={handleSubmit}
+            >
               Confirm Identity
             </Button>
           </div>

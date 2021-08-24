@@ -20,7 +20,8 @@ const AddUserForm = (props: Props) => {
   const { setNewUser } = useCurrentUser();
   const handleSubmit = async (e: any) => {
     e.preventDefault();
-    await addNewUser(username, fullname, email);
+    console.log(!verifyIdentity);
+    await addNewUser(username, fullname, email, !verifyIdentity);
     setNewUser(username);
     props.hideForm();
   };
@@ -56,7 +57,7 @@ const AddUserForm = (props: Props) => {
                 onChange={() => setVerifyIdentity(!verifyIdentity)}
               >
                 {' '}
-                Verify Identity{' '}
+                Verify Identity Mode{' '}
               </Checkbox>
               {verifyIdentity && (
                 <p className="value add-user__value">

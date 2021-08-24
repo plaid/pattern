@@ -48,12 +48,12 @@ router.get(
 router.post(
   '/',
   asyncWrapper(async (req, res) => {
-    const { username, fullname, email } = req.body;
+    const { username, fullname, email, identityCheck } = req.body;
     const usernameExists = await retrieveUserByUsername(username);
     // prevent duplicates
     if (usernameExists)
       throw new Boom('Username already exists', { statusCode: 409 });
-    const newUser = await createUser(username, fullname, email);
+    const newUser = await createUser(username, fullname, email, identityCheck);
     await createAppFund(newUser.id);
     res.json(sanitizeUsers(newUser));
   })

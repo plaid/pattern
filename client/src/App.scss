@@ -215,18 +215,11 @@ Item overview
   border-bottom: $border;
   box-shadow: $shadow-medium;
   display: grid;
-  grid-template-columns: 9fr 1fr;
+  grid-template-columns: 3fr 3fr 3fr 3fr;
 
   &.expanded {
     box-shadow: none;
   }
-}
-
-.item-card__clickable {
-  padding: (2 * $unit) 0 (2 * $unit) (2 * $unit);
-  width: 95%;
-  display: grid;
-  grid-template-columns: 8fr 3fr 3fr 9fr;
 }
 
 .item-card__column-1 {
@@ -254,6 +247,12 @@ Account row
 
 */
 
+.accountContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
 .account-data-row {
   border-bottom: $border;
   padding: 3 * $unit;
@@ -272,6 +271,10 @@ Account row
   line-height: 4 * $unit;
   display: inline-block;
   font-weight: 500;
+}
+
+.backBtnHolder {
+  width: 100px;
 }
 
 /*
@@ -322,192 +325,6 @@ Add User Form
 
 /*
 
-transactions-table
-
-*/
-.transactions {
-  border-bottom: $border;
-}
-
-.transactions-table {
-  padding: 0 (3 * $unit);
-  width: 100%;
-}
-
-.transactions-table th {
-  font-size: 2 * $unit;
-  font-weight: 600;
-  padding-top: 2 * $unit;
-  padding-bottom: 2 * $unit;
-}
-
-.transactions-table thead tr {
-  border-bottom: $border;
-  text-align: left;
-}
-
-.transactions-body {
-  height: 63 * $unit;
-  overflow-y: auto;
-  overflow-x: hidden;
-  text-align: left;
-}
-
-.table-name {
-  width: 35%;
-}
-
-.table-category {
-  width: 25%;
-}
-
-.table-amount {
-  width: 20%;
-}
-
-.table-date {
-  width: 20%;
-}
-
-/*
-
-More Details
-
-*/
-.more-details {
-  position: relative;
-}
-
-.menuOption {
-  line-height: 1.8rem !important;
-  padding-top: $unit;
-}
-
-/*
-
-net worth
-
-*/
-
-.tableSubHeading {
-  margin-top: $unit;
-}
-
-.netWorthText {
-  font-family: $font-stack-monospace;
-  font-size: 2 * $unit;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-}
-
-.netWorthContainer {
-  .netWorthDollars {
-    margin-top: $unit;
-  }
-
-  .netWorthHeading {
-    margin-top: 7 * $unit;
-    margin-bottom: 0;
-  }
-}
-
-.holdingsContainer {
-  display: flex;
-}
-
-.userDataBox {
-  width: 69 * $unit;
-  min-height: 40 * $unit;
-  border: $border;
-  margin-right: 2 * $unit;
-}
-
-.holdingsList {
-  padding: 4 * $unit;
-
-  .title {
-    font-weight: bold;
-  }
-}
-
-.assetsHeaderContainer {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-}
-
-.dollarsHeading {
-  font-weight: bold;
-  margin-top: 0;
-}
-
-.holdingsHeading {
-  margin-top: 0;
-}
-
-.data,
-.personalAsset {
-  display: grid;
-  grid-template-columns: 5fr 5fr 1fr;
-
-  .title {
-    font-weight: bold;
-  }
-
-  .dataItem {
-    margin-bottom: 0;
-  }
-}
-
-/*
-
-Monthly Spending
-
-*/
-
-.monthlySpendingContainer {
-  display: flex;
-}
-
-.monthlySpendingHeading {
-  margin-top: 7 * $unit;
-  margin-bottom: 0;
-}
-
-.monthlySpendingText {
-  margin-bottom: 4 * $unit;
-  font-family: $font-stack-monospace;
-  font-size: 2 * $unit;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-}
-.recharts-wrapper {
-  margin: 0 2 * $unit;
-}
-
-.spendingInsightData {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-}
-
-/*
-
-Loading
-
-*/
-
-.loading {
-  display: grid;
-  grid-template-rows: 150px 100px;
-  grid-row-gap: 50px;
-  justify-items: space-around;
-  width: 50%;
-  margin: auto;
-  margin-top: -125px;
-}
-
-/*
-
 ErrorMessage
 
 */
@@ -520,5 +337,24 @@ ErrorMessage
     position: absolute;
     right: 0;
     top: 0;
+  }
+}
+
+.mainAccountHeader {
+  display: flex;
+  justify-content: space-between;
+}
+
+h3 {
+  color: $black1000;
+  letter-spacing: -0.28px;
+  font-weight: bold;
+
+  &.accountBalance {
+    margin: 0;
+  }
+  &.accountDollars {
+    margin-bottom: 1px;
+    font-weight: 100;
   }
 }

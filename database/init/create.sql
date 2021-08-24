@@ -18,7 +18,7 @@ CREATE TABLE users_table
 (
   id SERIAL PRIMARY KEY,
   username text UNIQUE NOT NULL,
-  fullname text UNIQUE NOT NULL,
+  fullname text NOT NULL,
   email text NOT NULL,
   identity_check boolean NOT NULL,
   created_at timestamptz default now(),
@@ -79,6 +79,36 @@ AS
     updated_at
   FROM
     items_table;
+
+
+-- APP_FUNDS
+-- This table is used to store the app funds balance associated with each user. The view returns the same data
+-- as the table, we're just using both to maintain consistency with our other tables.
+
+CREATE TABLE app_funds_table
+(
+  id SERIAL PRIMARY KEY,
+  user_id integer REFERENCES users_table(id) ON DELETE CASCADE,
+  balance numeric NOT NULL,
+  created_at timestamptz default now(),
+  updated_at timestamptz default now()
+);
+
+CREATE TRIGGER app_funds_updated_at_timestamp
+BEFORE UPDATE ON app_funds_table
+FOR EACH ROW
+EXECUTE PROCEDURE trigger_set_timestamp();
+
+CREATE VIEW app_funds
+AS
+  SELECT
+    id,
+    user_id,
+    balance,
+    created_at,
+    updated_at
+  FROM
+    app_funds_table;
 
 
 

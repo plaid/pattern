@@ -36,6 +36,12 @@ export const updateUserInfo = (
 export const deleteUserById = (userId: number) =>
   api.delete(`/users/${userId}`);
 
+// app Funds
+export const getAppFundsByUser = (userId: number) =>
+  api.get(`/appFunds/${userId}`);
+export const updateAppFundsBalance = (userId: number, transferAmount: number) =>
+  api.put(`/appFunds/${userId}/bank_transfer`, { transferAmount });
+
 // items
 export const getItemById = (id: number) => api.get(`/items/${id}`);
 export const getItemsByUser = (userId: number) =>

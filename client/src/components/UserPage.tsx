@@ -4,56 +4,112 @@ import sortBy from 'lodash/sortBy';
 import NavigationLink from 'plaid-threads/NavigationLink';
 import Callout from 'plaid-threads/Callout';
 
-import { RouteInfo, ItemType, AccountType, UserType } from './types';
+import {
+  RouteInfo,
+  ItemType,
+  AccountType,
+  AppFundType,
+  UserType,
+} from './types';
 import { useItems, useAccounts, useUsers } from '../services';
-import { setIdentityCheckById } from '../services/api';
+import {
+  setIdentityCheckById,
+  getBalanceByItem,
+  getAppFundsByUser,
+} from '../services/api';
 
-import { Banner, UserCard, ErrorMessage, ItemCard, ConfirmIdentity } from '.';
+import {
+  Banner,
+  UserCard,
+  ErrorMessage,
+  ItemCard,
+  ConfirmIdentity,
+  MainAccount,
+} from '.';
 
 const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
-  const [user, setUser] = useState({
+  const [user, setUser] = useState<UserType>({
     id: 0,
-    username: '',
-    fullname: '',
-    email: '',
+    username: null,
+    fullname: null,
+    email: null,
     identity_check: false,
+    app_funds_balance: 0,
     created_at: '',
     updated_at: '',
   });
+  const [appFund, setAppFund] = useState<AppFundType>();
   const [items, setItems] = useState<ItemType[]>([]);
   const [numOfItems, setNumOfItems] = useState(0);
   const [accounts, setAccounts] = useState<AccountType[]>([]);
   const [isIdentityChecked, setIsIdentityChecked] = useState(
     user.identity_check
   );
-  const { getAccountsByUser, accountsByUser } = useAccounts();
+  const [showBank, setShowBank] = useState(false);
+  const {
+    getAccountsByUser,
+    accountsByUser,
+    getAccountsByItem,
+    accountsByItem,
+  } = useAccounts();
   const { usersById, getUserById } = useUsers();
   const { itemsByUser, getItemsByUser } = useItems();
   const userId = Number(match.params.userId);
 
-  // functions to check username and email against data from identity/get
-  const checkFullName = useCallback((names: string[], fullname: string) => {
-    // in case user enters "Last name, First name"
-    fullname = fullname.replace(',', ' ');
-    const fullnameArray = fullname.split(' ');
-
-    // if both the first name and last name of the username in this app are included somewhere in the
-    // financial institution's names array, return true (anything entered by the user (except a comma)
-    // must be included in the FI's names array).
-    return fullnameArray.every(name => {
-      return names.some(identName => {
-        return identName.indexOf(name) > -1;
-      });
-    });
+  const getAppFund = useCallback(async userId => {
+    const { data: appFunds } = await getAppFundsByUser(userId);
+    setAppFund(appFunds[0]);
   }, []);
+
+  // functions to check username and email against data from identity/get
+  const checkFullName = useCallback(
+    (names: string[], fullname: string | null) => {
+      // in case user enters "Last name, First name"
+      if (fullname != null) {
+        fullname = fullname.replace(',', ' ');
+        const fullnameArray = fullname.split(' ');
+
+        // if both the first name and last name of the username in this app are included somewhere in the
+        // financial institution's names array, return true (anything entered by the user (except a comma)
+        // must be included in the FI's names array).
+        return fullnameArray.every(name => {
+          return names.some(identName => {
+            return identName.toUpperCase().indexOf(name.toUpperCase()) > -1;
+          });
+        });
+      }
+      return false;
+    },
+    []
+  );
 
   const checkUserEmail = useCallback((emails: string[], user_email) => {
     return emails.includes(user_email);
   }, []);
 
+  const updateAppFund = useCallback(async (appFund: AppFundType) => {
+    setAppFund(appFund);
+  }, []);
+
   const updateUser = useCallback(async (user: UserType) => {
     setUser(user);
   }, []);
+
+  const getBalance = useCallback(async () => {
+    await getBalanceByItem(items[0].id, accounts[0].plaid_account_id);
+    await getAccountsByItem(items[0].id);
+    const itemAccounts: AccountType[] = accountsByItem[items[0].id];
+    setAccounts(itemAccounts || []);
+  }, [accounts, accountsByItem, getAccountsByItem, items]);
+
+  const userTransfer = () => {
+    getBalance();
+    setShowBank(true);
+  };
+
+  const closeView = () => {
+    setShowBank(false);
+  };
 
   // update data store with user
   useEffect(() => {
@@ -100,6 +156,11 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
     setAccounts(accountsByUser[userId] || []);
   }, [accountsByUser, userId, numOfItems]);
 
+  // update data store with the user's accounts
+  useEffect(() => {
+    getAppFund(userId);
+  }, [userId, getAppFund]);
+
   useEffect(() => {
     // checks identity of user against identity/get data stored in accounts data
     // only checks if identity has not already been verified.
@@ -120,6 +181,7 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
     isIdentityChecked,
     user,
   ]);
+
   document.getElementsByTagName('body')[0].style.overflow = 'auto'; // to override overflow:hidden from link pane
   return (
     <div>
@@ -138,12 +200,19 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
         <>
           <ErrorMessage />
           {isIdentityChecked && (
-            <ItemCard
-              item={items[0]}
-              isIdentityChecked={isIdentityChecked}
-              userId={userId}
-            />
+            <>
+              {showBank && (
+                <ItemCard
+                  item={items[0]}
+                  isIdentityChecked={isIdentityChecked}
+                  userId={userId}
+                  updateAppFund={updateAppFund}
+                  closeView={closeView}
+                />
+              )}
+            </>
           )}
+
           {!isIdentityChecked && (
             <>
               <Callout warning>
@@ -155,6 +224,15 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
             </>
           )}
         </>
+      )}
+      {appFund != null && !showBank && isIdentityChecked && (
+        <MainAccount
+          userTransfer={userTransfer}
+          user={user}
+          updateUser={updateUser}
+          appFund={appFund}
+          numOfItems={numOfItems}
+        />
       )}
     </div>
   );

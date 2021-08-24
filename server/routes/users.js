@@ -14,14 +14,11 @@ const {
   updateIdentityCheck,
   retrieveUserById,
   updateUserInfo,
+  updateAppFundsBalance,
+  createAppFund,
 } = require('../db/queries');
 const { asyncWrapper } = require('../middleware');
-const {
-  sanitizeAccounts,
-  sanitizeItems,
-  sanitizeUsers,
-  sanitizeTransactions,
-} = require('../util');
+const { sanitizeAccounts, sanitizeItems, sanitizeUsers } = require('../util');
 
 const router = express.Router();
 
@@ -57,6 +54,7 @@ router.post(
     if (usernameExists)
       throw new Boom('Username already exists', { statusCode: 409 });
     const newUser = await createUser(username, fullname, email);
+    await createAppFund(newUser.id);
     res.json(sanitizeUsers(newUser));
   })
 );
@@ -133,7 +131,7 @@ router.put(
   '/:userId/confirmation',
   asyncWrapper(async (req, res) => {
     const { userId } = req.params;
-    const { username, fullname, email } = req.body;
+    const { fullname, email } = req.body;
     await updateUserInfo(userId, fullname, email);
     const user = await retrieveUserById(userId);
     res.json(sanitizeUsers(user));

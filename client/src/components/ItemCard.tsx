@@ -3,7 +3,7 @@ import Note from 'plaid-threads/Note';
 import Touchable from 'plaid-threads/Touchable';
 import { Institution } from 'plaid/dist/api';
 
-import { ItemType, AccountType } from './types';
+import { ItemType, AccountType, AppFundType } from './types';
 import { AccountCard, MoreDetails } from '.';
 import { useAccounts, useInstitutions, useItems } from '../services';
 import { setItemToBadState, getBalanceByItem } from '../services/api';
@@ -15,6 +15,8 @@ interface Props {
   item: ItemType;
   userId: number;
   isIdentityChecked: boolean;
+  updateAppFund: (appFund: AppFundType) => void;
+  closeView: () => void;
 }
 
 const ItemCard = (props: Props) => {
@@ -27,7 +29,6 @@ const ItemCard = (props: Props) => {
     products: [],
     country_codes: [],
   });
-  const [showAccounts, setShowAccounts] = useState(false);
 
   const {
     deleteAccountsByItemId,
@@ -43,13 +44,6 @@ const ItemCard = (props: Props) => {
   const { id, plaid_institution_id, status } = props.item;
   const isSandbox = PLAID_ENV === 'sandbox';
   const isGoodState = status === 'good';
-
-  const getBalance = useCallback(async () => {
-    await getBalanceByItem(id, accounts[0].plaid_account_id);
-    await getAccountsByItem(id);
-    const itemAccounts: AccountType[] = accountsByItem[id];
-    setAccounts(itemAccounts || []);
-  }, [id, accounts, accountsByItem, getAccountsByItem]);
 
   useEffect(() => {
     getAccountsByItem(id);
@@ -76,60 +70,44 @@ const ItemCard = (props: Props) => {
     deleteAccountsByItemId(id);
   };
 
-  const cardClassNames = showAccounts
-    ? 'card item-card expanded'
-    : 'card item-card';
   return (
     <div className="box">
-      <div className={cardClassNames}>
-        <Touchable
-          className="item-card__clickable"
-          onClick={() => {
-            setShowAccounts(current => !current);
-            getBalance();
-          }}
-        >
-          <div className="item-card__column-1">
-            <img
-              className="item-card__img"
-              src={formatLogoSrc(institution.logo)}
-              alt={institution && institution.name}
-            />
-            <p>{institution && institution.name}</p>
-          </div>
-          <div className="item-card__column-2">
-            {props.isIdentityChecked ? (
-              <Note info solid>
-                identification <br />
-                verified
-              </Note>
-            ) : (
-              <Note error solid>
-                identification <br />
-                not verified
-              </Note>
-            )}
-          </div>
-          <div className="item-card__column-3">
-            {isGoodState ? (
-              <Note info solid>
-                Login
-                <br />
-                Updated
-              </Note>
-            ) : (
-              <Note error solid>
-                Login <br /> Required
-              </Note>
-            )}
-          </div>
-          <div className="item-card__column-4">
-            <h3 className="heading">LAST UPDATED</h3>
-            <p className="value">
-              {diffBetweenCurrentTime(props.item.updated_at)}
-            </p>
-          </div>
-        </Touchable>
+      <div className="card item-card item-card_clickable">
+        <div className="item-card__column-1 ">
+          <img
+            className="item-card__img"
+            src={formatLogoSrc(institution.logo)}
+            alt={institution && institution.name}
+          />
+          <p>{institution && institution.name}</p>
+        </div>
+        <div className="item-card__column-2">
+          {props.isIdentityChecked ? (
+            <Note info solid>
+              identification <br />
+              verified
+            </Note>
+          ) : (
+            <Note error solid>
+              identification <br />
+              not verified
+            </Note>
+          )}
+        </div>
+        <div className="item-card__column-3">
+          {isGoodState ? (
+            <Note info solid>
+              Login
+              <br />
+              Updated
+            </Note>
+          ) : (
+            <Note error solid>
+              Login <br /> Required
+            </Note>
+          )}
+        </div>
+
         <MoreDetails // The MoreDetails component allows developer to test the ITEM_LOGIN_REQUIRED webhook and Link update mode
           setBadStateShown={isSandbox && isGoodState}
           handleDelete={handleDeleteItem}
@@ -138,15 +116,19 @@ const ItemCard = (props: Props) => {
           itemId={id}
         />
       </div>
-      {showAccounts && (
-        <div className="accounts">
-          {accounts.map(account => (
-            <div key={account.id}>
-              <AccountCard account={account} />
-            </div>
-          ))}
-        </div>
-      )}
+
+      <div className="accounts">
+        {accounts.map(account => (
+          <div key={account.id}>
+            <AccountCard
+              account={account}
+              userId={props.userId}
+              updateAppFund={props.updateAppFund}
+              closeView={props.closeView}
+            />
+          </div>
+        ))}
+      </div>
     </div>
   );
 };

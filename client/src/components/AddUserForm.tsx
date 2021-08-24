@@ -20,7 +20,6 @@ const AddUserForm = (props: Props) => {
   const { setNewUser } = useCurrentUser();
   const handleSubmit = async (e: any) => {
     e.preventDefault();
-    console.log(!verifyIdentity);
     await addNewUser(username, fullname, email, !verifyIdentity);
     setNewUser(username);
     props.hideForm();

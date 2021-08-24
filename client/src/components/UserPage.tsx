@@ -169,7 +169,6 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
     // only checks if identity has not already been verified.
 
     if (accounts.length > 0 && user.identity_check === false) {
-      console.log('inside the function', user.identity_check);
       const fullnameCheck = checkFullName(
         accounts[0]!.owner_names,
         user.fullname
@@ -186,7 +185,6 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
     isIdentityChecked,
     user,
   ]);
-  console.log(isIdentityChecked);
   document.getElementsByTagName('body')[0].style.overflow = 'auto'; // to override overflow:hidden from link pane
   return (
     <div>

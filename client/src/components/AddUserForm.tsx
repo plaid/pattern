@@ -5,6 +5,8 @@ import Checkbox from 'plaid-threads/Checkbox';
 
 import { useUsers, useCurrentUser } from '../services';
 
+const PLAID_ENV = process.env.REACT_APP_PLAID_ENV;
+
 interface Props {
   hideForm: () => void;
 }
@@ -21,6 +23,20 @@ const AddUserForm = (props: Props) => {
     await addNewUser(username, fullname, email);
     setNewUser(username);
     props.hideForm();
+  };
+  const environment = PLAID_ENV === 'sandbox' ? 'sandbox' : 'development';
+
+  const messages = {
+    sandbox: {
+      message: 'Enter sandbox name and email address in the input fields.',
+      namePlaceholder: "sandbox: 'Alberta Charleson'",
+      emailPlaceholder: "sandbox: 'accountholder0@example.com'",
+    },
+    development: {
+      message: 'Enter name and email address in the input fields.',
+      namePlaceholder: 'First and last name',
+      emailPlaceholder: 'email address',
+    },
   };
 
   useEffect(() => {
@@ -44,7 +60,7 @@ const AddUserForm = (props: Props) => {
               </Checkbox>
               {verifyIdentity && (
                 <p className="value add-user__value">
-                  Enter your name and email address in the input fields.
+                  {messages[environment].message}
                 </p>
               )}
             </div>
@@ -69,7 +85,7 @@ const AddUserForm = (props: Props) => {
                     autoComplete="off"
                     className="input_field"
                     value={fullname}
-                    placeholder="First and last name"
+                    placeholder={messages[environment].namePlaceholder}
                     label="Full Name"
                     onChange={e => setFullname(e.target.value)}
                   />
@@ -80,7 +96,7 @@ const AddUserForm = (props: Props) => {
                     autoComplete="off"
                     className="input_field"
                     value={email}
-                    placeholder="email address"
+                    placeholder={messages[environment].emailPlaceholder}
                     label="Email"
                     onChange={e => setEmail(e.target.value)}
                   />

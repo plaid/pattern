@@ -6,6 +6,8 @@ import { useUsers } from '../services';
 import { UserType } from './types';
 import { updateUserInfo } from '../services/api';
 
+const PLAID_ENV = process.env.REACT_APP_PLAID_ENV;
+
 interface Props {
   userId: number;
   updateUser: (user: UserType) => void;
@@ -23,6 +25,22 @@ const ConfirmIdentity: React.FC<Props> = (props: Props) => {
     setEmail('');
   };
 
+  const environment = PLAID_ENV === 'sandbox' ? 'sandbox' : 'development';
+
+  const messages = {
+    sandbox: {
+      message: 'Re-enter sandbox name and email address in the input fields.',
+      namePlaceholder: "sandbox: 'Alberta Charleson'",
+      emailPlaceholder: "sandbox: 'accountholder0@example.com'",
+    },
+    development: {
+      message:
+        'Re-enter your full name and email as they are listed at your financial institution.',
+      namePlaceholder: 'full name used at financial institution',
+      emailPlaceholder: 'email used at financial institution',
+    },
+  };
+
   useEffect(() => {
     getUsers(true);
   }, [getUsers]);
@@ -34,8 +52,7 @@ const ConfirmIdentity: React.FC<Props> = (props: Props) => {
           <div className="add-user__column-1">
             <h3 className="heading add-user__heading">Confirm your identity</h3>
             <p className="value add-user__value">
-              Re-enter your full name and email as they are listed at your
-              financial institution.
+              {messages[environment].message}
             </p>
           </div>
           <div className="add-user__column-2">
@@ -46,7 +63,7 @@ const ConfirmIdentity: React.FC<Props> = (props: Props) => {
               autoComplete="off"
               className="input_field"
               value={fullname}
-              placeholder="full name used at financial institution"
+              placeholder={messages[environment].namePlaceholder}
               label="Full Name"
               onChange={e => setFullname(e.target.value)}
             />
@@ -57,7 +74,7 @@ const ConfirmIdentity: React.FC<Props> = (props: Props) => {
               autoComplete="off"
               className="input_field"
               value={email}
-              placeholder="email used at financial institution"
+              placeholder={messages[environment].emailPlaceholder}
               label="Email"
               onChange={e => setEmail(e.target.value)}
             />

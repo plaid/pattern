@@ -34,6 +34,7 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
     fullname: null,
     email: null,
     identity_check: false,
+    should_verify_identity: true,
     app_funds_balance: 0,
     created_at: '',
     updated_at: '',
@@ -120,7 +121,11 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
   useEffect(() => {
     setUser(usersById[userId] || {});
     if (usersById[userId] != null) {
-      setIsIdentityChecked(usersById[userId].identity_check);
+      if (usersById[userId].should_verify_identity) {
+        setIsIdentityChecked(usersById[userId].identity_check);
+      } else {
+        setIsIdentityChecked(true);
+      }
     }
   }, [usersById, userId]);
 
@@ -168,7 +173,11 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
     // checks identity of user against identity/get data stored in accounts data
     // only checks if identity has not already been verified.
 
-    if (accounts.length > 0 && isIdentityChecked === false) {
+    if (
+      accounts.length > 0 &&
+      isIdentityChecked === false &&
+      user.should_verify_identity
+    ) {
       const fullnameCheck = checkFullName(
         accounts[0]!.owner_names,
         user.fullname

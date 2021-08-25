@@ -54,6 +54,7 @@ export interface UserType {
   fullname: string | null;
   email: string | null;
   identity_check: boolean;
+  should_verify_identity: boolean;
   app_funds_balance: number;
   created_at: string;
   updated_at: string;

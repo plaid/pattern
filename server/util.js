@@ -76,6 +76,7 @@ const sanitizeUsers = users =>
     'fullname',
     'email',
     'identity_check',
+    'should_verify_identity',
     'created_at',
     'updated_at',
   ]);

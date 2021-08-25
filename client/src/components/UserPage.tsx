@@ -34,6 +34,7 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
     fullname: null,
     email: null,
     identity_check: false,
+    should_verify_identity: true,
     app_funds_balance: 0,
     created_at: '',
     updated_at: '',
@@ -119,6 +120,13 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
   // set state user from data store
   useEffect(() => {
     setUser(usersById[userId] || {});
+    if (usersById[userId] != null) {
+      if (usersById[userId].should_verify_identity) {
+        setIsIdentityChecked(usersById[userId].identity_check);
+      } else {
+        setIsIdentityChecked(true);
+      }
+    }
   }, [usersById, userId]);
 
   // update data store with the user's items
@@ -164,7 +172,12 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
   useEffect(() => {
     // checks identity of user against identity/get data stored in accounts data
     // only checks if identity has not already been verified.
-    if (accounts.length > 0 && isIdentityChecked === false) {
+
+    if (
+      accounts.length > 0 &&
+      isIdentityChecked === false &&
+      user.should_verify_identity
+    ) {
       const fullnameCheck = checkFullName(
         accounts[0]!.owner_names,
         user.fullname
@@ -181,7 +194,6 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
     isIdentityChecked,
     user,
   ]);
-
   document.getElementsByTagName('body')[0].style.overflow = 'auto'; // to override overflow:hidden from link pane
   return (
     <div>

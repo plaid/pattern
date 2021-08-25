@@ -87,6 +87,7 @@ router.post(
         return email.data;
       }
     );
+
     const names = identityResponse.data.accounts[0].owners[0].names;
     const account_info_from_identity_get = identityResponse.data.accounts[0];
 

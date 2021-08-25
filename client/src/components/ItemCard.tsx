@@ -69,7 +69,7 @@ const ItemCard = (props: Props) => {
     deleteItemById(id, props.userId);
     deleteAccountsByItemId(id);
   };
-
+  const account = accounts[0];
   return (
     <div className="box">
       <div className="card item-card item-card_clickable">
@@ -116,19 +116,16 @@ const ItemCard = (props: Props) => {
           itemId={id}
         />
       </div>
-
-      <div className="accounts">
-        {accounts.map(account => (
-          <div key={account.id}>
-            <AccountCard
-              account={account}
-              userId={props.userId}
-              updateAppFund={props.updateAppFund}
-              closeView={props.closeView}
-            />
-          </div>
-        ))}
-      </div>
+      {account != null && (
+        <div className="accounts">
+          <AccountCard
+            account={account}
+            userId={props.userId}
+            updateAppFund={props.updateAppFund}
+            closeView={props.closeView}
+          />
+        </div>
+      )}
     </div>
   );
 };

@@ -14,13 +14,13 @@ const AddUserForm = (props: Props) => {
   const [username, setUsername] = useState('');
   const [fullname, setFullname] = useState('');
   const [email, setEmail] = useState('');
-  const [verifyIdentity, setVerifyIdentity] = useState(false);
+  const [shouldVerifyIdentity, setShouldVerifyIdentity] = useState(false);
 
   const { addNewUser, getUsers } = useUsers();
   const { setNewUser } = useCurrentUser();
   const handleSubmit = async (e: any) => {
     e.preventDefault();
-    await addNewUser(username, fullname, email, !verifyIdentity);
+    await addNewUser(username, fullname, email, !shouldVerifyIdentity);
     setNewUser(username);
     props.hideForm();
   };
@@ -51,14 +51,14 @@ const AddUserForm = (props: Props) => {
           <div className="card">
             <div className="add-user__column-1">
               <Checkbox
-                value={verifyIdentity}
+                value={shouldVerifyIdentity}
                 id="identityCheckBox"
-                onChange={() => setVerifyIdentity(!verifyIdentity)}
+                onChange={() => setShouldVerifyIdentity(!shouldVerifyIdentity)}
               >
                 {' '}
                 Verify Identity Mode{' '}
               </Checkbox>
-              {verifyIdentity && (
+              {shouldVerifyIdentity && (
                 <p className="value add-user__value">
                   {messages[environment].message}
                 </p>
@@ -76,7 +76,7 @@ const AddUserForm = (props: Props) => {
                 label="Username"
                 onChange={e => setUsername(e.target.value)}
               />
-              {verifyIdentity && (
+              {shouldVerifyIdentity && (
                 <>
                   <TextInput
                     id="full_name"

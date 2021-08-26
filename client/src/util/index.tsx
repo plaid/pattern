@@ -19,7 +19,7 @@ export function pluralize(noun: string, count: number) {
 /**
  * @desc converts number values into $ currency strings
  */
-export function currencyFilter(value: number) {
+export function currencyFilter(value: number | undefined) {
   if (typeof value !== 'number') {
     return '-';
   }

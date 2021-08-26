@@ -3,6 +3,8 @@ import { Link, RouteComponentProps } from 'react-router-dom';
 import sortBy from 'lodash/sortBy';
 import NavigationLink from 'plaid-threads/NavigationLink';
 import Callout from 'plaid-threads/Callout';
+import { Institution } from 'plaid/dist/api';
+import { currencyFilter } from '../util';
 
 import {
   RouteInfo,
@@ -11,7 +13,7 @@ import {
   AppFundType,
   UserType,
 } from './types';
-import { useItems, useAccounts, useUsers } from '../services';
+import { useItems, useAccounts, useUsers, useInstitutions } from '../services';
 import {
   setIdentityCheckById,
   getBalanceByItem,
@@ -25,6 +27,7 @@ import {
   ItemCard,
   ConfirmIdentity,
   MainAccount,
+  AccountCard,
 } from '.';
 
 const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
@@ -43,6 +46,15 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
   const [items, setItems] = useState<ItemType[]>([]);
   const [numOfItems, setNumOfItems] = useState(0);
   const [accounts, setAccounts] = useState<AccountType[]>([]);
+  const [institution, setInstitution] = useState<Institution>({
+    logo: '',
+    name: '',
+    institution_id: '',
+    oauth: false,
+    products: [],
+    country_codes: [],
+  });
+
   const [isIdentityChecked, setIsIdentityChecked] = useState(
     user.identity_check
   );
@@ -55,6 +67,7 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
   } = useAccounts();
   const { usersById, getUserById } = useUsers();
   const { itemsByUser, getItemsByUser } = useItems();
+  const { institutionsById, getInstitutionById } = useInstitutions();
   const userId = Number(match.params.userId);
 
   const getAppFund = useCallback(async userId => {
@@ -139,11 +152,7 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
   // update state items from data store
   useEffect(() => {
     const newItems: Array<ItemType> = itemsByUser[userId] || [];
-    const orderedItems = sortBy(
-      newItems,
-      item => new Date(item.updated_at)
-    ).reverse();
-    setItems(orderedItems);
+    setItems(newItems);
   }, [itemsByUser, userId]);
 
   // update no of items from data store
@@ -163,6 +172,20 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
   useEffect(() => {
     setAccounts(accountsByUser[userId] || []);
   }, [accountsByUser, userId, numOfItems]);
+
+  // update institution
+
+  useEffect(() => {
+    if (items[0] != null) {
+      setInstitution(institutionsById[items[0].plaid_institution_id] || {});
+    }
+  }, [institutionsById, items]);
+
+  useEffect(() => {
+    if (items[0] != null) {
+      getInstitutionById(items[0].plaid_institution_id);
+    }
+  }, [getInstitutionById, items]);
 
   // update data store with the user's accounts
   useEffect(() => {
@@ -194,6 +217,11 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
     isIdentityChecked,
     user,
   ]);
+
+  const accountName = accounts.length > 0 ? `${accounts[0].name}` : '';
+  const accountBalance =
+    accounts.length > 0 ? currencyFilter(accounts[0].available_balance) : '';
+
   document.getElementsByTagName('body')[0].style.overflow = 'auto'; // to override overflow:hidden from link pane
   return (
     <div>
@@ -207,19 +235,26 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
         userId={userId}
         removeButton={false}
         linkButton={numOfItems === 0}
+        numOfItems={numOfItems}
+        institutionName={institution.name}
+        accountName={accountName}
+        accountBalance={accountBalance}
+        item={items[0]}
+        isIdentityChecked={isIdentityChecked}
       />
       {numOfItems > 0 && (
         <>
           <ErrorMessage />
+
           {isIdentityChecked && (
             <>
               {showBank && (
-                <ItemCard
-                  item={items[0]}
-                  isIdentityChecked={isIdentityChecked}
+                <AccountCard
+                  institutionName={institution.name}
                   userId={userId}
                   updateAppFund={updateAppFund}
                   closeView={closeView}
+                  account={accounts[0]}
                 />
               )}
             </>

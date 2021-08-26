@@ -4,21 +4,27 @@ import Button from 'plaid-threads/Button';
 import Touchable from 'plaid-threads/Touchable';
 import Callout from 'plaid-threads/Callout';
 
-import { UserDetails, LinkButton } from '.';
+import { LinkButton, ItemCard } from '.';
 import { useItems, useUsers, useLink } from '../services';
-import { UserType } from './types';
+import { UserType, ItemType } from './types';
+import { currencyFilter } from '../util';
 
 interface Props {
   user: UserType;
   removeButton: boolean;
   linkButton: boolean;
   userId: number;
+  numOfItems: number;
+  institutionName: string;
+  accountName: string;
+  accountBalance: string;
+  item: ItemType;
+  isIdentityChecked: boolean;
 }
 
 export default function UserCard(props: Props) {
   const [numOfItems, setNumOfItems] = useState(0);
   const [token, setToken] = useState('');
-  const [hovered, setHovered] = useState(false);
   const { itemsByUser, getItemsByUser } = useItems();
   const { deleteUserById } = useUsers();
   const { generateLinkToken, linkTokens } = useLink();
@@ -51,37 +57,36 @@ export default function UserCard(props: Props) {
   const handleDeleteUser = () => {
     deleteUserById(props.user.id); // this will delete all items associated with a user
   };
+
+  const userClassName =
+    numOfItems === 0 ? 'card user-card' : 'card user-card-no-link';
   return (
     <>
       <div className="box user-card__box">
-        <div className=" card user-card">
-          <div
-            className="hoverable"
-            onMouseEnter={() => {
-              if (numOfItems > 0) {
-                setHovered(true);
-              }
-            }}
-            onMouseLeave={() => {
-              setHovered(false);
-            }}
-          >
+        <div className={userClassName}>
+          <div>
             <Touchable
-              className="user-card-clickable"
+              className="user-card-info"
               component={HashLink}
-              to={`/user/${props.userId}#itemCards`}
+              to={`/user/${props.userId}`}
             >
-              <div className="user-card__detail">
-                <UserDetails
-                  hovered={hovered}
-                  user={props.user}
-                  numOfItems={numOfItems}
-                />
+              <div>
+                <h3 className="heading">username</h3>
+                <p className="value">{props.user.username}</p>
               </div>
+              {numOfItems !== 0 && (
+                <ItemCard
+                  item={props.item}
+                  isIdentityChecked={props.isIdentityChecked}
+                  userId={props.userId}
+                  accountName={props.accountName}
+                  numOfItems={props.numOfItems}
+                />
+              )}
             </Touchable>
           </div>
           {(props.removeButton || (props.linkButton && numOfItems === 0)) && (
-            <div className="user-card__buttons">
+            <div className="user-card__button">
               {token != null && token.length > 0 && props.linkButton && (
                 <LinkButton userId={props.userId} token={token} itemId={null}>
                   Add your checking or savings account

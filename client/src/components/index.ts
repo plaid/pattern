@@ -9,7 +9,6 @@ export { default as LinkButton } from './LinkButton';
 export { default as MoreDetails } from './MoreDetails';
 export { default as Sockets } from './Sockets';
 export { default as UserCard } from './UserCard';
-export { default as UserDetails } from './UserDetails';
 export { default as UserList } from './UserList';
 export { default as OAuthLink } from './OAuthLink';
 export { default as Login } from './Login';

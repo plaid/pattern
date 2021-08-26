@@ -19,7 +19,7 @@ const UserList = () => {
 
   return (
     <>
-      <h5>For developer admin use</h5>
+      {/* <h5>For developer admin use</h5>
 
       <div>
         {users.map(user => (
@@ -29,10 +29,11 @@ const UserList = () => {
               userId={user.id}
               removeButton
               linkButton={false}
+              institutionName=""
             />
           </div>
         ))}
-      </div>
+      </div> */}
     </>
   );
 };

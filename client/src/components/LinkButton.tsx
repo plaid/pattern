@@ -129,15 +129,18 @@ export default function LinkButton(props: Props) {
       ) : props.itemId != null ? (
         // update mode: Link is launched from dropdown menu in the
         // item card after item is set to "bad state"
-        <Touchable
-          className="menuOption"
+        <Button
+          className="linkButton"
+          small
+          centered
+          inline
           disabled={!ready}
           onClick={() => {
             handleClick();
           }}
         >
           {props.children}
-        </Touchable>
+        </Button>
       ) : (
         // regular case for initializing Link from user card or from "add another item" button
         <Button

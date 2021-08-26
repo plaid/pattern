@@ -39,42 +39,24 @@ export function MoreDetails(props: Props) {
   }, [linkTokens, props.itemId]);
 
   // display choice, depending on whether item is in "good" or "bad" state
-  const linkChoice = props.setBadStateShown ? (
-    // handleSetBadState uses sandbox/item/reset_login to send the ITEM_LOGIN_REQUIRED webhook;
-    // app responds to this webhook by setting item to "bad" state (server/webhookHandlers/handleItemWebhook.js)
-    <Touchable className="menuOption" onClick={props.handleSetBadState}>
-      Test Item Login Required Webhook
-    </Touchable>
-  ) : token != null && token.length > 0 ? (
-    // item is in "bad" state;  launch link to login and return to "good" state
-    <div>
-      <LinkButton userId={props.userId} itemId={props.itemId} token={token}>
-        Update Login
-      </LinkButton>
-    </div>
-  ) : (
-    <></>
-  );
-
-  const icon = (
-    <div className="icon-button-container" ref={refToButton}>
-      <IconButton
-        accessibilityLabel="Navigation"
-        icon={<Menu />}
-        onClick={() => setmenuShown(!menuShown)}
-      />
-    </div>
-  );
+  const linkChoice =
+    token != null && token.length > 0 ? (
+      // item is in "bad" state;  launch link to login and return to "good" state
+      <div>
+        <LinkButton userId={props.userId} itemId={props.itemId} token={token}>
+          Update Login
+        </LinkButton>
+      </div>
+    ) : (
+      <></>
+    );
 
   return (
     <div className="more-details" ref={refToMenu}>
-      <Dropdown isOpen={menuShown} target={icon}>
-        {linkChoice}
+      {/* <Dropdown isOpen={menuShown} target={icon}> */}
+      {linkChoice}
 
-        <Touchable className="menuOption2" onClick={props.handleDelete}>
-          Remove
-        </Touchable>
-      </Dropdown>
+      {/* </Dropdown> */}
     </div>
   );
 }

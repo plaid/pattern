@@ -104,7 +104,18 @@ export default function LinkButton(props: Props) {
     if (props.isOauth && ready) {
       open();
     }
-  }, [ready, open, props.isOauth]);
+    if (props.itemId == null && ready) {
+      localStorage.setItem(
+        'oauthConfig',
+        JSON.stringify({
+          userId: props.userId,
+          itemId: props.itemId,
+          token: props.token,
+        })
+      );
+      open();
+    }
+  }, [ready, open, props.isOauth, props.userId, props.itemId, props.token]);
 
   const handleClick = () => {
     // regular, non-OAuth case:
@@ -140,17 +151,7 @@ export default function LinkButton(props: Props) {
         </Touchable>
       ) : (
         // regular case for initializing Link from user card or from "add another item" button
-        <Button
-          disabled={!ready}
-          className="linkButton"
-          large
-          inline
-          onClick={() => {
-            handleClick();
-          }}
-        >
-          {props.children}
-        </Button>
+        <></>
       )}
     </>
   );

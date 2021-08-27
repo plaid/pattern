@@ -5,7 +5,7 @@ import { Institution } from 'plaid/dist/api';
 
 import { ItemType, AccountType, AppFundType } from './types';
 import { AccountCard, MoreDetails } from '.';
-import { useAccounts, useInstitutions, useItems } from '../services';
+import { useAccounts, useInstitutions, useItems, useLink } from '../services';
 import { setItemToBadState, getBalanceByItem } from '../services/api';
 import { diffBetweenCurrentTime } from '../util';
 
@@ -41,6 +41,7 @@ const ItemCard = (props: Props) => {
     getInstitutionById,
     formatLogoSrc,
   } = useInstitutions();
+  const { deleteLinkToken } = useLink();
   const { id, plaid_institution_id, status } = props.item;
   const isSandbox = PLAID_ENV === 'sandbox';
   const isGoodState = status === 'good';
@@ -68,6 +69,7 @@ const ItemCard = (props: Props) => {
   const handleDeleteItem = () => {
     deleteItemById(id, props.userId);
     deleteAccountsByItemId(id);
+    deleteLinkToken(props.userId);
   };
   const account = accounts[0];
   return (

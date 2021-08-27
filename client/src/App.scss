@@ -172,7 +172,7 @@ UserCard
 
 .user-card-info {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+  grid-template-columns: 3fr 3fr 7fr 4fr 5fr;
   margin-left: 2 * $unit;
 }
 
@@ -227,11 +227,16 @@ Item overview
   margin-top: $unit;
 }
 
-.item-card__img {
-  height: 4 * $unit;
-  padding-right: 1rem;
+.test_update_mode {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
 }
 
+.uodate_login_warning{
+  
+}
 /*
 
 Account row

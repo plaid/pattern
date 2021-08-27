@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Note from 'plaid-threads/Note';
 import Button from 'plaid-threads/Button';
+import Callout from 'plaid-threads/Callout';
 import { Institution } from 'plaid/dist/api';
 
 import { ItemType, AccountType, AppFundType } from './types';
@@ -64,7 +65,7 @@ const ItemCard = (props: Props) => {
       </div>
       {props.numOfItems !== 0 && (
         <>
-          <div>
+          <div className="test_update_mode">
             <div>
               {isGoodState ? (
                 <Note info solid>
@@ -78,21 +79,36 @@ const ItemCard = (props: Props) => {
                 </Note>
               )}
             </div>
-            <Button secondary small centered inline onClick={handleSetBadState}>
-              Test Item Login Required Webhook
-            </Button>
+            {isSandbox && isGoodState && (
+              <Button
+                tertiary
+                small
+                centered
+                inline
+                onClick={handleSetBadState}
+              >
+                Test Item Login Required
+              </Button>
+            )}
+            {isSandbox && !isGoodState && (
+              <MoreDetails // The MoreDetails component allows developer to test the ITEM_LOGIN_REQUIRED webhook and Link update mode
+                setBadStateShown={isSandbox && isGoodState}
+                handleDelete={handleDeleteItem}
+                handleSetBadState={handleSetBadState}
+                userId={props.userId}
+                itemId={id}
+              />
+            )}
           </div>
 
-          <MoreDetails // The MoreDetails component allows developer to test the ITEM_LOGIN_REQUIRED webhook and Link update mode
-            setBadStateShown={isSandbox && isGoodState}
-            handleDelete={handleDeleteItem}
-            handleSetBadState={handleSetBadState}
-            userId={props.userId}
-            itemId={id}
-          />
           <Button small inline secondary centered onClick={handleDeleteItem}>
             Remove Bank
           </Button>
+          {isSandbox && !isGoodState && (
+            <Callout className="update_login_warning" warning>
+              Please update your login credentials
+            </Callout>
+          )}
         </>
       )}
     </>

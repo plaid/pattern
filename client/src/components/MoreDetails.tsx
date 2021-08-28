@@ -19,15 +19,7 @@ interface Props {
 //TODO: rename this component to LinkUpdateBtn
 // Provides for testing of the ITEM_LOGIN_REQUIRED webhook and Link update mode
 export function MoreDetails(props: Props) {
-  const [menuShown, setmenuShown] = useState(false);
   const [token, setToken] = useState('');
-  const refToButton = useRef<HTMLDivElement>(null);
-  const refToMenu: React.RefObject<HTMLDivElement> = useOnClickOutside({
-    callback: () => {
-      setmenuShown(false);
-    },
-    ignoreRef: refToButton,
-  });
 
   const { generateLinkToken, linkTokens } = useLink();
   // creates new link token for each item in bad state
@@ -39,25 +31,13 @@ export function MoreDetails(props: Props) {
     setToken(linkTokens.byItem[props.itemId]);
   }, [linkTokens, props.itemId]);
 
-  // display choice, depending on whether item is in "good" or "bad" state
-  const linkChoice =
-    token != null && token.length > 0 ? (
-      // item is in "bad" state;  launch link to login and return to "good" state
-      <div>
+  return (
+    <div className="more-details">
+      {token != null && token.length > 0 && (
         <LinkButton userId={props.userId} itemId={props.itemId} token={token}>
           Update Login
         </LinkButton>
-      </div>
-    ) : (
-      <></>
-    );
-
-  return (
-    <div className="more-details" ref={refToMenu}>
-      {/* <Dropdown isOpen={menuShown} target={icon}> */}
-      {linkChoice}
-
-      {/* </Dropdown> */}
+      )}
     </div>
   );
 }

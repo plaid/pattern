@@ -369,3 +369,13 @@ h3 {
 .callout {
   margin: 2 * $unit 0;
 }
+
+.user-list {
+  display: flex;
+  justify-content: flex-start;
+  margin-bottom: 2 * $unit;
+
+  .user-list__name {
+    width: 15 * $unit;
+  }
+}

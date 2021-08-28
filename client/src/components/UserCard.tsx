@@ -7,7 +7,6 @@ import Callout from 'plaid-threads/Callout';
 import { LinkButton, ItemCard } from '.';
 import { useItems, useUsers, useLink } from '../services';
 import { UserType, ItemType } from './types';
-import { currencyFilter } from '../util';
 
 const PLAID_ENV = process.env.REACT_APP_PLAID_ENV || 'sandbox';
 

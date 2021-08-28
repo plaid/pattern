@@ -6,7 +6,7 @@ export { default as ItemCard } from './ItemCard';
 export { default as UserPage } from './UserPage';
 export { default as Landing } from './Landing';
 export { default as LinkButton } from './LinkButton';
-export { default as MoreDetails } from './MoreDetails';
+export { default as UpdateLink } from './UpdateLink';
 export { default as Sockets } from './Sockets';
 export { default as UserCard } from './UserCard';
 export { default as UserList } from './UserList';

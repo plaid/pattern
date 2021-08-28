@@ -1,14 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import Note from 'plaid-threads/Note';
 import Button from 'plaid-threads/Button';
-import Callout from 'plaid-threads/Callout';
 import { Institution } from 'plaid/dist/api';
 
-import { ItemType, AccountType, AppFundType } from './types';
-import { MoreDetails } from '.';
-import { useAccounts, useInstitutions, useItems } from '../services';
+import { ItemType } from './types';
+import { UpdateLink } from '.';
+import { useAccounts, useInstitutions, useItems, useLink } from '../services';
 import { setItemToBadState } from '../services/api';
-import { currencyFilter } from '../util';
 
 const PLAID_ENV = process.env.REACT_APP_PLAID_ENV || 'sandbox';
 
@@ -36,6 +34,7 @@ const ItemCard = (props: Props) => {
   const { id, plaid_institution_id, status } = props.item;
   const isSandbox = PLAID_ENV === 'sandbox';
   const isGoodState = status === 'good';
+  const { deleteLinkToken } = useLink();
 
   useEffect(() => {
     setInstitution(institutionsById[plaid_institution_id] || {});
@@ -51,6 +50,7 @@ const ItemCard = (props: Props) => {
   const handleDeleteItem = () => {
     deleteItemById(id, props.userId);
     deleteAccountsByItemId(id);
+    deleteLinkToken(props.userId);
   };
 
   return (
@@ -91,8 +91,7 @@ const ItemCard = (props: Props) => {
               </Button>
             )}
             {isSandbox && !isGoodState && (
-              <MoreDetails // The MoreDetails component allows developer to test the Link update mode
-                // TODO: rename this component to LinkUpdateButton
+              <UpdateLink
                 setBadStateShown={isSandbox && isGoodState}
                 handleDelete={handleDeleteItem}
                 handleSetBadState={handleSetBadState}

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Callout from 'plaid-threads/Callout';
+import Button from 'plaid-threads/Button';
 
 import { LinkButton, ItemCard } from '.';
 import { useItems, useLink } from '../services';
@@ -28,6 +29,10 @@ export default function UserCard(props: Props) {
   const isSandbox = PLAID_ENV === 'sandbox';
   const isGoodState = status === 'good';
 
+  const initiateLink = async () => {
+    await generateLinkToken(props.userId, null);
+  };
+
   // update data store with the user's items
   useEffect(() => {
     if (props.userId) {
@@ -44,13 +49,12 @@ export default function UserCard(props: Props) {
     }
   }, [itemsByUser, props.userId]);
 
-  // creates new link token upon change in user or number of items
   useEffect(() => {
-    generateLinkToken(props.userId, null); // itemId is null
-  }, [props.userId, generateLinkToken]);
-
-  useEffect(() => {
-    setToken(linkTokens.byUser[props.userId]);
+    if (numOfItems === 0) {
+      setToken(linkTokens.byUser[props.userId]);
+    } else {
+      setToken('');
+    }
   }, [linkTokens, props.userId, numOfItems]);
 
   const userClassName =
@@ -74,12 +78,15 @@ export default function UserCard(props: Props) {
               />
             )}
           </div>
+          {numOfItems === 0 && (
+            <Button large inline className="link-button" onClick={initiateLink}>
+              Add your checking or savings account
+            </Button>
+          )}
           {(props.removeButton || (props.linkButton && numOfItems === 0)) && (
             <div className="user-card__button">
               {token != null && token.length > 0 && props.linkButton && (
-                <LinkButton userId={props.userId} token={token} itemId={null}>
-                  Add your checking or savings account
-                </LinkButton>
+                <LinkButton userId={props.userId} token={token} itemId={null} />
               )}
             </div>
           )}

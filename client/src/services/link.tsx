@@ -33,7 +33,8 @@ type LinkAction =
       token: string;
     }
   | { type: 'LINK_TOKEN_UPDATE_MODE_CREATED'; id: number; token: string }
-  | { type: 'LINK_TOKEN_ERROR'; error: PlaidLinkError };
+  | { type: 'LINK_TOKEN_ERROR'; error: PlaidLinkError }
+  | { type: 'DELETE_LINK_TOKEN'; id: number };
 
 interface LinkContextShape extends LinkState {
   dispatch: Dispatch<LinkAction>;
@@ -41,6 +42,7 @@ interface LinkContextShape extends LinkState {
     userId: number,
     itemId: number | null | undefined
   ) => void;
+  deleteLinkToken: (userId: number) => void;
   linkTokens: LinkState;
 }
 const LinkContext = createContext<LinkContextShape>(
@@ -79,12 +81,20 @@ export function LinkProvider(props: any) {
     }
   }, []);
 
+  const deleteLinkToken = useCallback(async userId => {
+    dispatch({
+      type: 'DELETE_LINK_TOKEN',
+      id: userId,
+    });
+  }, []);
+
   const value = useMemo(
     () => ({
       generateLinkToken,
+      deleteLinkToken,
       linkTokens,
     }),
-    [linkTokens, generateLinkToken]
+    [linkTokens, generateLinkToken, deleteLinkToken]
   );
 
   return <LinkContext.Provider value={value} {...props} />;
@@ -111,6 +121,13 @@ function reducer(state: any, action: LinkAction) {
         byItem: {
           ...state.byItem,
           [action.id]: action.token,
+        },
+      };
+    case 'DELETE_LINK_TOKEN':
+      return {
+        ...state,
+        byUser: {
+          [action.id]: '',
         },
       };
     case 'LINK_TOKEN_ERROR':

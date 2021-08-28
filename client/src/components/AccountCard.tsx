@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import Callout from 'plaid-threads/Callout';
 import { Button } from 'plaid-threads/Button';
 
@@ -12,7 +12,7 @@ interface Props {
   account: AccountType;
   userId: number;
   updateAppFund: (appFund: AppFundType) => void;
-  closeView: () => void;
+  closeTransferView: () => void;
   institutionName: string;
 }
 
@@ -83,7 +83,7 @@ export default function AccountCard(props: Props) {
       <div>
         {showInput && (
           <TransferFunds
-            closeView={props.closeView}
+            closeTransferView={props.closeTransferView}
             checkAmountAndInitiate={checkAmountAndInitiate}
             setShowInput={setShowInput}
           />
@@ -98,7 +98,12 @@ export default function AccountCard(props: Props) {
             )} from ${
               props.institutionName
             } to your Plaid Pattern Account.`}</p>
-            <Button small centered inline onClick={() => props.closeView()}>
+            <Button
+              small
+              centered
+              inline
+              onClick={() => props.closeTransferView()}
+            >
               Done
             </Button>
           </>
@@ -112,7 +117,12 @@ export default function AccountCard(props: Props) {
               {' '}
               {errorMessage}
             </Callout>
-            <Button small centered inline onClick={() => props.closeView()}>
+            <Button
+              small
+              centered
+              inline
+              onClick={() => props.closeTransferView()}
+            >
               Back
             </Button>
           </>

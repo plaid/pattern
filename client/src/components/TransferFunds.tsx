@@ -6,7 +6,7 @@ import { currencyFilter } from '../util';
 
 interface Props {
   checkAmountAndInitiate: (amount: number) => void;
-  closeView: () => void;
+  closeTransferView: () => void;
   setShowInput: (arg: boolean) => void;
 }
 const TransferFunds: React.FC<Props> = (props: Props) => {
@@ -45,7 +45,7 @@ const TransferFunds: React.FC<Props> = (props: Props) => {
             centered
             secondary
             inline
-            onClick={() => props.closeView()}
+            onClick={() => props.closeTransferView()}
           >
             Back
           </Button>

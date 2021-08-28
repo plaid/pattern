@@ -57,7 +57,7 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
   const [isIdentityChecked, setIsIdentityChecked] = useState(
     user.identity_check
   );
-  const [showBank, setShowBank] = useState(false);
+  const [showTransfer, setShowTransfer] = useState(false);
   const {
     getAccountsByUser,
     accountsByUser,
@@ -117,11 +117,11 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
 
   const userTransfer = () => {
     getBalance();
-    setShowBank(true);
+    setShowTransfer(true);
   };
 
-  const closeView = () => {
-    setShowBank(false);
+  const closeTransferView = () => {
+    setShowTransfer(false);
   };
 
   // update data store with user
@@ -244,12 +244,12 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
 
           {isIdentityChecked && (
             <>
-              {showBank && (
+              {showTransfer && (
                 <AccountCard
                   institutionName={institution.name}
                   userId={userId}
                   updateAppFund={updateAppFund}
-                  closeView={closeView}
+                  closeTransferView={closeTransferView}
                   account={accounts[0]}
                 />
               )}
@@ -268,7 +268,7 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
           )}
         </>
       )}
-      {appFund != null && !showBank && isIdentityChecked && (
+      {appFund != null && !showTransfer && isIdentityChecked && (
         <MainAccount
           userTransfer={userTransfer}
           user={user}

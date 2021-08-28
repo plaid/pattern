@@ -26,25 +26,25 @@ const UserList = () => {
       <div>
         {users.map(user => (
           <div key={user.id}>
-            <Touchable
-              className="user-list__container"
-              component={HashLink}
-              to={`/user/${user.id}`}
-            >
-              <div className="user-list">
+            <div className="user-list">
+              <Touchable
+                className="user-list__touchable"
+                component={HashLink}
+                to={`/user/${user.id}`}
+              >
                 <div className="user-list__name">{user.username}</div>
-                <div>
-                  <Button
-                    small
-                    inline
-                    centered
-                    onClick={() => deleteUserById(user.id)}
-                  >
-                    delete
-                  </Button>
-                </div>
+              </Touchable>
+              <div>
+                <Button
+                  small
+                  inline
+                  centered
+                  onClick={() => deleteUserById(user.id)}
+                >
+                  delete
+                </Button>
               </div>
-            </Touchable>
+            </div>
           </div>
         ))}
       </div>

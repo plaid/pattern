@@ -370,24 +370,22 @@ h3 {
   margin: 2 * $unit 0;
 }
 
-.user-list__container {
+.user-list {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 2 * $unit;
   border: $border;
   border-radius: $border-radius;
   margin-bottom: 3 * $unit;
   box-shadow: $shadow-xsmall;
   padding: 2 * $unit;
+  width: 50 * $unit;
 
-  .user-list {
-    display: flex;
-    justify-content: flex-start;
-    margin-bottom: 2 * $unit;
-
-    .user-list__name {
-      width: 15 * $unit;
-    }
+  .user-list__touchable {
+    width: 30 * $unit;
   }
 }
 
-.user-list__container:hover {
+.user-list__touchable:hover {
   cursor: pointer;
 }

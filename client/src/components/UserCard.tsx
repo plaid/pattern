@@ -5,7 +5,7 @@ import Touchable from 'plaid-threads/Touchable';
 import Callout from 'plaid-threads/Callout';
 
 import { LinkButton, ItemCard } from '.';
-import { useItems, useUsers, useLink } from '../services';
+import { useItems, useLink } from '../services';
 import { UserType, ItemType } from './types';
 
 const PLAID_ENV = process.env.REACT_APP_PLAID_ENV || 'sandbox';
@@ -26,7 +26,6 @@ export default function UserCard(props: Props) {
   const [numOfItems, setNumOfItems] = useState(0);
   const [token, setToken] = useState('');
   const { itemsByUser, getItemsByUser } = useItems();
-  const { deleteUserById } = useUsers();
   const { generateLinkToken, linkTokens } = useLink();
   const status = props.item != null ? props.item.status : 'good';
   const isSandbox = PLAID_ENV === 'sandbox';
@@ -56,10 +55,6 @@ export default function UserCard(props: Props) {
   useEffect(() => {
     setToken(linkTokens.byUser[props.userId]);
   }, [linkTokens, props.userId, numOfItems]);
-
-  const handleDeleteUser = () => {
-    deleteUserById(props.user.id); // this will delete all items associated with a user
-  };
 
   const userClassName =
     numOfItems === 0 ? 'card user-card' : 'card user-card__no-link';
@@ -94,18 +89,6 @@ export default function UserCard(props: Props) {
                 <LinkButton userId={props.userId} token={token} itemId={null}>
                   Add your checking or savings account
                 </LinkButton>
-              )}
-              {props.removeButton && (
-                <Button
-                  className="remove"
-                  onClick={handleDeleteUser}
-                  small
-                  inline
-                  centered
-                  secondary
-                >
-                  Delete user
-                </Button>
               )}
             </div>
           )}

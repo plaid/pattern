@@ -1,7 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { HashLink } from 'react-router-hash-link';
-import Button from 'plaid-threads/Button';
-import Touchable from 'plaid-threads/Touchable';
 import Callout from 'plaid-threads/Callout';
 
 import { LinkButton, ItemCard } from '.';
@@ -62,26 +59,20 @@ export default function UserCard(props: Props) {
     <>
       <div className="box user-card__box">
         <div className={userClassName}>
-          <div>
-            <Touchable
-              className="user-card__info"
-              component={HashLink}
-              to={`/user/${props.userId}`}
-            >
-              <div>
-                <h3 className="heading">username</h3>
-                <p className="value">{props.user.username}</p>
-              </div>
-              {numOfItems !== 0 && (
-                <ItemCard
-                  item={props.item}
-                  isIdentityChecked={props.isIdentityChecked}
-                  userId={props.userId}
-                  accountName={props.accountName}
-                  numOfItems={props.numOfItems}
-                />
-              )}
-            </Touchable>
+          <div className="user-card__info">
+            <div>
+              <h3 className="heading">username</h3>
+              <p className="value">{props.user.username}</p>
+            </div>
+            {numOfItems !== 0 && (
+              <ItemCard
+                item={props.item}
+                isIdentityChecked={props.isIdentityChecked}
+                userId={props.userId}
+                accountName={props.accountName}
+                numOfItems={props.numOfItems}
+              />
+            )}
           </div>
           {(props.removeButton || (props.linkButton && numOfItems === 0)) && (
             <div className="user-card__button">

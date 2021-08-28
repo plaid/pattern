@@ -165,12 +165,12 @@ UserCard
   grid-template-columns: 7fr 3fr;
 }
 
-.user-card-no-link {
+.user-card__no-link {
   display: grid;
   grid-template-columns: 1fr;
 }
 
-.user-card-info {
+.user-card__info {
   display: grid;
   grid-template-columns: 3fr 3fr 7fr 4fr 5fr;
   margin-left: 2 * $unit;
@@ -231,15 +231,13 @@ Item overview
   margin-top: $unit;
 }
 
-.test_update_mode {
+.test-update-mode {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
 }
 
-.uodate_login_warning {
-}
 /*
 
 Account row
@@ -359,12 +357,12 @@ h3 {
   }
 }
 
-.transferAmtInput {
+.transfer-funds__input {
   margin: 2 * $unit 0;
   width: 40 * $unit;
 }
 
-.transferFundsTitle {
+.transfer-funds__Title {
   margin: 0;
 }
 

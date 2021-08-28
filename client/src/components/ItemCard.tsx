@@ -65,7 +65,7 @@ const ItemCard = (props: Props) => {
       </div>
       {props.numOfItems !== 0 && (
         <>
-          <div className="test_update_mode">
+          <div className="test-update-mode">
             <div>
               {isGoodState ? (
                 <Note info solid>

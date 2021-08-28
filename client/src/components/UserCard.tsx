@@ -64,14 +64,14 @@ export default function UserCard(props: Props) {
   };
 
   const userClassName =
-    numOfItems === 0 ? 'card user-card' : 'card user-card-no-link';
+    numOfItems === 0 ? 'card user-card' : 'card user-card__no-link';
   return (
     <>
       <div className="box user-card__box">
         <div className={userClassName}>
           <div>
             <Touchable
-              className="user-card-info"
+              className="user-card__info"
               component={HashLink}
               to={`/user/${props.userId}`}
             >

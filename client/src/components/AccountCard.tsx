@@ -5,7 +5,10 @@ import { Button } from 'plaid-threads/Button';
 import { AccountType, AppFundType } from './types';
 import { currencyFilter } from '../util';
 import { TransferFunds } from '.';
-import { updateAppFundsBalance } from '../services/api';
+import {
+  updateAppFundsBalance,
+  incrementTransfersByAccount,
+} from '../services/api';
 
 const IS_PROCESSOR = process.env.REACT_APP_IS_PROCESSOR;
 interface Props {
@@ -14,23 +17,23 @@ interface Props {
   updateAppFund: (appFund: AppFundType) => void;
   closeTransferView: () => void;
   institutionName: string;
+  setAccount: (arg: AccountType) => void;
 }
 
 export default function AccountCard(props: Props) {
-  const account = props.account;
-  const balance =
-    account.available_balance != null
-      ? account.available_balance
-      : account.current_balance;
   const [isAmountOkay, setIsAmountOkay] = useState(true);
   const [transferAmount, setTransferAmount] = useState(0);
   const [isTransferConfirmed, setIsTransferconfirmed] = useState(false);
   const [showInput, setShowInput] = useState(true);
+  const account = props.account;
   const [
     showTransferConfirmationError,
     setShowTransferConfirmationError,
   ] = useState(false);
-
+  const balance =
+    account.available_balance != null
+      ? account.available_balance
+      : account.current_balance;
   const errorMessage = !isAmountOkay
     ? `We are unable to verify ${currencyFilter(
         transferAmount
@@ -74,10 +77,16 @@ export default function AccountCard(props: Props) {
           confirmedAmount
         );
         props.updateAppFund(appFunds[0]);
+        const { data: newAccount } = await incrementTransfersByAccount(
+          account.plaid_account_id
+        );
+        props.setAccount(newAccount);
         setIsTransferconfirmed(true);
       }
     }
   };
+
+  console.log(account);
   return (
     <>
       <div>

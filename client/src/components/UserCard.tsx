@@ -9,6 +9,8 @@ import { useItems, useUsers, useLink } from '../services';
 import { UserType, ItemType } from './types';
 import { currencyFilter } from '../util';
 
+const PLAID_ENV = process.env.REACT_APP_PLAID_ENV || 'sandbox';
+
 interface Props {
   user: UserType;
   removeButton: boolean;
@@ -28,6 +30,9 @@ export default function UserCard(props: Props) {
   const { itemsByUser, getItemsByUser } = useItems();
   const { deleteUserById } = useUsers();
   const { generateLinkToken, linkTokens } = useLink();
+  const status = props.item != null ? props.item.status : 'good';
+  const isSandbox = PLAID_ENV === 'sandbox';
+  const isGoodState = status === 'good';
 
   // update data store with the user's items
   useEffect(() => {
@@ -108,21 +113,28 @@ export default function UserCard(props: Props) {
           )}
         </div>
       </div>
-      {linkTokens.error.error_code != null && (
-        <Callout warning>
-          <div>
-            Unable to fetch link_token: please make sure your backend server is
-            running and that your .env file has been configured correctly.
-          </div>
-          <div>
-            Error Code: <code>{linkTokens.error.error_code}</code>
-          </div>
-          <div>
-            Error Type: <code>{linkTokens.error.error_type}</code>{' '}
-          </div>
-          <div>Error Message: {linkTokens.error.error_message}</div>
-        </Callout>
-      )}
+      <div className="user-card__callouts">
+        {isSandbox && !isGoodState && (
+          <Callout warning>
+            Please update your login credentials at your bank
+          </Callout>
+        )}
+        {linkTokens.error.error_code != null && (
+          <Callout warning>
+            <div>
+              Unable to fetch link_token: please make sure your backend server
+              is running and that your .env file has been configured correctly.
+            </div>
+            <div>
+              Error Code: <code>{linkTokens.error.error_code}</code>
+            </div>
+            <div>
+              Error Type: <code>{linkTokens.error.error_type}</code>{' '}
+            </div>
+            <div>Error Message: {linkTokens.error.error_message}</div>
+          </Callout>
+        )}
+      </div>
     </>
   );
 }

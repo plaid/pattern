@@ -185,6 +185,10 @@ UserCard
   font-size: 2 * $unit;
 }
 
+.user-card__callouts {
+  margin-bottom: 3 * $unit;
+}
+
 /*
 
 Item overview
@@ -234,8 +238,7 @@ Item overview
   justify-content: space-between;
 }
 
-.uodate_login_warning{
-  
+.uodate_login_warning {
 }
 /*
 

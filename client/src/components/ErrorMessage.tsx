@@ -30,6 +30,8 @@ export default function ErrorMessage() {
     if (error.code != null && errors.includes(error.code)) {
       setShow(true);
       setMessage(error.message);
+    } else {
+      setShow(false);
     }
   }, [error.code, error.message]);
 

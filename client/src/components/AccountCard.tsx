@@ -80,16 +80,6 @@ export default function AccountCard(props: Props) {
   };
   return (
     <>
-      <div className="accountContainer">
-        <div className="account-data-row">
-          <div className="account-data-row__left">
-            <div className="account-data-row__name">{account.name}</div>
-            <div className="account-data-row__balance">{`Balance:  ${currencyFilter(
-              balance
-            )}`}</div>
-          </div>
-        </div>
-      </div>
       <div>
         {showInput && (
           <TransferFunds

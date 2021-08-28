@@ -91,7 +91,8 @@ const ItemCard = (props: Props) => {
               </Button>
             )}
             {isSandbox && !isGoodState && (
-              <MoreDetails // The MoreDetails component allows developer to test the ITEM_LOGIN_REQUIRED webhook and Link update mode
+              <MoreDetails // The MoreDetails component allows developer to test the Link update mode
+                // TODO: rename this component to LinkUpdateButton
                 setBadStateShown={isSandbox && isGoodState}
                 handleDelete={handleDeleteItem}
                 handleSetBadState={handleSetBadState}

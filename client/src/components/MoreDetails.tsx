@@ -16,6 +16,7 @@ interface Props {
   handleDelete: () => void;
 }
 
+//TODO: rename this component to LinkUpdateBtn
 // Provides for testing of the ITEM_LOGIN_REQUIRED webhook and Link update mode
 export function MoreDetails(props: Props) {
   const [menuShown, setmenuShown] = useState(false);

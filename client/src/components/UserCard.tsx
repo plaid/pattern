@@ -19,7 +19,6 @@ interface Props {
   numOfItems: number;
   institutionName: string;
   accountName: string;
-  accountBalance: string;
   item: ItemType;
   isIdentityChecked: boolean;
 }

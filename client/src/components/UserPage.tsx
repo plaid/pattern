@@ -218,8 +218,6 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
   ]);
 
   const accountName = accounts.length > 0 ? `${accounts[0].name}` : '';
-  const accountBalance =
-    accounts.length > 0 ? currencyFilter(accounts[0].available_balance) : '';
 
   document.getElementsByTagName('body')[0].style.overflow = 'auto'; // to override overflow:hidden from link pane
   return (
@@ -237,7 +235,6 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
         numOfItems={numOfItems}
         institutionName={institution.name}
         accountName={accountName}
-        accountBalance={accountBalance}
         item={items[0]}
         isIdentityChecked={isIdentityChecked}
       />

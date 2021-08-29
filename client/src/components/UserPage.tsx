@@ -29,8 +29,6 @@ import {
   AccountCard,
 } from '.';
 
-const IS_PROCESSOR = process.env.REACT_APP_IS_PROCESSOR;
-
 const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
   const [user, setUser] = useState<UserType>({
     id: 0,

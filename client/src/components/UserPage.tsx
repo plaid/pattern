@@ -111,7 +111,6 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
   }, []);
 
   const getBalance = useCallback(async () => {
-    console.log('processor?', IS_PROCESSOR);
     if (account != null) {
       console.log(account.number_of_transfers !== 0);
     }

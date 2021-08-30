@@ -172,7 +172,7 @@ UserCard
 
 .user-card__info {
   display: grid;
-  grid-template-columns: 3fr 3fr 7fr 4fr 5fr;
+  grid-template-columns: 3fr 3fr 9fr 4fr 3fr;
   margin-left: 2 * $unit;
 }
 
@@ -236,6 +236,11 @@ Item overview
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
+}
+
+.remove_bank_button {
+  max-width: 10 * $unit;
+  margin-top: 3 * $unit;
 }
 
 /*
@@ -357,6 +362,12 @@ h3 {
   }
 }
 
+/*
+
+Transfers
+
+*/
+
 .transfer-funds__input {
   margin: 2 * $unit 0;
   width: 40 * $unit;
@@ -369,6 +380,12 @@ h3 {
 .callout {
   margin: 2 * $unit 0;
 }
+
+/*
+
+user list
+
+*/
 
 .user-list {
   display: flex;

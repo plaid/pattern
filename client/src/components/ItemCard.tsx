@@ -101,14 +101,16 @@ const ItemCard = (props: Props) => {
             )}
           </div>
 
-          <Button small inline secondary centered onClick={handleDeleteItem}>
+          <Button
+            className="remove_bank_button "
+            small
+            inline
+            secondary
+            centered
+            onClick={handleDeleteItem}
+          >
             Remove Bank
           </Button>
-          {/* {isSandbox && !isGoodState && (
-            <Callout className="update_login_warning" warning>
-              Please update your login credentials
-            </Callout>
-          )} */}
         </>
       )}
     </>

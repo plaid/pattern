@@ -75,20 +75,24 @@ router.post(
       itemId,
       userId
     );
+
     const authAndIdRequest = {
       access_token: accessToken,
       options: {
         account_ids: [account.id],
       },
     };
-    const identityResponse = await plaid.identityGet(authAndIdRequest);
-    const emails = identityResponse.data.accounts[0].owners[0].emails.map(
-      email => {
-        return email.data;
-      }
-    );
 
-    const names = identityResponse.data.accounts[0].owners[0].names;
+    let emails = null;
+    let ownerNames = null;
+    if (isIdentity) {
+      const identityResponse = await plaid.identityGet(authAndIdRequest);
+      emails = identityResponse.data.accounts[0].owners[0].emails.map(email => {
+        return email.data;
+      });
+
+      ownerNames = identityResponse.data.accounts[0].owners[0].names;
+    }
     const account_info_from_identity_get = identityResponse.data.accounts[0];
 
     let authNumbers = {
@@ -96,6 +100,13 @@ router.post(
       routing: null,
       wire_routing: null,
     };
+    let balances = {
+      available: null,
+      current: null,
+      iso_currency_code: null,
+      unofficial_currency_code: null,
+    };
+
     let processorToken = null;
     const IS_PROCESSOR = process.env.IS_PROCESSOR;
 
@@ -117,7 +128,8 @@ router.post(
     const newAccount = await createAccount(
       itemId,
       userId,
-      account_info_from_identity_get,
+      account,
+      balances,
       authNumbers,
       names,
       emails,

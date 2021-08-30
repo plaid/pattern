@@ -1,10 +1,8 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { Link, RouteComponentProps } from 'react-router-dom';
-import sortBy from 'lodash/sortBy';
 import NavigationLink from 'plaid-threads/NavigationLink';
 import Callout from 'plaid-threads/Callout';
 import { Institution } from 'plaid/dist/api';
-import { currencyFilter } from '../util';
 
 import {
   RouteInfo,

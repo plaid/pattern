@@ -60,10 +60,17 @@ export const setItemState = (itemId: number, status: string) =>
 export const setItemToBadState = (itemId: number) =>
   api.post('/items/sandbox/item/reset_login', { itemId });
 
-export const getLinkToken = (userId: number, itemId: number) =>
+export const getLinkToken = (
+  userId: number,
+  itemId: number,
+  isAuth: boolean,
+  isIdentity: boolean
+) =>
   api.post(`/link-token`, {
     userId,
     itemId,
+    isAuth,
+    isIdentity,
   });
 
 // accounts

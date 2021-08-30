@@ -28,6 +28,8 @@ const OAuthLink = () => {
           userId={userId}
           itemId={itemId}
           token={token}
+          isAuth={false}
+          isIdentity={false}
         />
       )}
     </>

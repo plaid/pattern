@@ -26,10 +26,7 @@ router.post(
     try {
       const { userId, itemId, isAuth, isIdentity } = req.body;
       let accessToken = null;
-      let products = []; // must include transactions in order to receive transactions webhooks
-      if (isAuth) {
-        products.push('auth');
-      }
+      let products = ['auth']; // must include transactions in order to receive transactions webhooks
       if (isIdentity) {
         products.push('identity');
       }

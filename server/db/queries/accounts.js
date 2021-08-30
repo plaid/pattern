@@ -81,7 +81,7 @@ const createAccount = async (
       aid,
       name,
       mask,
-      officialName,
+      '',
       currentBalance,
       availableBalance,
       isoCurrencyCode,

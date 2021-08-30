@@ -7,7 +7,7 @@ import { useItems, useLink } from '../services';
 import { UserType, ItemType } from './types';
 
 const PLAID_ENV = process.env.REACT_APP_PLAID_ENV || 'sandbox';
-const IS_PROCESSOR = process.env.IS_PROCESSOR;
+const IS_PROCESSOR = process.env.REACT_APP_IS_PROCESSOR;
 
 interface Props {
   user: UserType;
@@ -33,6 +33,7 @@ export default function UserCard(props: Props) {
   const isIdentity = props.user.should_verify_identity ? true : false;
 
   const initiateLink = async () => {
+    console.log(isAuth);
     await generateLinkToken(props.userId, null, isAuth, isIdentity);
   };
 

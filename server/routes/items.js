@@ -36,7 +36,14 @@ const router = express.Router();
 router.post(
   '/',
   asyncWrapper(async (req, res) => {
-    const { publicToken, institutionId, userId, accounts } = req.body;
+    const {
+      publicToken,
+      institutionId,
+      userId,
+      accounts,
+      isAuth,
+      isIdentity,
+    } = req.body;
     // in case developer did not customize their Account Select in the dashboard to enable only one account,
     // choose the checking or savings account.
     const checkingAccount = accounts.filter(
@@ -85,16 +92,6 @@ router.post(
 
     let emails = null;
     let ownerNames = null;
-    if (isIdentity) {
-      const identityResponse = await plaid.identityGet(authAndIdRequest);
-      emails = identityResponse.data.accounts[0].owners[0].emails.map(email => {
-        return email.data;
-      });
-
-      ownerNames = identityResponse.data.accounts[0].owners[0].names;
-    }
-    const account_info_from_identity_get = identityResponse.data.accounts[0];
-
     let authNumbers = {
       account: null,
       routing: null,
@@ -106,13 +103,24 @@ router.post(
       iso_currency_code: null,
       unofficial_currency_code: null,
     };
+    if (isIdentity) {
+      const identityResponse = await plaid.identityGet(authAndIdRequest);
+      emails = identityResponse.data.accounts[0].owners[0].emails.map(email => {
+        return email.data;
+      });
+
+      ownerNames = identityResponse.data.accounts[0].owners[0].names;
+      if (!isAuth) {
+        balances = identityResponse.data.accounts[0].balances;
+      }
+    }
 
     let processorToken = null;
-    const IS_PROCESSOR = process.env.IS_PROCESSOR;
 
-    if (IS_PROCESSOR === 'false') {
+    if (isAuth) {
       authResponse = await plaid.authGet(authAndIdRequest);
       authNumbers = authResponse.data.numbers.ach[0];
+      balances = authResponse.data.accounts[0].balances;
     } else {
       const processorRequest = {
         access_token: accessToken,
@@ -131,10 +139,12 @@ router.post(
       account,
       balances,
       authNumbers,
-      names,
+      ownerNames,
       emails,
       processorToken
     );
+
+    console.log(newAccount);
 
     res.json({
       items: sanitizeItems(newItem),

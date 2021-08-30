@@ -92,7 +92,9 @@ export const exchangeToken = async (
   publicToken: string,
   institution: any,
   accounts: PlaidLinkOnSuccessMetadata['accounts'],
-  userId: number
+  userId: number,
+  isAuth: boolean,
+  isIdentity: boolean
 ) => {
   try {
     const { data } = await api.post('/items', {
@@ -100,6 +102,8 @@ export const exchangeToken = async (
       institutionId: institution.institution_id,
       userId,
       accounts,
+      isAuth,
+      isIdentity,
     });
     return data;
   } catch (err) {

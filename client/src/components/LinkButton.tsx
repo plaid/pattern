@@ -54,7 +54,9 @@ export default function LinkButton(props: Props) {
         publicToken,
         metadata.institution,
         metadata.accounts,
-        props.userId
+        props.userId,
+        props.isAuth,
+        props.isIdentity
       );
       getItemsByUser(props.userId, true);
     }

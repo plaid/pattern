@@ -59,8 +59,6 @@ router.post(
       email,
       shouldVerifyIdentity
     );
-
-    console.log(newUser);
     await createAppFund(newUser.id);
     res.json(sanitizeUsers(newUser));
   })

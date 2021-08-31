@@ -1,7 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import Callout from 'plaid-threads/Callout';
-import Button from 'plaid-threads/Button';
-import ChevronS1Left from 'plaid-threads/Icons/ChevronS1Left';
+import { Button } from 'plaid-threads/Button';
 
 import { AccountType, AppFundType } from './types';
 import { currencyFilter } from '../util';
@@ -13,7 +12,8 @@ interface Props {
   account: AccountType;
   userId: number;
   updateAppFund: (appFund: AppFundType) => void;
-  closeView: () => void;
+  closeTransferView: () => void;
+  institutionName: string;
 }
 
 export default function AccountCard(props: Props) {
@@ -24,10 +24,18 @@ export default function AccountCard(props: Props) {
       : account.current_balance;
   const [isAmountOkay, setIsAmountOkay] = useState(true);
   const [transferAmount, setTransferAmount] = useState(0);
+  const [isTransferConfirmed, setIsTransferconfirmed] = useState(false);
+  const [showInput, setShowInput] = useState(true);
   const [
     showTransferConfirmationError,
     setShowTransferConfirmationError,
   ] = useState(false);
+
+  const errorMessage = !isAmountOkay
+    ? `We are unable to verify ${currencyFilter(
+        transferAmount
+      )} in your bank account.`
+    : `Oops! Something went wrong with the transfer. Try again later.`;
 
   const sendRequestToProcessor = (amount: number, processorToken: string) => {
     // placeholder code to simulate request to Dwolla/Processor:
@@ -66,46 +74,60 @@ export default function AccountCard(props: Props) {
           confirmedAmount
         );
         props.updateAppFund(appFunds[0]);
-        props.closeView();
+        setIsTransferconfirmed(true);
       }
     }
   };
   return (
-    <div className="accountContainer">
-      <div className="account-data-row">
-        <div className="account-data-row__left">
-          <div className="account-data-row__name">{account.name}</div>
-          <div className="account-data-row__balance">{`Balance:  ${currencyFilter(
-            balance
-          )}`}</div>
-        </div>
-        <div>
-          <TransferFunds checkAmountAndInitiate={checkAmountAndInitiate} />
-        </div>
+    <>
+      <div>
+        {showInput && (
+          <TransferFunds
+            closeTransferView={props.closeTransferView}
+            checkAmountAndInitiate={checkAmountAndInitiate}
+            setShowInput={setShowInput}
+          />
+        )}
+        {isTransferConfirmed && (
+          <>
+            <div className="transferFundsHeader">
+              <h3 className="transferFundsTitle">Transfer Confirmed</h3>{' '}
+            </div>
+            <p>{`You have successfully transferred ${currencyFilter(
+              transferAmount
+            )} from ${
+              props.institutionName
+            } to your Plaid Pattern Account.`}</p>
+            <Button
+              small
+              centered
+              inline
+              onClick={() => props.closeTransferView()}
+            >
+              Done
+            </Button>
+          </>
+        )}
+        {(!isAmountOkay || showTransferConfirmationError) && (
+          <>
+            <div className="transferFundsHeader">
+              <h3 className="transferFundsTitle">Transfer Error</h3>{' '}
+            </div>
+            <Callout className="callout" warning>
+              {' '}
+              {errorMessage}
+            </Callout>
+            <Button
+              small
+              centered
+              inline
+              onClick={() => props.closeTransferView()}
+            >
+              Back
+            </Button>
+          </>
+        )}
       </div>
-      {!isAmountOkay && (
-        <Callout warning>
-          {' '}
-          We are unable to verify {transferAmount} in your bank account.
-        </Callout>
-      )}
-      {showTransferConfirmationError && (
-        <Callout warning>
-          {' '}
-          Oops! Something went wrong with the transfer. Try again later.
-        </Callout>
-      )}
-      <div className="backBtnHolder">
-        <Button
-          small
-          centered
-          secondary
-          inline
-          onClick={() => props.closeView()}
-        >
-          <ChevronS1Left /> Back
-        </Button>
-      </div>
-    </div>
+    </>
   );
 }

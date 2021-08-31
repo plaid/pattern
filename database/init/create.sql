@@ -189,7 +189,7 @@ CREATE TABLE link_events_table
   type text NOT NULL,
   user_id integer,
   link_session_id text,
-  request_id text UNIQUE,
+  request_id text,
   error_type text,
   error_code text,
   status text,

@@ -59,13 +59,13 @@ export function UsersProvider(props: any) {
    * @desc Creates a new user
    */
   const addNewUser = useCallback(
-    async (username, fullname, email, identityCheck) => {
+    async (username, fullname, email, shouldVerifyIdentity) => {
       try {
         const { data: payload } = await apiAddNewUser(
           username,
           fullname,
           email,
-          identityCheck
+          shouldVerifyIdentity
         );
         dispatch({ type: 'SUCCESSFUL_GET', payload: payload });
       } catch (err) {

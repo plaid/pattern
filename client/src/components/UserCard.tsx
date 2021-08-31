@@ -1,27 +1,32 @@
 import React, { useEffect, useState } from 'react';
-import { HashLink } from 'react-router-hash-link';
-import Button from 'plaid-threads/Button';
-import Touchable from 'plaid-threads/Touchable';
 import Callout from 'plaid-threads/Callout';
 
-import { UserDetails, LinkButton } from '.';
-import { useItems, useUsers, useLink } from '../services';
-import { UserType } from './types';
+import { LinkButton, ItemCard } from '.';
+import { useItems, useLink } from '../services';
+import { UserType, ItemType } from './types';
+
+const PLAID_ENV = process.env.REACT_APP_PLAID_ENV || 'sandbox';
 
 interface Props {
   user: UserType;
   removeButton: boolean;
   linkButton: boolean;
   userId: number;
+  numOfItems: number;
+  institutionName: string;
+  accountName: string;
+  item: ItemType;
+  isIdentityChecked: boolean;
 }
 
 export default function UserCard(props: Props) {
   const [numOfItems, setNumOfItems] = useState(0);
   const [token, setToken] = useState('');
-  const [hovered, setHovered] = useState(false);
   const { itemsByUser, getItemsByUser } = useItems();
-  const { deleteUserById } = useUsers();
   const { generateLinkToken, linkTokens } = useLink();
+  const status = props.item != null ? props.item.status : 'good';
+  const isSandbox = PLAID_ENV === 'sandbox';
+  const isGoodState = status === 'good';
 
   // update data store with the user's items
   useEffect(() => {
@@ -48,76 +53,60 @@ export default function UserCard(props: Props) {
     setToken(linkTokens.byUser[props.userId]);
   }, [linkTokens, props.userId, numOfItems]);
 
-  const handleDeleteUser = () => {
-    deleteUserById(props.user.id); // this will delete all items associated with a user
-  };
+  const userClassName =
+    numOfItems === 0 ? 'card user-card' : 'card user-card__no-link';
   return (
     <>
       <div className="box user-card__box">
-        <div className=" card user-card">
-          <div
-            className="hoverable"
-            onMouseEnter={() => {
-              if (numOfItems > 0) {
-                setHovered(true);
-              }
-            }}
-            onMouseLeave={() => {
-              setHovered(false);
-            }}
-          >
-            <Touchable
-              className="user-card-clickable"
-              component={HashLink}
-              to={`/user/${props.userId}#itemCards`}
-            >
-              <div className="user-card__detail">
-                <UserDetails
-                  hovered={hovered}
-                  user={props.user}
-                  numOfItems={numOfItems}
-                />
-              </div>
-            </Touchable>
+        <div className={userClassName}>
+          <div className="user-card__info">
+            <div>
+              <h3 className="heading">username</h3>
+              <p className="value">{props.user.username}</p>
+            </div>
+            {numOfItems !== 0 && (
+              <ItemCard
+                item={props.item}
+                isIdentityChecked={props.isIdentityChecked}
+                userId={props.userId}
+                accountName={props.accountName}
+                numOfItems={props.numOfItems}
+              />
+            )}
           </div>
           {(props.removeButton || (props.linkButton && numOfItems === 0)) && (
-            <div className="user-card__buttons">
+            <div className="user-card__button">
               {token != null && token.length > 0 && props.linkButton && (
                 <LinkButton userId={props.userId} token={token} itemId={null}>
                   Add your checking or savings account
                 </LinkButton>
               )}
-              {props.removeButton && (
-                <Button
-                  className="remove"
-                  onClick={handleDeleteUser}
-                  small
-                  inline
-                  centered
-                  secondary
-                >
-                  Delete user
-                </Button>
-              )}
             </div>
           )}
         </div>
       </div>
-      {linkTokens.error.error_code != null && (
-        <Callout warning>
-          <div>
-            Unable to fetch link_token: please make sure your backend server is
-            running and that your .env file has been configured correctly.
-          </div>
-          <div>
-            Error Code: <code>{linkTokens.error.error_code}</code>
-          </div>
-          <div>
-            Error Type: <code>{linkTokens.error.error_type}</code>{' '}
-          </div>
-          <div>Error Message: {linkTokens.error.error_message}</div>
-        </Callout>
-      )}
+      <div className="user-card__callouts">
+        {isSandbox && !isGoodState && (
+          <Callout warning>
+            Please update your login credentials at your bank
+          </Callout>
+        )}
+        {linkTokens.error.error_code != null && (
+          <Callout warning>
+            <div>
+              Unable to fetch link_token: please make sure your backend server
+              is running and that your .env file has been configured correctly.
+            </div>
+            <div>
+              Error Code: <code>{linkTokens.error.error_code}</code>
+            </div>
+            <div>
+              Error Type: <code>{linkTokens.error.error_type}</code>{' '}
+            </div>
+            <div>Error Message: {linkTokens.error.error_message}</div>
+          </Callout>
+        )}
+      </div>
     </>
   );
 }

@@ -217,7 +217,7 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
     user,
   ]);
 
-  const accountName = accounts.length > 0 ? `${accounts[0].name}` : '';
+  const accountName = accounts.length > 0 ? accounts[0].name : '';
 
   document.getElementsByTagName('body')[0].style.overflow = 'auto'; // to override overflow:hidden from link pane
   return (

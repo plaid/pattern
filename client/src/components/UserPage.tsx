@@ -24,7 +24,7 @@ import {
   ErrorMessage,
   ConfirmIdentity,
   MainAccount,
-  AccountCard,
+  AccountBalanceCheck,
 } from '.';
 
 const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
@@ -56,12 +56,7 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
     user.identity_check
   );
   const [showTransfer, setShowTransfer] = useState(false);
-  const {
-    getAccountsByUser,
-    accountsByUser,
-    getAccountsByItem,
-    accountsByItem,
-  } = useAccounts();
+  const { getAccountsByUser, accountsByUser } = useAccounts();
   const { usersById, getUserById } = useUsers();
   const { itemsByUser, getItemsByUser } = useItems();
   const { institutionsById, getInstitutionById } = useInstitutions();
@@ -74,17 +69,18 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
 
   // functions to check username and email against data from identity/get
   const checkFullName = useCallback(
-    (names: string[], fullname: string | null) => {
+    // ownerNames is the ownernames array returned from identity/get
+    (ownerNames: string[], fullname: string | null) => {
       // in case user enters "Last name, First name"
       if (fullname != null) {
         fullname = fullname.replace(',', ' ');
         const fullnameArray = fullname.split(' ');
 
         // if both the first name and last name of the username in this app are included somewhere in the
-        // financial institution's names array, return true (anything entered by the user (except a comma)
-        // must be included in the FI's names array).
+        // financial institution's onwerNames array, return true (anything entered by the user (except a comma)
+        // must be included in the FI's ownerNames array).
         return fullnameArray.every(name => {
-          return names.some(identName => {
+          return ownerNames.some(identName => {
             return identName.toUpperCase().indexOf(name.toUpperCase()) > -1;
           });
         });
@@ -107,21 +103,21 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
   }, []);
 
   const getBalance = useCallback(async () => {
-    if (account != null) {
-      console.log(account.number_of_transfers !== 0);
-    }
+    // only call get balance if this is not the initial transfer
+    // or it is the initial transfer but auth and identity have not been called on item creation (i.e. balance=null)
     if (
       account != null &&
       (account.number_of_transfers !== 0 || account.available_balance == null)
     ) {
-      //if this is not the initial transfer
-      await getBalanceByItem(items[0].id, account.plaid_account_id);
-
-      await getAccountsByItem(items[0].id);
-      const itemAccounts: AccountType[] = accountsByItem[items[0].id];
-      setAccount(itemAccounts[0] || {});
+      const { data: newAccount } = await getBalanceByItem(
+        items[0].id,
+        account.plaid_account_id
+      );
+      // await getAccountsByItem(items[0].id);
+      // const itemAccounts: AccountType[] = accountsByItem[items[0].id];
+      setAccount(newAccount || {});
     }
-  }, [accountsByItem, account, getAccountsByItem, items]);
+  }, [account, items]);
 
   const userTransfer = () => {
     getBalance();
@@ -176,35 +172,35 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
     getAccountsByUser(userId);
   }, [getAccountsByUser, userId, numOfItems]);
 
+  // update state account from data store
   useEffect(() => {
     if (accountsByUser[userId] != null && accountsByUser[userId].length > 0) {
       setAccount(accountsByUser[userId][0]);
     }
   }, [accountsByUser, userId, numOfItems]);
 
-  // update institution
-
-  useEffect(() => {
-    if (items[0] != null) {
-      setInstitution(institutionsById[items[0].plaid_institution_id] || {});
-    }
-  }, [institutionsById, items]);
-
+  // update data store with institutions
   useEffect(() => {
     if (items[0] != null) {
       getInstitutionById(items[0].plaid_institution_id);
     }
   }, [getInstitutionById, items]);
 
-  // update data store with the user's accounts
+  // update state institution from data store
+  useEffect(() => {
+    if (items[0] != null) {
+      setInstitution(institutionsById[items[0].plaid_institution_id] || {});
+    }
+  }, [institutionsById, items]);
+
+  // update data store with the user's app fund
   useEffect(() => {
     getAppFund(userId);
   }, [userId, getAppFund]);
 
   useEffect(() => {
-    // checks identity of user against identity/get data stored in accounts data
+    // checks identity of user against identity/get data stored in accounts database
     // only checks if identity has not already been verified.
-
     if (
       account != null &&
       isIdentityChecked === false &&
@@ -220,7 +216,7 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
   const accountName = account != null ? `${account.name}` : '';
 
   document.getElementsByTagName('body')[0].style.overflow = 'auto'; // to override overflow:hidden from link pane
-  console.log(account);
+
   return (
     <div>
       <NavigationLink component={Link} to="/">
@@ -246,7 +242,7 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
           {isIdentityChecked && (
             <>
               {showTransfer && account != null && (
-                <AccountCard
+                <AccountBalanceCheck
                   institutionName={institution.name}
                   userId={userId}
                   updateAppFund={updateAppFund}

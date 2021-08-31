@@ -20,7 +20,7 @@ interface Props {
   setAccount: (arg: AccountType) => void;
 }
 
-export default function AccountCard(props: Props) {
+export default function AccountBalanceCheck(props: Props) {
   const [isAmountOkay, setIsAmountOkay] = useState(true);
   const [transferAmount, setTransferAmount] = useState(0);
   const [isTransferConfirmed, setIsTransferconfirmed] = useState(false);
@@ -30,10 +30,8 @@ export default function AccountCard(props: Props) {
     showTransferConfirmationError,
     setShowTransferConfirmationError,
   ] = useState(false);
-  const balance =
-    account.available_balance != null
-      ? account.available_balance
-      : account.current_balance;
+
+  const balance = account.available_balance;
   const errorMessage = !isAmountOkay
     ? `We are unable to verify ${currencyFilter(
         transferAmount
@@ -60,7 +58,7 @@ export default function AccountCard(props: Props) {
   };
 
   const checkAmountAndInitiate = async (amount: number) => {
-    setIsAmountOkay(amount <= balance);
+    setIsAmountOkay(balance != null && amount <= balance);
     setTransferAmount(amount);
     setShowTransferConfirmationError(false);
 
@@ -86,7 +84,6 @@ export default function AccountCard(props: Props) {
     }
   };
 
-  console.log(account);
   return (
     <>
       <div>

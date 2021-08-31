@@ -1,8 +1,8 @@
-export { default as AccountCard } from './AccountCard';
+export { default as AccountBalanceCheck } from './AccountBalanceCheck';
 export { default as AddUserForm } from './AddUserForm';
 export { default as Banner } from './Banner';
 export { default as DuplicateItemToastMessage } from './DuplicateItemToast';
-export { default as ItemCard } from './ItemCard';
+export { default as ItemInfo } from './ItemInfo';
 export { default as UserPage } from './UserPage';
 export { default as Landing } from './Landing';
 export { default as LinkButton } from './LinkButton';

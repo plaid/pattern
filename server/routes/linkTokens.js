@@ -26,7 +26,7 @@ router.post(
     try {
       const { userId, itemId, isAuth, isIdentity } = req.body;
       let accessToken = null;
-      let products = ['auth']; // must include transactions in order to receive transactions webhooks
+      let products = ['auth']; // must always include auth for account funding app
       if (isIdentity) {
         products.push('identity');
       }

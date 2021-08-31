@@ -18,7 +18,7 @@ interface Props {
   accountName: string;
 }
 
-const ItemCard = (props: Props) => {
+const ItemInfo = (props: Props) => {
   const [institution, setInstitution] = useState<Institution>({
     logo: '',
     name: '',
@@ -117,4 +117,4 @@ const ItemCard = (props: Props) => {
   );
 };
 
-export default ItemCard;
+export default ItemInfo;

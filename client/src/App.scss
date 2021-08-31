@@ -384,8 +384,7 @@ h3 {
   .user-list__touchable {
     width: 30 * $unit;
   }
-}
-
-.user-list__touchable:hover {
-  cursor: pointer;
+  &:hover {
+    cursor: pointer;
+  }
 }

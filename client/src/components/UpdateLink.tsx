@@ -31,7 +31,6 @@ export function UpdateLink(props: Props) {
     <div className="more-details">
       {
         <Button small centered inline onClick={initiateLinkUpdate}>
-          {' '}
           Update Login
         </Button>
       }

@@ -86,7 +86,6 @@ export default function AccountCard(props: Props) {
     }
   };
 
-  console.log(account);
   return (
     <>
       <div>

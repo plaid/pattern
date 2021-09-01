@@ -5,10 +5,7 @@ import { Button } from 'plaid-threads/Button';
 import { AccountType, AppFundType } from './types';
 import { currencyFilter } from '../util';
 import { TransferFunds } from '.';
-import {
-  updateAppFundsBalance,
-  incrementTransfersByAccount,
-} from '../services/api';
+import { updateAppFundsBalance } from '../services/api';
 
 const IS_PROCESSOR = process.env.REACT_APP_IS_PROCESSOR;
 
@@ -78,6 +75,8 @@ export default function AccountCard(props: Props) {
         setShowTransferConfirmationError(true);
       } else {
         const response: TransferResonse | any = await updateAppFundsBalance(
+          // this route updates the appFunds with the new balance and also
+          // increments the number of transfers for this account by 1
           props.userId,
           confirmedAmount,
           account.plaid_account_id

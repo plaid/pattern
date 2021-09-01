@@ -109,16 +109,12 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
   }, []);
 
   const getBalance = useCallback(async () => {
-    if (account != null) {
-      console.log(account.number_of_transfers !== 0);
-    }
     if (
       account != null &&
       (account.number_of_transfers !== 0 || account.available_balance == null)
     ) {
       //if this is not the initial transfer
       await getBalanceByItem(items[0].id, account.plaid_account_id);
-
       await getAccountsByItem(items[0].id);
       const itemAccounts: AccountType[] = accountsByItem[items[0].id];
       setAccount(itemAccounts[0] || {});
@@ -222,7 +218,6 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
   const accountName = account != null ? `${account.name}` : '';
 
   document.getElementsByTagName('body')[0].style.overflow = 'auto'; // to override overflow:hidden from link pane
-  console.log(account);
   return (
     <div>
       <NavigationLink component={Link} to="/">

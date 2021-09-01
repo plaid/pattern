@@ -71,7 +71,7 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
 
   const getAppFund = useCallback(async userId => {
     const { data: appFunds } = await getAppFundsByUser(userId);
-    setAppFund(appFunds[0]);
+    setAppFund(appFunds);
   }, []);
 
   // functions to check username and email against data from identity/get

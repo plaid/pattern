@@ -101,6 +101,7 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
   }, []);
 
   const updateAppFund = useCallback(async (appFund: AppFundType) => {
+    console.log(appFund);
     setAppFund(appFund);
   }, []);
 

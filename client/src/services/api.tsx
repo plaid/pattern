@@ -46,8 +46,12 @@ export const incrementTransfersByAccount = (accountId: string) =>
 // app Funds
 export const getAppFundsByUser = (userId: number) =>
   api.get(`/appFunds/${userId}`);
-export const updateAppFundsBalance = (userId: number, transferAmount: number) =>
-  api.put(`/appFunds/${userId}/bank_transfer`, { transferAmount });
+export const updateAppFundsBalance = (
+  userId: number,
+  transferAmount: number,
+  accountId: string
+) =>
+  api.put(`/appFunds/${userId}/bank_transfer`, { transferAmount, accountId });
 
 // items
 export const getItemById = (id: number) => api.get(`/items/${id}`);

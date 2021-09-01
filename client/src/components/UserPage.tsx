@@ -69,7 +69,7 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
 
   const getAppFund = useCallback(async userId => {
     const { data: appFunds } = await getAppFundsByUser(userId);
-    setAppFund(appFunds[0]);
+    setAppFund(appFunds);
   }, []);
 
   // functions to check username and email against data from identity/get
@@ -99,6 +99,7 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
   }, []);
 
   const updateAppFund = useCallback(async (appFund: AppFundType) => {
+    console.log(appFund);
     setAppFund(appFund);
   }, []);
 
@@ -107,16 +108,12 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
   }, []);
 
   const getBalance = useCallback(async () => {
-    if (account != null) {
-      console.log(account.number_of_transfers !== 0);
-    }
     if (
       account != null &&
       (account.number_of_transfers !== 0 || account.available_balance == null)
     ) {
       //if this is not the initial transfer
       await getBalanceByItem(items[0].id, account.plaid_account_id);
-
       await getAccountsByItem(items[0].id);
       const itemAccounts: AccountType[] = accountsByItem[items[0].id];
       setAccount(itemAccounts[0] || {});

@@ -84,6 +84,7 @@ export default function UserCard(props: Props) {
             </Button>
           )}
           {(props.removeButton || (props.linkButton && numOfItems === 0)) && (
+            // Plaid React Link cannot be rendered without a link token
             <div className="user-card__button">
               {token != null && token.length > 0 && props.linkButton && (
                 <LinkButton userId={props.userId} token={token} itemId={null} />

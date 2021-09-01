@@ -16,7 +16,7 @@ interface Props {
   userId: number;
   updateAppFund: (appFund: AppFundType) => void;
   closeTransferView: () => void;
-  institutionName: string;
+  institutionName: string | null;
   setAccount: (arg: AccountType) => void;
 }
 

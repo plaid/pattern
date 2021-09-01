@@ -40,17 +40,10 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
     updated_at: '',
   });
   const [appFund, setAppFund] = useState<AppFundType>();
-  const [items, setItems] = useState<ItemType[]>([]);
+  const [item, setItem] = useState<ItemType | null>(null);
   const [numOfItems, setNumOfItems] = useState(0);
   const [account, setAccount] = useState<AccountType | null>(null);
-  const [institution, setInstitution] = useState<Institution>({
-    logo: '',
-    name: '',
-    institution_id: '',
-    oauth: false,
-    products: [],
-    country_codes: [],
-  });
+  const [institution, setInstitution] = useState<Institution | null>(null);
 
   const [isIdentityChecked, setIsIdentityChecked] = useState(
     user.identity_check
@@ -107,17 +100,18 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
     // or it is the initial transfer but auth and identity have not been called on item creation (i.e. balance=null)
     if (
       account != null &&
+      item != null &&
       (account.number_of_transfers !== 0 || account.available_balance == null)
     ) {
       const { data: newAccount } = await getBalanceByItem(
-        items[0].id,
+        item.id,
         account.plaid_account_id
       );
       // await getAccountsByItem(items[0].id);
       // const itemAccounts: AccountType[] = accountsByItem[items[0].id];
       setAccount(newAccount || {});
     }
-  }, [account, items]);
+  }, [account, item]);
 
   const userTransfer = () => {
     getBalance();
@@ -155,7 +149,7 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
   // update state items from data store
   useEffect(() => {
     const newItems: Array<ItemType> = itemsByUser[userId] || [];
-    setItems(newItems);
+    setItem(newItems[0]);
   }, [itemsByUser, userId]);
 
   // update no of items from data store
@@ -181,17 +175,17 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
 
   // update data store with institutions
   useEffect(() => {
-    if (items[0] != null) {
-      getInstitutionById(items[0].plaid_institution_id);
+    if (item != null) {
+      getInstitutionById(item.plaid_institution_id);
     }
-  }, [getInstitutionById, items]);
+  }, [getInstitutionById, item]);
 
   // update state institution from data store
   useEffect(() => {
-    if (items[0] != null) {
-      setInstitution(institutionsById[items[0].plaid_institution_id] || {});
+    if (item != null) {
+      setInstitution(institutionsById[item.plaid_institution_id] || {});
     }
-  }, [institutionsById, items]);
+  }, [institutionsById, item]);
 
   // update data store with the user's app fund
   useEffect(() => {
@@ -214,6 +208,7 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
   }, [account, checkUserEmail, checkFullName, userId, isIdentityChecked, user]);
 
   const accountName = account != null ? `${account.name}` : '';
+  const institutionName = institution != null ? institution.name : null;
 
   document.getElementsByTagName('body')[0].style.overflow = 'auto'; // to override overflow:hidden from link pane
 
@@ -230,9 +225,8 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
         removeButton={false}
         linkButton={numOfItems === 0}
         numOfItems={numOfItems}
-        institutionName={institution.name}
         accountName={accountName}
-        item={items[0]}
+        item={item}
         isIdentityChecked={isIdentityChecked}
       />
       {numOfItems > 0 && (
@@ -243,7 +237,7 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
             <>
               {showTransfer && account != null && (
                 <AccountBalanceCheck
-                  institutionName={institution.name}
+                  institutionName={institutionName}
                   userId={userId}
                   updateAppFund={updateAppFund}
                   closeTransferView={closeTransferView}

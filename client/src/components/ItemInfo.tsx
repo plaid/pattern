@@ -11,7 +11,7 @@ import { setItemToBadState } from '../services/api';
 const PLAID_ENV = process.env.REACT_APP_PLAID_ENV || 'sandbox';
 
 interface Props {
-  item: ItemType;
+  item: ItemType | null;
   userId: number;
   isIdentityChecked: boolean;
   numOfItems: number;
@@ -31,7 +31,11 @@ const ItemInfo = (props: Props) => {
   const { deleteAccountsByItemId } = useAccounts();
   const { deleteItemById } = useItems();
   const { institutionsById, getInstitutionById } = useInstitutions();
-  const { id, plaid_institution_id, status } = props.item;
+  const id = props.item != null ? props.item.id : '';
+  const plaid_institution_id =
+    props.item != null ? props.item.plaid_institution_id : '';
+  const status = props.item != null ? props.item.status : '';
+
   const isSandbox = PLAID_ENV === 'sandbox';
   const isGoodState = status === 'good';
   const { deleteLinkToken } = useLink();

@@ -15,9 +15,8 @@ interface Props {
   linkButton: boolean;
   userId: number;
   numOfItems: number;
-  institutionName: string;
   accountName: string;
-  item: ItemType;
+  item: ItemType | null;
   isIdentityChecked: boolean;
 }
 

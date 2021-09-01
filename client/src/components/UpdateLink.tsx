@@ -1,8 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import Menu from 'plaid-threads/Icons/MenuS1';
-import Dropdown from 'plaid-threads/Dropdown';
-import IconButton from 'plaid-threads/IconButton';
-import Touchable from 'plaid-threads/Touchable';
+import Button from 'plaid-threads/Button';
 
 import { LinkButton } from '.';
 import { useOnClickOutside } from '../hooks';
@@ -17,14 +14,14 @@ interface Props {
 }
 
 //TODO: rename this component to LinkUpdateBtn
-export function MoreDetails(props: Props) {
+export function UpdateLink(props: Props) {
   const [token, setToken] = useState('');
 
   const { generateLinkToken, linkTokens } = useLink();
-  // creates new link token for each item in bad state
-  useEffect(() => {
+
+  const initiateLinkUpdate = async () => {
     generateLinkToken(props.userId, props.itemId); // itemId is set because link is in update mode
-  }, [props.userId, props.itemId, generateLinkToken]);
+  };
 
   useEffect(() => {
     setToken(linkTokens.byItem[props.itemId]);
@@ -32,13 +29,16 @@ export function MoreDetails(props: Props) {
 
   return (
     <div className="more-details">
-      {token != null && token.length > 0 && (
-        <LinkButton userId={props.userId} itemId={props.itemId} token={token}>
+      {
+        <Button small centered inline onClick={initiateLinkUpdate}>
           Update Login
-        </LinkButton>
+        </Button>
+      }
+      {token != null && token.length > 0 && (
+        <LinkButton userId={props.userId} itemId={props.itemId} token={token} />
       )}
     </div>
   );
 }
 
-export default MoreDetails;
+export default UpdateLink;

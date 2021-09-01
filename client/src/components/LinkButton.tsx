@@ -103,58 +103,18 @@ export default function LinkButton(props: Props) {
     // initiallizes Link automatically if it is handling an OAuth reidrect
     if (props.isOauth && ready) {
       open();
+    } else if (ready) {
+      localStorage.setItem(
+        'oauthConfig',
+        JSON.stringify({
+          userId: props.userId,
+          itemId: props.itemId,
+          token: props.token,
+        })
+      );
+      open();
     }
-  }, [ready, open, props.isOauth]);
+  }, [ready, open, props.isOauth, props.userId, props.itemId, props.token]);
 
-  const handleClick = () => {
-    // regular, non-OAuth case:
-    // set link token, userId and itemId in local storage for use if needed later by OAuth
-
-    localStorage.setItem(
-      'oauthConfig',
-      JSON.stringify({
-        userId: props.userId,
-        itemId: props.itemId,
-        token: props.token,
-      })
-    );
-    open();
-  };
-
-  return (
-    <>
-      {props.isOauth ? (
-        // no link button rendered: OAuth will open automatically by useEffect above
-        <></>
-      ) : props.itemId != null ? (
-        // update mode: Link is launched from dropdown menu in the
-        // item card after item is set to "bad state"
-        <Button
-          className="linkButton"
-          small
-          centered
-          inline
-          disabled={!ready}
-          onClick={() => {
-            handleClick();
-          }}
-        >
-          {props.children}
-        </Button>
-      ) : (
-        // regular case for initializing Link from user card or from "add another item" button
-        <Button
-          disabled={!ready}
-          className="linkButton"
-          large
-          inline
-          onClick={() => {
-            handleClick();
-          }}
-        >
-          {props.children}
-        </Button>
-      )}
-    </>
-  );
+  return <></>;
 }

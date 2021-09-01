@@ -8,29 +8,34 @@ import { TransferFunds } from '.';
 import { updateAppFundsBalance } from '../services/api';
 
 const IS_PROCESSOR = process.env.REACT_APP_IS_PROCESSOR;
+
+interface TransferResonse {
+  newAccount: AccountType;
+  newAppFunds: AppFundType;
+}
 interface Props {
   account: AccountType;
   userId: number;
   updateAppFund: (appFund: AppFundType) => void;
   closeTransferView: () => void;
   institutionName: string;
+  setAccount: (arg: AccountType) => void;
 }
 
 export default function AccountCard(props: Props) {
-  const account = props.account;
-  const balance =
-    account.available_balance != null
-      ? account.available_balance
-      : account.current_balance;
   const [isAmountOkay, setIsAmountOkay] = useState(true);
   const [transferAmount, setTransferAmount] = useState(0);
   const [isTransferConfirmed, setIsTransferconfirmed] = useState(false);
   const [showInput, setShowInput] = useState(true);
+  const account = props.account;
   const [
     showTransferConfirmationError,
     setShowTransferConfirmationError,
   ] = useState(false);
-
+  const balance =
+    account.available_balance != null
+      ? account.available_balance
+      : account.current_balance;
   const errorMessage = !isAmountOkay
     ? `We are unable to verify ${currencyFilter(
         transferAmount
@@ -69,15 +74,20 @@ export default function AccountCard(props: Props) {
       if (confirmedAmount == null) {
         setShowTransferConfirmationError(true);
       } else {
-        const { data: appFunds } = await updateAppFundsBalance(
+        const response: TransferResonse | any = await updateAppFundsBalance(
+          // this route updates the appFunds with the new balance and also
+          // increments the number of transfers for this account by 1
           props.userId,
-          confirmedAmount
+          confirmedAmount,
+          account.plaid_account_id
         );
-        props.updateAppFund(appFunds[0]);
+        props.updateAppFund(response.data.newAppFunds);
+        props.setAccount(response.data.newAccount);
         setIsTransferconfirmed(true);
       }
     }
   };
+
   return (
     <>
       <div>

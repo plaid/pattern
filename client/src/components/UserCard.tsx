@@ -85,7 +85,6 @@ export default function UserCard(props: Props) {
               Add your checking or savings account
             </Button>
           )}
-
           {(props.removeButton || (props.linkButton && numOfItems === 0)) && (
             // Plaid React Link cannot be rendered without a link token
             <div className="user-card__button">

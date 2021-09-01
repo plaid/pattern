@@ -44,7 +44,7 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
   const [appFund, setAppFund] = useState<AppFundType>();
   const [items, setItems] = useState<ItemType[]>([]);
   const [numOfItems, setNumOfItems] = useState(0);
-  const [accounts, setAccounts] = useState<AccountType[]>([]);
+  const [account, setAccount] = useState<AccountType | null>(null);
   const [institution, setInstitution] = useState<Institution>({
     logo: '',
     name: '',
@@ -71,7 +71,7 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
 
   const getAppFund = useCallback(async userId => {
     const { data: appFunds } = await getAppFundsByUser(userId);
-    setAppFund(appFunds[0]);
+    setAppFund(appFunds);
   }, []);
 
   // functions to check username and email against data from identity/get
@@ -101,6 +101,7 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
   }, []);
 
   const updateAppFund = useCallback(async (appFund: AppFundType) => {
+    console.log(appFund);
     setAppFund(appFund);
   }, []);
 
@@ -109,11 +110,17 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
   }, []);
 
   const getBalance = useCallback(async () => {
-    await getBalanceByItem(items[0].id, accounts[0].plaid_account_id);
-    await getAccountsByItem(items[0].id);
-    const itemAccounts: AccountType[] = accountsByItem[items[0].id];
-    setAccounts(itemAccounts || []);
-  }, [accounts, accountsByItem, getAccountsByItem, items]);
+    if (
+      account != null &&
+      (account.number_of_transfers !== 0 || account.available_balance == null)
+    ) {
+      //if this is not the initial transfer
+      await getBalanceByItem(items[0].id, account.plaid_account_id);
+      await getAccountsByItem(items[0].id);
+      const itemAccounts: AccountType[] = accountsByItem[items[0].id];
+      setAccount(itemAccounts[0] || {});
+    }
+  }, [accountsByItem, account, getAccountsByItem, items]);
 
   const userTransfer = () => {
     getBalance();
@@ -169,7 +176,9 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
   }, [getAccountsByUser, userId, numOfItems]);
 
   useEffect(() => {
-    setAccounts(accountsByUser[userId] || []);
+    if (accountsByUser[userId] != null && accountsByUser[userId].length > 0) {
+      setAccount(accountsByUser[userId][0]);
+    }
   }, [accountsByUser, userId, numOfItems]);
 
   // update institution
@@ -196,28 +205,18 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
     // only checks if identity has not already been verified.
 
     if (
-      accounts.length > 0 &&
+      account != null &&
       isIdentityChecked === false &&
       user.should_verify_identity
     ) {
-      const fullnameCheck = checkFullName(
-        accounts[0]!.owner_names,
-        user.fullname
-      );
-      const emailCheck = checkUserEmail(accounts[0]!.emails, user.email);
+      const fullnameCheck = checkFullName(account.owner_names, user.fullname);
+      const emailCheck = checkUserEmail(account!.emails, user.email);
       setIdentityCheckById(userId, fullnameCheck && emailCheck); // update user_table in db
       setIsIdentityChecked(fullnameCheck && emailCheck); // set state
     }
-  }, [
-    accounts,
-    checkUserEmail,
-    checkFullName,
-    userId,
-    isIdentityChecked,
-    user,
-  ]);
+  }, [account, checkUserEmail, checkFullName, userId, isIdentityChecked, user]);
 
-  const accountName = accounts.length > 0 ? accounts[0].name : '';
+  const accountName = account != null ? `${account.name}` : '';
 
   document.getElementsByTagName('body')[0].style.overflow = 'auto'; // to override overflow:hidden from link pane
   return (
@@ -244,13 +243,14 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
 
           {isIdentityChecked && (
             <>
-              {showTransfer && (
+              {showTransfer && account != null && (
                 <AccountCard
                   institutionName={institution.name}
                   userId={userId}
                   updateAppFund={updateAppFund}
                   closeTransferView={closeTransferView}
-                  account={accounts[0]}
+                  account={account}
+                  setAccount={setAccount}
                 />
               )}
             </>

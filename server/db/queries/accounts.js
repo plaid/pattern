@@ -65,13 +65,14 @@ const createAccount = async (
             owner_names,
             emails,
             processor_token,
+            number_of_transfers,
             type,
             subtype,
             user_id,
             plaid_item_id
           )
         VALUES
-          ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19)
+          ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20)
         ON CONFLICT
           (plaid_account_id)
         DO UPDATE SET
@@ -96,6 +97,7 @@ const createAccount = async (
       ownerNames,
       emails,
       processorToken,
+      0,
       type,
       subtype,
       userId,
@@ -155,6 +157,22 @@ const updateBalances = async (accountId, currentBalance, availableBalance) => {
 };
 
 /**
+ * Updates the number of transfers for an account.
+ *
+ * @param {string} accountId the accountId.
+ * @param {number} numberOfTransfers the number of transfers confirmed
+ */
+const updateTransfers = async (accountId, numberOfTransfers) => {
+  const query = {
+    text:
+      'UPDATE accounts SET number_of_transfers = $1  WHERE plaid_account_id = $2',
+    values: [numberOfTransfers, accountId],
+  };
+  const { rows: accounts } = await db.query(query);
+  return accounts;
+};
+
+/**
  * Retrieves all accounts for a single user.
  *
  * @param {number} userId the ID of the user.
@@ -176,4 +194,5 @@ module.exports = {
   retrieveAccountsByItemId,
   retrieveAccountsByUserId,
   updateBalances,
+  updateTransfers,
 };

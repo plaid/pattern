@@ -30,7 +30,7 @@ export default function UserCard(props: Props) {
   const isSandbox = PLAID_ENV === 'sandbox';
   const isGoodState = status === 'good';
   const isAuth = IS_PROCESSOR === 'true' ? false : true;
-  const isIdentity = props.user.should_verify_identity ? true : false;
+  const isIdentity = props.user.should_verify_identity;
 
   const initiateLink = async () => {
     // only generate a link token upon a click from enduser to add a bank;

@@ -119,6 +119,8 @@ export default function LinkButton(props: Props) {
           userId: props.userId,
           itemId: props.itemId,
           token: props.token,
+          isAuth: props.isAuth,
+          isIdentity: props.isIdentity,
         })
       );
       open();

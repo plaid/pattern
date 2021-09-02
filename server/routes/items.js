@@ -144,8 +144,6 @@ router.post(
       processorToken
     );
 
-    console.log(newAccount);
-
     res.json({
       items: sanitizeItems(newItem),
       accounts: sanitizeAccounts(newAccount),

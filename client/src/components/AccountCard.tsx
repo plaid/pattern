@@ -5,10 +5,7 @@ import { Button } from 'plaid-threads/Button';
 import { AccountType, AppFundType } from './types';
 import { currencyFilter } from '../util';
 import { TransferFunds } from '.';
-import {
-  updateAppFundsBalance,
-  incrementTransfersByAccount,
-} from '../services/api';
+import { updateAppFundsBalance } from '../services/api';
 
 const IS_PROCESSOR = process.env.REACT_APP_IS_PROCESSOR;
 

@@ -5,7 +5,7 @@
 const express = require('express');
 const { asyncWrapper } = require('../middleware');
 const plaid = require('../plaid');
-const { toArray } = require('../util');
+const { toArray, prettyPrintResponse } = require('../util');
 
 const router = express.Router();
 
@@ -56,6 +56,30 @@ router.get(
     try {
       const response = await plaid.institutionsGetById(request);
       const institution = response.data.institution;
+      const {
+        country_codes,
+        institution_id,
+        name,
+        oauth,
+        primary_color,
+        products,
+        routing_numbers,
+        url,
+      } = institution;
+
+      const responseData = {
+        data: {
+          country_codes,
+          institution_id,
+          name,
+          oauth,
+          primary_color,
+          products,
+          routing_numbers,
+          url,
+        },
+      };
+      prettyPrintResponse(responseData);
       res.json(toArray(institution));
     } catch (error) {}
   })

@@ -5,6 +5,8 @@
 const forEach = require('lodash/forEach');
 const { Configuration, PlaidApi, PlaidEnvironments } = require('plaid');
 
+const { prettyPrintResponse } = require('./util');
+
 const {
   createPlaidApiEvent,
   retrieveItemByPlaidAccessToken,
@@ -49,6 +51,7 @@ const defaultLogger = async (clientMethod, clientMethodArgs, response) => {
     clientMethodArgs,
     response
   );
+  // prettyPrintResponse(response);
 };
 
 /**
@@ -71,6 +74,12 @@ const noAccessTokenLogger = async (
     clientMethodArgs,
     response
   );
+  if (
+    clientMethod != 'institutionsGet' &&
+    clientMethod != 'institutionsGetById'
+  ) {
+    prettyPrintResponse(response);
+  }
 };
 
 // Plaid client methods used in this app, mapped to their appropriate logging functions.

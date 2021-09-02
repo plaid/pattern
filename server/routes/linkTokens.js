@@ -3,6 +3,7 @@
  */
 
 const { asyncWrapper } = require('../middleware');
+const { prettyPrintResponse } = require('../util');
 
 const express = require('express');
 const plaid = require('../plaid');
@@ -51,11 +52,13 @@ router.post(
         webhook: httpTunnel.public_url + '/services/webhook',
         access_token: accessToken,
       };
+
       // If user has entered a redirect uri in the .env file
       if (redirect_uri.indexOf('http') === 0) {
         linkTokenParams.redirect_uri = redirect_uri;
       }
       const createResponse = await plaid.linkTokenCreate(linkTokenParams);
+      prettyPrintResponse(createResponse);
       res.json(createResponse.data);
     } catch (err) {
       console.log('error while fetching client token', err.response.data);

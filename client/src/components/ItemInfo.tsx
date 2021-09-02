@@ -31,7 +31,7 @@ const ItemInfo = (props: Props) => {
   const { deleteAccountsByItemId } = useAccounts();
   const { deleteItemById } = useItems();
   const { institutionsById, getInstitutionById } = useInstitutions();
-  const id = props.item != null ? props.item.id : '';
+  const id = props.item != null ? props.item.id : 0;
   const plaid_institution_id =
     props.item != null ? props.item.plaid_institution_id : '';
   const status = props.item != null ? props.item.status : '';

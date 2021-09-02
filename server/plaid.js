@@ -51,7 +51,7 @@ const defaultLogger = async (clientMethod, clientMethodArgs, response) => {
     clientMethodArgs,
     response
   );
-  // prettyPrintResponse(response);
+  prettyPrintResponse(response);
 };
 
 /**

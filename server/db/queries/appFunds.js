@@ -48,7 +48,7 @@ const retrieveAppFundsByUser = async userId => {
     values: [userId],
   };
   const { rows: appFunds } = await db.query(query);
-  return appFunds;
+  return appFunds[0];
 };
 
 module.exports = {

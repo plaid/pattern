@@ -11,6 +11,11 @@ import {
 } from '../services/api';
 
 const IS_PROCESSOR = process.env.REACT_APP_IS_PROCESSOR;
+
+interface TransferResonse {
+  newAccount: AccountType;
+  newAppFunds: AppFundType;
+}
 interface Props {
   account: AccountType;
   userId: number;
@@ -70,15 +75,15 @@ export default function AccountBalanceCheck(props: Props) {
       if (confirmedAmount == null) {
         setShowTransferConfirmationError(true);
       } else {
-        const { data: appFunds } = await updateAppFundsBalance(
+        const response: TransferResonse | any = await updateAppFundsBalance(
+          // this route updates the appFunds with the new balance and also
+          // increments the number of transfers for this account by 1
           props.userId,
-          confirmedAmount
-        );
-        props.updateAppFund(appFunds[0]);
-        const { data: newAccount } = await incrementTransfersByAccount(
+          confirmedAmount,
           account.plaid_account_id
         );
-        props.setAccount(newAccount);
+        props.updateAppFund(response.data.newAppFunds);
+        props.setAccount(response.data.newAccount);
         setIsTransferconfirmed(true);
       }
     }

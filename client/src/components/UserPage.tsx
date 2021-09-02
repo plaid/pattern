@@ -57,7 +57,7 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
 
   const getAppFund = useCallback(async userId => {
     const { data: appFunds } = await getAppFundsByUser(userId);
-    setAppFund(appFunds[0]);
+    setAppFund(appFunds);
   }, []);
 
   // functions to check username and email against data from identity/get
@@ -88,6 +88,7 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
   }, []);
 
   const updateAppFund = useCallback(async (appFund: AppFundType) => {
+    console.log(appFund);
     setAppFund(appFund);
   }, []);
 
@@ -208,8 +209,6 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
   }, [account, checkUserEmail, checkFullName, userId, isIdentityChecked, user]);
 
   const accountName = account != null ? `${account.name}` : '';
-  const institutionName = institution != null ? institution.name : null;
-
   document.getElementsByTagName('body')[0].style.overflow = 'auto'; // to override overflow:hidden from link pane
 
   return (
@@ -235,9 +234,9 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
 
           {isIdentityChecked && (
             <>
-              {showTransfer && account != null && (
+              {showTransfer && account != null && institution != null && (
                 <AccountBalanceCheck
-                  institutionName={institutionName}
+                  institutionName={institution.name}
                   userId={userId}
                   updateAppFund={updateAppFund}
                   closeTransferView={closeTransferView}

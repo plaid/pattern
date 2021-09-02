@@ -71,12 +71,7 @@ export default function LinkButton(props: Props) {
     // log and save error and metatdata
     logExit(error, metadata, props.userId);
     if (error != null && error.error_code === 'INVALID_LINK_TOKEN') {
-      await generateLinkToken(
-        props.userId,
-        props.itemId,
-        props.isAuth,
-        props.isIdentity
-      );
+      await generateLinkToken(props.userId, props.itemId, props.isIdentity);
     }
     if (error != null) {
       setError(error.error_code, error.display_message || error.error_message);
@@ -119,11 +114,22 @@ export default function LinkButton(props: Props) {
           userId: props.userId,
           itemId: props.itemId,
           token: props.token,
+          isAuth: props.isAuth,
+          isIdentity: props.isIdentity,
         })
       );
       open();
     }
-  }, [ready, open, props.isOauth, props.userId, props.itemId, props.token]);
+  }, [
+    ready,
+    open,
+    props.isOauth,
+    props.userId,
+    props.itemId,
+    props.token,
+    props.isAuth,
+    props.isIdentity,
+  ]);
 
   return <></>;
 }

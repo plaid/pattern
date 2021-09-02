@@ -35,7 +35,7 @@ export default function UserCard(props: Props) {
   const initiateLink = async () => {
     // only generate a link token upon a click from enduser to add a bank;
     // if done earlier, it may expire before enuser actually activates Link to add a bank.
-    await generateLinkToken(props.userId, null, isAuth, isIdentity);
+    await generateLinkToken(props.userId, null, isIdentity);
   };
 
   // update data store with the user's items

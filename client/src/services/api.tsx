@@ -64,13 +64,11 @@ export const setItemToBadState = (itemId: number) =>
 export const getLinkToken = (
   userId: number,
   itemId: number,
-  isAuth: boolean,
   isIdentity: boolean
 ) =>
   api.post(`/link-token`, {
     userId,
     itemId,
-    isAuth,
     isIdentity,
   });
 

@@ -20,7 +20,7 @@ export function UpdateLink(props: Props) {
   const { generateLinkToken, linkTokens } = useLink();
 
   const initiateLinkUpdate = async () => {
-    generateLinkToken(props.userId, props.itemId, false, false); // itemId is set because link is in update mode; isAuth and isIdentity are false in update mode;
+    generateLinkToken(props.userId, props.itemId, false); // itemId is set because link is in update mode; isAuth and isIdentity are false in update mode;
   };
 
   useEffect(() => {

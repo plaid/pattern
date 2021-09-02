@@ -9,6 +9,8 @@ const OAuthLink = () => {
   const [token, setToken] = useState<string>();
   const [userId, setUserId] = useState<number>(-100); // set for typescript
   const [itemId, setItemId] = useState<number>();
+  const [isAuth, setIsAuth] = useState<boolean>(false);
+  const [isIdentity, setIsIdentity] = useState<boolean>(false);
 
   const oauthObject = localStorage.getItem('oauthConfig');
 
@@ -17,6 +19,8 @@ const OAuthLink = () => {
       setUserId(JSON.parse(oauthObject).userId);
       setItemId(JSON.parse(oauthObject).itemId);
       setToken(JSON.parse(oauthObject).token);
+      setIsAuth(JSON.parse(oauthObject).isAuth);
+      setIsIdentity(JSON.parse(oauthObject).isIdentity);
     }
   }, [oauthObject]);
 
@@ -28,6 +32,8 @@ const OAuthLink = () => {
           userId={userId}
           itemId={itemId}
           token={token}
+          isAuth={isAuth}
+          isIdentity={isIdentity}
         />
       )}
     </>

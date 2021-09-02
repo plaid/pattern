@@ -19,6 +19,7 @@ const createAccount = async (
   plaidItemId,
   userId,
   account,
+  balances,
   numbers,
   ownerNames,
   emails,
@@ -32,19 +33,13 @@ const createAccount = async (
   } = numbers;
 
   const {
-    account_id: aid,
-    name,
-    mask,
-    official_name: officialName,
-    balances: {
-      available: availableBalance,
-      current: currentBalance,
-      iso_currency_code: isoCurrencyCode,
-      unofficial_currency_code: unofficialCurrencyCode,
-    },
-    subtype,
-    type,
-  } = account;
+    available: availableBalance,
+    current: currentBalance,
+    iso_currency_code: isoCurrencyCode,
+    unofficial_currency_code: unofficialCurrencyCode,
+  } = balances;
+
+  const { id: aid, name, mask, subtype, type } = account;
   const query = {
     // RETURNING is a Postgres-specific clause that returns a list of the inserted items.
     text: `
@@ -86,7 +81,7 @@ const createAccount = async (
       aid,
       name,
       mask,
-      officialName,
+      '',
       currentBalance,
       availableBalance,
       isoCurrencyCode,

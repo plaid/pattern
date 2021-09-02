@@ -36,7 +36,14 @@ const router = express.Router();
 router.post(
   '/',
   asyncWrapper(async (req, res) => {
-    const { publicToken, institutionId, userId, accounts } = req.body;
+    const {
+      publicToken,
+      institutionId,
+      userId,
+      accounts,
+      isAuth,
+      isIdentity,
+    } = req.body;
     // in case developer did not customize their Account Select in the dashboard to enable only one account,
     // choose the checking or savings account.
     const checkingAccount = accounts.filter(
@@ -75,33 +82,45 @@ router.post(
       itemId,
       userId
     );
+
     const authAndIdRequest = {
       access_token: accessToken,
       options: {
         account_ids: [account.id],
       },
     };
-    const identityResponse = await plaid.identityGet(authAndIdRequest);
-    const emails = identityResponse.data.accounts[0].owners[0].emails.map(
-      email => {
-        return email.data;
-      }
-    );
 
-    const names = identityResponse.data.accounts[0].owners[0].names;
-    const account_info_from_identity_get = identityResponse.data.accounts[0];
-
+    let emails = null;
+    let ownerNames = null;
     let authNumbers = {
       account: null,
       routing: null,
       wire_routing: null,
     };
-    let processorToken = null;
-    const IS_PROCESSOR = process.env.IS_PROCESSOR;
+    let balances = {
+      available: null,
+      current: null,
+      iso_currency_code: null,
+      unofficial_currency_code: null,
+    };
+    if (isIdentity) {
+      const identityResponse = await plaid.identityGet(authAndIdRequest);
+      emails = identityResponse.data.accounts[0].owners[0].emails.map(email => {
+        return email.data;
+      });
 
-    if (IS_PROCESSOR === 'false') {
+      ownerNames = identityResponse.data.accounts[0].owners[0].names;
+      if (!isAuth) {
+        balances = identityResponse.data.accounts[0].balances;
+      }
+    }
+
+    let processorToken = null;
+
+    if (isAuth) {
       authResponse = await plaid.authGet(authAndIdRequest);
       authNumbers = authResponse.data.numbers.ach[0];
+      balances = authResponse.data.accounts[0].balances;
     } else {
       const processorRequest = {
         access_token: accessToken,
@@ -117,9 +136,10 @@ router.post(
     const newAccount = await createAccount(
       itemId,
       userId,
-      account_info_from_identity_get,
+      account,
+      balances,
       authNumbers,
-      names,
+      ownerNames,
       emails,
       processorToken
     );

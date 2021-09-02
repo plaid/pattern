@@ -61,10 +61,15 @@ export const setItemState = (itemId: number, status: string) =>
 export const setItemToBadState = (itemId: number) =>
   api.post('/items/sandbox/item/reset_login', { itemId });
 
-export const getLinkToken = (userId: number, itemId: number) =>
+export const getLinkToken = (
+  userId: number,
+  itemId: number,
+  isIdentity: boolean
+) =>
   api.post(`/link-token`, {
     userId,
     itemId,
+    isIdentity,
   });
 
 // accounts
@@ -86,7 +91,9 @@ export const exchangeToken = async (
   publicToken: string,
   institution: any,
   accounts: PlaidLinkOnSuccessMetadata['accounts'],
-  userId: number
+  userId: number,
+  isAuth: boolean,
+  isIdentity: boolean
 ) => {
   try {
     const { data } = await api.post('/items', {
@@ -94,6 +101,8 @@ export const exchangeToken = async (
       institutionId: institution.institution_id,
       userId,
       accounts,
+      isAuth,
+      isIdentity,
     });
     return data;
   } catch (err) {

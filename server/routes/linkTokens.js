@@ -24,9 +24,12 @@ router.post(
   '/',
   asyncWrapper(async (req, res) => {
     try {
-      const { userId, itemId } = req.body;
+      const { userId, itemId, isIdentity } = req.body;
       let accessToken = null;
-      let products = ['auth', 'identity']; // must include transactions in order to receive transactions webhooks
+      let products = ['auth']; // must include transactions in order to receive transactions webhooks
+      if (isIdentity) {
+        products.push('identity');
+      }
       if (itemId != null) {
         // for the link update mode, include access token and an empty products array
         const itemIdResponse = await retrieveItemById(itemId);

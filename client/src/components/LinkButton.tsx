@@ -22,6 +22,8 @@ interface Props {
   userId: number;
   itemId?: number | null;
   children?: React.ReactNode;
+  isAuth: boolean;
+  isIdentity: boolean;
 }
 
 // Uses the usePlaidLink hook to manage the Plaid Link creation.  See https://github.com/plaid/react-plaid-link for full usage instructions.
@@ -52,7 +54,9 @@ export default function LinkButton(props: Props) {
         publicToken,
         metadata.institution,
         metadata.accounts,
-        props.userId
+        props.userId,
+        props.isAuth,
+        props.isIdentity
       );
       getItemsByUser(props.userId, true);
     }
@@ -67,7 +71,7 @@ export default function LinkButton(props: Props) {
     // log and save error and metatdata
     logExit(error, metadata, props.userId);
     if (error != null && error.error_code === 'INVALID_LINK_TOKEN') {
-      await generateLinkToken(props.userId, props.itemId);
+      await generateLinkToken(props.userId, props.itemId, props.isIdentity);
     }
     if (error != null) {
       setError(error.error_code, error.display_message || error.error_message);
@@ -110,6 +114,8 @@ export default function LinkButton(props: Props) {
           userId: props.userId,
           itemId: props.itemId,
           token: props.token,
+          isAuth: props.isAuth,
+          isIdentity: props.isIdentity,
         })
       );
       open();

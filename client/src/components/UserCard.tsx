@@ -7,6 +7,7 @@ import { useItems, useLink } from '../services';
 import { UserType, ItemType } from './types';
 
 const PLAID_ENV = process.env.REACT_APP_PLAID_ENV || 'sandbox';
+const IS_PROCESSOR = process.env.REACT_APP_IS_PROCESSOR;
 
 interface Props {
   user: UserType;
@@ -28,11 +29,13 @@ export default function UserCard(props: Props) {
   const status = props.item != null ? props.item.status : 'good';
   const isSandbox = PLAID_ENV === 'sandbox';
   const isGoodState = status === 'good';
+  const isAuth = IS_PROCESSOR === 'true' ? false : true;
+  const isIdentity = props.user.should_verify_identity;
 
   const initiateLink = async () => {
     // only generate a link token upon a click from enduser to add a bank;
     // if done earlier, it may expire before enuser actually activates Link to add a bank.
-    await generateLinkToken(props.userId, null);
+    await generateLinkToken(props.userId, null, isIdentity);
   };
 
   // update data store with the user's items
@@ -89,7 +92,13 @@ export default function UserCard(props: Props) {
             // Plaid React Link cannot be rendered without a link token
             <div className="user-card__button">
               {token != null && token.length > 0 && props.linkButton && (
-                <LinkButton userId={props.userId} token={token} itemId={null} />
+                <LinkButton
+                  userId={props.userId}
+                  token={token}
+                  itemId={null}
+                  isAuth={isAuth}
+                  isIdentity={isIdentity}
+                />
               )}
             </div>
           )}

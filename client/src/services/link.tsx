@@ -40,7 +40,8 @@ interface LinkContextShape extends LinkState {
   dispatch: Dispatch<LinkAction>;
   generateLinkToken: (
     userId: number,
-    itemId: number | null | undefined
+    itemId: number | null | undefined,
+    isIdentity: boolean
   ) => void;
   deleteLinkToken: (userId: number) => void;
   linkTokens: LinkState;
@@ -59,9 +60,9 @@ export function LinkProvider(props: any) {
    * @desc Creates a new link token for a given User or Item.
    */
 
-  const generateLinkToken = useCallback(async (userId, itemId) => {
+  const generateLinkToken = useCallback(async (userId, itemId, isIdentity) => {
     // if itemId is not null, update mode is triggered
-    const linkTokenResponse = await getLinkToken(userId, itemId);
+    const linkTokenResponse = await getLinkToken(userId, itemId, isIdentity);
     if (linkTokenResponse.data.link_token) {
       const token = await linkTokenResponse.data.link_token;
       console.log('success', linkTokenResponse.data);

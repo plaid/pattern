@@ -40,9 +40,6 @@ export const updateUserInfo = (
 export const deleteUserById = (userId: number) =>
   api.delete(`/users/${userId}`);
 
-//transfers
-export const incrementTransfersByAccount = (accountId: string) =>
-  api.put(`/accounts/${accountId}/increment_transfers`);
 // app Funds
 export const getAppFundsByUser = (userId: number) =>
   api.get(`/appFunds/${userId}`);

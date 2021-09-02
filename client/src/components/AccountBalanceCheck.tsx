@@ -5,10 +5,7 @@ import { Button } from 'plaid-threads/Button';
 import { AccountType, AppFundType } from './types';
 import { currencyFilter } from '../util';
 import { TransferFunds } from '.';
-import {
-  updateAppFundsBalance,
-  incrementTransfersByAccount,
-} from '../services/api';
+import { updateAppFundsBalance } from '../services/api';
 
 const IS_PROCESSOR = process.env.REACT_APP_IS_PROCESSOR;
 
@@ -36,7 +33,10 @@ export default function AccountBalanceCheck(props: Props) {
     setShowTransferConfirmationError,
   ] = useState(false);
 
+  // use available_balance only; leave it up to developer to decide
+  // the risk of using current_balance:
   const balance = account.available_balance;
+
   const errorMessage = !isAmountOkay
     ? `We are unable to verify ${currencyFilter(
         transferAmount

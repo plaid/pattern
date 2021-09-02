@@ -19,14 +19,7 @@ interface Props {
 }
 
 const ItemInfo = (props: Props) => {
-  const [institution, setInstitution] = useState<Institution>({
-    logo: '',
-    name: '',
-    institution_id: '',
-    oauth: false,
-    products: [],
-    country_codes: [],
-  });
+  const [institution, setInstitution] = useState<Institution | null>(null);
 
   const { deleteAccountsByItemId } = useAccounts();
   const { deleteItemById } = useItems();
@@ -35,7 +28,6 @@ const ItemInfo = (props: Props) => {
   const plaid_institution_id =
     props.item != null ? props.item.plaid_institution_id : '';
   const status = props.item != null ? props.item.status : '';
-
   const isSandbox = PLAID_ENV === 'sandbox';
   const isGoodState = status === 'good';
   const { deleteLinkToken } = useLink();
@@ -61,7 +53,7 @@ const ItemInfo = (props: Props) => {
     <>
       <div>
         <h3 className="heading">bank</h3>
-        <p className="value">{institution.name}</p>
+        {institution != null && <p className="value">{institution.name}</p>}
       </div>
       <div>
         <h3 className="heading">account</h3>

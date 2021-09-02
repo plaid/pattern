@@ -97,8 +97,10 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
   }, []);
 
   const getBalance = useCallback(async () => {
-    // only call get balance if this is not the initial transfer
-    // or it is the initial transfer but auth and identity have not been called on item creation (i.e. balance=null)
+    // only call balance/get if this is not the initial transfer (because the balance data already exists
+    // from the auth/get or identity/get make upon creating the item).
+    // However, if neither auth nor identity have not been called on item creation (i.e. account.available_balance=null),
+    // make the balance/get call
     if (
       account != null &&
       item != null &&
@@ -108,8 +110,6 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
         item.id,
         account.plaid_account_id
       );
-      // await getAccountsByItem(items[0].id);
-      // const itemAccounts: AccountType[] = accountsByItem[items[0].id];
       setAccount(newAccount || {});
     }
   }, [account, item]);

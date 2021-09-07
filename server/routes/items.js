@@ -230,14 +230,12 @@ router.put(
     const balanceResponse = await plaid.accountsBalanceGet(balanceRequest);
 
     const account = balanceResponse.data.accounts[0];
-    const updatedBalances = await updateBalances(
+    const updatedAccount = await updateBalances(
       accountId,
       account.balances.current,
       account.balances.available
     );
-    console.log('inside update function', updatedBalances);
-    const latestAccount = await retrieveAccountsByItemId(itemId);
-    res.json(latestAccount[0]);
+    res.json(updatedAccount[0]);
   })
 );
 

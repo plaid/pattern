@@ -2,7 +2,7 @@
 
 ![Plaid Pattern client][client-img]
 
-This is a sample Account Funding application demonstrating an end-to-end [Plaid][plaid] integration, focused on using the auth, identity and balance endpoints to safely transfer funds.
+This is a sample Account Funding application demonstrating an end-to-end [Plaid][plaid] integration, focused on using the auth (or working with a Plaid partner using processor tokens), identity and balance endpoints to safely transfer funds.
 
 **This is not meant to be run as a production application.**
 
@@ -61,7 +61,7 @@ More information about the individual services is given below.
 
 # Plaid Pattern - Client
 
-The Pattern web client is written in JavaScript using [React]. It presents a basic [Link][plaid-link] workflow to the user, including an implementation of [OAuth][plaid-oauth] as well as a demonstration of [Link update mode][plaid-link-update-mode]. The sample app presents a user's net worth, categorized spending as well as a simple dashboard displaying linked accounts and transactions. The app runs on port 3001 by default, although you can modify this in [docker-compose.yml](../docker-compose.yml).
+The Pattern web client is written in JavaScript using [React]. It presents a basic [Link][plaid-link] workflow to the user, including an implementation of [OAuth][plaid-oauth] as well as a demonstration of [Link update mode][plaid-link-update-mode]. The sample app allows you to choose to use identification mode, where an enduser must input the name and email associated with their financial institution. The app runs on port 3001 by default, although you can modify this in [docker-compose.yml](../docker-compose.yml).
 
 ## Key concepts
 
@@ -100,6 +100,10 @@ A redirect_uri parameter is included in the linkTokenCreate call and set in this
 You will also need to configure `http://localhost:3001/oauth-link` as an allowed redirect URI for your client ID through the [Plaid developer dashboard](https://dashboard.plaid.com/team/api).
 
 To test the OAuth flow, choose 'Playtypus OAuth Bank' from the list of financial instutions in Plaid Link.
+
+### Working with Plaid Partners
+
+An example of the creation of a processor token instead of using the auth/get endpoint is included in the [root items route][items-routes]
 
 ## Debugging
 
@@ -200,7 +204,7 @@ See [`docs/troubleshooting.md`][troubleshooting].
 
 [MIT](LICENSE)
 
-[create-script]: init/create.sql
+[create-script]: database/init/create.sql
 [docker-compose]: ../docker-compose.yml
 [plaid-docs-api-identifiers]: https://plaid.com/docs/#storing-plaid-api-identifiers
 [plaid-new-support-ticket]: https://dashboard.plaid.com/support/new
@@ -213,14 +217,14 @@ See [`docs/troubleshooting.md`][troubleshooting].
 [react]: https://reactjs.org/
 [database-readme]: #plaid-pattern---database
 [expressjs]: http://expressjs.com/
-[items-routes]: routes/items.js
+[items-routes]: server/routes/items.js
 [ngrok-readme]: #plaid-pattern---ngrok
 [node-pg]: https://github.com/brianc/node-postgres
 [nodejs]: https://nodejs.org/en/
 [plaid-node]: https://github.com/plaid/plaid-node
-[items-handler]: webhookHandlers/handleItemWebhook.js
+[items-handler]: /server/webhookHandlers/handleItemWebhook.js
 [error-webhooks]: https://plaid.com/docs/api/webhooks/#item-error
-[users-routes]: routes/users.js
+[users-routes]: /server/routes/users.js
 [vscode-debugging]: https://code.visualstudio.com/docs/editor/debugging
 [client-img]: docs/account_funding_screenshot.jpg
 [client-readme]: #plaid-pattern---client

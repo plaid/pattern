@@ -144,7 +144,7 @@ const retrieveAccountsByItemId = async itemId => {
 const updateBalances = async (accountId, currentBalance, availableBalance) => {
   const query = {
     text:
-      'UPDATE accounts SET current_balance = $1, available_balance = $2  WHERE plaid_account_id = $3',
+      'UPDATE accounts SET current_balance = $1, available_balance = $2  WHERE plaid_account_id = $3 RETURNING *',
     values: [currentBalance, availableBalance, accountId],
   };
   const { rows: accounts } = await db.query(query);

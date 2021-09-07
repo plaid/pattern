@@ -24,7 +24,7 @@ import {
   ErrorMessage,
   ConfirmIdentity,
   MainAccount,
-  AccountCard,
+  AccountBalanceCheck,
 } from '.';
 
 const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
@@ -40,28 +40,16 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
     updated_at: '',
   });
   const [appFund, setAppFund] = useState<AppFundType>();
-  const [items, setItems] = useState<ItemType[]>([]);
+  const [item, setItem] = useState<ItemType | null>(null);
   const [numOfItems, setNumOfItems] = useState(0);
   const [account, setAccount] = useState<AccountType | null>(null);
-  const [institution, setInstitution] = useState<Institution>({
-    logo: '',
-    name: '',
-    institution_id: '',
-    oauth: false,
-    products: [],
-    country_codes: [],
-  });
+  const [institution, setInstitution] = useState<Institution | null>(null);
 
   const [isIdentityChecked, setIsIdentityChecked] = useState(
     user.identity_check
   );
   const [showTransfer, setShowTransfer] = useState(false);
-  const {
-    getAccountsByUser,
-    accountsByUser,
-    getAccountsByItem,
-    accountsByItem,
-  } = useAccounts();
+  const { getAccountsByUser, accountsByUser } = useAccounts();
   const { usersById, getUserById } = useUsers();
   const { itemsByUser, getItemsByUser } = useItems();
   const { institutionsById, getInstitutionById } = useInstitutions();
@@ -74,17 +62,18 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
 
   // functions to check username and email against data from identity/get
   const checkFullName = useCallback(
-    (names: string[], fullname: string | null) => {
+    // ownerNames is the ownernames array returned from identity/get
+    (ownerNames: string[], fullname: string | null) => {
       // in case user enters "Last name, First name"
       if (fullname != null) {
         fullname = fullname.replace(',', ' ');
         const fullnameArray = fullname.split(' ');
 
         // if both the first name and last name of the username in this app are included somewhere in the
-        // financial institution's names array, return true (anything entered by the user (except a comma)
-        // must be included in the FI's names array).
+        // financial institution's onwerNames array, return true (anything entered by the user (except a comma)
+        // must be included in the FI's ownerNames array).
         return fullnameArray.every(name => {
-          return names.some(identName => {
+          return ownerNames.some(identName => {
             return identName.toUpperCase().indexOf(name.toUpperCase()) > -1;
           });
         });
@@ -108,17 +97,22 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
   }, []);
 
   const getBalance = useCallback(async () => {
+    // only call balance/get if this is not the initial transfer (because the balance data already exists
+    // from the auth/get or identity/get make upon creating the item).
+    // However, if neither auth nor identity have not been called on item creation (i.e. account.available_balance=null),
+    // make the balance/get call
     if (
       account != null &&
+      item != null &&
       (account.number_of_transfers !== 0 || account.available_balance == null)
     ) {
-      //if this is not the initial transfer
-      await getBalanceByItem(items[0].id, account.plaid_account_id);
-      await getAccountsByItem(items[0].id);
-      const itemAccounts: AccountType[] = accountsByItem[items[0].id];
-      setAccount(itemAccounts[0] || {});
+      const { data: newAccount } = await getBalanceByItem(
+        item.id,
+        account.plaid_account_id
+      );
+      setAccount(newAccount || {});
     }
-  }, [accountsByItem, account, getAccountsByItem, items]);
+  }, [account, item]);
 
   const userTransfer = () => {
     getBalance();
@@ -156,7 +150,7 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
   // update state items from data store
   useEffect(() => {
     const newItems: Array<ItemType> = itemsByUser[userId] || [];
-    setItems(newItems);
+    setItem(newItems[0]);
   }, [itemsByUser, userId]);
 
   // update no of items from data store
@@ -173,35 +167,35 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
     getAccountsByUser(userId);
   }, [getAccountsByUser, userId, numOfItems]);
 
+  // update state account from data store
   useEffect(() => {
     if (accountsByUser[userId] != null && accountsByUser[userId].length > 0) {
       setAccount(accountsByUser[userId][0]);
     }
   }, [accountsByUser, userId, numOfItems]);
 
-  // update institution
-
+  // update data store with institutions
   useEffect(() => {
-    if (items[0] != null) {
-      setInstitution(institutionsById[items[0].plaid_institution_id] || {});
+    if (item != null) {
+      getInstitutionById(item.plaid_institution_id);
     }
-  }, [institutionsById, items]);
+  }, [getInstitutionById, item]);
 
+  // update state institution from data store
   useEffect(() => {
-    if (items[0] != null) {
-      getInstitutionById(items[0].plaid_institution_id);
+    if (item != null) {
+      setInstitution(institutionsById[item.plaid_institution_id] || {});
     }
-  }, [getInstitutionById, items]);
+  }, [institutionsById, item]);
 
-  // update data store with the user's accounts
+  // update data store with the user's app fund
   useEffect(() => {
     getAppFund(userId);
   }, [userId, getAppFund]);
 
   useEffect(() => {
-    // checks identity of user against identity/get data stored in accounts data
+    // checks identity of user against identity/get data stored in accounts database
     // only checks if identity has not already been verified.
-
     if (
       account != null &&
       isIdentityChecked === false &&
@@ -216,6 +210,7 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
 
   const accountName = account != null ? `${account.name}` : '';
   document.getElementsByTagName('body')[0].style.overflow = 'auto'; // to override overflow:hidden from link pane
+
   return (
     <div>
       <NavigationLink component={Link} to="/">
@@ -229,9 +224,8 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
         removeButton={false}
         linkButton={numOfItems === 0}
         numOfItems={numOfItems}
-        institutionName={institution.name}
         accountName={accountName}
-        item={items[0]}
+        item={item}
         isIdentityChecked={isIdentityChecked}
       />
       {numOfItems > 0 && (
@@ -240,8 +234,8 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
 
           {isIdentityChecked && (
             <>
-              {showTransfer && account != null && (
-                <AccountCard
+              {showTransfer && account != null && institution != null && (
+                <AccountBalanceCheck
                   institutionName={institution.name}
                   userId={userId}
                   updateAppFund={updateAppFund}

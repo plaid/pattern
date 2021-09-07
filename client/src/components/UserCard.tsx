@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Callout from 'plaid-threads/Callout';
 import Button from 'plaid-threads/Button';
 
-import { LinkButton, ItemCard } from '.';
+import { LinkButton, ItemInfo } from '.';
 import { useItems, useLink } from '../services';
 import { UserType, ItemType } from './types';
 
@@ -15,9 +15,8 @@ interface Props {
   linkButton: boolean;
   userId: number;
   numOfItems: number;
-  institutionName: string;
   accountName: string;
-  item: ItemType;
+  item: ItemType | null;
   isIdentityChecked: boolean;
 }
 
@@ -74,7 +73,7 @@ export default function UserCard(props: Props) {
               <p className="value">{props.user.username}</p>
             </div>
             {numOfItems !== 0 && (
-              <ItemCard
+              <ItemInfo
                 item={props.item}
                 isIdentityChecked={props.isIdentityChecked}
                 userId={props.userId}

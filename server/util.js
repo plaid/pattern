@@ -1,5 +1,6 @@
 const isArray = require('lodash/isArray');
 const pick = require('lodash/pick');
+const util = require('util');
 
 /**
  * Wraps input in an array if needed.
@@ -85,6 +86,10 @@ const sanitizeUsers = users =>
 const validItemStatuses = new Set(['good', 'bad']);
 const isValidItemStatus = status => validItemStatuses.has(status);
 
+const prettyPrintResponse = response => {
+  console.log(util.inspect(response.data, { colors: true, depth: 4 }));
+};
+
 module.exports = {
   toArray,
   sanitizeAccounts,
@@ -92,4 +97,5 @@ module.exports = {
   sanitizeUsers,
   validItemStatuses,
   isValidItemStatus,
+  prettyPrintResponse,
 };

@@ -11,27 +11,23 @@ import { setItemToBadState } from '../services/api';
 const PLAID_ENV = process.env.REACT_APP_PLAID_ENV || 'sandbox';
 
 interface Props {
-  item: ItemType;
+  item: ItemType | null;
   userId: number;
   isIdentityChecked: boolean;
   numOfItems: number;
   accountName: string;
 }
 
-const ItemCard = (props: Props) => {
-  const [institution, setInstitution] = useState<Institution>({
-    logo: '',
-    name: '',
-    institution_id: '',
-    oauth: false,
-    products: [],
-    country_codes: [],
-  });
+const ItemInfo = (props: Props) => {
+  const [institution, setInstitution] = useState<Institution | null>(null);
 
   const { deleteAccountsByItemId } = useAccounts();
   const { deleteItemById } = useItems();
   const { institutionsById, getInstitutionById } = useInstitutions();
-  const { id, plaid_institution_id, status } = props.item;
+  const id = props.item != null ? props.item.id : 0;
+  const plaid_institution_id =
+    props.item != null ? props.item.plaid_institution_id : '';
+  const status = props.item != null ? props.item.status : '';
   const isSandbox = PLAID_ENV === 'sandbox';
   const isGoodState = status === 'good';
   const { deleteLinkToken } = useLink();
@@ -57,7 +53,7 @@ const ItemCard = (props: Props) => {
     <>
       <div>
         <h3 className="heading">bank</h3>
-        <p className="value">{institution.name}</p>
+        {institution != null && <p className="value">{institution.name}</p>}
       </div>
       <div>
         <h3 className="heading">account</h3>
@@ -117,4 +113,4 @@ const ItemCard = (props: Props) => {
   );
 };
 
-export default ItemCard;
+export default ItemInfo;

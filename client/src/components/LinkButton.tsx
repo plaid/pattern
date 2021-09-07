@@ -120,7 +120,16 @@ export default function LinkButton(props: Props) {
       );
       open();
     }
-  }, [ready, open, props.isOauth, props.userId, props.itemId, props.token]);
+  }, [
+    ready,
+    open,
+    props.isOauth,
+    props.userId,
+    props.itemId,
+    props.token,
+    props.isAuth,
+    props.isIdentity,
+  ]);
 
   return <></>;
 }

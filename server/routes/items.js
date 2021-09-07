@@ -83,20 +83,26 @@ router.post(
       userId
     );
 
+    // the request is the same for both auth and identity calls
     const authAndIdRequest = {
       access_token: accessToken,
       options: {
         account_ids: [account.id],
       },
     };
-
+    // identity info will remain null if not identity
     let emails = null;
     let ownerNames = null;
+
+    // auth numbers will remain null if not auth
     let authNumbers = {
       account: null,
       routing: null,
       wire_routing: null,
     };
+
+    // balances will be null if not auth or identity, only until the first transfer is made
+    // and accounts/balance/get is called
     let balances = {
       available: null,
       current: null,
@@ -114,7 +120,8 @@ router.post(
         balances = identityResponse.data.accounts[0].balances;
       }
     }
-
+    // processorToken is only set if IS_PROCESSOR is true in .env file and
+    // therefore isAuth is false
     let processorToken = null;
 
     if (isAuth) {
@@ -223,12 +230,13 @@ router.put(
     const balanceResponse = await plaid.accountsBalanceGet(balanceRequest);
 
     const account = balanceResponse.data.accounts[0];
-    const latestAccount = await updateBalances(
+    await updateBalances(
       accountId,
       account.balances.current,
       account.balances.available
     );
-    res.json(latestAccount);
+    const latestAccount = await retrieveAccountsByItemId(itemId);
+    res.json(latestAccount[0]);
   })
 );
 

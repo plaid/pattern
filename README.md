@@ -103,7 +103,7 @@ To test the OAuth flow, choose 'Playtypus OAuth Bank' from the list of financial
 
 ### Working with Plaid Partners
 
-An example of the creation of a processor token instead of using the auth/get endpoint is included in the [root items route][items-routes]
+This sample app can also demonstrate the creation of a processor token for use with Plaid partners. While still initializing Link with the Auth product, instead of of using Plaid Auth endpoints, an example of the creation of a processor token is included in the [root items route][items-routes].
 
 ## Debugging
 

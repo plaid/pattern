@@ -14,7 +14,7 @@ export default function Sockets() {
     socket.current = io(`localhost:${REACT_APP_SERVER_PORT}`);
 
     socket.current.on('ERROR', ({ itemId, errorCode } = {}) => {
-      const msg = `New Webhook Event: Item ${itemId}: Item Error ${errorCode}`;
+      const msg = `Item ${itemId}: Item Error ${errorCode}`;
       console.error(msg);
       toast.error(msg);
       getItemById(itemId, true);

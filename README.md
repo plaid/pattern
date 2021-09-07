@@ -208,8 +208,8 @@ See [`docs/troubleshooting.md`][troubleshooting].
 
 [MIT](LICENSE)
 
-[create-script]: init/create.sql
-[docker-compose]: ../docker-compose.yml
+[create-script]: database/init/create.sql
+[docker-compose]: ./docker-compose.yml
 [plaid-docs-api-identifiers]: https://plaid.com/docs/#storing-plaid-api-identifiers
 [plaid-new-support-ticket]: https://dashboard.plaid.com/support/new
 [postgres]: https://www.postgresql.org/
@@ -221,14 +221,14 @@ See [`docs/troubleshooting.md`][troubleshooting].
 [react]: https://reactjs.org/
 [database-readme]: #plaid-pattern---database
 [expressjs]: http://expressjs.com/
-[items-routes]: routes/items.js
+[items-routes]: server/routes/items.js
 [ngrok-readme]: #plaid-pattern---ngrok
 [node-pg]: https://github.com/brianc/node-postgres
 [nodejs]: https://nodejs.org/en/
 [plaid-node]: https://github.com/plaid/plaid-node
-[transactions-handler]: webhookHandlers/handleTransactionsWebhook.js
+[transactions-handler]: /server/webhookHandlers/handleTransactionsWebhook.js
 [transactions-webhooks]: https://plaid.com/docs/#transactions-webhooks
-[users-routes]: routes/users.js
+[users-routes]: server/routes/users.js
 [vscode-debugging]: https://code.visualstudio.com/docs/editor/debugging
 [client-img]: docs/pattern_screenshot.jpg
 [client-readme]: #plaid-pattern---client

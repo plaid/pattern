@@ -42,7 +42,7 @@ Note: We recommend running these commands in a unix terminal. Windows users can 
     make stop
     ```
 
-## Additional Commands
+ß## Additional Commands
 
 All available commands can be seen by calling `make help`.
 
@@ -61,11 +61,7 @@ More information about the individual services is given below.
 
 # Plaid Pattern - Client
 
-<<<<<<< HEAD
 The Pattern web client is written in JavaScript using [React]. It presents a basic [Link][plaid-link] workflow to the user, including an implementation of [OAuth][plaid-oauth] as well as a demonstration of [Link update mode][plaid-link-update-mode]. The sample app allows you to choose to use identification mode, where an enduser must input the name and email associated with their financial institution. The app runs on port 3001 by default, although you can modify this in [docker-compose.yml](../docker-compose.yml).
-=======
-The Pattern web client is written in JavaScript using [React]. It presents a basic [Link][plaid-link] workflow to the user, including an implementation of [OAuth][plaid-oauth] as well as a demonstration of [Link update mode][plaid-link-update-mode]. The sample app presents a user's net worth, categorized spending as well as a simple dashboard displaying linked accounts and transactions. The app runs on port 3001 by default, although you can modify this in [docker-compose.yml](../docker-compose.yml).
->>>>>>> lw-accountFunding
 
 ## Key concepts
 
@@ -209,11 +205,7 @@ See [`docs/troubleshooting.md`][troubleshooting].
 [MIT](LICENSE)
 
 [create-script]: database/init/create.sql
-<<<<<<< HEAD
-[docker-compose]: ../docker-compose.yml
-=======
 [docker-compose]: ./docker-compose.yml
->>>>>>> lw-accountFunding
 [plaid-docs-api-identifiers]: https://plaid.com/docs/#storing-plaid-api-identifiers
 [plaid-new-support-ticket]: https://dashboard.plaid.com/support/new
 [postgres]: https://www.postgresql.org/
@@ -230,15 +222,9 @@ See [`docs/troubleshooting.md`][troubleshooting].
 [node-pg]: https://github.com/brianc/node-postgres
 [nodejs]: https://nodejs.org/en/
 [plaid-node]: https://github.com/plaid/plaid-node
-<<<<<<< HEAD
 [items-handler]: /server/webhookHandlers/handleItemWebhook.js
 [error-webhooks]: https://plaid.com/docs/api/webhooks/#item-error
 [users-routes]: /server/routes/users.js
-=======
-[transactions-handler]: /server/webhookHandlers/handleTransactionsWebhook.js
-[transactions-webhooks]: https://plaid.com/docs/#transactions-webhooks
-[users-routes]: server/routes/users.js
->>>>>>> lw-accountFunding
 [vscode-debugging]: https://code.visualstudio.com/docs/editor/debugging
 [client-img]: docs/account_funding_screenshot.jpg
 [client-readme]: #plaid-pattern---client

@@ -62,7 +62,7 @@ const ItemInfo = (props: Props) => {
       {props.numOfItems !== 0 && (
         <>
           <div className="test-update-mode">
-            <div>
+            <div className="update_mode_note">
               {isGoodState ? (
                 <Note info solid>
                   Login
@@ -77,7 +77,7 @@ const ItemInfo = (props: Props) => {
             </div>
             {isSandbox && isGoodState && (
               <Button
-                tertiary
+                secondary
                 small
                 centered
                 inline
@@ -96,17 +96,18 @@ const ItemInfo = (props: Props) => {
               />
             )}
           </div>
-
-          <Button
-            className="remove_bank_button "
-            small
-            inline
-            secondary
-            centered
-            onClick={handleDeleteItem}
-          >
-            Remove Bank
-          </Button>
+          <div className="remove_bank_button_container">
+            <Button
+              className="remove_bank_button "
+              small
+              inline
+              secondary
+              centered
+              onClick={handleDeleteItem}
+            >
+              Remove Bank
+            </Button>
+          </div>
         </>
       )}
     </>

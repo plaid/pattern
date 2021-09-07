@@ -172,7 +172,7 @@ UserCard
 
 .user-card__info {
   display: grid;
-  grid-template-columns: 3fr 3fr 9fr 4fr 3fr;
+  grid-template-columns: 3fr 3fr 7fr 3fr 3fr;
   margin-left: 2 * $unit;
 }
 
@@ -187,6 +187,10 @@ UserCard
 
 .user-card__callouts {
   margin-bottom: 3 * $unit;
+}
+
+.update_mode_note {
+  margin-top: $unit;
 }
 
 /*
@@ -238,9 +242,13 @@ Item overview
   justify-content: space-between;
 }
 
-.remove_bank_button {
-  max-width: 10 * $unit;
-  margin-top: 3 * $unit;
+.remove_bank_button_container {
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  .remove_bank_button {
+    max-width: 10 * $unit;
+  }
 }
 
 /*
@@ -343,11 +351,6 @@ ErrorMessage
   }
 }
 
-.mainAccountHeader {
-  display: flex;
-  justify-content: space-between;
-}
-
 h3 {
   color: $black1000;
   letter-spacing: -0.28px;
@@ -360,6 +363,22 @@ h3 {
     margin-bottom: 1px;
     font-weight: 100;
   }
+}
+
+/*
+
+Main account
+
+*/
+
+.mainAccountHeader {
+  display: flex;
+  justify-content: space-between;
+}
+
+.transfer_funds_button_container {
+  display: flex;
+  align-items: center;
 }
 
 /*

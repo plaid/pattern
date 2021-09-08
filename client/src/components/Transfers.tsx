@@ -4,12 +4,12 @@ import { Button } from 'plaid-threads/Button';
 
 import { AccountType, AppFundType } from './types';
 import { currencyFilter } from '../util';
-import { TransferFunds } from '.';
+import { TransferForm } from '.';
 import { updateAppFundsBalance } from '../services/api';
 
 const IS_PROCESSOR = process.env.REACT_APP_IS_PROCESSOR;
 
-interface TransferResonse {
+interface TransferResponse {
   newAccount: AccountType;
   newAppFunds: AppFundType;
 }
@@ -22,7 +22,7 @@ interface Props {
   setAccount: (arg: AccountType) => void;
 }
 
-export default function AccountBalanceCheck(props: Props) {
+export default function Transfers(props: Props) {
   const [isAmountOkay, setIsAmountOkay] = useState(true);
   const [transferAmount, setTransferAmount] = useState(0);
   const [isTransferConfirmed, setIsTransferconfirmed] = useState(false);
@@ -75,7 +75,7 @@ export default function AccountBalanceCheck(props: Props) {
       if (confirmedAmount == null) {
         setShowTransferConfirmationError(true);
       } else {
-        const response: TransferResonse | any = await updateAppFundsBalance(
+        const response: TransferResponse | any = await updateAppFundsBalance(
           // this route updates the appFunds with the new balance and also
           // increments the number of transfers for this account by 1
           props.userId,
@@ -93,7 +93,7 @@ export default function AccountBalanceCheck(props: Props) {
     <>
       <div>
         {showInput && (
-          <TransferFunds
+          <TransferForm
             closeTransferView={props.closeTransferView}
             checkAmountAndInitiate={checkAmountAndInitiate}
             setShowInput={setShowInput}

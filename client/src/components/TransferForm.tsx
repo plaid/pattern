@@ -9,7 +9,7 @@ interface Props {
   closeTransferView: () => void;
   setShowInput: (arg: boolean) => void;
 }
-const TransferFunds: React.FC<Props> = (props: Props) => {
+const TransferForm: React.FC<Props> = (props: Props) => {
   const [transferAmount, setTransferAmount] = useState('');
   const handleSubmit = (e: any) => {
     e.preventDefault();
@@ -57,5 +57,5 @@ const TransferFunds: React.FC<Props> = (props: Props) => {
     </>
   );
 };
-TransferFunds.displayName = 'TransferFunds';
-export default TransferFunds;
+TransferForm.displayName = 'TransferForm';
+export default TransferForm;

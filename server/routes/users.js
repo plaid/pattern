@@ -113,6 +113,7 @@ router.get(
  * Updates user identity check.
  *
  * @param {string} userId the ID of the user.
+ * @param {boolean} identityCheck true or false identity checked.
  * @returns {Object[]} an array of accounts.
  */
 router.put(

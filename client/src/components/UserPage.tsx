@@ -23,8 +23,8 @@ import {
   UserCard,
   ErrorMessage,
   ConfirmIdentity,
-  MainAccount,
-  AccountBalanceCheck,
+  PatternAccount,
+  Transfers,
 } from '.';
 
 const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
@@ -231,22 +231,6 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
       {numOfItems > 0 && (
         <>
           <ErrorMessage />
-
-          {isIdentityChecked && (
-            <>
-              {showTransfer && account != null && institution != null && (
-                <AccountBalanceCheck
-                  institutionName={institution.name}
-                  userId={userId}
-                  updateAppFund={updateAppFund}
-                  closeTransferView={closeTransferView}
-                  account={account}
-                  setAccount={setAccount}
-                />
-              )}
-            </>
-          )}
-
           {!isIdentityChecked && (
             <>
               <Callout warning>
@@ -260,13 +244,27 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
         </>
       )}
       {appFund != null && !showTransfer && isIdentityChecked && (
-        <MainAccount
+        <PatternAccount
           userTransfer={userTransfer}
           user={user}
           updateUser={updateUser}
           appFund={appFund}
           numOfItems={numOfItems}
         />
+      )}
+      {isIdentityChecked && (
+        <>
+          {showTransfer && account != null && institution != null && (
+            <Transfers
+              institutionName={institution.name}
+              userId={userId}
+              updateAppFund={updateAppFund}
+              closeTransferView={closeTransferView}
+              account={account}
+              setAccount={setAccount}
+            />
+          )}
+        </>
       )}
     </div>
   );

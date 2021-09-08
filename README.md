@@ -73,6 +73,8 @@ Aside from websocket listeners (see below), all HTTP calls to the Pattern server
 
 The Pattern server is configured to send a message over a websocket whenever it receives a webhook from Plaid. On the client side have websocket listeners defined in `src/components/Sockets.jsx` that wait for these messages and update data in real time accordingly.
 
+Both PENDING_EXPIRATION and ITEM_LOGIN_REQUIRED are item webhooks demonstrated in this sample app in the [items webhook handler][items-handler].
+
 ### Admin
 
 A view of all users is provided to developers on `http://localhost:3001/admin`. Developers have the ability to remove a user here.

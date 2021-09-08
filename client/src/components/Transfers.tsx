@@ -16,11 +16,14 @@ interface TransferResponse {
 interface Props {
   account: AccountType;
   userId: number;
-  updateAppFund: (appFund: AppFundType) => void;
-  closeTransferView: () => void;
+  setAppFund: (appFund: AppFundType) => void;
+  setShowTransfer: (arg: boolean) => void;
   institutionName: string | null;
   setAccount: (arg: AccountType) => void;
 }
+
+// This component checks to make sure the amount of transfer does not
+// exceed the balance in the account and then initiates the ach transfer or processor request
 
 export default function Transfers(props: Props) {
   const [isAmountOkay, setIsAmountOkay] = useState(true);
@@ -82,7 +85,7 @@ export default function Transfers(props: Props) {
           confirmedAmount,
           account.plaid_account_id
         );
-        props.updateAppFund(response.data.newAppFunds);
+        props.setAppFund(response.data.newAppFunds);
         props.setAccount(response.data.newAccount);
         setIsTransferconfirmed(true);
       }
@@ -94,7 +97,7 @@ export default function Transfers(props: Props) {
       <div>
         {showInput && (
           <TransferForm
-            closeTransferView={props.closeTransferView}
+            setShowTransfer={props.setShowTransfer}
             checkAmountAndInitiate={checkAmountAndInitiate}
             setShowInput={setShowInput}
           />
@@ -113,7 +116,7 @@ export default function Transfers(props: Props) {
               small
               centered
               inline
-              onClick={() => props.closeTransferView()}
+              onClick={() => props.setShowTransfer(false)}
             >
               Done
             </Button>
@@ -132,7 +135,7 @@ export default function Transfers(props: Props) {
               small
               centered
               inline
-              onClick={() => props.closeTransferView()}
+              onClick={() => props.setShowTransfer(false)}
             >
               Back
             </Button>

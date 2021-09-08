@@ -8,13 +8,12 @@ import { currencyFilter } from '../util';
 
 interface Props {
   userTransfer: () => void;
-  updateUser: (user: UserType) => void;
   user: UserType;
   appFund: AppFundType;
   numOfItems: number;
 }
 
-const MainAccount = (props: Props) => {
+const PatternAccount = (props: Props) => {
   const handleClick = () => {
     props.userTransfer();
   };
@@ -39,4 +38,4 @@ const MainAccount = (props: Props) => {
   );
 };
 
-export default MainAccount;
+export default PatternAccount;

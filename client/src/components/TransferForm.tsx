@@ -6,7 +6,7 @@ import { currencyFilter } from '../util';
 
 interface Props {
   checkAmountAndInitiate: (amount: number) => void;
-  closeTransferView: () => void;
+  setShowTransfer: (arg: boolean) => void;
   setShowInput: (arg: boolean) => void;
 }
 const TransferForm: React.FC<Props> = (props: Props) => {
@@ -45,7 +45,7 @@ const TransferForm: React.FC<Props> = (props: Props) => {
             centered
             secondary
             inline
-            onClick={() => props.closeTransferView()}
+            onClick={() => props.setShowTransfer(false)}
           >
             Back
           </Button>

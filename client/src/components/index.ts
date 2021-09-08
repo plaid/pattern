@@ -13,5 +13,5 @@ export { default as OAuthLink } from './OAuthLink';
 export { default as Login } from './Login';
 export { default as ErrorMessage } from './ErrorMessage';
 export { default as TransferForm } from './TransferForm';
-export { default as ConfirmIdentity } from './ConfirmIdentity';
+export { default as ConfirmIdentityForm } from './ConfirmIdentityForm';
 export { default as PatternAccount } from './PatternAccount';

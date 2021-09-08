@@ -1,8 +1,7 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import Button from 'plaid-threads/Button';
 
 import { LinkButton } from '.';
-import { useOnClickOutside } from '../hooks';
 import { useLink } from '../services';
 
 interface Props {
@@ -13,7 +12,6 @@ interface Props {
   handleDelete: () => void;
 }
 
-//TODO: rename this component to LinkUpdateBtn
 export function UpdateLink(props: Props) {
   const [token, setToken] = useState('');
 

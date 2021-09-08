@@ -42,7 +42,7 @@ Note: We recommend running these commands in a unix terminal. Windows users can 
     make stop
     ```
 
-ß## Additional Commands
+## Additional Commands
 
 All available commands can be seen by calling `make help`.
 

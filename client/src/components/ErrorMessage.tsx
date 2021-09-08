@@ -5,8 +5,6 @@ import { CloseS2 } from 'plaid-threads/Icons/CloseS2';
 
 import useErrors from '../services/errors';
 
-//  Allows user to input their personal assets such as a house or car.
-
 export default function ErrorMessage() {
   const [show, setShow] = useState(false);
   const [message, setMessage] = useState('');

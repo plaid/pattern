@@ -25,9 +25,14 @@ export default function Landing() {
     <div>
       <Banner initialSubheading />
       If you don't have an account, please click "Create Account".
-      <div className="btnsContainer">
+      <div className="btns-container">
         <Login />
-        <Button className="btnWithMargin" onClick={toggleForm} centered inline>
+        <Button
+          className="btn-with-margin"
+          onClick={toggleForm}
+          centered
+          inline
+        >
           Create Account
         </Button>
         {userState.currentUser.username != null && (

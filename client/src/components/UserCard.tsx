@@ -83,7 +83,12 @@ export default function UserCard(props: Props) {
             )}
           </div>
           {numOfItems === 0 && (
-            <Button large inline className="link-button" onClick={initiateLink}>
+            <Button
+              large
+              inline
+              className="add-account-button"
+              onClick={initiateLink}
+            >
               Add your checking or savings account
             </Button>
           )}

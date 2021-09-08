@@ -88,6 +88,20 @@ shared styles
   color: $white;
 }
 
+h3 {
+  color: $black1000;
+  letter-spacing: -0.28px;
+  font-weight: bold;
+
+  &.accountBalance {
+    margin: 0;
+  }
+  &.accountDollars {
+    margin-bottom: 1px;
+    font-weight: 100;
+  }
+}
+
 /*
 
 Content at the top of the view
@@ -111,43 +125,13 @@ Landing overview
 
 */
 
-.landing__column {
-  width: 33%;
-  float: left;
-}
-
-.landing__value {
-  overflow-x: hidden;
-  padding-right: 1rem;
-}
-
-.btnsContainer {
+.btns-container {
   display: flex;
   margin: 2 * $unit 0;
 }
 
-.btnWithMargin {
+.btn-with-margin {
   margin-left: 2 * $unit;
-}
-
-/*
-
-Modal
-
-*/
-
-input::placeholder {
-  line-height: 1.5;
-}
-
-/*
-
-UserList
-
-*/
-
-.user-list-heading {
-  font-weight: normal;
 }
 
 /*
@@ -181,7 +165,7 @@ UserCard
   flex: 1;
 }
 
-.link-button {
+.add-account-button {
   font-size: 2 * $unit;
 }
 
@@ -189,57 +173,20 @@ UserCard
   margin-bottom: 3 * $unit;
 }
 
-.update_mode_note {
-  margin-top: $unit;
-}
-
 /*
 
-Item overview
+Item info
 
 */
-
-.item__header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin: 3 * $unit 0;
-}
-.item__header-heading {
-  margin-bottom: 1rem;
-  font-weight: normal;
-}
-
-.item-card {
-  padding: 0 $unit 0 0;
-
-  display: grid;
-  grid-template-columns: 3fr 3fr 3fr 3fr;
-
-  &.expanded {
-    box-shadow: none;
-  }
-}
-
-.item-card__column-1 {
-  display: flex;
-  align-items: center;
-}
-
-.item-card__column-2 {
-  margin-top: $unit;
-  margin-right: 2 * $unit;
-}
-
-.item-card__column-3 {
-  margin-top: $unit;
-}
-
 .test-update-mode {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
+}
+
+.update_mode_note {
+  margin-top: $unit;
 }
 
 .remove_bank_button_container {
@@ -249,42 +196,6 @@ Item overview
   .remove_bank_button {
     max-width: 10 * $unit;
   }
-}
-
-/*
-
-Account row
-
-*/
-
-.accountContainer {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-}
-
-.account-data-row {
-  border-bottom: $border;
-  padding: 3 * $unit;
-  display: grid;
-  grid-template-columns: 3fr 1fr;
-}
-
-.account-data-row:after {
-  clear: both;
-  content: '';
-  display: table;
-}
-
-.account-data-row__name {
-  font-size: 2 * $unit;
-  line-height: 4 * $unit;
-  display: inline-block;
-  font-weight: 500;
-}
-
-.backBtnHolder {
-  width: 100px;
 }
 
 /*
@@ -340,43 +251,29 @@ ErrorMessage
 
 */
 
-.errMsgCallout {
+.err-msg__callout {
   position: relative;
   margin-bottom: 3 * $unit;
 
-  .closeBtn {
+  .close-btn {
     position: absolute;
     right: 0;
     top: 0;
   }
 }
 
-h3 {
-  color: $black1000;
-  letter-spacing: -0.28px;
-  font-weight: bold;
-
-  &.accountBalance {
-    margin: 0;
-  }
-  &.accountDollars {
-    margin-bottom: 1px;
-    font-weight: 100;
-  }
-}
-
 /*
 
-Main account
+Pattern account
 
 */
 
-.mainAccountHeader {
+.pattern-account__header {
   display: flex;
   justify-content: space-between;
 }
 
-.transfer_funds_button_container {
+.transfer-funds__button__container {
   display: flex;
   align-items: center;
 }
@@ -392,7 +289,7 @@ Transfers
   width: 40 * $unit;
 }
 
-.transfer-funds__Title {
+.transfer-funds__title {
   margin: 0;
 }
 

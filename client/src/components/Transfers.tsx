@@ -104,7 +104,7 @@ export default function Transfers(props: Props) {
         )}
         {isTransferConfirmed && (
           <>
-            <div className="transferFundsHeader">
+            <div>
               <h3 className="transferFundsTitle">Transfer Confirmed</h3>{' '}
             </div>
             <p>{`You have successfully transferred ${currencyFilter(
@@ -124,7 +124,7 @@ export default function Transfers(props: Props) {
         )}
         {(!isAmountOkay || showTransferConfirmationError) && (
           <>
-            <div className="transferFundsHeader">
+            <div>
               <h3 className="transferFundsTitle">Transfer Error</h3>{' '}
             </div>
             <Callout className="callout" warning>

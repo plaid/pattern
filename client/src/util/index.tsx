@@ -1,4 +1,3 @@
-import { distanceInWords, parse } from 'date-fns';
 import {
   PlaidLinkOnSuccessMetadata,
   PlaidLinkOnExitMetadata,

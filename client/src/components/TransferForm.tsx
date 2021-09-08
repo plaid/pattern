@@ -25,7 +25,7 @@ const TransferForm: React.FC<Props> = (props: Props) => {
   return (
     <>
       <div>
-        <div className="transferFundsHeader">
+        <div>
           <h3 className="transfer-funds__title">Transfer Funds</h3>{' '}
         </div>
         <h4>Enter amount</h4>

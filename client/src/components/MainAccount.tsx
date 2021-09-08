@@ -23,9 +23,11 @@ const MainAccount = (props: Props) => {
       <div className="mainAccountHeader">
         <h3 className="accountBalance">Plaid Pattern Funds Balance</h3>{' '}
         {props.numOfItems > 0 && (
-          <Button onClick={handleClick} inline small>
-            Transfer funds
-          </Button>
+          <div className="transfer_funds_button_container">
+            <Button onClick={handleClick} inline small>
+              Transfer funds
+            </Button>
+          </div>
         )}
       </div>
       <div>

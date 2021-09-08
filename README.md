@@ -2,7 +2,7 @@
 
 ![Plaid Pattern client][client-img]
 
-This is a sample Personal Finance Manager application demonstrating an end-to-end [Plaid][plaid] integration, focused on linking items and fetching transaction data.
+This is a sample Account Funding application demonstrating an end-to-end [Plaid][plaid] integration, focused on using the auth (or working with a Plaid partner using processor tokens), identity and balance endpoints to safely transfer funds.
 
 **This is not meant to be run as a production application.**
 
@@ -61,7 +61,7 @@ More information about the individual services is given below.
 
 # Plaid Pattern - Client
 
-The Pattern web client is written in JavaScript using [React]. It presents a basic [Link][plaid-link] workflow to the user, including an implementation of [OAuth][plaid-oauth] as well as a demonstration of [Link update mode][plaid-link-update-mode]. The sample app presents a user's net worth, categorized spending as well as a simple dashboard displaying linked accounts and transactions. The app runs on port 3001 by default, although you can modify this in [docker-compose.yml](../docker-compose.yml).
+The Pattern web client is written in JavaScript using [React]. It presents a basic [Link][plaid-link] workflow to the user, including an implementation of [OAuth][plaid-oauth] as well as a demonstration of [Link update mode][plaid-link-update-mode]. The sample app allows you to choose to use identification mode, where an enduser must input the name and email associated with their financial institution. The app runs on port 3001 by default, although you can modify this in [docker-compose.yml](../docker-compose.yml).
 
 ## Key concepts
 
@@ -87,19 +87,11 @@ The application server is written in JavaScript using [Node.js][nodejs] and [Exp
 
 Plaid does not have a user data object for tying multiple items together, so it is up to application developers to define that relationship. For an example of this, see the [root items route][items-routes] (used to store new items) and the [users routes][users-routes].
 
-### Preventing item duplication
+### Using webhook to test update mode in Link.
 
-By default, Plaid Link will let a user link to the same institution multiple times. Some developers prefer disallowing duplicate account linkages because duplicate connections still come at an additional cost. It is entirely possible for a user to create multiple items linked to the same financial institution. In practice, you probably want to prevent this. The easiest way to do this is to check the institution id of a newly created item before performing the token exchange and storing the item. For an example of this, see the [root items route][items-routes].
+Plaid uses [webhooks][error-webhooks] to notify you whenever an item enters an error state. If a user needs to update their login information at their financial institution, an item will display an ITEM_LOGIN_REQUIRED error. This sample app demonstrates the use of the sandboxItemResetLogin endpoint to test this webhook. For an example of this, see the [items webhook handler][items-handler].
 
-### Using webhooks to update transaction data and test update mode in Link.
-
-Plaid uses [webhooks][transactions-webhooks] to notify you whenever there are new transactions associated with an item. This allows you to make a call to Plaid's transactions endpoint only when there are new transactions available, rather than polling for them. For an example of this, see the [transactions webhook handler][transactions-handler]. This sample app also demonstrates the use of the sandboxItemResetLogin endpoint to test the webhook used to notify you when a user needs to update their login information at their financial institution.
-
-For webhooks to work, the server must be publicly accessible on the internet. For development purposes, this application uses [ngrok][ngrok-readme] to accomplish that. Therefore, if the server is re-started, any items created in this sample app previous to the current session will have a different webhook address attached to it. As a result, webhooks are only valid during the session in which an item is created; for previously created items, no transactions webhooks will be received, and no webhook will be received from the call to sandboxItemResetLogin.
-
-### Updating transactions to remove pending transactions that have posted or cancelled
-
-Upon receipt of a transactions webhook a call will be made to Plaid's transactions endpoint. Incoming transactions are compared to existing transactions. Any existing transactions that are not included in incoming transactions will be removed and any new transactions are added to the database. For an example, see the [handleTransactionsUpdate][transactions-handler] function.
+For webhooks to work, the server must be publicly accessible on the internet. For development purposes, this application uses [ngrok][ngrok-readme] to accomplish that. Therefore, if the server is re-started, any items created in this sample app previous to the current session will have a different webhook address attached to it. As a result, webhooks are only valid during the session in which an item is created; for previously created items no webhook will be received from the call to sandboxItemResetLogin.
 
 ### Testing OAuth
 
@@ -108,6 +100,10 @@ A redirect_uri parameter is included in the linkTokenCreate call and set in this
 You will also need to configure `http://localhost:3001/oauth-link` as an allowed redirect URI for your client ID through the [Plaid developer dashboard](https://dashboard.plaid.com/team/api).
 
 To test the OAuth flow, choose 'Playtypus OAuth Bank' from the list of financial instutions in Plaid Link.
+
+### Working with Plaid Partners
+
+This sample app can also demonstrate the creation of a processor token for use with Plaid partners. While still initializing Link with the Auth product, instead of of using Plaid Auth endpoints, an example of the creation of a processor token is included in the [root items route][items-routes].
 
 ## Debugging
 
@@ -226,11 +222,11 @@ See [`docs/troubleshooting.md`][troubleshooting].
 [node-pg]: https://github.com/brianc/node-postgres
 [nodejs]: https://nodejs.org/en/
 [plaid-node]: https://github.com/plaid/plaid-node
-[transactions-handler]: /server/webhookHandlers/handleTransactionsWebhook.js
-[transactions-webhooks]: https://plaid.com/docs/#transactions-webhooks
-[users-routes]: server/routes/users.js
+[items-handler]: /server/webhookHandlers/handleItemWebhook.js
+[error-webhooks]: https://plaid.com/docs/api/webhooks/#item-error
+[users-routes]: /server/routes/users.js
 [vscode-debugging]: https://code.visualstudio.com/docs/editor/debugging
-[client-img]: docs/pattern_screenshot.jpg
+[client-img]: docs/account_funding_screenshot.jpg
 [client-readme]: #plaid-pattern---client
 [docker]: https://docs.docker.com/
 [docker-compose]: https://docs.docker.com/compose/

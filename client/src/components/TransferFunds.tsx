@@ -35,8 +35,8 @@ const TransferFunds: React.FC<Props> = (props: Props) => {
             name="transfer amount"
             value={transferAmount}
             required
-            placeholder="0.00"
-            label="transfer_amount"
+            placeholder="$0.00"
+            label="Transfer amount"
             onChange={e => setTransferAmount(e.currentTarget.value)}
             className="transfer-funds__input"
           />

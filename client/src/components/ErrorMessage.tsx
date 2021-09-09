@@ -39,9 +39,9 @@ export default function ErrorMessage() {
   return (
     <>
       {show && (
-        <Callout className="errMsgCallout">
+        <Callout className="err-msg__callout">
           <IconButton
-            className="closeBtn"
+            className="close-btn"
             accessibilityLabel="close"
             onClick={() => {
               setShow(false);

@@ -26,9 +26,9 @@ const {
 const router = express.Router();
 
 /**
- * First exchanges a public token for a private token via the Plaid API,
- * stores the newly created item in the DB.  Then calls auth/get or identity/get
- * or processor/token/create and creates and stores newly created account in the DB.
+ * First exchanges a public token for a private token via the Plaid API and
+ * stores the newly created item in the DB.  Then fetches auth data or processor token and identity data from
+ * the Plaid API and creates and stores newly created account in the DB.
  *
  * @param {string} publicToken public token returned from the onSuccess call back in Link.
  * @param {string} institutionId the Plaid institution ID of the new item.
@@ -48,6 +48,20 @@ router.post(
       isAuth,
       isIdentity,
     } = req.body;
+
+    // exchange the public token for a private access token and store with the item.
+    const response = await plaid.itemPublicTokenExchange({
+      public_token: publicToken,
+    });
+    const accessToken = response.data.access_token;
+    const itemId = response.data.item_id;
+    const newItem = await createItem(
+      institutionId,
+      accessToken,
+      itemId,
+      userId
+    );
+
     // in case developer did not customize their Account Select in the dashboard to enable only one account,
     // choose the checking or savings account.
     const checkingAccount = accounts.filter(
@@ -63,19 +77,6 @@ router.post(
         : checkingAccount.length > 0
         ? checkingAccount[0]
         : savingsAccount[0];
-
-    // exchange the public token for a private access token and store with the item.
-    const response = await plaid.itemPublicTokenExchange({
-      public_token: publicToken,
-    });
-    const accessToken = response.data.access_token;
-    const itemId = response.data.item_id;
-    const newItem = await createItem(
-      institutionId,
-      accessToken,
-      itemId,
-      userId
-    );
 
     // the request is the same for both auth and identity calls
     const authAndIdRequest = {

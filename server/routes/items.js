@@ -26,12 +26,16 @@ const {
 const router = express.Router();
 
 /**
- * First exchanges a public token for a private token via the Plaid API
- * and then stores the newly created item in the DB.
+ * First exchanges a public token for a private token via the Plaid API,
+ * stores the newly created item in the DB.  Then calls auth/get or identity/get
+ * or processor/token/create and creates and stores newly created account in the DB.
  *
  * @param {string} publicToken public token returned from the onSuccess call back in Link.
  * @param {string} institutionId the Plaid institution ID of the new item.
  * @param {string} userId the Plaid user ID of the active user.
+ * @param {object} accounts the accounts chosen by the user from the onSuccess metadata.
+ * @param {boolean} isAuth false if developer is using a Plaid partner (processor)
+ * @param {boolean} isIdentity true if in identity mode.
  */
 router.post(
   '/',
@@ -59,16 +63,6 @@ router.post(
         : checkingAccount.length > 0
         ? checkingAccount[0]
         : savingsAccount[0];
-
-    // prevent duplicate items for the same institution per user.
-    const existingItem = await retrieveItemByPlaidInstitutionId(
-      institutionId,
-      userId
-    );
-    if (existingItem)
-      throw new Boom('You have already linked an item at this institution.', {
-        statusCode: 409,
-      });
 
     // exchange the public token for a private access token and store with the item.
     const response = await plaid.itemPublicTokenExchange({

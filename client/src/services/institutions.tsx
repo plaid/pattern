@@ -26,7 +26,6 @@ type InstitutionsAction = {
 interface InstitutionsContextShape extends InstitutionsState {
   dispatch: Dispatch<InstitutionsAction>;
   getInstitutionById: (id: string) => void;
-  formatLogoSrc: (src: string | null | undefined) => string;
 }
 const InstitutionsContext = createContext<InstitutionsContextShape>(
   initialState as InstitutionsContextShape
@@ -58,7 +57,6 @@ export function InstitutionsProvider(props: any) {
       institutionsById,
       getInstitutionById,
       getInstitutionsById: getInstitutionById,
-      formatLogoSrc,
     };
   }, [institutionsById, getInstitutionById]);
 
@@ -98,11 +96,4 @@ export default function useInstitutions() {
   }
 
   return context;
-}
-
-/**
- * @desc Prepends base64 encoded logo src for use in image tags
- */
-function formatLogoSrc(src: string) {
-  return src && `data:image/jpeg;base64,${src}`;
 }

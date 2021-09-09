@@ -10,13 +10,6 @@ import {
 import { postLinkEvent as apiPostLinkEvent } from '../services/api';
 
 /**
- * @desc small helper for pluralizing words for display given a number of items
- */
-export function pluralize(noun: string, count: number) {
-  return count === 1 ? noun : `${noun}s`;
-}
-
-/**
  * @desc converts number values into $ currency strings
  */
 export function currencyFilter(value: number | undefined) {
@@ -29,46 +22,6 @@ export function currencyFilter(value: number | undefined) {
   return `${isNegative ? '-' : ''}$${displayValue
     .toFixed(2)
     .replace(/(\d)(?=(\d{3})+(\.|$))/g, '$1,')}`;
-}
-
-const months = [
-  null,
-  'January',
-  'February',
-  'March',
-  'April',
-  'May',
-  'June',
-  'July',
-  'August',
-  'September',
-  'October',
-  'November',
-  'December',
-];
-
-/**
- * @desc Returns formatted date.
- */
-export function formatDate(timestamp: string) {
-  if (timestamp) {
-    // slice will return the first 10 char(date)of timestamp
-    // coming in as: 2019-05-07T15:41:30.520Z
-    const [y, m, d] = timestamp.slice(0, 10).split('-');
-    return `${months[+m]} ${d}, ${y}`;
-  }
-
-  return '';
-}
-
-/**
- * @desc Checks the difference between the current time and a provided time
- */
-export function diffBetweenCurrentTime(timestamp: string) {
-  return distanceInWords(new Date(), parse(timestamp), {
-    addSuffix: true,
-    includeSeconds: true,
-  }).replace(/^(about|less than)\s/i, '');
 }
 
 export const logEvent = (

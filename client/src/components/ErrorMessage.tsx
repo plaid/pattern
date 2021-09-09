@@ -5,7 +5,7 @@ import { CloseS2 } from 'plaid-threads/Icons/CloseS2';
 
 import useErrors from '../services/errors';
 
-//  Allows user to input their personal assets such as a house or car.
+// link errors that require a prompt for the enduser
 
 export default function ErrorMessage() {
   const [show, setShow] = useState(false);
@@ -34,6 +34,7 @@ export default function ErrorMessage() {
       setShow(false);
     }
   }, [error.code, error.message]);
+  console.log('in errormessage component', error);
 
   return (
     <>

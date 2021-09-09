@@ -10,9 +10,9 @@ const PLAID_ENV = process.env.REACT_APP_PLAID_ENV;
 
 interface Props {
   userId: number;
-  updateUser: (user: UserType) => void;
+  setUser: (user: UserType) => void;
 }
-const ConfirmIdentity: React.FC<Props> = (props: Props) => {
+const ConfirmIdentityForm: React.FC<Props> = (props: Props) => {
   const [fullname, setFullname] = useState('');
   const [email, setEmail] = useState('');
 
@@ -20,7 +20,7 @@ const ConfirmIdentity: React.FC<Props> = (props: Props) => {
   const handleSubmit = async (e: any) => {
     e.preventDefault();
     const { data: users } = await updateUserInfo(props.userId, fullname, email);
-    props.updateUser(users[0]);
+    props.setUser(users[0]);
     setFullname('');
     setEmail('');
   };
@@ -95,5 +95,5 @@ const ConfirmIdentity: React.FC<Props> = (props: Props) => {
   );
 };
 
-ConfirmIdentity.displayName = 'ConfirmIdentity';
-export default ConfirmIdentity;
+ConfirmIdentityForm.displayName = 'ConfirmIdentityForm';
+export default ConfirmIdentityForm;

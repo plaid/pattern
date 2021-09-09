@@ -4,25 +4,28 @@ import { Button } from 'plaid-threads/Button';
 
 import { AccountType, AppFundType } from './types';
 import { currencyFilter } from '../util';
-import { TransferFunds } from '.';
+import { TransferForm } from '.';
 import { updateAppFundsBalance } from '../services/api';
 
 const IS_PROCESSOR = process.env.REACT_APP_IS_PROCESSOR;
 
-interface TransferResonse {
+interface TransferResponse {
   newAccount: AccountType;
   newAppFunds: AppFundType;
 }
 interface Props {
   account: AccountType;
   userId: number;
-  updateAppFund: (appFund: AppFundType) => void;
-  closeTransferView: () => void;
+  setAppFund: (appFund: AppFundType) => void;
+  setShowTransfer: (arg: boolean) => void;
   institutionName: string | null;
   setAccount: (arg: AccountType) => void;
 }
 
-export default function AccountBalanceCheck(props: Props) {
+// This component checks to make sure the amount of transfer does not
+// exceed the balance in the account and then initiates the ach transfer or processor request
+
+export default function Transfers(props: Props) {
   const [isAmountOkay, setIsAmountOkay] = useState(true);
   const [transferAmount, setTransferAmount] = useState(0);
   const [isTransferConfirmed, setIsTransferconfirmed] = useState(false);
@@ -75,14 +78,14 @@ export default function AccountBalanceCheck(props: Props) {
       if (confirmedAmount == null) {
         setShowTransferConfirmationError(true);
       } else {
-        const response: TransferResonse | any = await updateAppFundsBalance(
+        const response: TransferResponse | any = await updateAppFundsBalance(
           // this route updates the appFunds with the new balance and also
           // increments the number of transfers for this account by 1
           props.userId,
           confirmedAmount,
           account.plaid_account_id
         );
-        props.updateAppFund(response.data.newAppFunds);
+        props.setAppFund(response.data.newAppFunds);
         props.setAccount(response.data.newAccount);
         setIsTransferconfirmed(true);
       }
@@ -93,8 +96,8 @@ export default function AccountBalanceCheck(props: Props) {
     <>
       <div>
         {showInput && (
-          <TransferFunds
-            closeTransferView={props.closeTransferView}
+          <TransferForm
+            setShowTransfer={props.setShowTransfer}
             checkAmountAndInitiate={checkAmountAndInitiate}
             setShowInput={setShowInput}
           />
@@ -113,7 +116,7 @@ export default function AccountBalanceCheck(props: Props) {
               small
               centered
               inline
-              onClick={() => props.closeTransferView()}
+              onClick={() => props.setShowTransfer(false)}
             >
               Done
             </Button>
@@ -132,7 +135,7 @@ export default function AccountBalanceCheck(props: Props) {
               small
               centered
               inline
-              onClick={() => props.closeTransferView()}
+              onClick={() => props.setShowTransfer(false)}
             >
               Back
             </Button>

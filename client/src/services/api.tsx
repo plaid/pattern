@@ -3,8 +3,6 @@ import React from 'react';
 import { toast } from 'react-toastify';
 import { PlaidLinkOnSuccessMetadata } from 'react-plaid-link';
 
-import { DuplicateItemToastMessage } from '../components';
-
 const baseURL = '/';
 
 const api = axios.create({
@@ -106,13 +104,6 @@ export const exchangeToken = async (
     });
     return data;
   } catch (err) {
-    const { response } = err;
-    if (response && response.status === 409) {
-      toast.error(
-        <DuplicateItemToastMessage institutionName={institution.name} />
-      );
-    } else {
-      toast.error(`Error linking ${institution.name}`);
-    }
+    toast.error(`Error linking ${institution.name}`);
   }
 };

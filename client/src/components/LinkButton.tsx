@@ -1,6 +1,4 @@
 import React, { useEffect } from 'react';
-import Button from 'plaid-threads/Button';
-import Touchable from 'plaid-threads/Touchable';
 import {
   usePlaidLink,
   PlaidLinkOnSuccessMetadata,
@@ -70,11 +68,15 @@ export default function LinkButton(props: Props) {
   ) => {
     // log and save error and metatdata
     logExit(error, metadata, props.userId);
-    if (error != null && error.error_code === 'INVALID_LINK_TOKEN') {
-      await generateLinkToken(props.userId, props.itemId, props.isIdentity);
-    }
     if (error != null) {
-      setError(error.error_code, error.display_message || error.error_message);
+      if (error.error_code === 'INVALID_LINK_TOKEN') {
+        await generateLinkToken(props.userId, props.itemId, props.isIdentity);
+      } else {
+        setError(
+          error.error_code,
+          error.display_message || error.error_message
+        );
+      }
     }
     // to handle other error codes, see https://plaid.com/docs/errors/
   };
@@ -104,7 +106,7 @@ export default function LinkButton(props: Props) {
   const { open, ready } = usePlaidLink(config);
 
   useEffect(() => {
-    // initiallizes Link automatically if it is handling an OAuth reidrect
+    // initiallizes Link automatically
     if (props.isOauth && ready) {
       open();
     } else if (ready) {

@@ -22,9 +22,9 @@ import {
   Banner,
   UserCard,
   ErrorMessage,
-  ConfirmIdentity,
-  MainAccount,
-  AccountBalanceCheck,
+  ConfirmIdentityForm,
+  PatternAccount,
+  Transfers,
 } from '.';
 
 const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
@@ -35,16 +35,14 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
     email: null,
     identity_check: false,
     should_verify_identity: true,
-    app_funds_balance: 0,
     created_at: '',
     updated_at: '',
   });
-  const [appFund, setAppFund] = useState<AppFundType>();
+  const [appFund, setAppFund] = useState<AppFundType | null>(null);
   const [item, setItem] = useState<ItemType | null>(null);
   const [numOfItems, setNumOfItems] = useState(0);
   const [account, setAccount] = useState<AccountType | null>(null);
   const [institution, setInstitution] = useState<Institution | null>(null);
-
   const [isIdentityChecked, setIsIdentityChecked] = useState(
     user.identity_check
   );
@@ -59,6 +57,30 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
     const { data: appFunds } = await getAppFundsByUser(userId);
     setAppFund(appFunds);
   }, []);
+
+  const getBalance = useCallback(async () => {
+    // This is triggered when user clicks "transfer funds."
+    // Only call balance/get if this is not the initial transfer (because the balance data already exists
+    // from the auth/get or identity/get make upon creating the item).
+    // However, if neither auth nor identity have not been called on item creation (i.e. account.available_balance=null),
+    // make the balance/get call
+    if (
+      account != null &&
+      item != null &&
+      (account.number_of_transfers !== 0 || account.available_balance == null)
+    ) {
+      const { data: newAccount } = await getBalanceByItem(
+        item.id,
+        account.plaid_account_id
+      );
+      setAccount(newAccount || {});
+    }
+  }, [account, item]);
+
+  const userTransfer = () => {
+    getBalance();
+    setShowTransfer(true);
+  };
 
   // functions to check username and email against data from identity/get
   const checkFullName = useCallback(
@@ -86,49 +108,12 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
   const checkUserEmail = useCallback((emails: string[], user_email) => {
     return emails.includes(user_email);
   }, []);
-
-  const updateAppFund = useCallback(async (appFund: AppFundType) => {
-    console.log(appFund);
-    setAppFund(appFund);
-  }, []);
-
-  const updateUser = useCallback(async (user: UserType) => {
-    setUser(user);
-  }, []);
-
-  const getBalance = useCallback(async () => {
-    // only call balance/get if this is not the initial transfer (because the balance data already exists
-    // from the auth/get or identity/get make upon creating the item).
-    // However, if neither auth nor identity have not been called on item creation (i.e. account.available_balance=null),
-    // make the balance/get call
-    if (
-      account != null &&
-      item != null &&
-      (account.number_of_transfers !== 0 || account.available_balance == null)
-    ) {
-      const { data: newAccount } = await getBalanceByItem(
-        item.id,
-        account.plaid_account_id
-      );
-      setAccount(newAccount || {});
-    }
-  }, [account, item]);
-
-  const userTransfer = () => {
-    getBalance();
-    setShowTransfer(true);
-  };
-
-  const closeTransferView = () => {
-    setShowTransfer(false);
-  };
-
   // update data store with user
   useEffect(() => {
     getUserById(userId, false);
   }, [getUserById, userId]);
 
-  // set state user from data store
+  // set state user and isIdentityChecked from data store
   useEffect(() => {
     setUser(usersById[userId] || {});
     if (usersById[userId] != null) {
@@ -140,20 +125,20 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
     }
   }, [usersById, userId]);
 
-  // update data store with the user's items
+  // update data store with the user's item
   useEffect(() => {
     if (userId != null) {
       getItemsByUser(userId, true);
     }
   }, [getItemsByUser, userId]);
 
-  // update state items from data store
+  // update state item from data store
   useEffect(() => {
     const newItems: Array<ItemType> = itemsByUser[userId] || [];
     setItem(newItems[0]);
   }, [itemsByUser, userId]);
 
-  // update no of items from data store
+  // update state number of items from data store
   useEffect(() => {
     if (itemsByUser[userId] != null) {
       setNumOfItems(itemsByUser[userId].length);
@@ -162,7 +147,7 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
     }
   }, [itemsByUser, userId]);
 
-  // update data store with the user's accounts
+  // update data store with the user's account
   useEffect(() => {
     getAccountsByUser(userId);
   }, [getAccountsByUser, userId, numOfItems]);
@@ -188,7 +173,7 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
     }
   }, [institutionsById, item]);
 
-  // update data store with the user's app fund
+  // update state with the user's app fund
   useEffect(() => {
     getAppFund(userId);
   }, [userId, getAppFund]);
@@ -228,45 +213,38 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
         item={item}
         isIdentityChecked={isIdentityChecked}
       />
-      {numOfItems > 0 && (
+      <ErrorMessage />
+      {numOfItems > 0 && !isIdentityChecked && (
         <>
-          <ErrorMessage />
-
-          {isIdentityChecked && (
-            <>
-              {showTransfer && account != null && institution != null && (
-                <AccountBalanceCheck
-                  institutionName={institution.name}
-                  userId={userId}
-                  updateAppFund={updateAppFund}
-                  closeTransferView={closeTransferView}
-                  account={account}
-                  setAccount={setAccount}
-                />
-              )}
-            </>
-          )}
-
-          {!isIdentityChecked && (
-            <>
-              <Callout warning>
-                {' '}
-                We were not able to verify your identity. Please update your
-                name and email address below.{' '}
-              </Callout>
-              <ConfirmIdentity userId={userId} updateUser={updateUser} />
-            </>
-          )}
+          <Callout warning>
+            {' '}
+            We were not able to verify your identity. Please update your name
+            and email address below.{' '}
+          </Callout>
+          <ConfirmIdentityForm userId={userId} setUser={setUser} />
         </>
       )}
       {appFund != null && !showTransfer && isIdentityChecked && (
-        <MainAccount
+        <PatternAccount
           userTransfer={userTransfer}
           user={user}
-          updateUser={updateUser}
           appFund={appFund}
           numOfItems={numOfItems}
         />
+      )}
+      {isIdentityChecked && (
+        <>
+          {showTransfer && account != null && institution != null && (
+            <Transfers
+              institutionName={institution.name}
+              userId={userId}
+              setAppFund={setAppFund}
+              setShowTransfer={setShowTransfer}
+              account={account}
+              setAccount={setAccount}
+            />
+          )}
+        </>
       )}
     </div>
   );

@@ -56,7 +56,6 @@ export interface UserType {
   email: string | null;
   identity_check: boolean;
   should_verify_identity: boolean;
-  app_funds_balance: number;
   created_at: string;
   updated_at: string;
 }

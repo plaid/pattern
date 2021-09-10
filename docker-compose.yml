@@ -51,7 +51,7 @@ services:
     build: ./client
     image: plaidinc/pattern-client:1.0.7
     ports:
-      - 3001:3001
+      - 3002:3002
     environment:
       REACT_APP_PLAID_ENV: ${PLAID_ENV}
       REACT_APP_IS_PROCESSOR: ${IS_PROCESSOR}

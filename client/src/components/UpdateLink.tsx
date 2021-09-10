@@ -14,11 +14,13 @@ interface Props {
 
 export function UpdateLink(props: Props) {
   const [token, setToken] = useState('');
+  const [showLink, setShowLink] = useState(false);
 
   const { generateLinkToken, linkTokens } = useLink();
 
   const initiateLinkUpdate = async () => {
     generateLinkToken(props.userId, props.itemId, false); // itemId is set because link is in update mode; isAuth and isIdentity are false in update mode;
+    setShowLink(true);
   };
 
   useEffect(() => {
@@ -32,7 +34,7 @@ export function UpdateLink(props: Props) {
           Update Login
         </Button>
       }
-      {token != null && token.length > 0 && (
+      {token != null && token.length > 0 && showLink && (
         <LinkButton
           userId={props.userId}
           itemId={props.itemId}

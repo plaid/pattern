@@ -302,7 +302,7 @@ router.post(
       });
       res.json(resetResponse.data);
     } catch (error) {
-      if (error.response.status === 400) {
+      if (error.response && error.response.status === 400) {
         console.log(
           'Ngrok webhook addresses are only valid for 2 hours and only during the session in which an item is created; for previously created items, no webhook will be received from the call to sandboxItemResetLogin. If your current session has been longer than 2 hours, restart your server to test the item reset login.  Otherwise, create a new item to test. For more information, see the troubleshooting guide in the readme file.'
         );

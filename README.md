@@ -107,6 +107,10 @@ To test the OAuth flow, choose 'Playtypus OAuth Bank' from the list of financial
 
 This sample app can also demonstrate the creation of a processor token for use with Plaid partners. While still initializing Link with the Auth product, instead of of using Plaid Auth endpoints, an example of the creation of a processor token is included in the [root items route][items-routes].
 
+### Verifying and transferring funds
+
+This sample app demonstrates how to get the available balance in order to verify funds. It does not actually conduct a transfer of funds. Therefore, the balance in the linked account (whether in sandbox or development) will not decrement when a transfer is made in this app.
+
 ## Debugging
 
 The node debugging port (9229) is exposed locally on port 9229.

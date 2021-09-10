@@ -117,7 +117,7 @@ router.get(
  * @returns {Object[]} an array of accounts.
  */
 router.put(
-  '/:userId',
+  '/:userId/identity_check',
   asyncWrapper(async (req, res) => {
     const { userId } = req.params;
     const { identityCheck } = req.body;

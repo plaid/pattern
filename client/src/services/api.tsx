@@ -28,8 +28,10 @@ export const addNewUser = (
   email: string,
   shouldVerifyIdentity: boolean
 ) => api.post('/users', { username, fullname, email, shouldVerifyIdentity });
-export const setIdentityCheckById = (userId: number, identityCheck: boolean) =>
-  api.put(`/users/${userId}`, { identityCheck });
+export const updateIdentityCheckById = (
+  userId: number,
+  identityCheck: boolean
+) => api.put(`/users/${userId}/identity_check`, { identityCheck });
 export const updateUserInfo = (
   userId: number,
   fullname: string,

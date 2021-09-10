@@ -34,7 +34,6 @@ export default function ErrorMessage() {
       setShow(false);
     }
   }, [error.code, error.message]);
-  console.log('in errormessage component', error);
 
   return (
     <>

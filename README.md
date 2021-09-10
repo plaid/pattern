@@ -204,7 +204,7 @@ See [`docs/troubleshooting.md`][troubleshooting].
 
 ## License
 
-[MIT](LICENSE)
+Plaid Pattern is a demo app that is intended to be used only for the purpose of demonstrating how you can integrate with Plaid. You are solely responsible for ensuring the correctness, legality, security, privacy, and compliance of your own app and Plaid integration. The Pattern code is licensed under the [MIT License](LICENSE) and is provided as-is and without warranty of any kind. Plaid Pattern is provided for demonstration purposes only and is not intended for use in production environments.
 
 [create-script]: database/init/create.sql
 [docker-compose]: ./docker-compose.yml

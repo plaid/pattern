@@ -13,7 +13,7 @@ import {
 } from './types';
 import { useItems, useAccounts, useUsers, useInstitutions } from '../services';
 import {
-  setIdentityCheckById,
+  updateIdentityCheckById,
   getBalanceByItem,
   getAppFundsByUser,
 } from '../services/api';
@@ -188,7 +188,7 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
     ) {
       const fullnameCheck = checkFullName(account.owner_names, user.fullname);
       const emailCheck = checkUserEmail(account!.emails, user.email);
-      setIdentityCheckById(userId, fullnameCheck && emailCheck); // update user_table in db
+      updateIdentityCheckById(userId, fullnameCheck && emailCheck); // update user_table in db
       setIsIdentityChecked(fullnameCheck && emailCheck); // set state
     }
   }, [account, checkUserEmail, checkFullName, userId, isIdentityChecked, user]);

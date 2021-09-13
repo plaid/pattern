@@ -202,7 +202,7 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
         BACK TO LOGIN
       </NavigationLink>
 
-      <Banner />
+      <Banner username={user.username} />
       <UserCard
         user={user}
         userId={userId}

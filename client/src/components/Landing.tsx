@@ -23,29 +23,37 @@ export default function Landing() {
   };
   return (
     <div>
-      <Banner initialSubheading />
-      If you don't have an account, please click "Create Account".
-      <div className="btns-container">
-        <Login />
-        <Button
-          className="btn-with-margin"
-          onClick={toggleForm}
-          centered
-          inline
-        >
-          Create Account
-        </Button>
-        {userState.currentUser.username != null && (
-          <Button
-            className="btnWithMargin"
-            centered
-            inline
-            onClick={returnToCurrentUser}
-          >
-            Return to Current User
-          </Button>
-        )}
-      </div>
+      <Banner initialSubheading username={''} />
+      {!isAdding && (
+        <>
+          <div>
+            {' '}
+            If you don't have an account, please click "Create Account".
+          </div>
+
+          <div className="btns-container">
+            <Login />
+            <Button
+              className="btn-with-margin"
+              onClick={toggleForm}
+              centered
+              inline
+            >
+              Create Account
+            </Button>
+            {userState.currentUser.username != null && (
+              <Button
+                className="btnWithMargin"
+                centered
+                inline
+                onClick={returnToCurrentUser}
+              >
+                Return to Current User
+              </Button>
+            )}
+          </div>
+        </>
+      )}
       {isAdding && <AddUserForm hideForm={hideForm} />}
     </div>
   );

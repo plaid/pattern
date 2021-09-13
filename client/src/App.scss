@@ -34,16 +34,17 @@ shared styles
 }
 
 .box {
-  border: $border;
-  border-radius: $border-radius;
-  margin-bottom: 3 * $unit;
-  box-shadow: $shadow-xsmall;
+  // border: $border;
+  // border-radius: $border-radius;
+  // margin-bottom: 3 * $unit;
+  // box-shadow: $shadow-xsmall;
 }
 
 .card {
-  display: flex;
-  padding: 2rem;
-  align-items: center;
+  // display: flex;
+  // // padding: 2rem;
+  // align-items: center;
+  // justify-content: flex-start;
 }
 
 .heading {
@@ -140,13 +141,13 @@ UserCard
 
 */
 
-.user-card__box {
-  box-shadow: $shadow-medium;
-  border-bottom: $border;
-}
+// .user-card__box {
+//   box-shadow: $shadow-medium;
+//   border-bottom: $border;
+// }
 .user-card {
-  display: grid;
-  grid-template-columns: 7fr 3fr;
+  // display: grid;
+  // grid-template-columns: 7fr 3fr;
 }
 
 .user-card__no-link {
@@ -194,7 +195,7 @@ Item info
   justify-content: center;
   align-items: flex-end;
   .remove_bank_button {
-    max-width: 10 * $unit;
+    // max-width: 10 * $unit;
   }
 }
 

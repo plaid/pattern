@@ -65,13 +65,11 @@ const ItemInfo = (props: Props) => {
             <div className="update_mode_note">
               {isGoodState ? (
                 <Note info solid>
-                  Login
-                  <br />
-                  Updated
+                  Login Updated
                 </Note>
               ) : (
                 <Note error solid>
-                  Login <br /> Required
+                  Login Required
                 </Note>
               )}
             </div>

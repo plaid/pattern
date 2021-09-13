@@ -47,7 +47,7 @@ const AddUserForm = (props: Props) => {
     <div className="box addUserForm">
       <form onSubmit={handleSubmit}>
         <div>
-          <h3 className="heading add-user__heading">Add a new user</h3>
+          <h3 className="heading add-user__heading">Create an account</h3>
           <div className="card">
             <div className="add-user__column-1">
               <Checkbox

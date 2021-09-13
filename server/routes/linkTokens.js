@@ -59,7 +59,7 @@ router.post(
       res.json(createResponse.data);
     } catch (err) {
       console.log('error while fetching client token', err.response.data);
-      res.send(err.response.data);
+      return res.json(err.response.data);
     }
   })
 );

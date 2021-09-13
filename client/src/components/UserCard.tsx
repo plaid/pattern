@@ -68,10 +68,6 @@ export default function UserCard(props: Props) {
       <div className="box user-card__box">
         <div className={userClassName}>
           <div className="user-card__info">
-            <div>
-              <h3 className="heading">username</h3>
-              <p className="value">{props.user.username}</p>
-            </div>
             {numOfItems !== 0 && (
               <ItemInfo
                 item={props.item}
@@ -89,7 +85,7 @@ export default function UserCard(props: Props) {
               className="add-account-button"
               onClick={initiateLink}
             >
-              Add your checking or savings account
+              Add a bank account
             </Button>
           )}
           {(props.removeButton || (props.linkButton && numOfItems === 0)) && (

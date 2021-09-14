@@ -44,9 +44,11 @@ export default function Transfers(props: Props) {
   const balance = account.available_balance;
 
   const errorMessage = !isAmountOkay
-    ? `We are unable to verify ${currencyFilter(
-        transferAmount
-      )} in your bank account.`
+    ? transferAmount <= 0
+      ? `You must enter an amount greater than $0.00`
+      : `We are unable to verify ${currencyFilter(
+          transferAmount
+        )} in your bank account.`
     : `Oops! Something went wrong with the transfer. Try again later.`;
 
   const sendRequestToProcessor = (amount: number, processorToken: string) => {
@@ -69,7 +71,7 @@ export default function Transfers(props: Props) {
   };
 
   const checkAmountAndInitiate = async (amount: number) => {
-    setIsAmountOkay(balance != null && amount <= balance);
+    setIsAmountOkay(balance != null && amount <= balance && amount > 0);
     setTransferAmount(amount);
     setShowTransferConfirmationError(false);
 

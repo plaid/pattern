@@ -61,13 +61,12 @@ export default function UserCard(props: Props) {
     }
   }, [linkTokens, props.userId, numOfItems]);
 
-  const userClassName =
-    numOfItems === 0 ? 'card user-card' : 'card user-card__no-link';
+  const userClassName = numOfItems === 0 ? 'user-card' : 'user-card__no-link';
   return (
     <>
-      <div className="box user-card__box">
+      <div>
         <div className={userClassName}>
-          <div className="user-card__info">
+          <div>
             {numOfItems !== 0 && (
               <ItemInfo
                 item={props.item}

@@ -50,7 +50,7 @@ const ItemInfo = (props: Props) => {
   };
 
   return (
-    <>
+    <div className="item-info">
       <div>
         <h3 className="heading">bank</h3>
         {institution != null && <p className="value">{institution.name}</p>}
@@ -108,7 +108,7 @@ const ItemInfo = (props: Props) => {
           </div>
         </>
       )}
-    </>
+    </div>
   );
 };
 

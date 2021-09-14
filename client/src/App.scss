@@ -34,17 +34,17 @@ shared styles
 }
 
 .box {
-  // border: $border;
-  // border-radius: $border-radius;
-  // margin-bottom: 3 * $unit;
-  // box-shadow: $shadow-xsmall;
+  border: $border;
+  border-radius: $border-radius;
+  margin-bottom: 3 * $unit;
+  box-shadow: $shadow-xsmall;
 }
 
 .card {
-  // display: flex;
-  // // padding: 2rem;
-  // align-items: center;
-  // justify-content: flex-start;
+  display: flex;
+  padding: 2rem;
+  align-items: center;
+  justify-content: flex-start;
 }
 
 .heading {
@@ -155,12 +155,6 @@ UserCard
   grid-template-columns: 1fr;
 }
 
-.user-card__info {
-  display: grid;
-  grid-template-columns: 3fr 3fr 7fr 3fr 3fr;
-  margin-left: 2 * $unit;
-}
-
 .user-card__button {
   padding-left: 3 * $unit;
   flex: 1;
@@ -179,6 +173,11 @@ UserCard
 Item info
 
 */
+
+.item-info {
+  display: grid;
+  grid-template-columns: 3fr 7fr 7fr 3fr;
+}
 .test-update-mode {
   display: flex;
   flex-direction: column;

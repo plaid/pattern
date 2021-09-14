@@ -14,6 +14,7 @@ const Login = () => {
   const handleSubmit = () => {
     setShow(false);
     login(value);
+    setValue('');
   };
 
   return (
@@ -21,10 +22,19 @@ const Login = () => {
       <Button centered inline onClick={() => setShow(!show)}>
         Login
       </Button>
-      <Modal isOpen={show} onRequestClose={() => setShow(false)}>
+      <Modal
+        isOpen={show}
+        onRequestClose={() => {
+          setShow(false);
+          setValue('');
+        }}
+      >
         <>
           <ModalBody
-            onClickCancel={() => setShow(false)}
+            onClickCancel={() => {
+              setShow(false);
+              setValue('');
+            }}
             header="User Login"
             isLoading={false}
             onClickConfirm={handleSubmit}
@@ -32,7 +42,7 @@ const Login = () => {
           >
             <TextInput
               label=""
-              id="id-6"
+              id="username"
               placeholder="Enter User Name"
               value={value}
               onChange={e => setValue(e.currentTarget.value)}

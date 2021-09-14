@@ -133,9 +133,5 @@ export default function LinkButton(props: Props) {
     props.isIdentity,
   ]);
 
-  return (
-    <>
-      <div>{}</div>
-    </>
-  );
+  return <></>;
 }

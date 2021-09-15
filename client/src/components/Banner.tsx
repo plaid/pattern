@@ -3,7 +3,6 @@ import Button from 'plaid-threads/Button';
 
 interface Props {
   initialSubheading?: boolean;
-  isLanding?: boolean;
   username?: string | null;
 }
 

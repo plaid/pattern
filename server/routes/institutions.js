@@ -30,6 +30,8 @@ router.get(
         include_optional_metadata: true,
       },
     };
+
+    console.log('request1!', request);
     const response = await plaid.institutionsGet(request);
     const institutions = response.data.institutions;
     res.json(toArray(institutions));
@@ -53,6 +55,7 @@ router.get(
         include_optional_metadata: true,
       },
     };
+    console.log('request2!', request);
     try {
       const response = await plaid.institutionsGetById(request);
       const institution = response.data.institution;

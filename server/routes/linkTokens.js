@@ -51,6 +51,8 @@ router.post(
         webhook: httpTunnel.public_url + '/services/webhook',
         access_token: accessToken,
       };
+
+      console.log(linkTokenParams);
       // If user has entered a redirect uri in the .env file
       if (redirect_uri.indexOf('http') === 0) {
         linkTokenParams.redirect_uri = redirect_uri;
@@ -58,7 +60,6 @@ router.post(
       const createResponse = await plaid.linkTokenCreate(linkTokenParams);
       res.json(createResponse.data);
     } catch (err) {
-      console.log('redirecturs', redirect_uri);
       console.log('error while fetching client token', err.response.data);
       return res.json(err.response.data);
     }

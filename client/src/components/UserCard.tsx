@@ -4,7 +4,7 @@ import Button from 'plaid-threads/Button';
 import Note from 'plaid-threads/Note';
 import { Institution } from 'plaid/dist/api';
 
-import { LinkButton, ItemInfo, UpdateLink } from '.';
+import { LinkButton, UpdateLink } from '.';
 import { useItems, useLink, useInstitutions, useAccounts } from '../services';
 import { UserType, ItemType } from './types';
 import { setItemToBadState } from '../services/api';
@@ -25,7 +25,7 @@ interface Props {
 
 export default function UserCard(props: Props) {
   const [numOfItems, setNumOfItems] = useState(0);
-  const [token, setToken] = useState('');
+  const [token, setToken] = useState<string | null>('');
   const [institution, setInstitution] = useState<Institution | null>(null);
 
   const { itemsByUser, getItemsByUser, deleteItemById } = useItems();
@@ -39,7 +39,7 @@ export default function UserCard(props: Props) {
   const isIdentity = props.user.should_verify_identity;
   const id = props.item != null ? props.item.id : 0;
   const plaid_institution_id =
-    props.item != null ? props.item.plaid_institution_id : '';
+    props.item != null ? props.item.plaid_institution_id : null;
 
   const initiateLink = async () => {
     // only generate a link token upon a click from enduser to add a bank;
@@ -47,11 +47,17 @@ export default function UserCard(props: Props) {
     await generateLinkToken(props.userId, null, isIdentity);
   };
 
+  const handleSetBadState = () => {
+    setItemToBadState(id);
+  };
+  const handleDeleteItem = () => {
+    deleteItemById(id, props.userId);
+    deleteAccountsByItemId(id);
+    deleteLinkToken(props.userId);
+  };
   // update data store with the user's items
   useEffect(() => {
-    if (props.userId) {
-      getItemsByUser(props.userId, true);
-    }
+    getItemsByUser(props.userId, true);
   }, [getItemsByUser, props.userId]);
 
   // update no of items from data store
@@ -67,28 +73,24 @@ export default function UserCard(props: Props) {
     if (numOfItems === 0) {
       setToken(linkTokens.byUser[props.userId]);
     } else {
-      setToken('');
+      setToken(null);
     }
   }, [linkTokens, props.userId, numOfItems]);
 
   useEffect(() => {
-    setInstitution(institutionsById[plaid_institution_id] || {});
+    if (plaid_institution_id != null) {
+      setInstitution(institutionsById[plaid_institution_id] || {});
+    }
   }, [institutionsById, plaid_institution_id]);
 
   useEffect(() => {
-    getInstitutionById(plaid_institution_id);
+    if (plaid_institution_id != null) {
+      getInstitutionById(plaid_institution_id);
+    }
   }, [getInstitutionById, plaid_institution_id]);
 
-  const handleSetBadState = () => {
-    setItemToBadState(id);
-  };
-  const handleDeleteItem = () => {
-    deleteItemById(id, props.userId);
-    deleteAccountsByItemId(id);
-    deleteLinkToken(props.userId);
-  };
-
-  const userClassName = numOfItems === 0 ? 'user-card' : 'user-card__no-link';
+  const userClassName =
+    numOfItems === 0 ? 'user-card' : '  box card user-card__no-link';
   return (
     <>
       <div>
@@ -170,7 +172,7 @@ export default function UserCard(props: Props) {
           {(props.removeButton || (props.linkButton && numOfItems === 0)) && (
             // Plaid React Link cannot be rendered without a link token
             <div className="user-card__button">
-              {token != null && token.length > 0 && props.linkButton && (
+              {token != null && props.linkButton && (
                 <LinkButton
                   userId={props.userId}
                   token={token}

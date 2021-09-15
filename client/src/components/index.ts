@@ -1,7 +1,6 @@
 export { default as Transfers } from './Transfers';
 export { default as AddUserForm } from './AddUserForm';
 export { default as Banner } from './Banner';
-export { default as ItemInfo } from './ItemInfo';
 export { default as UserPage } from './UserPage';
 export { default as Landing } from './Landing';
 export { default as LinkButton } from './LinkButton';

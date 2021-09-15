@@ -141,13 +141,9 @@ UserCard
 
 */
 
-// .user-card__box {
-//   box-shadow: $shadow-medium;
-//   border-bottom: $border;
-// }
-.user-card {
-  // display: grid;
-  // grid-template-columns: 7fr 3fr;
+.user-card__box {
+  box-shadow: $shadow-medium;
+  border-bottom: $border;
 }
 
 .user-card__no-link {
@@ -193,9 +189,6 @@ Item info
   display: flex;
   justify-content: center;
   align-items: flex-end;
-  .remove_bank_button {
-    // max-width: 10 * $unit;
-  }
 }
 
 /*

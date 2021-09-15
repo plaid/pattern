@@ -23,7 +23,7 @@ export default function Landing() {
   };
   return (
     <div>
-      <Banner initialSubheading username={''} isLanding={true} />
+      <Banner initialSubheading />
       {!isAdding && (
         <>
           <div>

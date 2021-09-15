@@ -1,7 +1,5 @@
-import React, { useState } from 'react';
+import React from 'react';
 import Button from 'plaid-threads/Button';
-
-const PLAID_ENV = process.env.REACT_APP_PLAID_ENV;
 
 interface Props {
   initialSubheading?: boolean;
@@ -19,7 +17,7 @@ const Banner = (props: Props) => {
 
   return (
     <div id="banner" className="bottom-border-content">
-      {!props.isLanding && <h4>username: {props.username} </h4>}
+      {!props.initialSubheading && <h4>username: {props.username} </h4>}
       <div className="header">
         <h1 className="everpresent-content__heading">Plaid Pattern</h1>
         <Button

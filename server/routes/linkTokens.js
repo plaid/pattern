@@ -52,7 +52,6 @@ router.post(
         access_token: accessToken,
       };
 
-      console.log(linkTokenParams);
       // If user has entered a redirect uri in the .env file
       if (redirect_uri.indexOf('http') === 0) {
         linkTokenParams.redirect_uri = redirect_uri;

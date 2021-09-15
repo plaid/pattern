@@ -23,7 +23,7 @@ interface Props {
   isIdentityChecked: boolean;
 }
 
-export default function UserCard(props: Props) {
+export default function Item(props: Props) {
   const [numOfItems, setNumOfItems] = useState(0);
   const [token, setToken] = useState<string | null>('');
   const [institution, setInstitution] = useState<Institution | null>(null);
@@ -90,7 +90,7 @@ export default function UserCard(props: Props) {
   }, [getInstitutionById, plaid_institution_id]);
 
   const userClassName =
-    numOfItems === 0 ? 'user-card' : '  box card user-card__no-link';
+    numOfItems === 0 ? 'user-card' : '  box card item-no-link';
   return (
     <>
       <div>
@@ -110,7 +110,7 @@ export default function UserCard(props: Props) {
               {props.numOfItems !== 0 && (
                 <>
                   <div className="test-update-mode">
-                    <div className="update_mode_note">
+                    <div className="update-mode__note">
                       {isGoodState ? (
                         <Note info solid>
                           Login Updated
@@ -142,9 +142,8 @@ export default function UserCard(props: Props) {
                       />
                     )}
                   </div>
-                  <div className="remove_bank_button_container">
+                  <div className="remove-bank__button-container">
                     <Button
-                      className="remove_bank_button "
                       small
                       inline
                       secondary
@@ -163,7 +162,7 @@ export default function UserCard(props: Props) {
             <Button
               large
               inline
-              className="add-account-button"
+              className="add-account__button"
               onClick={initiateLink}
             >
               Add a bank account
@@ -171,7 +170,7 @@ export default function UserCard(props: Props) {
           )}
           {(props.removeButton || (props.linkButton && numOfItems === 0)) && (
             // Plaid React Link cannot be rendered without a link token
-            <div className="user-card__button">
+            <div className="item__button">
               {token != null && props.linkButton && (
                 <LinkButton
                   userId={props.userId}
@@ -185,7 +184,7 @@ export default function UserCard(props: Props) {
           )}
         </div>
       </div>
-      <div className="user-card__callouts">
+      <div className="item__callouts">
         {isSandbox && !isGoodState && (
           <Callout warning>
             Please update your login credentials at your bank

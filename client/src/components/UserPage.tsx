@@ -20,7 +20,7 @@ import {
 
 import {
   Banner,
-  UserCard,
+  Item,
   ErrorMessage,
   ConfirmIdentityForm,
   PatternAccount,
@@ -203,7 +203,7 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
       </NavigationLink>
 
       <Banner username={user.username} />
-      <UserCard
+      <Item
         user={user}
         userId={userId}
         removeButton={false}

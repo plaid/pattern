@@ -18,7 +18,7 @@ const PatternAccount = (props: Props) => {
     props.userTransfer();
   };
   return (
-    <div>
+    <div className="pattern-account">
       <div className="pattern-account__header">
         <h3 className="account-balance">Plaid Pattern Funds Balance</h3>{' '}
         {props.numOfItems > 0 && (

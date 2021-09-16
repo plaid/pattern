@@ -43,7 +43,7 @@ export default function Landing() {
             </Button>
             {userState.currentUser.username != null && (
               <Button
-                className="btnWithMargin"
+                className="btn-with-margin"
                 centered
                 inline
                 onClick={returnToCurrentUser}

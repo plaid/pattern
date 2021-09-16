@@ -20,7 +20,7 @@ import {
 
 import {
   Banner,
-  UserCard,
+  Item,
   ErrorMessage,
   ConfirmIdentityForm,
   PatternAccount,
@@ -199,11 +199,11 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
   return (
     <div>
       <NavigationLink component={Link} to="/">
-        BACK TO LOGIN
+        LOGOUT
       </NavigationLink>
 
-      <Banner />
-      <UserCard
+      <Banner username={user.username} />
+      <Item
         user={user}
         userId={userId}
         removeButton={false}

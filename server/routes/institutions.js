@@ -30,6 +30,7 @@ router.get(
         include_optional_metadata: true,
       },
     };
+
     const response = await plaid.institutionsGet(request);
     const institutions = response.data.institutions;
     res.json(toArray(institutions));

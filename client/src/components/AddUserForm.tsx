@@ -44,10 +44,10 @@ const AddUserForm = (props: Props) => {
   }, [addNewUser, getUsers]);
 
   return (
-    <div className="box addUserForm">
+    <div className="box add-user__form">
       <form onSubmit={handleSubmit}>
         <div>
-          <h3 className="heading add-user__heading">Add a new user</h3>
+          <h3 className="heading add-user__heading">Create an account</h3>
           <div className="card">
             <div className="add-user__column-1">
               <Checkbox

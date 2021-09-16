@@ -96,14 +96,13 @@ h3 {
   letter-spacing: -0.28px;
   font-weight: bold;
 
-  &.account-balance {
-    margin: 0;
-  }
   &.account-dollars {
+    margin-top: 3 * $unit;
     margin-bottom: 1px;
     font-weight: 100;
   }
-  &.linked-bank {
+
+  &.subheading {
     margin: 0;
   }
 }
@@ -275,17 +274,16 @@ Transfers
 .transfers {
   margin-bottom: 8 * $unit;
 }
+.transfer__title {
+  margin-top: 3 * $unit;
+}
 .transfer-funds__input {
   margin: 2 * $unit 0;
   width: 40 * $unit;
 }
 
-.transfer-funds__title {
-  margin: 0;
-}
-
 .callout {
-  margin: 2 * $unit 0;
+  margin: 3 * $unit 0;
 }
 
 /*

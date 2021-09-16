@@ -94,7 +94,7 @@ export default function Item(props: Props) {
       <div>
         {numOfItems !== 0 && (
           <>
-            <h3 className="linked-bank">Linked Bank</h3>
+            <h3 className="subheading">Linked Bank</h3>
             <div className="item-info">
               <div>
                 <h3 className="heading">bank</h3>

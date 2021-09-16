@@ -203,7 +203,6 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
       </NavigationLink>
 
       <Banner username={user.username} />
-
       {appFund != null && !showTransfer && isIdentityChecked && (
         <PatternAccount
           userTransfer={userTransfer}

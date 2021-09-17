@@ -23,7 +23,7 @@ interface Props {
   isIdentityChecked: boolean;
 }
 
-export default function Item(props: Props) {
+const Item: React.FC<Props> = (props: Props) => {
   const [numOfItems, setNumOfItems] = useState(0);
   const [token, setToken] = useState<string | null>('');
   const [institution, setInstitution] = useState<Institution | null>(null);
@@ -208,4 +208,7 @@ export default function Item(props: Props) {
       </div>
     </>
   );
-}
+};
+
+Item.displayName = 'Item';
+export default Item;

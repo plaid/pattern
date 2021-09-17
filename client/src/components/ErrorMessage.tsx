@@ -7,7 +7,7 @@ import useErrors from '../services/errors';
 
 // link errors that require a prompt for the enduser
 
-export default function ErrorMessage() {
+const ErrorMessage: React.FC = () => {
   const [show, setShow] = useState(false);
   const [message, setMessage] = useState('');
   const { error, resetError } = useErrors();
@@ -54,4 +54,7 @@ export default function ErrorMessage() {
       )}
     </>
   );
-}
+};
+
+ErrorMessage.displayName = 'ErrorMessage';
+export default ErrorMessage;

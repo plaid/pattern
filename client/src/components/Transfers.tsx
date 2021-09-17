@@ -28,7 +28,7 @@ interface Props {
 // linked accounts (either in sandbox or development) will not actually be decremented when
 // a transfer is made in this app.
 
-export default function Transfers(props: Props) {
+const Transfers: React.FC<Props> = (props: Props) => {
   const [isAmountOkay, setIsAmountOkay] = useState(true);
   const [transferAmount, setTransferAmount] = useState(0);
   const [isTransferConfirmed, setIsTransferconfirmed] = useState(false);
@@ -145,4 +145,7 @@ export default function Transfers(props: Props) {
       )}
     </div>
   );
-}
+};
+
+Transfers.displayName = 'Transfers';
+export default Transfers;

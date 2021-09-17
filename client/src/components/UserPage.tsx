@@ -250,4 +250,5 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
   );
 };
 
+UserPage.displayName = 'UserPage';
 export default UserPage;

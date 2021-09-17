@@ -6,7 +6,7 @@ import TextInput from 'plaid-threads/TextInput';
 
 import { useCurrentUser } from '../services';
 
-const Login = () => {
+const Login: React.FC = () => {
   const { login } = useCurrentUser();
   const [show, setShow] = useState(false);
   const [value, setValue] = useState('');
@@ -54,4 +54,5 @@ const Login = () => {
   );
 };
 
+Login.displayName = 'Login';
 export default Login;

@@ -7,7 +7,7 @@ import { useUsers } from '../services';
 import { UserType } from './types';
 // This provides developers with a list of all users by username, and ability to delete a user.
 // View at path: "/admin"
-const UserList = () => {
+const UserList: React.FC = () => {
   const { allUsers, getUsers, usersById, deleteUserById } = useUsers();
   const [users, setUsers] = useState<UserType[]>([]);
 
@@ -52,4 +52,5 @@ const UserList = () => {
   );
 };
 
+UserList.displayName = 'UserList';
 export default UserList;

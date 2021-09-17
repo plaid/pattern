@@ -6,7 +6,7 @@ interface Props {
   username?: string | null;
 }
 
-const Banner = (props: Props) => {
+const Banner: React.FC<Props> = (props: Props) => {
   const initialText =
     'This is an example account funding app that outlines an end-to-end integration with Plaid.';
 
@@ -37,4 +37,5 @@ const Banner = (props: Props) => {
   );
 };
 
+Banner.displayName = 'Banner';
 export default Banner;

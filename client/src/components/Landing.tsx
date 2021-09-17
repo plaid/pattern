@@ -7,7 +7,7 @@ import { Login, Banner, AddUserForm } from '.';
 
 import { useBoolean } from '../hooks';
 
-export default function Landing() {
+const Landing: React.FC = () => {
   const { userState, setCurrentUser } = useCurrentUser();
   const [isAdding, hideForm, toggleForm] = useBoolean(false);
   const history = useHistory();
@@ -57,4 +57,7 @@ export default function Landing() {
       {isAdding && <AddUserForm hideForm={hideForm} />}
     </div>
   );
-}
+};
+
+Landing.displayName = 'Landing';
+export default Landing;

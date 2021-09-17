@@ -12,7 +12,7 @@ interface Props {
   handleDelete: () => void;
 }
 
-export function UpdateLink(props: Props) {
+const UpdateLink: React.FC<Props> = (props: Props) => {
   const [token, setToken] = useState('');
   const [showLink, setShowLink] = useState(false);
 
@@ -52,6 +52,7 @@ export function UpdateLink(props: Props) {
       )}
     </div>
   );
-}
+};
 
+UpdateLink.displayName = 'UpdateLink';
 export default UpdateLink;

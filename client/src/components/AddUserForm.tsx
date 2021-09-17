@@ -10,7 +10,7 @@ const PLAID_ENV = process.env.REACT_APP_PLAID_ENV;
 interface Props {
   hideForm: () => void;
 }
-const AddUserForm = (props: Props) => {
+const AddUserForm: React.FC<Props> = (props: Props) => {
   const [username, setUsername] = useState('');
   const [fullname, setFullname] = useState('');
   const [email, setEmail] = useState('');
@@ -124,4 +124,5 @@ const AddUserForm = (props: Props) => {
   );
 };
 
+AddUserForm.displayName = 'AddUserForm';
 export default AddUserForm;

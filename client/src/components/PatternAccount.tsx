@@ -13,7 +13,7 @@ interface Props {
   numOfItems: number;
 }
 
-const PatternAccount = (props: Props) => {
+const PatternAccount: React.FC<Props> = (props: Props) => {
   const handleClick = () => {
     props.userTransfer();
   };
@@ -38,4 +38,5 @@ const PatternAccount = (props: Props) => {
   );
 };
 
+PatternAccount.displayName = 'PatternAccount';
 export default PatternAccount;

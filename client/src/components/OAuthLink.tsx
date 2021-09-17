@@ -5,7 +5,7 @@ import { LinkButton } from '.';
 // Component rendered when user is redirected back to site from Oauth institution site.
 // It initiates link immediately with the original link token that was set in local storage
 // from the initial link initialization.
-const OAuthLink = () => {
+const OAuthLink: React.FC = () => {
   const [token, setToken] = useState<string>();
   const [userId, setUserId] = useState<number>(-100); // set for typescript
   const [itemId, setItemId] = useState<number>();
@@ -40,4 +40,5 @@ const OAuthLink = () => {
   );
 };
 
+OAuthLink.displayName = 'OAuthLink';
 export default OAuthLink;

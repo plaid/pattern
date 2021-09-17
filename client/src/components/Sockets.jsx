@@ -5,7 +5,7 @@ import { useAccounts, useItems } from '../services';
 const io = require('socket.io-client');
 const { REACT_APP_SERVER_PORT } = process.env;
 
-export default function Sockets() {
+const Sockets = () => {
   const socket = useRef();
   const { getAccountsByItem } = useAccounts();
   const { getItemById } = useItems();
@@ -34,4 +34,7 @@ export default function Sockets() {
   }, [getAccountsByItem, getItemById]);
 
   return <div />;
-}
+};
+
+Sockets.displayName = 'Sockets';
+export default Sockets;

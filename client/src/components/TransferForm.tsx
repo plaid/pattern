@@ -26,9 +26,9 @@ const TransferForm: React.FC<Props> = (props: Props) => {
     <>
       <div>
         <div>
-          <h3 className="transfer-funds__title">Transfer Funds</h3>{' '}
+          <h3 className="subheading">Transfer Funds</h3>{' '}
         </div>
-        <h4>Enter amount</h4>
+        <h4 className="transfer__title">Enter amount</h4>
         <form onSubmit={handleSubmit}>
           <NumberInput
             id="transferAmount"

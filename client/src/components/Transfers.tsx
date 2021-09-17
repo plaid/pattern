@@ -98,55 +98,51 @@ export default function Transfers(props: Props) {
   };
 
   return (
-    <>
-      <div>
-        {showInput && (
-          <TransferForm
-            setShowTransfer={props.setShowTransfer}
-            checkAmountAndInitiate={checkAmountAndInitiate}
-            setShowInput={setShowInput}
-          />
-        )}
-        {isTransferConfirmed && (
-          <>
-            <div>
-              <h3 className="transferFundsTitle">Transfer Confirmed</h3>{' '}
-            </div>
-            <p>{`You have successfully transferred ${currencyFilter(
-              transferAmount
-            )} from ${
-              props.institutionName
-            } to your Plaid Pattern Account.`}</p>
-            <Button
-              small
-              centered
-              inline
-              onClick={() => props.setShowTransfer(false)}
-            >
-              Done
-            </Button>
-          </>
-        )}
-        {(!isAmountOkay || showTransferConfirmationError) && (
-          <>
-            <div>
-              <h3 className="transferFundsTitle">Transfer Error</h3>{' '}
-            </div>
-            <Callout className="callout" warning>
-              {' '}
-              {errorMessage}
-            </Callout>
-            <Button
-              small
-              centered
-              inline
-              onClick={() => props.setShowTransfer(false)}
-            >
-              Back
-            </Button>
-          </>
-        )}
-      </div>
-    </>
+    <div className="transfers">
+      {showInput && (
+        <TransferForm
+          setShowTransfer={props.setShowTransfer}
+          checkAmountAndInitiate={checkAmountAndInitiate}
+          setShowInput={setShowInput}
+        />
+      )}
+      {isTransferConfirmed && (
+        <>
+          <div>
+            <h3 className="subheading">Transfer Confirmed</h3>{' '}
+          </div>
+          <p>{`You have successfully transferred ${currencyFilter(
+            transferAmount
+          )} from ${props.institutionName} to your Plaid Pattern Account.`}</p>
+          <Button
+            small
+            centered
+            inline
+            onClick={() => props.setShowTransfer(false)}
+          >
+            Done
+          </Button>
+        </>
+      )}
+      {(!isAmountOkay || showTransferConfirmationError) && (
+        <>
+          <div>
+            <h3 className="subheading">Transfer Error</h3>{' '}
+          </div>
+          <Callout className="callout" warning>
+            {' '}
+            {errorMessage}
+          </Callout>
+          <Button
+            small
+            centered
+            inline
+            onClick={() => props.setShowTransfer(false)}
+          >
+            Back
+          </Button>
+        </>
+      )}
+    </div>
   );
 }

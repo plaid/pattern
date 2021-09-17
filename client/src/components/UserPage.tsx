@@ -203,27 +203,6 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
       </NavigationLink>
 
       <Banner username={user.username} />
-      <Item
-        user={user}
-        userId={userId}
-        removeButton={false}
-        linkButton={numOfItems === 0}
-        numOfItems={numOfItems}
-        accountName={accountName}
-        item={item}
-        isIdentityChecked={isIdentityChecked}
-      />
-      <ErrorMessage />
-      {numOfItems > 0 && !isIdentityChecked && (
-        <>
-          <Callout warning>
-            {' '}
-            We were not able to verify your identity. Please update your name
-            and email address below.{' '}
-          </Callout>
-          <ConfirmIdentityForm userId={userId} setUser={setUser} />
-        </>
-      )}
       {appFund != null && !showTransfer && isIdentityChecked && (
         <PatternAccount
           userTransfer={userTransfer}
@@ -244,6 +223,27 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
               setAccount={setAccount}
             />
           )}
+        </>
+      )}
+      <Item
+        user={user}
+        userId={userId}
+        removeButton={false}
+        linkButton={numOfItems === 0}
+        numOfItems={numOfItems}
+        accountName={accountName}
+        item={item}
+        isIdentityChecked={isIdentityChecked}
+      />
+      <ErrorMessage />
+      {numOfItems > 0 && !isIdentityChecked && (
+        <>
+          <Callout warning>
+            {' '}
+            We were not able to verify your identity. Please update your name
+            and email address below.{' '}
+          </Callout>
+          <ConfirmIdentityForm userId={userId} setUser={setUser} />
         </>
       )}
     </div>

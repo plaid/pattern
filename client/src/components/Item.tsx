@@ -89,13 +89,12 @@ export default function Item(props: Props) {
     }
   }, [getInstitutionById, plaid_institution_id]);
 
-  const userClassName =
-    numOfItems === 0 ? 'user-card' : '  box card item-no-link';
   return (
     <>
       <div>
-        <div className={userClassName}>
-          {numOfItems !== 0 && (
+        {numOfItems !== 0 && (
+          <>
+            <h3 className="subheading">Linked Bank</h3>
             <div className="item-info">
               <div>
                 <h3 className="heading">bank</h3>
@@ -107,82 +106,83 @@ export default function Item(props: Props) {
                 <h3 className="heading">account</h3>
                 <p className="value">{props.accountName}</p>
               </div>
-              {props.numOfItems !== 0 && (
-                <>
-                  <div className="test-update-mode">
-                    <div className="update-mode__note">
-                      {isGoodState ? (
-                        <Note info solid>
-                          Login Updated
-                        </Note>
-                      ) : (
-                        <Note error solid>
-                          Login Required
-                        </Note>
-                      )}
-                    </div>
-                    {isSandbox && isGoodState && (
-                      <Button
-                        secondary
-                        small
-                        centered
-                        inline
-                        onClick={handleSetBadState}
-                      >
-                        Test Item Login Required
-                      </Button>
-                    )}
-                    {isSandbox && !isGoodState && (
-                      <UpdateLink
-                        setBadStateShown={isSandbox && isGoodState}
-                        handleDelete={handleDeleteItem}
-                        handleSetBadState={handleSetBadState}
-                        userId={props.userId}
-                        itemId={id}
-                      />
-                    )}
-                  </div>
-                  <div className="remove-bank__button-container">
+              <div>
+                <h3 className="heading"> login status</h3>
+                <div className="update-mode__note">
+                  {isGoodState ? (
+                    <Note info solid>
+                      Login Updated
+                    </Note>
+                  ) : (
+                    <Note error solid>
+                      Login Required
+                    </Note>
+                  )}
+                </div>
+              </div>
+              <div>
+                <h3 className="heading">actions</h3>
+                <div className="actions-container">
+                  {isSandbox && isGoodState && (
                     <Button
+                      tertiary
                       small
-                      inline
-                      secondary
                       centered
-                      onClick={handleDeleteItem}
+                      className="action__button"
+                      inline
+                      onClick={handleSetBadState}
                     >
-                      Remove Bank
+                      Test Item Login Required
                     </Button>
-                  </div>
-                </>
-              )}
+                  )}
+                  {isSandbox && !isGoodState && (
+                    <UpdateLink
+                      setBadStateShown={isSandbox && isGoodState}
+                      handleDelete={handleDeleteItem}
+                      handleSetBadState={handleSetBadState}
+                      userId={props.userId}
+                      itemId={id}
+                    />
+                  )}
+                  <Button
+                    small
+                    inline
+                    tertiary
+                    className="action__button remove-bank"
+                    centered
+                    onClick={handleDeleteItem}
+                  >
+                    Remove Bank
+                  </Button>
+                </div>
+              </div>
             </div>
-          )}
-
-          {numOfItems === 0 && (
-            <Button
-              large
-              inline
-              className="add-account__button"
-              onClick={initiateLink}
-            >
-              Add a bank account
-            </Button>
-          )}
-          {(props.removeButton || (props.linkButton && numOfItems === 0)) && (
-            // Plaid React Link cannot be rendered without a link token
-            <div className="item__button">
-              {token != null && props.linkButton && (
-                <LinkButton
-                  userId={props.userId}
-                  token={token}
-                  itemId={null}
-                  isAuth={isAuth}
-                  isIdentity={isIdentity}
-                />
-              )}
-            </div>
-          )}
-        </div>
+          </>
+        )}
+        {numOfItems === 0 && (
+          <Button
+            large
+            inline
+            className="add-account__button"
+            onClick={initiateLink}
+          >
+            Add a bank account
+          </Button>
+        )}
+        {(props.removeButton || (props.linkButton && numOfItems === 0)) && (
+          // Plaid React Link cannot be rendered without a link token
+          <div className="item__button">
+            {token != null && props.linkButton && (
+              <LinkButton
+                userId={props.userId}
+                token={token}
+                itemId={null}
+                isAuth={isAuth}
+                isIdentity={isIdentity}
+              />
+            )}
+          </div>
+        )}
       </div>
       <div className="item__callouts">
         {isSandbox && !isGoodState && (

@@ -48,10 +48,12 @@ shared styles
 }
 
 .heading {
-  font-weight: bold;
+  font-weight: 700;
   text-transform: uppercase;
-  font-size: 1.2rem;
+  font-size: 2 * $unit;
   margin-bottom: 0;
+  color: $black800;
+  font-family: 'Inconsolata';
 }
 
 .header {
@@ -94,12 +96,14 @@ h3 {
   letter-spacing: -0.28px;
   font-weight: bold;
 
-  &.account-balance {
-    margin: 0;
-  }
   &.account-dollars {
+    margin-top: 3 * $unit;
     margin-bottom: 1px;
     font-weight: 100;
+  }
+
+  &.subheading {
+    margin: 0;
   }
 }
 
@@ -133,6 +137,7 @@ Landing overview
 
 .btn-with-margin {
   margin-left: 2 * $unit;
+  margin-right: 0;
 }
 
 /*
@@ -140,11 +145,6 @@ Landing overview
 Item
 
 */
-
-.item-no-link {
-  display: grid;
-  grid-template-columns: 1fr;
-}
 
 .item__button {
   padding-left: 3 * $unit;
@@ -161,23 +161,25 @@ Item
 
 .item-info {
   display: grid;
-  grid-template-columns: 3fr 7fr 7fr 3fr;
-}
-.test-update-mode {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: space-between;
+  grid-template-columns: 5fr 6fr 7fr 5fr;
 }
 
 .update-mode__note {
   margin-top: $unit;
 }
 
-.remove-bank__button-container {
+.actions-container {
   display: flex;
-  justify-content: center;
-  align-items: flex-end;
+  flex-direction: column;
+  align-items: flex-start;
+}
+.action__button {
+  margin-top: $unit;
+  padding-left: 0;
+}
+
+.remove-bank {
+  margin-top: 0;
 }
 
 /*
@@ -250,6 +252,9 @@ Pattern account
 
 */
 
+.pattern-account {
+  margin-bottom: 8 * $unit;
+}
 .pattern-account__header {
   display: flex;
   justify-content: space-between;
@@ -266,17 +271,19 @@ Transfers
 
 */
 
+.transfers {
+  margin-bottom: 8 * $unit;
+}
+.transfer__title {
+  margin-top: 3 * $unit;
+}
 .transfer-funds__input {
   margin: 2 * $unit 0;
   width: 40 * $unit;
 }
 
-.transfer-funds__title {
-  margin: 0;
-}
-
 .callout {
-  margin: 2 * $unit 0;
+  margin: 3 * $unit 0;
 }
 
 /*

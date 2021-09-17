@@ -38,7 +38,7 @@ export default function ErrorMessage() {
   return (
     <>
       {show && (
-        <Callout className="err-msg__callout">
+        <Callout className="error-msg__callout">
           <IconButton
             className="close-error__button"
             accessibilityLabel="close"

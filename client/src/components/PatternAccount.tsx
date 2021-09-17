@@ -18,9 +18,9 @@ const PatternAccount = (props: Props) => {
     props.userTransfer();
   };
   return (
-    <div>
+    <div className="pattern-account">
       <div className="pattern-account__header">
-        <h3 className="account-balance">Plaid Pattern Funds Balance</h3>{' '}
+        <h3 className="subheading">Plaid Pattern Funds Balance</h3>{' '}
         {props.numOfItems > 0 && (
           <div className="transfer-funds__button-container">
             <Button onClick={handleClick} inline small>

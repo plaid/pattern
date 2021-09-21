@@ -24,7 +24,7 @@ Note: We recommend running these commands in a unix terminal. Windows users can 
     ```shell
     cp .env.template .env
     ```
-1. Update the `.env` file with your [Plaid API keys][plaid-keys] and [OAuth redirect uri](https://github.com/plaid/pattern/tree/master/server#testing-oauth).
+1. Update the `.env` file with your [Plaid API keys][plaid-keys] and OAuth redirect uri (in sandbox this is 'http<span>://localhost:3001/oauth-link'</span>).
 
 1. You will also need to configure an allowed redirect URI for your client ID through the [Plaid developer dashboard](https://dashboard.plaid.com/team/api).
 

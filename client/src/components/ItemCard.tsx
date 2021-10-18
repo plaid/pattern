@@ -32,6 +32,7 @@ const ItemCard = (props: Props) => {
     oauth: false,
     products: [],
     country_codes: [],
+    routing_numbers: [],
   });
   const [showAccounts, setShowAccounts] = useState(false);
 

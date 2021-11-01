@@ -29,7 +29,7 @@ const Banner = (props: Props) => {
           centered
           secondary
         >
-          Send Feedback
+          How do you like this app?
         </Button>
       </div>
       <p id="intro" className="everpresent-content__subheading">

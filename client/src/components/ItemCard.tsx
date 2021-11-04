@@ -69,6 +69,7 @@ const ItemCard = (props: Props) => {
     deleteItemById(id, props.userId);
     deleteAccountsByItemId(id);
     deleteTransactionsByItemId(id);
+    // props.resetLinkToken();
   };
 
   const cardClassNames = showAccounts

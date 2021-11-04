@@ -1,6 +1,4 @@
 import React, { useEffect } from 'react';
-import Button from 'plaid-threads/Button';
-import Touchable from 'plaid-threads/Touchable';
 import {
   usePlaidLink,
   PlaidLinkOnSuccessMetadata,
@@ -31,7 +29,7 @@ interface Props {
 export default function LinkButton(props: Props) {
   const history = useHistory();
   const { getItemsByUser, getItemById } = useItems();
-  const { generateLinkToken } = useLink();
+  const { generateLinkToken, deleteLinkToken } = useLink();
   const { setError, resetError } = useErrors();
 
   // define onSuccess, onExit and onEvent functions as configs for Plaid Link creation
@@ -57,6 +55,7 @@ export default function LinkButton(props: Props) {
       getItemsByUser(props.userId, true);
     }
     resetError();
+    deleteLinkToken(props.userId);
     history.push(`/user/${props.userId}`);
   };
 
@@ -100,58 +99,24 @@ export default function LinkButton(props: Props) {
   const { open, ready } = usePlaidLink(config);
 
   useEffect(() => {
-    // initiallizes Link automatically if it is handling an OAuth reidrect
+    // initiallizes Link automatically
     if (props.isOauth && ready) {
       open();
+    } else if (ready) {
+      // regular, non-OAuth case:
+      // set link token, userId and itemId in local storage for use if needed later by OAuth
+
+      localStorage.setItem(
+        'oauthConfig',
+        JSON.stringify({
+          userId: props.userId,
+          itemId: props.itemId,
+          token: props.token,
+        })
+      );
+      open();
     }
-  }, [ready, open, props.isOauth]);
+  }, [ready, open, props.isOauth, props.userId, props.itemId, props.token]);
 
-  const handleClick = () => {
-    // regular, non-OAuth case:
-    // set link token, userId and itemId in local storage for use if needed later by OAuth
-
-    localStorage.setItem(
-      'oauthConfig',
-      JSON.stringify({
-        userId: props.userId,
-        itemId: props.itemId,
-        token: props.token,
-      })
-    );
-    open();
-  };
-
-  return (
-    <>
-      {props.isOauth ? (
-        // no link button rendered: OAuth will open automatically by useEffect above
-        <></>
-      ) : props.itemId != null ? (
-        // update mode: Link is launched from dropdown menu in the
-        // item card after item is set to "bad state"
-        <Touchable
-          className="menuOption"
-          disabled={!ready}
-          onClick={() => {
-            handleClick();
-          }}
-        >
-          {props.children}
-        </Touchable>
-      ) : (
-        // regular case for initializing Link from user card or from "add another item" button
-        <Button
-          centered
-          inline
-          small
-          disabled={!ready}
-          onClick={() => {
-            handleClick();
-          }}
-        >
-          {props.children}
-        </Button>
-      )}
-    </>
-  );
+  return <></>;
 }

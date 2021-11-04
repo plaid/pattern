@@ -22,6 +22,12 @@ export default function UserCard(props: Props) {
   const { deleteUserById } = useUsers();
   const { generateLinkToken, linkTokens } = useLink();
 
+  const initiateLink = async () => {
+    // only generate a link token upon a click from enduser to add a bank;
+    // if done earlier, it may expire before enduser actually activates Link to add a bank.
+    await generateLinkToken(props.userId, null);
+  };
+
   // update data store with the user's items
   useEffect(() => {
     if (props.userId) {
@@ -37,11 +43,6 @@ export default function UserCard(props: Props) {
       setNumOfItems(0);
     }
   }, [itemsByUser, props.userId]);
-
-  // creates new link token upon change in user or number of items
-  useEffect(() => {
-    generateLinkToken(props.userId, null); // itemId is null
-  }, [props.userId, numOfItems, generateLinkToken]);
 
   useEffect(() => {
     setToken(linkTokens.byUser[props.userId]);
@@ -80,13 +81,21 @@ export default function UserCard(props: Props) {
         </div>
         {(props.removeButton || (props.linkButton && numOfItems === 0)) && (
           <div className="user-card__buttons">
+            {numOfItems === 0 && (
+              <Button
+                large
+                inline
+                className="add-account__button"
+                onClick={initiateLink}
+              >
+                Add a bank account
+              </Button>
+            )}
             {token != null &&
               token.length > 0 &&
               props.linkButton &&
               numOfItems === 0 && (
-                <LinkButton userId={props.userId} token={token} itemId={null}>
-                  Add a Bank
-                </LinkButton>
+                <LinkButton userId={props.userId} token={token} itemId={null} />
               )}
             {props.removeButton && (
               <Button

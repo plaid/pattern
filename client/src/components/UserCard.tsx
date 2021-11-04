@@ -88,7 +88,7 @@ export default function UserCard(props: Props) {
                 className="add-account__button"
                 onClick={initiateLink}
               >
-                Add a bank account
+                Add a bank
               </Button>
             )}
             {token != null &&

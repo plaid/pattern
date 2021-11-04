@@ -30,11 +30,6 @@ export function MoreDetails(props: Props) {
 
   const { generateLinkToken, linkTokens } = useLink();
 
-  const testWebhook = () => {
-    setToken('');
-    props.handleSetBadState();
-  };
-
   const initiateLink = async () => {
     // creates new link token for each item in bad state
     // only generate a link token upon a click from enduser to update login;
@@ -50,7 +45,7 @@ export function MoreDetails(props: Props) {
   const linkChoice = props.setBadStateShown ? (
     // handleSetBadState uses sandbox/item/reset_login to send the ITEM_LOGIN_REQUIRED webhook;
     // app responds to this webhook by setting item to "bad" state (server/webhookHandlers/handleItemWebhook.js)
-    <Touchable className="menuOption" onClick={testWebhook}>
+    <Touchable className="menuOption" onClick={props.handleSetBadState}>
       Test Item Login Required Webhook
     </Touchable>
   ) : (
@@ -75,7 +70,6 @@ export function MoreDetails(props: Props) {
     </div>
   );
 
-  console.log(linkTokens);
   return (
     <div className="more-details" ref={refToMenu}>
       <Dropdown isOpen={menuShown} target={icon}>

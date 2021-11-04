@@ -34,7 +34,8 @@ type LinkAction =
     }
   | { type: 'LINK_TOKEN_UPDATE_MODE_CREATED'; id: number; token: string }
   | { type: 'LINK_TOKEN_ERROR'; error: PlaidLinkError }
-  | { type: 'DELETE_LINK_TOKEN'; id: number };
+  | { type: 'DELETE_USER_LINK_TOKEN'; id: number }
+  | { type: 'DELETE_ITEM_LINK_TOKEN'; id: number };
 
 interface LinkContextShape extends LinkState {
   dispatch: Dispatch<LinkAction>;
@@ -42,7 +43,7 @@ interface LinkContextShape extends LinkState {
     userId: number,
     itemId: number | null | undefined
   ) => void;
-  deleteLinkToken: (userId: number) => void;
+  deleteLinkToken: (userId: number | null, itemId: number | null) => void;
   linkTokens: LinkState;
 }
 const LinkContext = createContext<LinkContextShape>(
@@ -81,12 +82,18 @@ export function LinkProvider(props: any) {
     }
   }, []);
 
-  const deleteLinkToken = useCallback(async userId => {
-    console.log('inside service:', userId);
-    dispatch({
-      type: 'DELETE_LINK_TOKEN',
-      id: userId,
-    });
+  const deleteLinkToken = useCallback(async (userId, itemId) => {
+    if (userId != null) {
+      dispatch({
+        type: 'DELETE_USER_LINK_TOKEN',
+        id: userId,
+      });
+    } else {
+      dispatch({
+        type: 'DELETE_ITEM_LINK_TOKEN',
+        id: itemId,
+      });
+    }
   }, []);
 
   const value = useMemo(
@@ -124,10 +131,18 @@ function reducer(state: any, action: LinkAction) {
           [action.id]: action.token,
         },
       };
-    case 'DELETE_LINK_TOKEN':
+    case 'DELETE_USER_LINK_TOKEN':
       return {
         ...state,
         byUser: {
+          [action.id]: '',
+        },
+      };
+    case 'DELETE_ITEM_LINK_TOKEN':
+      return {
+        ...state,
+        byItem: {
+          ...state.byItem,
           [action.id]: '',
         },
       };

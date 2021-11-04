@@ -42,6 +42,7 @@ export default function LinkButton(props: Props) {
     if (props.itemId != null) {
       // update mode: no need to exchange public token
       await setItemState(props.itemId, 'good');
+      deleteLinkToken(null, props.itemId);
       getItemById(props.itemId, true);
       // regular link mode: exchange public token for access token
     } else {
@@ -55,7 +56,7 @@ export default function LinkButton(props: Props) {
       getItemsByUser(props.userId, true);
     }
     resetError();
-    deleteLinkToken(props.userId);
+    deleteLinkToken(props.userId, null);
     history.push(`/user/${props.userId}`);
   };
 

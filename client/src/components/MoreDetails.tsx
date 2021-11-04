@@ -4,7 +4,7 @@ import Dropdown from 'plaid-threads/Dropdown';
 import IconButton from 'plaid-threads/IconButton';
 import Touchable from 'plaid-threads/Touchable';
 
-import { LinkButton } from '.';
+import { LaunchLink } from '.';
 import { useOnClickOutside } from '../hooks';
 import { useLink } from '../services';
 
@@ -55,7 +55,7 @@ export function MoreDetails(props: Props) {
         Update Login
       </Touchable>
       {token != null && token.length > 0 && (
-        <LinkButton userId={props.userId} itemId={props.itemId} token={token} />
+        <LaunchLink userId={props.userId} itemId={props.itemId} token={token} />
       )}
     </div>
   );

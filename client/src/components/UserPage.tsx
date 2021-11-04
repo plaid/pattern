@@ -20,7 +20,7 @@ import { pluralize } from '../util';
 
 import {
   Banner,
-  LinkButton,
+  LaunchLink,
   SpendingInsights,
   NetWorth,
   ItemCard,
@@ -212,7 +212,7 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
 
             {token != null && token.length > 0 && (
               // Link will not render unless there is a link token
-              <LinkButton token={token} userId={userId} itemId={null} />
+              <LaunchLink token={token} userId={userId} itemId={null} />
             )}
           </div>
           <ErrorMessage />

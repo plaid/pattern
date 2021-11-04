@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-import { LinkButton } from '.';
+import { LaunchLink } from '.';
 
 // Component rendered when user is redirected back to site from Oauth institution site.
 // It initiates link immediately with the original link token that was set in local storage
@@ -23,7 +23,7 @@ const OAuthLink = () => {
   return (
     <>
       {token != null && (
-        <LinkButton
+        <LaunchLink
           isOauth // this will initiate link immediately
           userId={userId}
           itemId={itemId}

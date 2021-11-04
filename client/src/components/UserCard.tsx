@@ -3,7 +3,7 @@ import { HashLink } from 'react-router-hash-link';
 import Button from 'plaid-threads/Button';
 import Touchable from 'plaid-threads/Touchable';
 
-import { UserDetails, LinkButton } from '.';
+import { UserDetails, LaunchLink } from '.';
 import { useItems, useUsers, useLink } from '../services';
 import { UserType } from './types';
 
@@ -95,7 +95,7 @@ export default function UserCard(props: Props) {
               token.length > 0 &&
               props.linkButton &&
               numOfItems === 0 && (
-                <LinkButton userId={props.userId} token={token} itemId={null} />
+                <LaunchLink userId={props.userId} token={token} itemId={null} />
               )}
             {props.removeButton && (
               <Button

@@ -26,7 +26,7 @@ interface Props {
 // The link token passed to usePlaidLink cannot be null.  It must be generated outside of this component.  In this sample app, the link token
 // is generated in the link context in client/src/services/link.js.
 
-export default function LinkButton(props: Props) {
+export default function LaunchLink(props: Props) {
   const history = useHistory();
   const { getItemsByUser, getItemById } = useItems();
   const { generateLinkToken, deleteLinkToken } = useLink();

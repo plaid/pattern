@@ -81,7 +81,7 @@ export default function UserCard(props: Props) {
         </div>
         {(props.removeButton || (props.linkButton && numOfItems === 0)) && (
           <div className="user-card__buttons">
-            {numOfItems === 0 && (
+            {props.linkButton && numOfItems === 0 && (
               <Button
                 large
                 inline

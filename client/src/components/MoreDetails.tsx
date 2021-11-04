@@ -34,7 +34,7 @@ export function MoreDetails(props: Props) {
     // creates new link token for each item in bad state
     // only generate a link token upon a click from enduser to update login;
     // if done earlier, it may expire before enduser actually activates link.
-    await generateLinkToken(props.userId, props.itemId);
+    await generateLinkToken(props.userId, props.itemId); // itemId is set because link is in update mode
   };
 
   useEffect(() => {

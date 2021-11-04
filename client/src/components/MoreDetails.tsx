@@ -3,7 +3,6 @@ import Menu from 'plaid-threads/Icons/MenuS1';
 import Dropdown from 'plaid-threads/Dropdown';
 import IconButton from 'plaid-threads/IconButton';
 import Touchable from 'plaid-threads/Touchable';
-import Button from 'plaid-threads/Button';
 
 import { LinkButton } from '.';
 import { useOnClickOutside } from '../hooks';
@@ -76,6 +75,7 @@ export function MoreDetails(props: Props) {
     </div>
   );
 
+  console.log(linkTokens);
   return (
     <div className="more-details" ref={refToMenu}>
       <Dropdown isOpen={menuShown} target={icon}>

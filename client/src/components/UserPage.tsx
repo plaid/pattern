@@ -4,6 +4,7 @@ import sortBy from 'lodash/sortBy';
 import NavigationLink from 'plaid-threads/NavigationLink';
 import LoadingSpinner from 'plaid-threads/LoadingSpinner';
 import Callout from 'plaid-threads/Callout';
+import Button from 'plaid-threads/Button';
 
 import { RouteInfo, ItemType, AccountType, AssetType } from './types';
 import {
@@ -19,7 +20,7 @@ import { pluralize } from '../util';
 
 import {
   Banner,
-  LinkButton,
+  LaunchLink,
   SpendingInsights,
   NetWorth,
   ItemCard,
@@ -52,6 +53,12 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
   const { itemsByUser, getItemsByUser } = useItems();
   const userId = Number(match.params.userId);
   const { generateLinkToken, linkTokens } = useLink();
+
+  const initiateLink = async () => {
+    // only generate a link token upon a click from enduser to add a bank;
+    // if done earlier, it may expire before enduser actually activates Link to add a bank.
+    await generateLinkToken(userId, null);
+  };
 
   // update data store with user
   useEffect(() => {
@@ -117,13 +124,6 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
   useEffect(() => {
     setAccounts(accountsByUser[userId] || []);
   }, [accountsByUser, userId]);
-
-  // creates new link token upon new user or change in number of items
-  useEffect(() => {
-    if (userId != null) {
-      generateLinkToken(userId, null); // itemId is null
-    }
-  }, [userId, numOfItems, generateLinkToken]);
 
   useEffect(() => {
     setToken(linkTokens.byUser[userId]);
@@ -200,11 +200,19 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
                 </p>
               )}
             </div>
+
+            <Button
+              large
+              inline
+              className="add-account__button"
+              onClick={initiateLink}
+            >
+              Add another bank
+            </Button>
+
             {token != null && token.length > 0 && (
               // Link will not render unless there is a link token
-              <LinkButton token={token} userId={userId} itemId={null}>
-                Add Another Bank
-              </LinkButton>
+              <LaunchLink token={token} userId={userId} itemId={null} />
             )}
           </div>
           <ErrorMessage />

@@ -4,7 +4,7 @@ import Dropdown from 'plaid-threads/Dropdown';
 import IconButton from 'plaid-threads/IconButton';
 import Touchable from 'plaid-threads/Touchable';
 
-import { LinkButton } from '.';
+import { LaunchLink } from '.';
 import { useOnClickOutside } from '../hooks';
 import { useLink } from '../services';
 
@@ -29,10 +29,13 @@ export function MoreDetails(props: Props) {
   });
 
   const { generateLinkToken, linkTokens } = useLink();
-  // creates new link token for each item in bad state
-  useEffect(() => {
-    generateLinkToken(props.userId, props.itemId); // itemId is set because link is in update mode
-  }, [props.userId, props.itemId, generateLinkToken]);
+
+  const initiateLink = async () => {
+    // creates new link token for each item in bad state
+    // only generate a link token upon a click from enduser to update login;
+    // if done earlier, it may expire before enduser actually activates link.
+    await generateLinkToken(props.userId, props.itemId); // itemId is set because link is in update mode
+  };
 
   useEffect(() => {
     setToken(linkTokens.byItem[props.itemId]);
@@ -45,15 +48,16 @@ export function MoreDetails(props: Props) {
     <Touchable className="menuOption" onClick={props.handleSetBadState}>
       Test Item Login Required Webhook
     </Touchable>
-  ) : token != null && token.length > 0 ? (
+  ) : (
     // item is in "bad" state;  launch link to login and return to "good" state
     <div>
-      <LinkButton userId={props.userId} itemId={props.itemId} token={token}>
+      <Touchable className="menuOption" onClick={initiateLink}>
         Update Login
-      </LinkButton>
+      </Touchable>
+      {token != null && token.length > 0 && (
+        <LaunchLink userId={props.userId} itemId={props.itemId} token={token} />
+      )}
     </div>
-  ) : (
-    <></>
   );
 
   const icon = (

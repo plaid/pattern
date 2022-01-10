@@ -29,7 +29,7 @@ const Banner = (props: Props) => {
           centered
           secondary
         >
-          How do you like this app?
+          Provide feedback on this Plaid Pattern sample app
         </Button>
       </div>
       <p id="intro" className="everpresent-content__subheading">

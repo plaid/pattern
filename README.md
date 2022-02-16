@@ -2,14 +2,13 @@
 
 ![Plaid Pattern client][client-img]
 
-This is a sample Personal Finance Manager application demonstrating an end-to-end [Plaid][plaid] integration, focused on linking items and fetching transaction data.
+This is a sample Personal Finance Manager application demonstrating an end-to-end [Plaid][plaid] integration, focused on linking items and fetching transaction data. You can view a demonstration app at [pattern.plaid.com](https://pattern.plaid.com).
 
 The full Plaid Pattern collection of sample apps includes:
 
 [Plaid Pattern Personal Finance Manager](https://github.com/plaid/pattern/) (you are here) - Demonstrates the Plaid Transactions API
 
 [Plaid Pattern Account Funding App](https://github.com/plaid/pattern-account-funding) - Demonstrates the Plaid Auth, Balance, and Identity APIs
-
 
 Plaid Pattern apps are provided for illustrative purposes and are not meant to be run as production applications.
 

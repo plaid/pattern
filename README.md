@@ -21,13 +21,13 @@ Plaid Pattern apps are provided for illustrative purposes and are not meant to b
 -   [Additional Commands](#additional-commands)
 -   [Architecture](#architecture)
 -   [Plaid Pattern - Client](client)
+
     -   [Key concepts](#key-concepts)
     -   [Communicating with the server](#communicating-with-the-server)
     -   [Webhooks and Websockets](#webhooks-and-websockets)
-        -   [1. Running the backend](#1-running-the-backend)
-            -   [Node](#node)
--   [Plaid Pattern - Client](#client)
-    -
+    -   [Admin](#admin)
+
+-   [Plaid Pattern - Server](#server)
 -   [Plaid Pattern - Client](#client)
 -   [Plaid Pattern - Client](#client)
 
@@ -126,7 +126,7 @@ For webhooks to work, the server must be publicly accessible on the internet. Fo
 
 Upon receipt of a transactions webhook a call will be made to Plaid's transactions endpoint. Incoming transactions are compared to existing transactions. Any existing transactions that are not included in incoming transactions will be removed and any new transactions are added to the database. For an example, see the [handleTransactionsUpdate][transactions-handler] function.
 
-### Testing OAuth
+### [Testing OAuth](#testing-oauth)
 
 A redirect_uri parameter is included in the linkTokenCreate call and set in this sample app to the PLAID_SANDBOX_REDIRECT_URI you have set in the .env file (`http://localhost:3001/oauth-link`). This is the page that the user will be redirected to upon completion of the OAuth flow at their OAuth institution. When running in Production or Development, you will need to use an `https://` redirect URI, but a localhost http URI will work for Sandbox.
 

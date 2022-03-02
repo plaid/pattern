@@ -109,11 +109,41 @@ Upon receipt of a transactions webhook a call will be made to Plaid's transactio
 
 ### Testing OAuth
 
-A redirect_uri parameter is included in the linkTokenCreate call and set in this sample app to the PLAID_SANDBOX_REDIRECT_URI you have set in the .env file (`http://localhost:3001/oauth-link`). This is the page that the user will be redirected to upon completion of the OAuth flow at their OAuth institution. When running in Production or Development, you will need to use an `https://` redirect URI, but a localhost http URI will work for Sandbox.
-
-You will also need to configure `http://localhost:3001/oauth-link` as an allowed redirect URI for your client ID through the [Plaid developer dashboard](https://dashboard.plaid.com/team/api).
+A redirect_uri parameter is included in the linkTokenCreate call and set in this sample app to the PLAID_SANDBOX_REDIRECT_URI you have set in the .env file (`http://localhost:3001/oauth-link`). This is the page that the user will be redirected to upon completion of the OAuth flow at their OAuth institution. You will also need to configure `http://localhost:3001/oauth-link` as an allowed redirect URI for your client ID through the [Plaid developer dashboard](https://dashboard.plaid.com/team/api).
 
 To test the OAuth flow, choose 'Playtypus OAuth Bank' from the list of financial instutions in Plaid Link.
+
+If you want to test OAuth in development, you need to use https and set `PLAID_REDIRECT_URI=https://localhost:3000/` in `.env`. In order to run your localhost on https, you will need to create a self-signed certificate and add it to the frontend root folder. You can use the following instructions to do this. However, please note that this is recommended for local development enviroments only and not for production environments.
+
+In your terminal, use homebrew to install mkcert:
+
+```bash
+brew install mkcert
+```
+
+Then create your certificate for localhost:
+
+```bash
+mkcert -install
+mkcert localhost
+```
+
+This will create a certificate file localhost.pem and a key file localhost-key.pem.
+Copy both of these files to the root of the Pattern client folder.
+
+Then in the package.json file in the package.json folder, replace this line on line 26
+
+```bash
+  "start": "PORT=3001 react-scripts start",
+```
+
+with this line instead:
+
+```bash
+"start": "PORT=3001 HTTPS=true SSL_CRT_FILE=localhost.pem SSL_KEY_FILE=localhost-key.pem react-scripts start",
+```
+
+After starting up the Pattern sample app, you can now view it at https://localhost:3001.
 
 ## Debugging
 

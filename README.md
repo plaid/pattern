@@ -113,6 +113,8 @@ A redirect_uri parameter is included in the linkTokenCreate call and set in this
 
 To test the OAuth flow, choose 'Playtypus OAuth Bank' from the list of financial instutions in Plaid Link.
 
+#### Instructions for using https with localhost
+
 If you want to test OAuth in development, you need to use https and set `PLAID_REDIRECT_URI=https://localhost:3001/` in `.env`. In order to run your localhost on https, you will need to create a self-signed certificate and add it to the client root folder. You can use the following instructions to do this. However, please note that this is recommended for local development enviroments only and not for production environments.
 
 In your terminal, change to the client folder:

@@ -115,7 +115,13 @@ To test the OAuth flow, choose 'Playtypus OAuth Bank' from the list of financial
 
 If you want to test OAuth in development, you need to use https and set `PLAID_REDIRECT_URI=https://localhost:3000/` in `.env`. In order to run your localhost on https, you will need to create a self-signed certificate and add it to the frontend root folder. You can use the following instructions to do this. However, please note that this is recommended for local development enviroments only and not for production environments.
 
-In your terminal, use homebrew to install mkcert:
+In your terminal, change to the client folder:
+
+```bash
+cd client
+```
+
+Use homebrew to install mkcert:
 
 ```bash
 brew install mkcert
@@ -128,8 +134,7 @@ mkcert -install
 mkcert localhost
 ```
 
-This will create a certificate file localhost.pem and a key file localhost-key.pem.
-Copy both of these files to the root of the Pattern client folder.
+This will create a certificate file localhost.pem and a key file localhost-key.pem inside your client folder.
 
 Then in the package.json file in the package.json folder, replace this line on line 26
 

@@ -12,6 +12,25 @@ The full Plaid Pattern collection of sample apps includes:
 
 Plaid Pattern apps are provided for illustrative purposes and are not meant to be run as production applications.
 
+## Table of contents
+
+<!-- toc -->
+
+-   [Requirements](#requirements)
+-   [Getting Started](#getting-started)
+-   [Additional Commands](#additional-commands)
+-   [Architecture](#architecture)
+-   [Plaid Pattern - Client](client)
+    -   [Key concepts](#key-concepts)
+    -   [Communicating with the server](#communicating-with-the-server)
+    -   [Webhooks and Websockets](#webhooks-and-websockets)
+        -   [1. Running the backend](#1-running-the-backend)
+            -   [Node](#node)
+-   [Plaid Pattern - Client](#client)
+    -
+-   [Plaid Pattern - Client](#client)
+-   [Plaid Pattern - Client](#client)
+
 ## Requirements
 
 -   [Docker][docker] Version 2.0.0.3 (31259) or higher, installed, running, and signed in. If you're on **Windows**, check out [this link][wsl] to get set up in WSL.

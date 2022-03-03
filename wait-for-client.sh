@@ -3,7 +3,7 @@
 
 # wait for a response from the client
 echo -n "Waiting for the client to finish initializing..."
-while [ "$(curl -s -o /dev/null -w "%{http_code}" -m 1 localhost:3001)" != "200" ]
+while [ "$(curl -s -o /dev/null -w "%{http_code}" -m 1 https://localhost:3001)" != "200" ]
 do
   sleep 1
   echo -n "."

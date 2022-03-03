@@ -115,7 +115,7 @@ To test the OAuth flow in sandbox, choose 'Playtypus OAuth Bank' from the list o
 
 #### Instructions for using https with localhost
 
-If you want to test OAuth in development, you need to use https and set `PLAID_REDIRECT_URI=https://localhost:3001/` in `.env`. In order to run your localhost on https, you will need to create a self-signed certificate and add it to the client root folder. You can use the following instructions to do this. However, please note that this is recommended for local development enviroments only and not for production environments.
+If you want to test OAuth in development, you need to use https and set `PLAID_REDIRECT_URI=https://localhost:3001/` in `.env`. In order to run your localhost on https, you will need to create a self-signed certificate and add it to the client root folder. You can use the following instructions to do this. However, please note that this is recommended for local development environments only and not for production environments.
 
 In your terminal, change to the client folder:
 
@@ -138,7 +138,7 @@ mkcert localhost
 
 This will create a certificate file localhost.pem and a key file localhost-key.pem inside your client folder.
 
-Then in the package.json file in the package.json folder, replace this line on line 26
+Then in the package.json file in the client folder, replace this line on line 26
 
 ```bash
   "start": "PORT=3001 react-scripts start",
@@ -150,7 +150,8 @@ with this line instead:
 "start": "PORT=3001 HTTPS=true SSL_CRT_FILE=localhost.pem SSL_KEY_FILE=localhost-key.pem react-scripts start",
 ```
 
-After starting up the Pattern sample app, you can now view it at https://localhost:3001.
+After starting up the Pattern sample app, you can now view it at https://localhost:3001. Note that if you are on Windows, you
+may still get an invalid certification warning on your browser. If so, click on "advanced" and proceed. However, please note that this is recommended for local development environments only and not for production environments. Also on Windows, the frontend may still try to load http://localhost:3001 and you may have to enter https://localhost:3001 manually.
 
 ## Debugging
 

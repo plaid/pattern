@@ -153,13 +153,13 @@ with this line instead:
 Finally, in the wait-for-client.sh file in the server folder, replace this line on line 6
 
 ```bash
-"while [ "$(curl -s -o /dev/null -w "%{http_code}" -m 1 localhost:3001)" != "200" ]"
+while [ "$(curl -s -o /dev/null -w "%{http_code}" -m 1 localhost:3001)" != "200" ]
 ```
 
 with this line instead:
 
 ```bash
-"while [ "$(curl -s -o /dev/null -w "%{http_code}" -m 1 https://localhost:3001)" != "200" ]"
+while [ "$(curl -s -o /dev/null -w "%{http_code}" -m 1 https://localhost:3001)" != "200" ]
 ```
 
 After starting up the Pattern sample app, you can now view it at https://localhost:3001.
@@ -181,13 +181,13 @@ with this line instead:
 Then, in the wait-for-client.sh file in the server folder, replace this line on line 6
 
 ```bash
-"while [ "$(curl -s -o /dev/null -w "%{http_code}" -m 1 localhost:3001)" != "200" ]"
+while [ "$(curl -s -o /dev/null -w "%{http_code}" -m 1 localhost:3001)" != "200" ]
 ```
 
 with this line instead:
 
 ```bash
-"while [ "$(curl -s -o /dev/null -w "%{http_code}" -m 1 https://localhost:3001)" != "200" ]"
+while [ "$(curl -s -o /dev/null -w "%{http_code}" -m 1 https://localhost:3001)" != "200" ]
 ```
 
 After starting up the Pattern sample app, you can now view it at https://localhost:3001. Your browser will alert you with an invalid certificate warning on your browser; click on "advanced" and proceed.

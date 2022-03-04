@@ -113,13 +113,11 @@ A redirect_uri parameter is included in the linkTokenCreate call and set in this
 
 To test the OAuth flow in sandbox, choose 'Playtypus OAuth Bank' from the list of financial institutions in Plaid Link.
 
-#### Instructions for using https with localhost
+If you want to test OAuth in development, you need to use https and set `PLAID_REDIRECT_URI=https://localhost:3001/oauth-link` in `.env`. In order to run your localhost on https, you will need to create a self-signed certificate and add it to the client root folder. MacOS users can use the following instructions to do this. Note that self-signed certificates should be used for testing purposes only, never for actual deployments. Windows users can use [these instructions below](#instructions-for-using-https-with-localhost:-for-windows-users)
 
-##### For MacOS users
+#### Instructions for using https with localhost: For MacOS users
 
-If you want to test OAuth in development, you need to use https and set `PLAID_REDIRECT_URI=https://localhost:3001/oauth-link` in `.env`. In order to run your localhost on https, you will need to create a self-signed certificate and add it to the client root folder. You can use the following instructions to do this. Note that self-signed certificates should be used for testing purposes only, never for actual deployments.
-
-In your terminal, change to the client folder:
+If you are using MacOS, in your terminal, change to the client folder:
 
 ```bash
 cd client
@@ -154,9 +152,9 @@ with this line instead:
 
 After starting up the Pattern sample app, you can now view it at https://localhost:3001.
 
-##### For Windows users
+#### Instructions for using https with localhost: For Windows users
 
-In the package.json file in the client folder, replace this line on line 26
+If you are on a Windows machine, in the package.json file in the client folder, replace this line on line 26
 
 ```bash
   "start": "PORT=3001 react-scripts start",

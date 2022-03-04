@@ -190,7 +190,7 @@ with this line instead:
 while [ "$(curl -s -o /dev/null -w "%{http_code}" -m 1 https://localhost:3001)" != "200" ]
 ```
 
-After starting up the Pattern sample app, you can now view it at https://localhost:3001. Your browser will alert you with an invalid certificate warning on your browser; click on "advanced" and proceed.
+After starting up the Pattern sample app, you can now view it at https://localhost:3001. Your browser will alert you with an invalid certificate warning; click on "advanced" and proceed.
 
 ## Debugging
 

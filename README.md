@@ -166,7 +166,7 @@ with this line instead:
 "start": "PORT=3001 HTTPS=true react-scripts start",
 ```
 
-You may still get an invalid certificate warning on your browser. If so, click on "advanced" and proceed. Also on Windows, the frontend may still try to load http://localhost:3001 and you may have to access https://localhost:3001 manually.
+After starting up the Pattern sample app, you can now view it at https://localhost:3001. Your browser will alert you with an invalid certificate warning on your browser; click on "advanced" and proceed.
 
 ## Debugging
 

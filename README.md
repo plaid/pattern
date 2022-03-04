@@ -109,11 +109,88 @@ Upon receipt of a transactions webhook a call will be made to Plaid's transactio
 
 ### Testing OAuth
 
-A redirect_uri parameter is included in the linkTokenCreate call and set in this sample app to the PLAID_SANDBOX_REDIRECT_URI you have set in the .env file (`http://localhost:3001/oauth-link`). This is the page that the user will be redirected to upon completion of the OAuth flow at their OAuth institution. When running in Production or Development, you will need to use an `https://` redirect URI, but a localhost http URI will work for Sandbox.
+A redirect_uri parameter is included in the linkTokenCreate call and set in this sample app to the PLAID_SANDBOX_REDIRECT_URI you have set in the .env file (`http://localhost:3001/oauth-link`). This is the page that the user will be redirected to upon completion of the OAuth flow at their OAuth institution. You will also need to configure `http://localhost:3001/oauth-link` as an allowed redirect URI for your client ID through the [Plaid developer dashboard](https://dashboard.plaid.com/team/api).
 
-You will also need to configure `http://localhost:3001/oauth-link` as an allowed redirect URI for your client ID through the [Plaid developer dashboard](https://dashboard.plaid.com/team/api).
+To test the OAuth flow in sandbox, choose 'Playtypus OAuth Bank' from the list of financial institutions in Plaid Link.
 
-To test the OAuth flow, choose 'Playtypus OAuth Bank' from the list of financial instutions in Plaid Link.
+If you want to test OAuth in development, you need to use https and set `PLAID_REDIRECT_URI=https://localhost:3001/oauth-link` in `.env`. In order to run your localhost on https, you will need to create a self-signed certificate and add it to the client root folder. MacOS users can use the following instructions to do this. Note that self-signed certificates should be used for testing purposes only, never for actual deployments. Windows users can use [these instructions below](#windows-instructions-for-using-https-with-localhost).
+
+#### MacOS instructions for using https with localhost
+
+If you are using MacOS, in your terminal, change to the client folder:
+
+```bash
+cd client
+```
+
+Use homebrew to install mkcert:
+
+```bash
+brew install mkcert
+```
+
+Then create your certificate for localhost:
+
+```bash
+mkcert -install
+mkcert localhost
+```
+
+This will create a certificate file localhost.pem and a key file localhost-key.pem inside your client folder.
+
+Then in the package.json file in the client folder, replace this line on line 26
+
+```bash
+  "start": "PORT=3001 react-scripts start",
+```
+
+with this line instead:
+
+```bash
+"start": "PORT=3001 HTTPS=true SSL_CRT_FILE=localhost.pem SSL_KEY_FILE=localhost-key.pem react-scripts start",
+```
+
+Finally, in the wait-for-client.sh file in the server folder, replace this line on line 6
+
+```bash
+while [ "$(curl -s -o /dev/null -w "%{http_code}" -m 1 localhost:3001)" != "200" ]
+```
+
+with this line instead:
+
+```bash
+while [ "$(curl -s -o /dev/null -w "%{http_code}" -m 1 https://localhost:3001)" != "200" ]
+```
+
+After starting up the Pattern sample app, you can now view it at https://localhost:3001.
+
+#### Windows instructions for using https with localhost
+
+If you are on a Windows machine, in the package.json file in the client folder, replace this line on line 26
+
+```bash
+  "start": "PORT=3001 react-scripts start",
+```
+
+with this line instead:
+
+```bash
+"start": "PORT=3001 HTTPS=true react-scripts start",
+```
+
+Then, in the wait-for-client.sh file in the server folder, replace this line on line 6
+
+```bash
+while [ "$(curl -s -o /dev/null -w "%{http_code}" -m 1 localhost:3001)" != "200" ]
+```
+
+with this line instead:
+
+```bash
+while [ "$(curl -s -o /dev/null -w "%{http_code}" -m 1 https://localhost:3001)" != "200" ]
+```
+
+After starting up the Pattern sample app, you can now view it at https://localhost:3001. Your browser will alert you with an invalid certificate warning; click on "advanced" and proceed.
 
 ## Debugging
 

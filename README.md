@@ -115,6 +115,8 @@ To test the OAuth flow in sandbox, choose 'Playtypus OAuth Bank' from the list o
 
 #### Instructions for using https with localhost
 
+##### For MacOS users
+
 If you want to test OAuth in development, you need to use https and set `PLAID_REDIRECT_URI=https://localhost:3001/oauth-link` in `.env`. In order to run your localhost on https, you will need to create a self-signed certificate and add it to the client root folder. You can use the following instructions to do this. Note that self-signed certificates should be used for testing purposes only, never for actual deployments.
 
 In your terminal, change to the client folder:
@@ -150,8 +152,23 @@ with this line instead:
 "start": "PORT=3001 HTTPS=true SSL_CRT_FILE=localhost.pem SSL_KEY_FILE=localhost-key.pem react-scripts start",
 ```
 
-After starting up the Pattern sample app, you can now view it at https://localhost:3001. If you are on Windows, you
-may still get an invalid certificate warning on your browser. If so, click on "advanced" and proceed. Also on Windows, the frontend may still try to load http://localhost:3001 and you may have to access https://localhost:3001 manually.
+After starting up the Pattern sample app, you can now view it at https://localhost:3001.
+
+##### For Windows users
+
+In the package.json file in the client folder, replace this line on line 26
+
+```bash
+  "start": "PORT=3001 react-scripts start",
+```
+
+with this line instead:
+
+```bash
+"start": "PORT=3001 HTTPS=true react-scripts start",
+```
+
+You may still get an invalid certificate warning on your browser. If so, click on "advanced" and proceed. Also on Windows, the frontend may still try to load http://localhost:3001 and you may have to access https://localhost:3001 manually.
 
 ## Debugging
 

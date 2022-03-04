@@ -150,6 +150,18 @@ with this line instead:
 "start": "PORT=3001 HTTPS=true SSL_CRT_FILE=localhost.pem SSL_KEY_FILE=localhost-key.pem react-scripts start",
 ```
 
+Finally, in the wait-for-client.sh file in the server folder, replace this line on line 6
+
+```bash
+"while [ "$(curl -s -o /dev/null -w "%{http_code}" -m 1 localhost:3001)" != "200" ]"
+```
+
+with this line instead:
+
+```bash
+"while [ "$(curl -s -o /dev/null -w "%{http_code}" -m 1 https://localhost:3001)" != "200" ]"
+```
+
 After starting up the Pattern sample app, you can now view it at https://localhost:3001.
 
 #### Windows instructions for using https with localhost
@@ -164,6 +176,18 @@ with this line instead:
 
 ```bash
 "start": "PORT=3001 HTTPS=true react-scripts start",
+```
+
+Then, in the wait-for-client.sh file in the server folder, replace this line on line 6
+
+```bash
+"while [ "$(curl -s -o /dev/null -w "%{http_code}" -m 1 localhost:3001)" != "200" ]"
+```
+
+with this line instead:
+
+```bash
+"while [ "$(curl -s -o /dev/null -w "%{http_code}" -m 1 https://localhost:3001)" != "200" ]"
 ```
 
 After starting up the Pattern sample app, you can now view it at https://localhost:3001. Your browser will alert you with an invalid certificate warning on your browser; click on "advanced" and proceed.

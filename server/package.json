@@ -14,7 +14,7 @@
     "express": "~4.16.0",
     "express-promise-router": "^3.0.3",
     "lodash": "^4.17.19",
-    "moment": "^2.24.0",
+    "moment": "^2.29.2",
     "morgan": "~1.9.0",
     "node-fetch": "^2.3.0",
     "pg": "^8.7.1",

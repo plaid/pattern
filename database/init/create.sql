@@ -52,7 +52,8 @@ CREATE TABLE items_table
   plaid_institution_id text NOT NULL,
   status text NOT NULL,
   created_at timestamptz default now(),
-  updated_at timestamptz default now()
+  updated_at timestamptz default now(),
+  transactions_cursor text
 );
 
 CREATE TRIGGER items_updated_at_timestamp
@@ -70,7 +71,8 @@ AS
     plaid_institution_id,
     status,
     created_at,
-    updated_at
+    updated_at,
+    transactions_cursor
   FROM
     items_table;
 

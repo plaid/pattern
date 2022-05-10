@@ -22,6 +22,7 @@ const {
   isValidItemStatus,
   validItemStatuses,
 } = require('../util');
+const updateTransactions = require('../update_transactions');
 
 const router = express.Router();
 
@@ -59,6 +60,14 @@ router.post(
       itemId,
       userId
     );
+
+    // Make an initial call to fetch transactions and enable SYNC_UPDATES_AVAILABLE webhook sending
+    // for this item.
+    updateTransactions(itemId).then(() => {
+      // Notify frontend to reflect any transactions changes.
+      req.io.emit('NEW_TRANSACTIONS_DATA', { itemId: newItem.id });
+    });
+
     res.json(sanitizeItems(newItem));
   })
 );

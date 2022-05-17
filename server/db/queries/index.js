@@ -17,14 +17,14 @@ const {
   retrieveItemByPlaidItemId,
   retrieveItemsByUser,
   updateItemStatus,
+  updateItemTransactionsCursor,
 } = require('./items');
 const { createPlaidApiEvent } = require('./plaidApiEvents');
 const {
-  createTransactions,
+  createOrUpdateTransactions,
   retrieveTransactionsByAccountId,
   retrieveTransactionsByItemId,
   retrieveTransactionsByUserId,
-  retrieveTransactionsInDateRange,
   deleteTransactions,
 } = require('./transactions');
 const {
@@ -60,12 +60,12 @@ module.exports = {
   // plaid api events
   createPlaidApiEvent,
   // transactions
-  createTransactions,
   retrieveTransactionsByAccountId,
   retrieveTransactionsByItemId,
   retrieveTransactionsByUserId,
-  retrieveTransactionsInDateRange,
   deleteTransactions,
+  createOrUpdateTransactions,
+  updateItemTransactionsCursor,
   // users
   createUser,
   deleteUsers,

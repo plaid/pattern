@@ -99,13 +99,13 @@ By default, Plaid Link will let a user link to the same institution multiple tim
 
 ### Using webhooks to update transaction data and test update mode in Link.
 
-Plaid uses [webhooks][transactions-webhooks] to notify you whenever there are new transactions associated with an item. This allows you to make a call to Plaid's transactions endpoint only when there are new transactions available, rather than polling for them. For an example of this, see the [transactions webhook handler][transactions-handler]. This sample app also demonstrates the use of the sandboxItemResetLogin endpoint to test the webhook used to notify you when a user needs to update their login information at their financial institution.
+Plaid uses [webhooks][transactions-webhooks] to notify you whenever there are changes in the transactions associated with an item. This allows you to make a call to Plaid's transactions sync endpoint only when changes have occurred, rather than polling for them. For an example of this, see the [transactions webhook handler][transactions-handler]. This sample app also demonstrates the use of the sandboxItemResetLogin endpoint to test the webhook used to notify you when a user needs to update their login information at their financial institution.
 
-For webhooks to work, the server must be publicly accessible on the internet. For development purposes, this application uses [ngrok][ngrok-readme] to accomplish that. Therefore, if the server is re-started, any items created in this sample app previous to the current session will have a different webhook address attached to it. As a result, webhooks are only valid during the session in which an item is created; for previously created items, no transactions webhooks will be received, and no webhook will be received from the call to sandboxItemResetLogin.
+For webhooks to work, the server must be publicly accessible on the internet. For development purposes, this application uses [ngrok][ngrok-readme] to accomplish that. Therefore, if the server is re-started, any items created in this sample app previous to the current session will have a different webhook address attached to it. As a result, webhooks are only valid during the session in which an item is created; for previously created items, no transactions webhooks will be received, and no webhook will be received from the call to sandboxItemResetLogin. In addition, ngrok webhook addresses are only valid for 2 hours. If you are not receiving webhooks in this sample application, restart your server to reset the ngrok webhook address.
 
-### Updating transactions to remove pending transactions that have posted or cancelled
+### Creating and updating transactions to reflect new, modified and removed transactions.
 
-Upon receipt of a transactions webhook a call will be made to Plaid's transactions endpoint. Incoming transactions are compared to existing transactions. Any existing transactions that are not included in incoming transactions will be removed and any new transactions are added to the database. For an example, see the [handleTransactionsUpdate][transactions-handler] function.
+Upon the creation of a new item or receipt of the SYNC_UPDATES_AVAILABLE transactions webhook a call will be made to Plaid's transactions sync endpoint. This will return any changes to transactions that have occurred since you last called the endpoint (or all transactions upon creation of a new item). These changes are then reflected in the database. For an example, see the [update_transactions][update-transactions] file.
 
 ### Testing OAuth
 
@@ -310,6 +310,7 @@ Plaid Pattern is a demo app that is intended to be used only for the purpose of 
 [nodejs]: https://nodejs.org/en/
 [plaid-node]: https://github.com/plaid/plaid-node
 [transactions-handler]: /server/webhookHandlers/handleTransactionsWebhook.js
+[update-transactions]: /server/update_transactions.js
 [transactions-webhooks]: https://plaid.com/docs/#transactions-webhooks
 [users-routes]: server/routes/users.js
 [vscode-debugging]: https://code.visualstudio.com/docs/editor/debugging

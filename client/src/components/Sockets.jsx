@@ -14,31 +14,12 @@ export default function Sockets() {
   useEffect(() => {
     socket.current = io(`http://localhost:${REACT_APP_SERVER_PORT}`);
 
-    socket.current.on('DEFAULT_UPDATE', ({ itemId } = {}) => {
-      const msg = `New Webhook Event: Item ${itemId}: New Transactions Received`;
-      console.log(msg);
-      toast(msg);
-    });
-
-    socket.current.on('TRANSACTIONS_REMOVED', ({ itemId } = {}) => {
-      const msg = `New Webhook Event: Item ${itemId}: Transactions Removed`;
-      console.log(msg);
-      toast(msg);
-    });
-
-    socket.current.on('INITIAL_UPDATE', ({ itemId } = {}) => {
-      const msg = `New Webhook Event: Item ${itemId}: Initial Transactions Received`;
+    socket.current.on('SYNC_UPDATES_AVAILABLE', ({ itemId } = {}) => {
+      const msg = `New Webhook Event: Item ${itemId}: Transactions updates`;
       console.log(msg);
       toast(msg);
       getAccountsByItem(itemId);
       getTransactionsByItem(itemId);
-    });
-
-    socket.current.on('HISTORICAL_UPDATE', ({ itemId } = {}) => {
-      const msg = `New Webhook Event: Item ${itemId}: Historical Transactions Received`;
-      console.log(msg);
-      toast(msg);
-      getTransactionsByItem(itemId, true);
     });
 
     socket.current.on('ERROR', ({ itemId, errorCode } = {}) => {
@@ -53,6 +34,11 @@ export default function Sockets() {
       console.log(msg);
       toast(msg);
       getItemById(itemId, true);
+    });
+
+    socket.current.on('NEW_TRANSACTIONS_DATA', ({ itemId } = {}) => {
+      getAccountsByItem(itemId);
+      getTransactionsByItem(itemId);
     });
 
     return () => {

@@ -133,6 +133,20 @@ const updateItemStatus = async (itemId, status) => {
 };
 
 /**
+ * Updates the transaction cursor for a single item.
+ *
+ * @param {string} itemId the Plaid item ID of the item.
+ * @param {string} transactionsCursor latest observed transactions cursor on this item.
+ */
+ const updateItemTransactionsCursor = async (itemId, transactionsCursor) => {
+  const query = {
+    text: 'UPDATE items SET transactions_cursor = $1 WHERE id = $2',
+    values: [transactionsCursor, itemId],
+  };
+  await db.query(query);
+};
+
+/**
  * Removes a single item. The database will also remove related accounts and transactions.
  *
  * @param {string} itemId the id of the item.
@@ -154,4 +168,5 @@ module.exports = {
   retrieveItemByPlaidItemId,
   retrieveItemsByUser,
   updateItemStatus,
+  updateItemTransactionsCursor,
 };

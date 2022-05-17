@@ -6,11 +6,11 @@ const { retrieveAccountByPlaidAccountId } = require('./accounts');
 const db = require('../');
 
 /**
- * Creates multiple transactions.
+ * Creates or updates multiple transactions.
  *
  * @param {Object[]} transactions an array of transactions.
  */
-const createTransactions = async transactions => {
+const createOrUpdateTransactions = async transactions => {
   const pendingQueries = transactions.map(async transaction => {
     const {
       account_id: plaidAccountId,
@@ -50,7 +50,20 @@ const createTransactions = async transactions => {
               account_owner
             )
           VALUES
-            ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13);
+            ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)
+          ON CONFLICT (plaid_transaction_id) DO UPDATE 
+            SET 
+              plaid_category_id = EXCLUDED.plaid_category_id,
+              category = EXCLUDED.category,
+              subcategory = EXCLUDED.subcategory,
+              type = EXCLUDED.type,
+              name = EXCLUDED.name,
+              amount = EXCLUDED.amount,
+              iso_currency_code = EXCLUDED.iso_currency_code,
+              unofficial_currency_code = EXCLUDED.unofficial_currency_code,
+              date = EXCLUDED.date,
+              pending = EXCLUDED.pending,
+              account_owner = EXCLUDED.account_owner;
         `,
         values: [
           accountId,
@@ -70,8 +83,7 @@ const createTransactions = async transactions => {
       };
       await db.query(query);
     } catch (err) {
-      // this is most likely a duplicate transaction, so we'll ignore it.
-      console.log(`Skipping duplicate transaction ${plaidTransactionId}`);
+      console.error(err);
     }
   });
   await Promise.all(pendingQueries);
@@ -125,41 +137,6 @@ const retrieveTransactionsByUserId = async userId => {
 };
 
 /**
- * Retrieves all transactions for a single item within a specified date range.
- *
- * @TODO combine with `retrieveTransactionsByUserId` by formatting the query to allow startDate and endDate to be nullable.
- * @TODO refactor to use item_id instead of plaid_item_id so it can be removed from the view
- *
- * @param {string} plaidItemId the Plaid ID for the item.
- * @param {string} startDate the earliest date to retrieve ('YYYY-MM-DD').
- * @param {string} endDate the latest date to retrieve ('YYYY-MM-DD').
- * @returns {Object[]} an array of transactions.
- */
-const retrieveTransactionsInDateRange = async (
-  plaidItemId,
-  startDate,
-  endDate
-) => {
-  const query = {
-    text: `
-      SELECT
-        *
-      FROM
-        transactions
-      WHERE
-        plaid_item_id = $1
-        AND date >= $2
-        AND date <= $3
-      ORDER BY
-        date DESC;
-    `,
-    values: [plaidItemId, startDate, endDate],
-  };
-  const { rows: transactions } = await db.query(query);
-  return transactions;
-};
-
-/**
  * Removes one or more transactions.
  *
  * @param {string[]} plaidTransactionIds the Plaid IDs of the transactions.
@@ -176,10 +153,9 @@ const deleteTransactions = async plaidTransactionIds => {
 };
 
 module.exports = {
-  createTransactions,
+  createOrUpdateTransactions,
   retrieveTransactionsByAccountId,
   retrieveTransactionsByItemId,
   retrieveTransactionsByUserId,
-  retrieveTransactionsInDateRange,
   deleteTransactions,
 };

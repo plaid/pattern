@@ -141,7 +141,7 @@ mkcert localhost
 
 This will create a certificate file localhost.pem and a key file localhost-key.pem inside your client folder.
 
-Then in the package.json file in the client folder, replace this line on line 20
+Then in the package.json file in the client folder, replace this line on line 26
 
 ```bash
   "start": "PORT=3001 react-scripts start",
@@ -153,7 +153,7 @@ with this line instead:
 "start": "PORT=3001 HTTPS=true SSL_CRT_FILE=localhost.pem SSL_KEY_FILE=localhost-key.pem react-scripts start",
 ```
 
-Finally, in the wait-for-client.sh file in the server folder, replace this line on line 6
+Finally, in the wait-for-client.sh file in the main pattern folder, replace this line on line 6
 
 ```bash
 while [ "$(curl -s -o /dev/null -w "%{http_code}" -m 1 localhost:3001)" != "200" ]
@@ -181,7 +181,7 @@ with this line instead:
 "start": "PORT=3001 HTTPS=true react-scripts start",
 ```
 
-Then, in the wait-for-client.sh file in the server folder, replace this line on line 6
+Then, in the wait-for-client.sh file in the main pattern folder, replace this line on line 6
 
 ```bash
 while [ "$(curl -s -o /dev/null -w "%{http_code}" -m 1 localhost:3001)" != "200" ]

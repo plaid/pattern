@@ -91,7 +91,7 @@ const updateTransactions = async (plaidItemId) => {
   await createAccounts(plaidItemId, accounts);
   await createOrUpdateTransactions(added.concat(modified));
   await deleteTransactions(removed);
-  await updateItemTransactionsCursor(itemId, cursor);
+  await updateItemTransactionsCursor(plaidItemId, cursor);
   return {
     addedCount: added.length,
     modifiedCount: modified.length,

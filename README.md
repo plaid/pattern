@@ -153,6 +153,13 @@ with this line instead:
 "start": "PORT=3001 HTTPS=true SSL_CRT_FILE=localhost.pem SSL_KEY_FILE=localhost-key.pem react-scripts start",
 ```
 
+In the `Dockerfile` in the client folder, add these two lines below line 6:
+
+```
+COPY ["localhost-key.pem", "/opt/client"]
+COPY ["localhost.pem", "/opt/client"]
+```
+
 Finally, in the wait-for-client.sh file in the main pattern folder, replace this line on line 6
 
 ```bash

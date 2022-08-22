@@ -141,7 +141,7 @@ mkcert localhost
 
 This will create a certificate file localhost.pem and a key file localhost-key.pem inside your client folder.
 
-Then in the package.json file in the client folder, replace this line on line 26
+Then in the package.json file in the client folder, replace this line on line 20
 
 ```bash
   "start": "PORT=3001 react-scripts start",

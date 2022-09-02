@@ -126,7 +126,7 @@ const retrieveItemsByUser = async userId => {
  */
 const updateItemStatus = async (itemId, status) => {
   const query = {
-    text: 'UPDATE items SET status = $1 WHERE id = $2',
+    text: 'UPDATE items SET status = $1 WHERE plaid_item_id = $2',
     values: [status, itemId],
   };
   await db.query(query);
@@ -140,7 +140,7 @@ const updateItemStatus = async (itemId, status) => {
  */
  const updateItemTransactionsCursor = async (itemId, transactionsCursor) => {
   const query = {
-    text: 'UPDATE items SET transactions_cursor = $1 WHERE id = $2',
+    text: 'UPDATE items SET transactions_cursor = $1 WHERE plaid_item_id = $2',
     values: [transactionsCursor, itemId],
   };
   await db.query(query);
@@ -153,7 +153,7 @@ const updateItemStatus = async (itemId, status) => {
  */
 const deleteItem = async itemId => {
   const query = {
-    text: `DELETE FROM items_table WHERE id = $1`,
+    text: `DELETE FROM items_table WHERE plaid_item_id = $1`,
     values: [itemId],
   };
   await db.query(query);

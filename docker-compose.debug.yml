@@ -16,7 +16,7 @@ services:
       - ./server:/opt/server
       - server_node_modules:/opt/server/node_modules
     ports:
-      - 5000:5000
+      - 5001:5001
       - 9229:9229
 
   ngrok:

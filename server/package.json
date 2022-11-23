@@ -19,7 +19,7 @@
     "node-fetch": "^2.3.0",
     "pg": "^8.7.1",
     "plaid": "^10.3.0",
-    "socket.io": "^2.2.0"
+    "socket.io": "^2.5.0"
   },
   "devDependencies": {
     "eslint": "^6.2.1",

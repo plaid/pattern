@@ -49,7 +49,7 @@ export default function NetWorth(props: Props) {
     <div className="netWorthContainer">
       <h2 className="netWorthHeading">Net Worth</h2>
       <h4 className="tableSubHeading">
-        A summary of your assets and liabilities
+        Here is a summary of your assets and liabilities
       </h4>
       {!props.assetsOnly && (
         <>

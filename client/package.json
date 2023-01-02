@@ -15,7 +15,7 @@
     "react-plaid-link": "^3.2.1",
     "react-router-dom": "^5.1.2",
     "react-router-hash-link": "^2.4.3",
-    "react-scripts": "4.0.1",
+    "react-scripts": "5.0.1",
     "react-toastify": "^5.1.0",
     "recharts": "^2.0.9",
     "sass": "^1.42.1",

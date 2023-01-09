@@ -2,7 +2,7 @@ version: "3.4"
 
 x-common-variables: &common-variables
   POSTGRES_USER: postgres
-  POSTGRES_PASSWORD: password
+  POSTGRES_PASSWORD: Lor3mDimpsum
 
 volumes:
   pg_sandbox_data:
@@ -10,7 +10,12 @@ volumes:
 
 services:
   db:
-    image: postgres:11.2
+    build: ./db
+    image: postgres:14.6-alpine3.17
+    DB_HOST_NAME: db.mfjuoqtfvjvffckuzdri.supabase.co
+    POSTGRES_USER: postgres
+    POSTGRES_PASSWORD: Lor3mDimpsum
+    DB_NAME: postgres
     volumes:
       - ./database/init:/docker-entrypoint-initdb.d
       - "pg_${PLAID_ENV}_data:/var/lib/postgresql/data"
@@ -33,9 +38,9 @@ services:
       PLAID_ENV:
       PORT: 5001
       DB_PORT: 5432
-      DB_HOST_NAME: db
+      DB_HOST_NAME: db.mfjuoqtfvjvffckuzdri.supabase.co
     depends_on:
-      - db
+      - db.mfjuoqtfvjvffckuzdri.supabase.co
 
   ngrok:
     build: ./ngrok

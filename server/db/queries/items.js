@@ -153,7 +153,7 @@ const updateItemStatus = async (itemId, status) => {
  */
 const deleteItem = async itemId => {
   const query = {
-    text: `DELETE FROM items_table WHERE plaid_item_id = $1`,
+    text: `DELETE FROM items_table WHERE id = $1`,
     values: [itemId],
   };
   await db.query(query);

@@ -29,36 +29,36 @@ help:
 ## Start the services
 start: $(envfile) $(clear_db_after_schema_change)
 	@echo "Pulling images from Docker Hub (this may take a few minutes)"
-	docker-compose pull
+	docker compose pull
 	@echo "Starting Docker services"
-	docker-compose up --build --detach
+	docker compose up --build --detach
 	./wait-for-client.sh
 
 ## Start the services without webhooks
 start-no-webhooks: $(envfile) $(clear_db_after_schema_change)
 	@echo "Pulling images from Docker Hub (this may take a few minutes)"
-	docker-compose pull
+	docker compose pull
 	@echo "Starting Docker services"
-	docker-compose up --detach client
+	docker compose up --detach client
 	./wait-for-client.sh
 
 ## Start the services in debug mode
 debug: $(envfile) $(clear_db_after_schema_change)
 	@echo "Starting services (this may take a few minutes if there are any changes)"
-	docker-compose -f docker-compose.yml -f docker-compose.debug.yml up --build --detach
+	docker compose -f docker-compose.yml -f docker-compose.debug.yml up --build --detach
 	./wait-for-client.sh
 
 ## Start an interactive psql session (services must running)
 sql:
-	docker-compose exec db psql -U postgres
+	docker compose exec db psql -U postgres
 
 ## Show the service logs (services must be running)
 logs:
-	docker-compose logs --follow
+	docker compose logs --follow
 
 ## Stop the services
 stop:
-	docker-compose down
+	docker compose down
 	docker volume rm $(current_dir)_{client,server}_node_modules 2>/dev/null || true
 
 ## Clear the sandbox and development databases

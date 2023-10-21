@@ -1,0 +1,29 @@
+{
+  "name": "pattern",
+  "version": "1.0.0",
+  "description": "A PalmFi pattern project // plaid auth & connect",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jlabastida0000/palmfi-pattern.git"
+  },
+  "keywords": [
+    "plaid",
+    "financial",
+    "data",
+    "analytics",
+    "insights"
+  ],
+  "author": "James Labastida",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jlabastida0000/palmfi-pattern/issues"
+  },
+  "homepage": "https://github.com/jlabastida0000/palmfi-pattern#readme"
+}

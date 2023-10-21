@@ -24,12 +24,12 @@ const {
 
 const app = express();
 
-// Updated line for setting the port
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3000;  // Modified to include a default port if process.env.PORT is not set
 
 const server = app.listen(PORT, () => {
   console.log(`listening on port ${PORT}`);
 });
+
 const io = socketIo(server);
 
 app.use(logger('dev'));
@@ -52,7 +52,25 @@ io.on('connection', socket => {
   });
 });
 
+app.get('/', (req, res) => {  // Added this line to handle requests to the root URL
+  res.send('Hello, welcome to my app!');
+});
+
 app.get('/test', (req, res) => {
   res.send('test response');
 });
 
+app.use('/users', usersRouter);
+app.use('/sessions', sessionsRouter);
+app.use('/items', itemsRouter);
+app.use('/accounts', accountsRouter);
+app.use('/institutions', institutionsRouter);
+app.use('/services', serviceRouter);
+app.use('/link-event', linkEventsRouter);
+app.use('/link-token', linkTokensRouter);
+app.use('/assets', assetsRouter);
+app.use('*', unhandledRouter);
+
+// Error handling has to sit at the bottom of the stack.
+// https://github.com/expressjs/express/issues/2718
+app.use(errorHandler);

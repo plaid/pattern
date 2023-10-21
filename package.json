@@ -30,5 +30,8 @@
     "eslint-plugin-prettier": "^3.0.1",
     "nodemon": "^2.0.4",
     "prettier": "^1.16.4"
+  },
+  "engines": {
+    "node": "14.x"
   }
 }

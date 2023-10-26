@@ -338,7 +338,7 @@ Plaid Pattern is a demo app that is intended to be used only for the purpose of 
 [plaid-dashboard]: https://dashboard.plaid.com/team/api
 [plaid-docs]: https://plaid.com/docs/
 [plaid-help]: https://support.plaid.com/hc/en-us
-[plaid-keys]: https://dashboard.plaid.com/account/keys
+[plaid-keys]: https://dashboard.plaid.com/developers/keys
 [plaid-quickstart]: https://plaid.com/docs/quickstart/
 [plaid-signup]: https://dashboard.plaid.com/signup
 [plaid-support-ticket]: https://dashboard.plaid.com/support/new

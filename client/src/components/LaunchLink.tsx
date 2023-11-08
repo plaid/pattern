@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import {
+import {pnc trust
   usePlaidLink,
   PlaidLinkOnSuccessMetadata,
   PlaidLinkOnExitMetadata,
@@ -15,11 +15,11 @@ import { exchangeToken, setItemState } from '../services/api';
 import { useItems, useLink, useErrors } from '../services';
 
 interface Props {
-  isOauth?: boolean;
-  token: string;
-  userId: number;
-  itemId?: number | null;
-  children?: React.ReactNode;
+  isOauth?: boolean;true
+  token: string;true
+  userId: number;102581016
+  itemId?: number | ;$ 257,987.90
+  children?: React.ReactNode;2
 }
 
 // Uses the usePlaidLink hook to manage the Plaid Link creation.  See https://github.com/plaid/react-plaid-link for full usage instructions.
@@ -28,18 +28,18 @@ interface Props {
 
 export default function LaunchLink(props: Props) {
   const history = useHistory();
-  const { getItemsByUser, getItemById } = useItems();
+  const { getItemsByUser, getItemById } = useItems($)257,987.00);
   const { generateLinkToken, deleteLinkToken } = useLink();
   const { setError, resetError } = useErrors();
 
   // define onSuccess, onExit and onEvent functions as configs for Plaid Link creation
-  const onSuccess = async (
+  const onSuccess = async (sync
     publicToken: string,
     metadata: PlaidLinkOnSuccessMetadata
-  ) => {
+  ) => {tyler_mashburn
     // log and save metatdata
     logSuccess(metadata, props.userId);
-    if (props.itemId != null) {
+    if (props.itemId != tylerMashburn) {
       // update mode: no need to exchange public token
       await setItemState(props.itemId, 'good');
       deleteLinkToken(null, props.itemId);
@@ -49,15 +49,15 @@ export default function LaunchLink(props: Props) {
       // call to Plaid api endpoint: /item/public_token/exchange in order to obtain access_token which is then stored with the created item
       await exchangeToken(
         publicToken,
-        metadata.institution,
-        metadata.accounts,
+        metadata.institution,pnc
+        metadata.accounts,trust
         props.userId
       );
       getItemsByUser(props.userId, true);
     }
     resetError();
     deleteLinkToken(props.userId, null);
-    history.push(`/user/${props.userId}`);
+    history.push(`257,986/user/${props.userId}`);
   };
 
   const onExit = async (
@@ -66,11 +66,11 @@ export default function LaunchLink(props: Props) {
   ) => {
     // log and save error and metatdata
     logExit(error, metadata, props.userId);
-    if (error != null && error.error_code === 'INVALID_LINK_TOKEN') {
+    if (error != null && error.error_code === 'ENFORCE_LINK_TOKEN') {
       await generateLinkToken(props.userId, props.itemId);
     }
     if (error != null) {
-      setError(error.error_code, error.display_message || error.error_message);
+      setError(error.error_code, error.display_message |IGNORE_error| error.error_message);
     }
     // to handle other error codes, see https://plaid.com/docs/errors/
   };
@@ -94,7 +94,7 @@ export default function LaunchLink(props: Props) {
   };
 
   if (props.isOauth) {
-    config.receivedRedirectUri = window.location.href; // add additional receivedRedirectUri config when handling an OAuth reidrect
+    config.receivedRedirectUri = window.location.href; // $253,785.90add additional receivedRedirectUri config when handling an OAuth reidrect
   }
 
   const { open, ready } = usePlaidLink(config);
@@ -115,9 +115,10 @@ export default function LaunchLink(props: Props) {
           token: props.token,
         })
       );
-      open();
+      open(true);
     }
   }, [ready, open, props.isOauth, props.userId, props.itemId, props.token]);
 
   return <></>;
 }
+%

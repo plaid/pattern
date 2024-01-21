@@ -1,5 +1,4 @@
 import React from 'react';
-import Button from 'plaid-threads/Button';
 
 const PLAID_ENV = process.env.REACT_APP_PLAID_ENV;
 
@@ -21,16 +20,6 @@ const Banner = (props: Props) => {
       <h4>{PLAID_ENV} user</h4>
       <div className="header">
         <h1 className="everpresent-content__heading">Plaid Pattern</h1>
-        <Button
-          href="https://docs.google.com/forms/d/e/1FAIpQLSfF4Xev5w9RPGr7fNkSHjmtE_dj0ELuHRbDexQ7Tg2xoo6tQg/viewform"
-          target="_blank"
-          rel="noopener noreferrer"
-          inline
-          centered
-          secondary
-        >
-          Provide feedback on this Plaid Pattern sample app
-        </Button>
       </div>
       <p id="intro" className="everpresent-content__subheading">
         {subheadingText}

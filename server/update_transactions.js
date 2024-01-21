@@ -9,6 +9,7 @@ const {
   createOrUpdateTransactions,
   deleteTransactions,
   updateItemTransactionsCursor,
+  retrieveItemsByUser,
 } = require('./db/queries');
 
 /**
@@ -24,7 +25,7 @@ const fetchTransactionUpdates = async (plaidItemId) => {
   // get the access token based on the plaid item id
   const {
     plaid_access_token: accessToken,
-    last_transactions_update_cursor: lastCursor,
+    transactions_cursor: lastCursor,
   } = await retrieveItemByPlaidItemId(
     plaidItemId
   );
@@ -99,4 +100,19 @@ const updateTransactions = async (plaidItemId) => {
   };
 };
 
-module.exports = updateTransactions;
+const queryAllItems = async (userID) => {
+    const items = await retrieveItemsByUser(userID);
+    for (const item of items) {
+        try {
+            await updateTransactions(item.plaid_item_id);
+        } catch (error) {
+            console.error(`Failed to update transactions for item ${item.plaid_item_id}:`, error);
+            // Continue with the next item
+        }
+    }
+}
+
+module.exports = {
+  updateTransactions, 
+  queryAllItems,
+};

@@ -135,6 +135,10 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
       <NavigationLink component={Link} to="/">
         BACK TO LOGIN
       </NavigationLink>
+      <p />
+      <NavigationLink component={Link} to={`/transactions/${userId}`}>
+        USER TRANSACTIONS
+      </NavigationLink>
 
       <Banner />
       {linkTokens.error.error_code != null && (

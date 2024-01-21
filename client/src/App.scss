@@ -361,6 +361,22 @@ transactions-table
 
 /*
 
+transactions-page
+
+*/
+
+.transactions-page tr:nth-child(odd) {
+  /* Odd rows */
+  background-color: white;
+}
+
+.transactions-page tr:nth-child(even) {
+  /* Even rows */
+  background-color: lightblue;
+}
+
+/*
+
 More Details
 
 */

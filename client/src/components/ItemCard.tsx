@@ -40,11 +40,8 @@ const ItemCard = (props: Props) => {
   const { deleteAccountsByItemId } = useAccounts();
   const { deleteItemById } = useItems();
   const { deleteTransactionsByItemId } = useTransactions();
-  const {
-    institutionsById,
-    getInstitutionById,
-    formatLogoSrc,
-  } = useInstitutions();
+  const { institutionsById, getInstitutionById, formatLogoSrc } =
+    useInstitutions();
   const { id, plaid_institution_id, status } = props.item;
   const isSandbox = PLAID_ENV === 'sandbox';
   const isGoodState = status === 'good';

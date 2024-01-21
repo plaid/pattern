@@ -13,6 +13,7 @@ export { default as TransactionsTable } from './TransactionsTable';
 export { default as UserCard } from './UserCard';
 export { default as UserDetails } from './UserDetails';
 export { default as UserList } from './UserList';
+export { default as TransactionsPage } from './TransactionsPage';
 export { default as OAuthLink } from './OAuthLink';
 export { default as Login } from './Login';
 export { default as CategoriesChart } from './CategoriesChart';

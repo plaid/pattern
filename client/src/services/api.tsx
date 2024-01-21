@@ -66,6 +66,8 @@ export const getTransactionsByItem = (itemId: number) =>
   api.get(`/items/${itemId}/transactions`);
 export const getTransactionsByUser = (userId: number) =>
   api.get(`/users/${userId}/transactions`);
+export const setLabel = (id: number, newLabel: any) =>
+  api.put(`/users/${id}/label`, { newLabel });
 
 // institutions
 export const getInstitutionById = (instId: string) =>
@@ -89,13 +91,17 @@ export const exchangeToken = async (
     });
     return data;
   } catch (err) {
-    const { response } = err;
-    if (response && response.status === 409) {
-      toast.error(
-        <DuplicateItemToastMessage institutionName={institution.name} />
-      );
+    if (err && typeof err === 'object' && 'response' in err) {
+      const response = (err as any).response;
+      if (response && response.status === 409) {
+        toast.error(
+          <DuplicateItemToastMessage institutionName={institution.name} />
+        );
+      } else {
+        toast.error(`Error linking ${institution.name}`);
+      }
     } else {
-      toast.error(`Error linking ${institution.name}`);
+      toast.error('An unknown error occurred');
     }
   }
 };

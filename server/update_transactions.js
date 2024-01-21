@@ -24,7 +24,7 @@ const fetchTransactionUpdates = async (plaidItemId) => {
   // get the access token based on the plaid item id
   const {
     plaid_access_token: accessToken,
-    last_transactions_update_cursor: lastCursor,
+    transactions_cursor: lastCursor,
   } = await retrieveItemByPlaidItemId(
     plaidItemId
   );

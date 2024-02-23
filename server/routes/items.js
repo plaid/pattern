@@ -22,7 +22,7 @@ const {
   isValidItemStatus,
   validItemStatuses,
 } = require('../util');
-const updateTransactions = require('../update_transactions');
+const { updateTransactions } = require('../update_transactions');
 
 const router = express.Router();
 

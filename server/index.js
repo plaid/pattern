@@ -6,6 +6,7 @@ const express = require('express');
 const socketIo = require('socket.io');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
+const cron = require('node-cron');
 
 const { errorHandler } = require('./middleware');
 
@@ -21,6 +22,7 @@ const {
   unhandledRouter,
   assetsRouter,
 } = require('./routes');
+const { queryAllItems } = require('./update_transactions');
 
 const app = express();
 
@@ -69,3 +71,9 @@ app.use('*', unhandledRouter);
 // Error handling has to sit at the bottom of the stack.
 // https://github.com/expressjs/express/issues/2718
 app.use(errorHandler);
+
+// Schedule a task to run at a specified time
+cron.schedule('0 2 * * *', async () => {
+    console.log('Running a task to query all items');
+    await queryAllItems(1);
+});

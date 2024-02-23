@@ -57,6 +57,7 @@ export interface TransactionType {
   unofficial_currency_code: string;
   date: string;
   pending: boolean;
+  label: string | null;
   account_owner: string;
   created_at: string;
   updated_at: string;

@@ -7,7 +7,7 @@ const {
   retrieveItemByPlaidItemId,
 } = require('../db/queries');
 
-const updateTransactions = require('../update_transactions');
+const { updateTransactions }= require('../update_transactions');
 
 /**
  * Handles all transaction webhook events. The transaction webhook notifies

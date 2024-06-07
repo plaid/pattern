@@ -10,14 +10,14 @@ const fetch = require('node-fetch');
 const { retrieveItemById } = require('../db/queries');
 const {
   PLAID_SANDBOX_REDIRECT_URI,
-  PLAID_DEVELOPMENT_REDIRECT_URI,
+  PLAID_PRODUCTION_REDIRECT_URI,
   PLAID_ENV,
 } = process.env;
 
 const redirect_uri =
   PLAID_ENV == 'sandbox'
     ? PLAID_SANDBOX_REDIRECT_URI
-    : PLAID_DEVELOPMENT_REDIRECT_URI;
+    : PLAID_PRODUCTION_REDIRECT_URI;
 const router = express.Router();
 
 router.post(

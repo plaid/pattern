@@ -35,7 +35,7 @@ Note: We recommend running these commands in a unix terminal. Windows users can 
     ```
 1. Update the `.env` file with your [Plaid API keys][plaid-keys] and OAuth redirect uri (in sandbox this is 'http<span>://localhost:3001/oauth-link'</span>).
 
-2. Update the `ngrok.yml` file in the ngrok folder with your ngrok authtoken. 
+1. Update the `ngrok.yml` file in the ngrok folder with your ngrok authtoken.
 
 1. (Optional, only required if testing OAuth with redirect URIs) You will also need to configure an allowed redirect URI for your client ID through the [Plaid developer dashboard](https://dashboard.plaid.com/team/api).
 
@@ -118,7 +118,7 @@ A redirect_uri parameter is included in the linkTokenCreate call and set in this
 
 To test the OAuth flow in sandbox, choose 'Playtypus OAuth Bank' from the list of financial institutions in Plaid Link.
 
-If you want to test OAuth in development, you need to use https and set `PLAID_REDIRECT_URI=https://localhost:3001/oauth-link` in `.env`. In order to run your localhost on https, you will need to create a self-signed certificate and add it to the client root folder. MacOS users can use the following instructions to do this. Note that self-signed certificates should be used for testing purposes only, never for actual deployments. Windows users can use [these instructions below](#windows-instructions-for-using-https-with-localhost).
+If you want to test OAuth in Production, you need to use https and set `PLAID_PRODUCTION_REDIRECT_URI=https://localhost:3001/oauth-link` in `.env`. In order to run your localhost on https, you will need to create a self-signed certificate and add it to the client root folder. MacOS users can use the following instructions to do this. Note that self-signed certificates should be used for testing purposes only, never for actual deployments. Windows users can use [these instructions below](#windows-instructions-for-using-https-with-localhost).
 
 #### MacOS instructions for using https with localhost
 
@@ -277,7 +277,7 @@ Browse to [localhost:4040](http://localhost:4040/inspect/http) to see the ngrok 
 
 Don’t want to use ngrok? As long as you serve the app with an endpoint that is publicly exposed, all the Plaid webhooks will work.
 
-ngrok's free account has a session limit of 8 hours. To fully test out some of the transaction webhook workflows, you will need to get a more persistent endpoint as noted above when using the development environment.
+ngrok's free account has a session limit of 8 hours. To fully test out some of the transaction webhook workflows, you will need to get a more persistent endpoint as noted above when using the Production environment.
 
 ## Source
 

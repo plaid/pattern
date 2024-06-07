@@ -61,9 +61,9 @@ stop:
 	docker compose down
 	docker volume rm $(current_dir)_{client,server}_node_modules 2>/dev/null || true
 
-## Clear the sandbox and development databases
+## Clear the sandbox and production databases
 clear-db: stop
-	docker volume rm $(current_dir)_pg_{sandbox,development}_data 2>/dev/null || true
+	docker volume rm $(current_dir)_pg_{sandbox,production}_data 2>/dev/null || true
 
 $(envfile):
 	@echo "Error: .env file does not exist! See the README for instructions."

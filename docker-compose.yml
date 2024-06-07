@@ -6,7 +6,7 @@ x-common-variables: &common-variables
 
 volumes:
   pg_sandbox_data:
-  pg_development_data:
+  pg_production_data:
 
 services:
   db:

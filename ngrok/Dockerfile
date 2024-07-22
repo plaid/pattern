@@ -11,15 +11,23 @@ RUN set -x && \
     rm glibc-2.29-r0.apk && \
     apk del --purge .deps
 
+
+ARG TARGETARCH
 RUN set -x \
-    # Install ngrok (latest official stable from https://ngrok.com/download).
+    && case ${TARGETARCH} in \
+        "amd64") NGROK_URL="https://bin.equinox.io/c/bNyj1mQVY4c/ngrok-v3-stable-linux-amd64.tgz" ;; \
+        "arm64") NGROK_URL="https://bin.equinox.io/c/bNyj1mQVY4c/ngrok-v3-stable-linux-arm64.tgz" ;; \
+        *) echo "unsupported architecture: ${TARGETARCH}" && exit 1 ;; \
+    esac \
     && apk add --no-cache curl \
-    && curl -Lo /ngrok.tgz https://bin.equinox.io/c/bNyj1mQVY4c/ngrok-v3-stable-linux-arm64.tgz \
+    && curl -Lo /ngrok.tgz ${NGROK_URL} \
     && tar xvzf /ngrok.tgz -C /bin \
     && rm -f /ngrok.tgz \
     # Create non-root user.
     && adduser -h /home/ngrok -D -u 6737 ngrok
-RUN ngrok --version
+    RUN ngrok --version
+
+
 
 # Add config script.
 COPY --chown=ngrok ngrok.yml /home/ngrok/.ngrok2/

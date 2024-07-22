@@ -11,7 +11,7 @@ RUN set -x && \
     rm glibc-2.29-r0.apk && \
     apk del --purge .deps
 
-
+# Install ngrok
 ARG TARGETARCH
 RUN set -x \
     && case ${TARGETARCH} in \
@@ -25,9 +25,7 @@ RUN set -x \
     && rm -f /ngrok.tgz \
     # Create non-root user.
     && adduser -h /home/ngrok -D -u 6737 ngrok
-    RUN ngrok --version
-
-
+RUN ngrok --version
 
 # Add config script.
 COPY --chown=ngrok ngrok.yml /home/ngrok/.ngrok2/

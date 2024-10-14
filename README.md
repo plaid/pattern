@@ -4,13 +4,15 @@
 
 This is a sample Personal Finance Manager application demonstrating an end-to-end [Plaid][plaid] integration, focused on linking items and fetching transaction data. You can view a simplified version of this demonstration app at [pattern.plaid.com](https://pattern.plaid.com).
 
-The full Plaid Pattern collection of sample apps includes:
+The full Plaid collection of sample apps includes:
 
 [Plaid Pattern Personal Finance Manager](https://github.com/plaid/pattern/) (you are here) - Demonstrates the Plaid Transactions API
 
 [Plaid Pattern Account Funding App](https://github.com/plaid/pattern-account-funding) - Demonstrates the Plaid Auth, Balance, and Identity APIs
 
-[Plaid Pattern Transfer App](https://github.com/plaid/pattern-transfers) - Demonstrates the Transfer API
+[Plaid Transfer Quickstart App](https://github.com/plaid/transfer-quickstart) - Demonstrates the Transfer API (up to date)
+
+[Plaid Pattern Transfer App (deprecated)](https://github.com/plaid/pattern-transfers) - Demonstrates the Transfer API (this sample app is deprecated, use the Quickstart app instead)
 
 Plaid Pattern apps are provided for illustrative purposes and are not meant to be run as production applications.
 

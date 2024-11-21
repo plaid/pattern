@@ -10,7 +10,7 @@
     "glob-parent": "6.0.2",
     "immer": "9.0.21",
     "levn": "0.3.0",
-    "plaid": "^9.3.0",
+    "plaid": "^30.0.0",
     "plaid-threads": "14.5.0",
     "prop-types": "^15.7.2",
     "react": "^16.14.0",

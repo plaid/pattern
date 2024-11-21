@@ -7,9 +7,9 @@ import React, {
   Dispatch,
 } from 'react';
 import { toast } from 'react-toastify';
-import { addAsset as apiAddAsset } from './api';
-import { getAssetsByUser as apiGetAssetsByUser } from './api';
-import { deleteAssetByAssetId as apiDeleteAssetByAssetId } from './api';
+import { addAsset as apiAddAsset } from './api.tsx';
+import { getAssetsByUser as apiGetAssetsByUser } from './api.tsx';
+import { deleteAssetByAssetId as apiDeleteAssetByAssetId } from './api.tsx';
 import { AssetType } from '../components/types';
 
 interface AssetsState {

@@ -1,7 +1,7 @@
 import React from 'react';
-import { pluralize } from '../util';
+import { pluralize } from '../util/index.tsx';
 
-import { formatDate } from '../util';
+import { formatDate } from '../util/index.tsx';
 import { UserType } from './types';
 
 interface Props {

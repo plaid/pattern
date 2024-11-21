@@ -8,7 +8,7 @@ import React, {
 } from 'react';
 import { Institution } from 'plaid/dist/api';
 
-import { getInstitutionById as apiGetInstitutionById } from './api';
+import { getInstitutionById as apiGetInstitutionById } from './api.tsx';
 
 interface InstitutionsById {
   [key: string]: Institution;

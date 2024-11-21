@@ -3,8 +3,13 @@ import { HashLink } from 'react-router-hash-link';
 import Button from 'plaid-threads/Button';
 import Touchable from 'plaid-threads/Touchable';
 
-import { UserDetails, LaunchLink } from '.';
-import { useItems, useUsers, useLink } from '../services';
+import UserDetails from './UserDetails.tsx';
+import LaunchLink from './LaunchLink.tsx';
+
+import useItems from '../services/items.tsx'
+import useUsers from '../services/users.tsx';
+import useLink from '../services/link.tsx';
+
 import { UserType } from './types';
 
 interface Props {

@@ -3,7 +3,7 @@ import { Callout } from 'plaid-threads/Callout';
 import { IconButton } from 'plaid-threads/IconButton';
 import { CloseS2 } from 'plaid-threads/Icons/CloseS2';
 
-import useErrors from '../services/errors';
+import useErrors from '../services/errors.tsx';
 
 //  Allows user to input their personal assets such as a house or car.
 

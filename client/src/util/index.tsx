@@ -7,7 +7,7 @@ import {
   PlaidLinkError,
 } from 'react-plaid-link';
 
-import { postLinkEvent as apiPostLinkEvent } from '../services/api';
+import { postLinkEvent as apiPostLinkEvent } from '../services/api.tsx';
 
 /**
  * @desc small helper for pluralizing words for display given a number of items

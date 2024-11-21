@@ -1,6 +1,6 @@
 import React from 'react';
 import { PieChart, Pie, Cell, Legend } from 'recharts';
-import colors from 'plaid-threads/scss/colors';
+import colors from 'plaid-threads/scss/colors.ts';
 
 interface Props {
   categories: {

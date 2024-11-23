@@ -15,8 +15,7 @@ const createOrUpdateTransactions = async transactions => {
     const {
       account_id: plaidAccountId,
       transaction_id: plaidTransactionId,
-      category_id: plaidCategoryId,
-      category: categories,
+      personal_finance_category: { primary: category },
       transaction_type: transactionType,
       name: transactionName,
       amount,
@@ -29,7 +28,6 @@ const createOrUpdateTransactions = async transactions => {
     const { id: accountId } = await retrieveAccountByPlaidAccountId(
       plaidAccountId
     );
-    const [category, subcategory] = categories;
     try {
       const query = {
         text: `
@@ -37,9 +35,7 @@ const createOrUpdateTransactions = async transactions => {
             (
               account_id,
               plaid_transaction_id,
-              plaid_category_id,
               category,
-              subcategory,
               type,
               name,
               amount,
@@ -50,12 +46,10 @@ const createOrUpdateTransactions = async transactions => {
               account_owner
             )
           VALUES
-            ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)
+            ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
           ON CONFLICT (plaid_transaction_id) DO UPDATE 
             SET 
-              plaid_category_id = EXCLUDED.plaid_category_id,
               category = EXCLUDED.category,
-              subcategory = EXCLUDED.subcategory,
               type = EXCLUDED.type,
               name = EXCLUDED.name,
               amount = EXCLUDED.amount,
@@ -68,9 +62,7 @@ const createOrUpdateTransactions = async transactions => {
         values: [
           accountId,
           plaidTransactionId,
-          plaidCategoryId,
           category,
-          subcategory,
           transactionType,
           transactionName,
           amount,

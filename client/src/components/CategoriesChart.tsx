@@ -12,6 +12,10 @@ export default function CategoriesChart(props: Props) {
   const data = [];
   const labels = Object.keys(props.categories);
   const values = Object.values(props.categories);
+  console.log(props);
+  console.log(props.categories);
+  console.log("labels are" + labels);
+  console.log("values are" +  values);
   for (let i = 0; i < labels.length; i++) {
     data.push({ name: labels[i], value: Math.round(values[i]) });
   }
@@ -29,13 +33,17 @@ export default function CategoriesChart(props: Props) {
     return `$${value.value.toLocaleString()}`;
   };
 
+  const sanitizedData = data.filter(entry => entry.value >= 0);
+
+  console.log("data is" + JSON.stringify(sanitizedData, null, 2));
+
   return (
     <div className="holdingsList">
       <h4 className="holdingsHeading">Spending Categories</h4>
       <PieChart width={400} height={400}>
         <Legend />
         <Pie
-          data={data}
+          data={sanitizedData}
           cx="50%"
           cy="50%"
           isAnimationActive={false}

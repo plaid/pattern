@@ -49,7 +49,6 @@ export interface TransactionType {
   plaid_transaction_id: string;
   plaid_category_id: string;
   category: string;
-  subcategory: string;
   type: string;
   name: string;
   amount: number;

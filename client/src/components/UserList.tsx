@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 
-import { useUsers } from '../services';
-import UserCard from './UserCard';
+import useUsers from '../services/users.tsx';
+import UserCard from './UserCard.tsx';
 import { UserType } from './types';
 // This provides developers with a view of all users, and ability to delete a user.
 // View at path: "/admin"

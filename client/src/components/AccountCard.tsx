@@ -4,9 +4,9 @@ import toLower from 'lodash/toLower';
 import Button from 'plaid-threads/Button';
 
 import { AccountType } from './types';
-import { useTransactions } from '../services';
-import { currencyFilter } from '../util';
-import { TransactionsTable } from '.';
+import useTransactions from '../services/transactions.tsx';
+import { currencyFilter } from '../util/index.tsx';
+import TransactionsTable from './TransactionsTable.tsx';
 
 interface Props {
   account: AccountType;

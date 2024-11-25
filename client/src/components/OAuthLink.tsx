@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-import { LaunchLink } from '.';
+import LaunchLink from './LaunchLink.tsx';
 
 // Component rendered when user is redirected back to site from Oauth institution site.
 // It initiates link immediately with the original link token that was set in local storage

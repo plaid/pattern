@@ -6,15 +6,17 @@ import { Callout } from 'plaid-threads/Callout';
 import { Institution } from 'plaid/dist/api';
 
 import { ItemType, AccountType } from './types';
-import { AccountCard, MoreDetails } from '.';
+import AccountCard from './AccountCard.tsx';
+import MoreDetails from './MoreDetails.tsx';
+
 import {
   useAccounts,
   useInstitutions,
   useItems,
   useTransactions,
 } from '../services';
-import { setItemToBadState } from '../services/api';
-import { diffBetweenCurrentTime } from '../util';
+import { setItemToBadState } from '../services/api.tsx';
+import { diffBetweenCurrentTime } from '../util/index.tsx';
 
 const PLAID_ENV = process.env.REACT_APP_PLAID_ENV || 'sandbox';
 

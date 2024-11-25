@@ -2,10 +2,12 @@ import React, { useEffect } from 'react';
 import Button from 'plaid-threads/Button';
 import { useHistory } from 'react-router-dom';
 
-import { useCurrentUser } from '../services';
-import { Login, Banner, AddUserForm } from '.';
+import useCurrentUser from '../services/currentUser.tsx';
+import Login from './Login.tsx';
+import Banner from './Banner.tsx';
+import AddUserForm from './AddUserForm.tsx';
 
-import { useBoolean } from '../hooks';
+import useBoolean from '../hooks/useBoolean.ts';
 
 export default function Landing() {
   const { userState, setCurrentUser } = useCurrentUser();

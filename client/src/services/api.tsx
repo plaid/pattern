@@ -3,7 +3,7 @@ import React from 'react';
 import { toast } from 'react-toastify';
 import { PlaidLinkOnSuccessMetadata } from 'react-plaid-link';
 
-import { DuplicateItemToastMessage } from '../components';
+import DuplicateItemToastMessage from '../components/DuplicateItemToast.tsx';
 
 const baseURL = '/';
 

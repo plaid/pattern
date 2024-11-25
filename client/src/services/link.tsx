@@ -7,7 +7,7 @@ import React, {
   createContext,
 } from 'react';
 
-import { getLinkToken } from './api';
+import { getLinkToken } from './api.tsx';
 
 import { PlaidLinkError } from 'react-plaid-link';
 

@@ -18,7 +18,7 @@ import {
   getItemsByUser as apiGetItemsByUser,
   getItemById as apiGetItemById,
   deleteItemById as apiDeleteItemById,
-} from './api';
+} from './api.tsx';
 
 interface ItemsState {
   [itemId: number]: ItemType;

@@ -7,27 +7,25 @@ import Callout from 'plaid-threads/Callout';
 import Button from 'plaid-threads/Button';
 
 import { RouteInfo, ItemType, AccountType, AssetType } from './types';
-import {
-  useItems,
-  useAccounts,
-  useTransactions,
-  useUsers,
-  useAssets,
-  useLink,
-} from '../services';
 
-import { pluralize } from '../util';
+import useItems from '../services/items.tsx';
+import useTransactions from '../services/transactions.tsx';
+import useUsers from '../services/users.tsx';
+import useAssets from '../services/assets.tsx';
+import useLink from '../services/link.tsx';
+import useAccounts from '../services/accounts.tsx';
 
-import {
-  Banner,
-  LaunchLink,
-  SpendingInsights,
-  NetWorth,
-  ItemCard,
-  UserCard,
-  LoadingCallout,
-  ErrorMessage,
-} from '.';
+import { pluralize } from '../util/index.tsx';
+
+import Banner from './Banner.tsx';
+import LaunchLink from './LaunchLink.tsx';
+import SpendingInsights from './SpendingInsights.tsx';
+import NetWorth from './NetWorth.tsx';
+import ItemCard from './ItemCard.tsx';
+import UserCard from './UserCard.tsx';
+import LoadingCallout from './LoadingCallout.tsx';
+import ErrorMessage from './ErrorMessage.tsx';
+
 
 // provides view of user's net worth, spending by category and allows them to explore
 // account and transactions details for linked items

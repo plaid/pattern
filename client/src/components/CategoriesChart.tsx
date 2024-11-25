@@ -1,6 +1,6 @@
 import React from 'react';
 import { PieChart, Pie, Cell, Legend } from 'recharts';
-import colors from 'plaid-threads/scss/colors';
+import colors from 'plaid-threads/scss/colors.ts';
 
 interface Props {
   categories: {
@@ -29,13 +29,15 @@ export default function CategoriesChart(props: Props) {
     return `$${value.value.toLocaleString()}`;
   };
 
+  const sanitizedData = data.filter(entry => entry.value >= 0);
+
   return (
     <div className="holdingsList">
       <h4 className="holdingsHeading">Spending Categories</h4>
       <PieChart width={400} height={400}>
         <Legend />
         <Pie
-          data={data}
+          data={sanitizedData}
           cx="50%"
           cy="50%"
           isAnimationActive={false}

@@ -3,16 +3,20 @@ import { Route, Switch, withRouter } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.min.css';
 
-import { UserPage, Landing, Sockets, OAuthLink, UserList } from './components';
-import { AccountsProvider } from './services/accounts';
-import { InstitutionsProvider } from './services/institutions';
-import { ItemsProvider } from './services/items';
-import { LinkProvider } from './services/link';
-import { TransactionsProvider } from './services/transactions';
-import { UsersProvider } from './services/users';
-import { CurrentUserProvider } from './services/currentUser';
-import { AssetsProvider } from './services/assets';
-import { ErrorsProvider } from './services/errors';
+import Sockets from "./components/Sockets.jsx";
+import OAuthLink from './components/OAuthLink.tsx';
+import Landing from './components/Landing.tsx';
+import UserPage from "./components/UserPage.tsx";
+import UserList from './components/UserList.tsx';
+import { AccountsProvider } from './services/accounts.tsx';
+import { InstitutionsProvider } from './services/institutions.tsx';
+import { ItemsProvider } from './services/items.tsx';
+import { LinkProvider } from './services/link.tsx';
+import { TransactionsProvider } from './services/transactions.tsx';
+import { UsersProvider } from './services/users.tsx';
+import { CurrentUserProvider } from './services/currentUser.tsx';
+import { AssetsProvider } from './services/assets.tsx';
+import { ErrorsProvider } from './services/errors.tsx';
 
 import './App.scss';
 

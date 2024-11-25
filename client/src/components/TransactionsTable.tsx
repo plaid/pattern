@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { currencyFilter } from '../util';
+import { currencyFilter } from '../util/index.tsx';
 import { TransactionType } from './types';
 
 interface Props {

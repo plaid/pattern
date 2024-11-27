@@ -11,16 +11,18 @@
     "@hapi/boom": "^7.4.2",
     "cookie-parser": "~1.4.3",
     "debug": "~2.6.9",
-    "express": "~4.16.0",
+    "express": "^4.21.1",
     "express-promise-router": "^3.0.3",
     "lodash": "^4.17.19",
     "moment": "^2.24.0",
     "morgan": "~1.9.0",
     "node-fetch": "^2.3.0",
     "pg": "^8.7.1",
-    "plaid": "^10.0.0",
+    "plaid": "^30.0.0",
     "socket.io": "^4.5.4"
   },
+"type": "commonjs",
+
   "devDependencies": {
     "eslint": "^6.2.1",
     "eslint-config-airbnb-base": "^14.0.0",

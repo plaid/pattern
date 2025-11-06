@@ -134,17 +134,21 @@ router.delete(
     // associated with an Item is no longer valid and cannot be used to
     // access any data that was associated with the Item.
 
-    // @TODO wrap promise in a try catch block once proper error handling introduced
-    const items = await retrieveItemsByUser(userId);
-    await Promise.all(
-      items.map(({ plaid_access_token: token }) =>
-        plaid.itemRemove({ access_token: token })
-      )
-    );
+    try {
+      const items = await retrieveItemsByUser(userId);
+      await Promise.all(
+        items.map(({ plaid_access_token: token }) =>
+          plaid.itemRemove({ access_token: token })
+        )
+      );
 
-    // delete from the db
-    await deleteUsers(userId);
-    res.sendStatus(204);
+      // delete from the db
+      await deleteUsers(userId);
+      res.sendStatus(204);
+    } catch (error) {
+      console.error('Error deleting user:', error);
+      throw error;
+    }
   })
 );
 

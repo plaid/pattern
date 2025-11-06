@@ -1,4 +1,4 @@
-FROM node:18-alpine
+FROM node:20-alpine
 
 COPY ["package.json", "/opt/client/"]
 COPY ["package-lock.json", "/opt/client/"]

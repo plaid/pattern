@@ -33,9 +33,34 @@ router.post(
         accessToken = itemIdResponse.plaid_access_token;
         products = [];
       }
-      const response = await fetch('http://ngrok:4040/api/tunnels');
+
+      // Fetch ngrok tunnel URL with better error handling
+      let response;
+      try {
+        response = await fetch('http://ngrok:4040/api/tunnels');
+        if (!response.ok) {
+          throw new Error(`ngrok API returned status ${response.status}`);
+        }
+      } catch (fetchError) {
+        console.error('Failed to connect to ngrok:', fetchError.message);
+        return res.status(500).json({
+          error: 'ngrok_not_configured',
+          error_message: 'Unable to connect to ngrok. Please ensure you have added your ngrok authtoken to ngrok/ngrok.yml. Get your authtoken at https://dashboard.ngrok.com/get-started/your-authtoken',
+          details: fetchError.message
+        });
+      }
+
       const { tunnels } = await response.json();
       const httpsTunnel = tunnels.find(t => t.proto === 'https');
+
+      if (!httpsTunnel) {
+        console.error('No HTTPS tunnel found in ngrok');
+        return res.status(500).json({
+          error: 'ngrok_tunnel_not_found',
+          error_message: 'ngrok is running but no HTTPS tunnel was found. Please check ngrok logs.',
+        });
+      }
+
       const linkTokenParams = {
         user: {
           // This should correspond to a unique id for the current user.
@@ -55,8 +80,15 @@ router.post(
       const createResponse = await plaid.linkTokenCreate(linkTokenParams);
       res.json(createResponse.data);
     } catch (err) {
-      console.log('error while fetching client token', err.response.data);
-      return res.json(err.response.data);
+      console.error('Error while creating link token:', err);
+      if (err.response && err.response.data) {
+        console.log('Plaid API error:', err.response.data);
+        return res.status(500).json(err.response.data);
+      }
+      return res.status(500).json({
+        error: 'link_token_creation_failed',
+        error_message: err.message || 'An unknown error occurred'
+      });
     }
   })
 );

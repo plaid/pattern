@@ -10,7 +10,7 @@
   "dependencies": {
     "@hapi/boom": "^10.0.1",
     "cookie-parser": "~1.4.6",
-    "debug": "~4.3.7",
+    "debug": "~4.4.3",
     "express": "^4.21.1",
     "express-promise-router": "^4.1.1",
     "lodash": "^4.17.21",
@@ -24,7 +24,7 @@
   "devDependencies": {
     "eslint": "^8.57.1",
     "eslint-config-airbnb-base": "^15.0.0",
-    "eslint-config-prettier": "^9.1.0",
+    "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-import": "^2.31.0",
     "eslint-plugin-prettier": "^5.2.1",
     "nodemon": "^3.1.7",

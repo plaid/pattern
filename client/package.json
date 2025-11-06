@@ -8,8 +8,8 @@
     "axios": "^1.13.2",
     "date-fns": "^4.1.0",
     "glob-parent": "6.0.2",
-    "immer": "10.1.1",
-    "levn": "0.3.0",
+    "immer": "10.2.0",
+    "levn": "0.4.1",
     "plaid": "^39.1.0",
     "plaid-threads": "14.5.0",
     "prop-types": "^15.8.1",
@@ -62,8 +62,8 @@
   "overrides": {
     "chokidar": "4.0.3",
     "glob-parent": "6.0.2",
-    "immer": "10.1.1",
-    "levn": "0.3.0",
+    "immer": "10.2.0",
+    "levn": "0.4.1",
     "react-textarea-autosize": "^8.5.4"
   },
   "proxy": "http://server:5001"

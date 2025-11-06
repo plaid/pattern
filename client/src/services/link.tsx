@@ -88,9 +88,8 @@ export function LinkProvider(props: any) {
       };
       dispatch({ type: 'LINK_TOKEN_ERROR', error: errorData });
       console.error('Error generating link token:', errorData);
-      // Show a user-friendly alert with the error message
       if (errorData.error_message) {
-        alert(`Error: ${errorData.error_message}`);
+        alert(errorData.error_message);
       }
     }
   }, []);

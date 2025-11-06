@@ -43,10 +43,10 @@ router.post(
         }
       } catch (fetchError) {
         console.error('Failed to connect to ngrok:', fetchError.message);
+        const errorMsg = 'Unable to connect to ngrok. Please ensure you have added your ngrok authtoken to ngrok/ngrok.yml. Get your authtoken at https://dashboard.ngrok.com/get-started/your-authtoken.\n\nFor more details, check ngrok logs using "make logs" or Docker Desktop.';
         return res.status(500).json({
-          error: 'ngrok_not_configured',
-          error_message: 'Unable to connect to ngrok. Please ensure you have added your ngrok authtoken to ngrok/ngrok.yml. Get your authtoken at https://dashboard.ngrok.com/get-started/your-authtoken',
-          details: fetchError.message
+          error: 'ngrok_connection_failed',
+          error_message: errorMsg
         });
       }
 
@@ -57,7 +57,7 @@ router.post(
         console.error('No HTTPS tunnel found in ngrok');
         return res.status(500).json({
           error: 'ngrok_tunnel_not_found',
-          error_message: 'ngrok is running but no HTTPS tunnel was found. Please check ngrok logs.',
+          error_message: 'ngrok is running but no HTTPS tunnel was found.\n\nCheck ngrok logs for more details using "make logs" or Docker Desktop.'
         });
       }
 

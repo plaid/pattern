@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Link, RouteComponentProps } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import sortBy from 'lodash/sortBy';
 import NavigationLink from 'plaid-threads/NavigationLink';
 import LoadingSpinner from 'plaid-threads/LoadingSpinner';
@@ -25,12 +25,14 @@ import ItemCard from './ItemCard.tsx';
 import UserCard from './UserCard.tsx';
 import LoadingCallout from './LoadingCallout.tsx';
 import ErrorMessage from './ErrorMessage.tsx';
+import TransactionsTable from './TransactionsTable.tsx';
 
 
 // provides view of user's net worth, spending by category and allows them to explore
 // account and transactions details for linked items
 
-const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
+const UserPage = () => {
+  const { userId } = useParams<{ userId: string }>();
   const [user, setUser] = useState({
     id: 0,
     username: '',
@@ -49,7 +51,6 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
   const { assetsByUser, getAssetsByUser } = useAssets();
   const { usersById, getUserById } = useUsers();
   const { itemsByUser, getItemsByUser } = useItems();
-  const userId = Number(match.params.userId);
   const { generateLinkToken, linkTokens } = useLink();
 
   const initiateLink = async () => {
@@ -138,51 +139,43 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
       {linkTokens.error.error_code != null && (
         <Callout warning>
           <div>
-            Unable to fetch link_token: please make sure your backend server is
-            running and that your .env file has been configured correctly.
+            <strong>Unable to connect to Plaid:</strong> Please make sure your backend server is
+            running and that your .env file has been configured with valid Plaid credentials.
+          </div>
+          <div style={{ marginTop: '8px' }}>
+            <strong>Error Code:</strong> <code>{linkTokens.error.error_code}</code>
           </div>
           <div>
-            Error Code: <code>{linkTokens.error.error_code}</code>
+            <strong>Error Type:</strong> <code>{linkTokens.error.error_type}</code>
           </div>
           <div>
-            Error Type: <code>{linkTokens.error.error_type}</code>{' '}
+            <strong>Error Message:</strong> {linkTokens.error.error_message}
           </div>
-          <div>Error Message: {linkTokens.error.error_message}</div>
         </Callout>
       )}
       <UserCard user={user} userId={userId} removeButton={false} linkButton />
+
+      <Callout style={{ marginBottom: '2rem' }}>
+        <div>
+          <strong>💡 Testing with Dynamic Transaction Data:</strong>
+        </div>
+        <div style={{ marginTop: '8px' }}>
+          To test with realistic data, link a <strong>non-OAuth institution</strong> like{' '}
+          <strong>First Platypus Bank</strong> and use these Plaid Link credentials:{' '}
+          <code style={{ background: '#f0f0f0', padding: '2px 6px', borderRadius: '3px' }}>
+            user_transactions_dynamic
+          </code>{' '}
+          (any password). The "Refresh Transactions" button will trigger simulated transaction updates.
+          See the README for more information about testing with realistic transaction data.
+        </div>
+      </Callout>
+
       {numOfItems === 0 && <ErrorMessage />}
       {numOfItems > 0 && transactions.length === 0 && (
         <div className="loading">
           <LoadingSpinner />
           <LoadingCallout />
         </div>
-      )}
-      {numOfItems > 0 && transactions.length > 0 && (
-        <>
-          <NetWorth
-            accounts={accounts}
-            numOfItems={numOfItems}
-            personalAssets={assets}
-            userId={userId}
-            assetsOnly={false}
-          />
-          <SpendingInsights
-            numOfItems={numOfItems}
-            transactions={transactions}
-          />
-        </>
-      )}
-      {numOfItems === 0 && transactions.length === 0 && assets.length > 0 && (
-        <>
-          <NetWorth
-            accounts={accounts}
-            numOfItems={numOfItems}
-            personalAssets={assets}
-            userId={userId}
-            assetsOnly
-          />
-        </>
       )}
       {numOfItems > 0 && (
         <>
@@ -213,12 +206,48 @@ const UserPage = ({ match }: RouteComponentProps<RouteInfo>) => {
               <LaunchLink token={token} userId={userId} itemId={null} />
             )}
           </div>
+
           <ErrorMessage />
           {items.map(item => (
             <div id="itemCards" key={item.id}>
               <ItemCard item={item} userId={userId} />
             </div>
           ))}
+        </>
+      )}
+      {numOfItems > 0 && transactions.length > 0 && (
+        <>
+          <div className="item__header" style={{ marginTop: '3rem' }}>
+            <h2 className="item__header-heading">All Transactions</h2>
+            <p className="item__header-subheading">
+              Complete transaction history across all linked accounts
+            </p>
+          </div>
+          <div className="box">
+            <TransactionsTable transactions={transactions} />
+          </div>
+          <SpendingInsights
+            numOfItems={numOfItems}
+            transactions={transactions}
+          />
+          <NetWorth
+            accounts={accounts}
+            numOfItems={numOfItems}
+            personalAssets={assets}
+            userId={userId}
+            assetsOnly={false}
+          />
+        </>
+      )}
+      {numOfItems === 0 && transactions.length === 0 && assets.length > 0 && (
+        <>
+          <NetWorth
+            accounts={accounts}
+            numOfItems={numOfItems}
+            personalAssets={assets}
+            userId={userId}
+            assetsOnly
+          />
         </>
       )}
     </div>

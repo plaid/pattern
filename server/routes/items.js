@@ -184,6 +184,53 @@ router.get(
 );
 
 /**
+ * Manually triggers a transactions refresh for a single item.
+ *
+ * @param {string} itemId the ID of the item.
+ * @returns {Object} the refresh result with counts of added/modified/removed transactions.
+ */
+router.post(
+  '/:itemId/transactions/refresh',
+  asyncWrapper(async (req, res) => {
+    const { itemId } = req.params;
+    const { plaid_access_token: accessToken, plaid_item_id: plaidItemId } = await retrieveItemById(itemId);
+
+    try {
+      // Call /transactions/refresh to trigger on-demand extraction
+      // This is especially important for special sandbox users like user_transactions_dynamic
+      await plaid.transactionsRefresh({
+        access_token: accessToken,
+      });
+
+      // /transactions/refresh is asynchronous - it triggers data extraction but doesn't wait
+      // for it to complete. Plaid will fire a SYNC_UPDATES_AVAILABLE webhook when ready.
+      // We'll try fetching immediately in case the data is already available (common in Sandbox),
+      // but the webhook will handle the actual update when it fires.
+      const result = await updateTransactions(plaidItemId);
+
+      // Always notify that refresh was initiated
+      res.json({
+        refreshInitiated: true,
+        addedCount: result.addedCount,
+        modifiedCount: result.modifiedCount,
+        removedCount: result.removedCount,
+      });
+    } catch (err) {
+      // Return detailed error information to the frontend
+      const errorResponse = {
+        error: {
+          message: err.message,
+          type: err.response?.data?.error_type,
+          code: err.response?.data?.error_code,
+          display_message: err.response?.data?.display_message,
+        }
+      };
+      res.status(err.response?.status || 500).json(errorResponse);
+    }
+  })
+);
+
+/**
  * -- This endpoint will only work in the sandbox enviornment --
  * Forces an Item into an ITEM_LOGIN_REQUIRED (bad) error state.
  * An ITEM_LOGIN_REQUIRED webhook will be fired after a call to this endpoint.

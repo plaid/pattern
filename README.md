@@ -120,6 +120,43 @@ A redirect_uri parameter is included in the linkTokenCreate call and set in this
 
 To test the OAuth flow in sandbox, choose 'Playtypus OAuth Bank' from the list of financial institutions in Plaid Link.
 
+### Testing with Realistic Transaction Data in Sandbox
+
+This sample app includes a "Refresh Transactions" button next to each linked bank that allows you to manually trigger transaction updates.
+
+#### Dynamic Transaction Testing with `user_transactions_dynamic`
+
+The special test credentials **`user_transactions_dynamic`** can be used together with the "Refresh Transactions" button to trigger simulated transaction updates in Sandbox.
+
+**To test with `user_transactions_dynamic`:**
+
+1. Create an account in the Pattern app (with any username)
+2. Link a bank account using a **non-OAuth test institution** such as **First Platypus Bank** (`ins_109508`)
+   - Note: OAuth institutions like Playtypus OAuth Bank will not work with these test credentials
+3. When prompted for credentials in the Plaid Link flow, enter:
+   - **Username:** `user_transactions_dynamic`
+   - **Password:** any non-blank password
+4. An Item will be created with 50 transactions in both the pending and posted state
+5. Click the **"Refresh Transactions"** button next to the linked bank to simulate new transaction activity
+
+**What happens when you click refresh:**
+- New pending transactions are generated
+- All previously pending transactions are moved to posted
+- All appropriate transaction webhooks are fired
+
+#### Persona-Based Transaction Testing
+
+For more realistic testing, Plaid also provides persona-based test users: **`user_ewa_user`**, **`user_yuppie`**, and **`user_small_business`**. These accounts simulate real life personas, so new transactions will appear at a more realistic rate and will **not** appear every time `/transactions/refresh` is called. These users have three months of transactions, including some recurring transactions.
+
+**To test with persona-based users:**
+
+1. Link a bank account using a **non-OAuth test institution** such as **First Platypus Bank** (`ins_109508`)
+2. When prompted for credentials in the Plaid Link flow, enter one of:
+   - **Username:** `user_ewa_user` (any non-blank password)
+   - **Username:** `user_yuppie` (any non-blank password)
+   - **Username:** `user_small_business` (any non-blank password)
+3. Transactions will update at a more realistic rate when you click "Refresh Transactions"
+
 If you want to test OAuth in Production, you need to use https and set `PLAID_PRODUCTION_REDIRECT_URI=https://localhost:3001/oauth-link` in `.env`. In order to run your localhost on https, you will need to create a self-signed certificate and add it to the client root folder. MacOS users can use the following instructions to do this. Note that self-signed certificates should be used for testing purposes only, never for actual deployments. Windows users can use [these instructions below](#windows-instructions-for-using-https-with-localhost).
 
 #### MacOS instructions for using https with localhost
@@ -280,6 +317,13 @@ Browse to [localhost:4040](http://localhost:4040/inspect/http) to see the ngrok 
 Don’t want to use ngrok? As long as you serve the app with an endpoint that is publicly exposed, all the Plaid webhooks will work.
 
 ngrok's free account has a session limit of 8 hours. To fully test out some of the transaction webhook workflows, you will need to get a more persistent endpoint as noted above when using the Production environment.
+
+**Important:** When your ngrok session expires or when you restart the Docker containers (which creates a new ngrok URL), any Items that were previously linked will stop receiving webhooks because they're still registered with the old ngrok URL. To receive webhooks for these Items, you'll need to:
+
+1. Delete the old Items from the app
+2. Re-link them using Plaid Link
+
+This will register the Items with the new webhook URL. You can check if webhooks are being received by visiting [localhost:4040](http://localhost:4040/inspect/http).
 
 ## Source
 

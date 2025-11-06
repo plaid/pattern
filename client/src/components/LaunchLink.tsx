@@ -8,7 +8,7 @@ import {
   PlaidLinkOnEventMetadata,
   PlaidLinkStableEvent,
 } from 'react-plaid-link';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import { logEvent, logSuccess, logExit } from '../util/index.tsx'; // functions to log and save errors and metadata from Link events
 
@@ -31,7 +31,7 @@ interface Props {
 // is generated in the link context in client/src/services/link.js.
 
 export default function LaunchLink(props: Props) {
-  const history = useHistory();
+  const navigate = useNavigate();
   const { getItemsByUser, getItemById } = useItems();
   const { generateLinkToken, deleteLinkToken } = useLink();
   const { setError, resetError } = useErrors();
@@ -61,7 +61,7 @@ export default function LaunchLink(props: Props) {
     }
     resetError();
     deleteLinkToken(props.userId, null);
-    history.push(`/user/${props.userId}`);
+    navigate(`/user/${props.userId}`);
   };
 
   const onExit = async (

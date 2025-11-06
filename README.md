@@ -4,6 +4,8 @@
 
 This is a sample Personal Finance Manager application demonstrating an end-to-end [Plaid][plaid] integration, focused on linking items and fetching transaction data. You can view a simplified version of this demonstration app at [pattern.plaid.com](https://pattern.plaid.com).
 
+You may also be interested in the [Plaid Transactions tutorial sample app](https://github.com/plaid/tutorial-resources/tree/main/transactions) which has an accompanying YouTube video tutorial.
+
 The full Plaid collection of sample apps includes:
 
 [Plaid Pattern Personal Finance Manager](https://github.com/plaid/pattern/) (you are here) - Demonstrates the Plaid Transactions API

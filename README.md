@@ -122,7 +122,7 @@ The special test credentials **`user_transactions_dynamic`** can be used togethe
 
 1. Create an account in the Pattern app (with any username)
 2. Link a bank account using a **non-OAuth test institution** such as **First Platypus Bank** (`ins_109508`)
-   - Note: OAuth institutions like Playtypus OAuth Bank will not work with these test credentials
+   - Note: OAuth institutions like Playtypus OAuth Bank will not work with these test credentials - you will be able to complete Link, but you will see the same data as the regular `user_good` test user and not the special `user_transactions_dynamic` data.
 3. When prompted for credentials in the Plaid Link flow, enter:
    - **Username:** `user_transactions_dynamic`
    - **Password:** any non-blank password

@@ -120,11 +120,7 @@ A redirect_uri parameter is included in the linkTokenCreate call and set in this
 
 To test the OAuth flow in sandbox, choose 'Playtypus OAuth Bank' from the list of financial institutions in Plaid Link.
 
-### Testing with Realistic Transaction Data in Sandbox
-
-This sample app includes a "Refresh Transactions" button next to each linked bank that allows you to manually trigger transaction updates.
-
-#### Dynamic Transaction Testing with `user_transactions_dynamic`
+### Dynamic Transaction Testing with `user_transactions_dynamic`
 
 The special test credentials **`user_transactions_dynamic`** can be used together with the "Refresh Transactions" button to trigger simulated transaction updates in Sandbox.
 
@@ -144,7 +140,7 @@ The special test credentials **`user_transactions_dynamic`** can be used togethe
 - All previously pending transactions are moved to posted
 - All appropriate transaction webhooks are fired
 
-#### Persona-Based Transaction Testing
+### Persona-Based Transaction Testing
 
 For more realistic testing, Plaid also provides persona-based test users: **`user_ewa_user`**, **`user_yuppie`**, and **`user_small_business`**. These accounts simulate real life personas, so new transactions will appear at a more realistic rate and will **not** appear every time `/transactions/refresh` is called. These users have three months of transactions, including some recurring transactions.
 
@@ -157,7 +153,11 @@ For more realistic testing, Plaid also provides persona-based test users: **`use
    - **Username:** `user_small_business` (any non-blank password)
 3. Transactions will update at a more realistic rate when you click "Refresh Transactions"
 
-If you want to test OAuth in Production, you need to use https and set `PLAID_PRODUCTION_REDIRECT_URI=https://localhost:3001/oauth-link` in `.env`. In order to run your localhost on https, you will need to create a self-signed certificate and add it to the client root folder. MacOS users can use the following instructions to do this. Note that self-signed certificates should be used for testing purposes only, never for actual deployments. Windows users can use [these instructions below](#windows-instructions-for-using-https-with-localhost).
+### Testing OAuth redirect URIs in Production for non-desktop
+
+> You do not need to enable redirect URIs for OAuth to work on Desktop. The instructions in this section are optional unless you are running the app on a mobile device. 
+
+If you want to test OAuth redirect URIs in Production, you need to use https and set `PLAID_PRODUCTION_REDIRECT_URI=https://localhost:3001/oauth-link` in `.env`. In order to run your localhost on https, you will need to create a self-signed certificate and add it to the client root folder. MacOS users can use the following instructions to do this. Note that self-signed certificates should be used for testing purposes only, never for actual deployments. Windows users can use [these instructions below](#windows-instructions-for-using-https-with-localhost).
 
 #### MacOS instructions for using https with localhost
 

@@ -122,7 +122,7 @@ The special test credentials **`user_transactions_dynamic`** can be used togethe
 
 1. Create an account in the Pattern app (with any username)
 2. Link a bank account using a **non-OAuth test institution** such as **First Platypus Bank** (`ins_109508`)
-   - Note: OAuth institutions like Playtypus OAuth Bank will not work with these test credentials - you will be able to complete Link, but you will see the same data as the regular `user_good` test user and not the special `user_transactions_dynamic` data.
+   - Note: OAuth institutions like most major banks and Playtypus OAuth Bank will not work with these test credentials - you will be able to complete Link, but you will see the same data as the regular `user_good` test user and not the special `user_transactions_dynamic` data.
 3. When prompted for credentials in the Plaid Link flow, enter:
    - **Username:** `user_transactions_dynamic`
    - **Password:** any non-blank password
@@ -193,18 +193,18 @@ This table stores responses from the Plaid API for client requests to the Plaid 
 User flows that this table captures (based on the client implementation, which hooks into the `onExit` and `onSuccess` Link callbacks):
 
 -   User opens Link, closes without trying to connect an account.
-    This will have type `exit` but no request_id, error_type, or error_code.
+    This will have type `exit` but no `request_id`, `error_type`, or `error_code`.
 -   User tries to connect an account, fails, and closes link.
-    This will have type `exit` and will have a request_id, error_type, and error_code.
+    This will have type `exit` and will have a `request_id`, `error_type`, and `error_code`.
 -   User successfully connects an account.
-    This will have type `success` but no request_id, error_type, or error_code.
+    This will have type `success` but no `request_id`, error_type, or `error_code`.
 
 ### plaid_api_events_table
 
 This table stores responses from the Plaid API for server requests to the Plaid client.
 The server stores the responses for all of the requests it makes to the Plaid API.
 Where applicable, it also maps the response to an item and user.
-If the request returned an error, the error_type and error_code columns will be populated.
+If the request returned an error, the `error_type` and `error_code` columns will be populated.
 
 ## Learn More
 
@@ -219,8 +219,6 @@ Browse to [localhost:4040](http://localhost:4040/inspect/http) to see the ngrok 
 **Do NOT use ngrok in production!** It's only included here as a convenience for local development and is not meant to be a production-quality solution.
 
 Don’t want to use ngrok? As long as you serve the app with an endpoint that is publicly exposed, all the Plaid webhooks will work.
-
-ngrok's free account has a session limit of 8 hours. To fully test out some of the transaction webhook workflows, you will need to get a more persistent endpoint as noted above when using the Production environment.
 
 **Important:** When your ngrok session expires or when you restart the Docker containers (which creates a new ngrok URL), any Items that were previously linked will stop receiving webhooks because they're still registered with the old ngrok URL. To receive webhooks for these Items, you'll need to:
 

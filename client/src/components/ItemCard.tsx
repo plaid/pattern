@@ -3,7 +3,9 @@ import Note from 'plaid-threads/Note';
 import Touchable from 'plaid-threads/Touchable';
 import { InlineLink } from 'plaid-threads/InlineLink';
 import { Callout } from 'plaid-threads/Callout';
+import Button from 'plaid-threads/Button';
 import { Institution } from 'plaid/dist/api';
+import { toast } from 'react-toastify';
 
 import { ItemType, AccountType } from './types';
 import AccountCard from './AccountCard.tsx';
@@ -15,7 +17,7 @@ import {
   useItems,
   useTransactions,
 } from '../services';
-import { setItemToBadState } from '../services/api.tsx';
+import { setItemToBadState, refreshTransactionsByItem } from '../services/api.tsx';
 import { diffBetweenCurrentTime } from '../util/index.tsx';
 
 const PLAID_ENV = process.env.REACT_APP_PLAID_ENV || 'sandbox';
@@ -37,11 +39,12 @@ const ItemCard = (props: Props) => {
     routing_numbers: [],
   });
   const [showAccounts, setShowAccounts] = useState(false);
+  const [isRefreshing, setIsRefreshing] = useState(false);
 
   const { accountsByItem } = useAccounts();
   const { deleteAccountsByItemId } = useAccounts();
   const { deleteItemById } = useItems();
-  const { deleteTransactionsByItemId } = useTransactions();
+  const { deleteTransactionsByItemId, getTransactionsByItem } = useTransactions();
   const {
     institutionsById,
     getInstitutionById,
@@ -72,6 +75,48 @@ const ItemCard = (props: Props) => {
     deleteAccountsByItemId(id);
     deleteTransactionsByItemId(id);
   };
+  const handleRefreshTransactions = async (e: React.MouseEvent) => {
+    e.stopPropagation(); // Prevent expanding/collapsing the card
+    setIsRefreshing(true);
+    try {
+      const { data } = await refreshTransactionsByItem(id);
+
+      // Check if any transactions were immediately available
+      const totalChanges = data.addedCount + data.modifiedCount + data.removedCount;
+
+      if (totalChanges > 0) {
+        toast.success(
+          `Transactions refreshed: ${data.addedCount} added, ${data.modifiedCount} modified, ${data.removedCount} removed`
+        );
+        await getTransactionsByItem(id);
+      } else {
+        // No immediate updates, but refresh was initiated
+        toast.info(
+          'Transaction refresh initiated. New transactions will appear shortly when the webhook fires.'
+        );
+      }
+    } catch (err: any) {
+      const errorData = err?.response?.data?.error;
+      let errorMessage = 'Failed to refresh transactions.';
+
+      if (errorData) {
+        // Show detailed error information from Plaid API
+        const details = [];
+        if (errorData.code) details.push(`Error: ${errorData.code}`);
+        if (errorData.type) details.push(`Type: ${errorData.type}`);
+        if (errorData.display_message) details.push(errorData.display_message);
+        else if (errorData.message) details.push(errorData.message);
+
+        if (details.length > 0) {
+          errorMessage = `Failed to refresh transactions. ${details.join(' | ')}`;
+        }
+      }
+
+      toast.error(errorMessage);
+    } finally {
+      setIsRefreshing(false);
+    }
+  };
 
   const cardClassNames = showAccounts
     ? 'card item-card expanded'
@@ -101,6 +146,15 @@ const ItemCard = (props: Props) => {
                 Login Required
               </Note>
             )}
+            <Button
+              small
+              secondary
+              onClick={handleRefreshTransactions}
+              disabled={isRefreshing}
+              style={{ marginTop: '8px' }}
+            >
+              {isRefreshing ? 'Refreshing...' : 'Refresh Transactions'}
+            </Button>
           </div>
           <div className="item-card__column-3">
             <h3 className="heading">LAST UPDATED</h3>

@@ -80,6 +80,7 @@ const sanitizeTransactions = transactions =>
     'date',
     'category',
     'amount',
+    'pending',
     'created_at',
     'updated_at',
   ]);

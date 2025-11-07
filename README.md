@@ -4,6 +4,8 @@
 
 This is a sample Personal Finance Manager application demonstrating an end-to-end [Plaid][plaid] integration, focused on linking items and fetching transaction data. You can view a simplified version of this demonstration app at [pattern.plaid.com](https://pattern.plaid.com).
 
+You may also be interested in the [Plaid Transactions tutorial sample app](https://github.com/plaid/tutorial-resources/tree/main/transactions) which has an accompanying [YouTube video tutorial](https://www.youtube.com/watch?v=hBiKJ6vTa4g).
+
 The full Plaid collection of sample apps includes:
 
 [Plaid Pattern Personal Finance Manager](https://github.com/plaid/pattern/) (you are here) - Demonstrates the Plaid Transactions API
@@ -35,11 +37,9 @@ Note: We recommend running these commands in a unix terminal. Windows users can 
     ```shell
     cp .env.template .env
     ```
-1. Update the `.env` file with your [Plaid API keys][plaid-keys] and OAuth redirect uri (in sandbox this is 'http<span>://localhost:3001/oauth-link'</span>).
+1. Update the `.env` file with your [Plaid API keys][plaid-keys].
 
 1. Update the `ngrok.yml` file in the ngrok folder with your ngrok authtoken.
-
-1. (Optional, only required if testing OAuth with redirect URIs) You will also need to configure an allowed redirect URI for your client ID through the [Plaid developer dashboard](https://dashboard.plaid.com/team/api).
 
 1. Start the services. The first run may take a few minutes as Docker images are pulled/built for the first time.
     ```shell
@@ -114,13 +114,129 @@ For webhooks to work, the server must be publicly accessible on the internet. Fo
 
 Upon the creation of a new item or receipt of the SYNC_UPDATES_AVAILABLE transactions webhook a call will be made to Plaid's transactions sync endpoint. This will return any changes to transactions that have occurred since you last called the endpoint (or all transactions upon creation of a new item). These changes are then reflected in the database. For an example, see the [update_transactions][update-transactions] file.
 
-### Testing OAuth
+### Dynamic Transaction Testing with `user_transactions_dynamic`
 
-A redirect_uri parameter is included in the linkTokenCreate call and set in this sample app to the PLAID_SANDBOX_REDIRECT_URI you have set in the .env file (`http://localhost:3001/oauth-link`). This is the page that the user will be redirected to upon completion of the OAuth flow at their OAuth institution. You will also need to configure `http://localhost:3001/oauth-link` as an allowed redirect URI for your client ID through the [Plaid developer dashboard](https://dashboard.plaid.com/team/api).
+The special test credentials **`user_transactions_dynamic`** can be used together with the "Refresh Transactions" button to trigger simulated transaction updates in Sandbox.
 
-To test the OAuth flow in sandbox, choose 'Playtypus OAuth Bank' from the list of financial institutions in Plaid Link.
+**To test with `user_transactions_dynamic`:**
 
-If you want to test OAuth in Production, you need to use https and set `PLAID_PRODUCTION_REDIRECT_URI=https://localhost:3001/oauth-link` in `.env`. In order to run your localhost on https, you will need to create a self-signed certificate and add it to the client root folder. MacOS users can use the following instructions to do this. Note that self-signed certificates should be used for testing purposes only, never for actual deployments. Windows users can use [these instructions below](#windows-instructions-for-using-https-with-localhost).
+1. Create an account in the Pattern app (with any username)
+2. Link a bank account using a **non-OAuth test institution** such as **First Platypus Bank** (`ins_109508`)
+   - Note: OAuth institutions like most major banks and Playtypus OAuth Bank will not work with these test credentials - you will be able to complete Link, but you will see the same data as the regular `user_good` test user and not the special `user_transactions_dynamic` data.
+3. When prompted for credentials in the Plaid Link flow, enter:
+   - **Username:** `user_transactions_dynamic`
+   - **Password:** any non-blank password
+4. An Item will be created with approximately 50 transactions
+5. Click the **"Refresh Transactions"** button next to the linked bank to simulate new transaction activity
+
+**What happens when you click refresh:**
+- New pending transactions are generated
+- All previously pending transactions are moved to posted
+- All appropriate transaction webhooks are fired
+
+### Persona-Based Transaction Testing
+
+For more realistic testing, Plaid also provides persona-based test users: **`user_ewa_user`**, **`user_yuppie`**, and **`user_small_business`**. These accounts simulate real life personas, so new transactions will appear at a more realistic rate and will **not** appear every time `/transactions/refresh` is called. These users have three months of transactions, including some recurring transactions.
+
+**To test with persona-based users:**
+
+1. Link a bank account using a **non-OAuth test institution** such as **First Platypus Bank** (`ins_109508`)
+2. When prompted for credentials in the Plaid Link flow, enter one of:
+   - **Username:** `user_ewa_user` (any non-blank password)
+   - **Username:** `user_yuppie` (any non-blank password)
+   - **Username:** `user_small_business` (any non-blank password)
+3. Transactions will update at a more realistic rate when you click "Refresh Transactions"
+
+## Debugging
+
+The node debugging port (9229) is exposed locally on port 9229.
+
+If you are using Visual Studio Code as your editor, you can use the `Docker: Attach to Server` launch configuration to interactively debug the server while it's running. See the [VS Code docs][vscode-debugging] for more information.
+
+# Plaid Pattern - Database
+
+The database is a [PostgreSQL][postgres] instance running inside a Docker container.
+
+Port 5432 is exposed to the Docker host, so you can connect to the DB using the tool of your choice.
+Username and password can be found in [docker-compose.yml][docker-compose].
+
+## Key Concepts
+
+### Plaid API & Link Identifiers
+
+API and Link Identifiers are crucial for maintaining a scalable and stable integration.
+Occasionally, an Institution error may occur due to a bank issue, or a live product pull may fail on request.
+To resolve these types of issues, Plaid Identifiers are required to [open a Support ticket in the Dashboard][plaid-new-support-ticket].
+
+`access_tokens` and `item_ids` are the core identifiers that map end-users to their financial institutions.
+As such, we are storing them in the database associated with our application users.
+**These identifiers should never be exposed client-side.**
+
+Plaid returns a unique `request_id` in all server-side responses and Link callbacks.
+A `link_session_id` is also returned in Link callbacks.
+These values can be used for identifying the specific network request or Link session for a user, and associating that request or session with other events in your application.
+We store these identifiers in database tables used for logging Plaid API requests, as they can be useful for troubleshooting.
+
+For more information, see the docs page on [storing Plaid API identifiers][plaid-docs-api-identifiers].
+
+## Tables
+
+The `*.sql` scripts in the `init` directory are used to initialize the database if the data directory is empty (i.e. on first run, after manually clearing the db by running `make clear-db`, or after modifying the scripts in the `init` directory).
+
+See the [create.sql][create-script] initialization script to see some brief notes for and the schemas of the tables used in this application.
+While most of them are fairly self-explanitory, we've added some additional notes for some of the tables below.
+
+### link_events_table
+
+This table stores responses from the Plaid API for client requests to the Plaid Link client.
+
+User flows that this table captures (based on the client implementation, which hooks into the `onExit` and `onSuccess` Link callbacks):
+
+-   User opens Link, closes without trying to connect an account.
+    This will have type `exit` but no `request_id`, `error_type`, or `error_code`.
+-   User tries to connect an account, fails, and closes link.
+    This will have type `exit` and will have a `request_id`, `error_type`, and `error_code`.
+-   User successfully connects an account.
+    This will have type `success` but no `request_id`, error_type, or `error_code`.
+
+### plaid_api_events_table
+
+This table stores responses from the Plaid API for server requests to the Plaid client.
+The server stores the responses for all of the requests it makes to the Plaid API.
+Where applicable, it also maps the response to an item and user.
+If the request returned an error, the `error_type` and `error_code` columns will be populated.
+
+## Learn More
+
+-   [PostgreSQL documentation][postgres-docs]
+
+# Plaid Pattern - ngrok
+
+This demo includes [ngrok](https://ngrok.com/), a utility that creates a secure tunnel between your local machine and the outside world. We're using it here to expose the local webhooks endpoint to the internet.
+
+Browse to [localhost:4040](http://localhost:4040/inspect/http) to see the ngrok dashboard. This will show any traffic that gets routed through the ngrok URL.
+
+**Do NOT use ngrok in production!** It's only included here as a convenience for local development and is not meant to be a production-quality solution.
+
+Don’t want to use ngrok? As long as you serve the app with an endpoint that is publicly exposed, all the Plaid webhooks will work.
+
+**Important:** When your ngrok session expires or when you restart the Docker containers (which creates a new ngrok URL), any Items that were previously linked will stop receiving webhooks because they're still registered with the old ngrok URL. To receive webhooks for these Items, you'll need to:
+
+1. Delete the old Items from the app
+2. Re-link them using Plaid Link
+
+This will register the Items with the new webhook URL. You can check if webhooks are being received by visiting [localhost:4040](http://localhost:4040/inspect/http).
+
+### Testing with OAuth redirect URIs (optional)
+
+> The sections below are optional: on desktop, OAuth will work without a redirect URI configured. However, using redirect URIs is recommended for best conversion on mobile web, and mandatory when using a Plaid mobile SDK. For more details, see the documentation on [redirect URIs on desktop and mobile web](https://plaid.com/docs/link/oauth/#desktop-web-mobile-web-react-or-webview).
+
+#### In Sandbox
+To test with an OAuth redirect URI, in the .env file, set your `PLAID_SANDBOX_REDIRECT_URI` to 'http://localhost:3001/oauth-link' and then register this URI in your Plaid Dashboard at https://dashboard.plaid.com/team/api.
+
+#### In Production
+
+If you want to test OAuth redirect URIs in Production, you need to use https and set `PLAID_PRODUCTION_REDIRECT_URI=https://localhost:3001/oauth-link` in `.env`. In order to run your localhost on https, you will need to create a self-signed certificate and add it to the client root folder. MacOS users can use the following instructions to do this. Note that self-signed certificates should be used for testing purposes only, never for actual deployments. Windows users can use [these instructions below](#windows-instructions-for-using-https-with-localhost).
 
 #### MacOS instructions for using https with localhost
 
@@ -206,80 +322,7 @@ while [ "$(curl -s -o /dev/null -w "%{http_code}" -m 1 https://localhost:3001)" 
 
 After starting up the Pattern sample app, you can now view it at https://localhost:3001. Your browser will alert you with an invalid certificate warning; click on "advanced" and proceed.
 
-## Debugging
 
-The node debugging port (9229) is exposed locally on port 9229.
-
-If you are using Visual Studio Code as your editor, you can use the `Docker: Attach to Server` launch configuration to interactively debug the server while it's running. See the [VS Code docs][vscode-debugging] for more information.
-
-# Plaid Pattern - Database
-
-The database is a [PostgreSQL][postgres] instance running inside a Docker container.
-
-Port 5432 is exposed to the Docker host, so you can connect to the DB using the tool of your choice.
-Username and password can be found in [docker-compose.yml][docker-compose].
-
-## Key Concepts
-
-### Plaid API & Link Identifiers
-
-API and Link Identifiers are crucial for maintaining a scalable and stable integration.
-Occasionally, an Institution error may occur due to a bank issue, or a live product pull may fail on request.
-To resolve these types of issues, Plaid Identifiers are required to [open a Support ticket in the Dashboard][plaid-new-support-ticket].
-
-`access_tokens` and `item_ids` are the core identifiers that map end-users to their financial institutions.
-As such, we are storing them in the database associated with our application users.
-**These identifiers should never be exposed client-side.**
-
-Plaid returns a unique `request_id` in all server-side responses and Link callbacks.
-A `link_session_id` is also returned in Link callbacks.
-These values can be used for identifying the specific network request or Link session for a user, and associating that request or session with other events in your application.
-We store these identifiers in database tables used for logging Plaid API requests, as they can be useful for troubleshooting.
-
-For more information, see the docs page on [storing Plaid API identifiers][plaid-docs-api-identifiers].
-
-## Tables
-
-The `*.sql` scripts in the `init` directory are used to initialize the database if the data directory is empty (i.e. on first run, after manually clearing the db by running `make clear-db`, or after modifying the scripts in the `init` directory).
-
-See the [create.sql][create-script] initialization script to see some brief notes for and the schemas of the tables used in this application.
-While most of them are fairly self-explanitory, we've added some additional notes for some of the tables below.
-
-### link_events_table
-
-This table stores responses from the Plaid API for client requests to the Plaid Link client.
-
-User flows that this table captures (based on the client implementation, which hooks into the `onExit` and `onSuccess` Link callbacks):
-
--   User opens Link, closes without trying to connect an account.
-    This will have type `exit` but no request_id, error_type, or error_code.
--   User tries to connect an account, fails, and closes link.
-    This will have type `exit` and will have a request_id, error_type, and error_code.
--   User successfully connects an account.
-    This will have type `success` but no request_id, error_type, or error_code.
-
-### plaid_api_events_table
-
-This table stores responses from the Plaid API for server requests to the Plaid client.
-The server stores the responses for all of the requests it makes to the Plaid API.
-Where applicable, it also maps the response to an item and user.
-If the request returned an error, the error_type and error_code columns will be populated.
-
-## Learn More
-
--   [PostgreSQL documentation][postgres-docs]
-
-# Plaid Pattern - ngrok
-
-This demo includes [ngrok](https://ngrok.com/), a utility that creates a secure tunnel between your local machine and the outside world. We're using it here to expose the local webhooks endpoint to the internet.
-
-Browse to [localhost:4040](http://localhost:4040/inspect/http) to see the ngrok dashboard. This will show any traffic that gets routed through the ngrok URL.
-
-**Do NOT use ngrok in production!** It's only included here as a convenience for local development and is not meant to be a production-quality solution.
-
-Don’t want to use ngrok? As long as you serve the app with an endpoint that is publicly exposed, all the Plaid webhooks will work.
-
-ngrok's free account has a session limit of 8 hours. To fully test out some of the transaction webhook workflows, you will need to get a more persistent endpoint as noted above when using the Production environment.
 
 ## Source
 

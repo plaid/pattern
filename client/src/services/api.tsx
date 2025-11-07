@@ -66,6 +66,8 @@ export const getTransactionsByItem = (itemId: number) =>
   api.get(`/items/${itemId}/transactions`);
 export const getTransactionsByUser = (userId: number) =>
   api.get(`/users/${userId}/transactions`);
+export const refreshTransactionsByItem = (itemId: number) =>
+  api.post(`/items/${itemId}/transactions/refresh`);
 
 // institutions
 export const getInstitutionById = (instId: string) =>
@@ -95,7 +97,7 @@ export const exchangeToken = async (
         <DuplicateItemToastMessage institutionName={institution.name} />
       );
     } else {
-      toast.error(`Error linking ${institution.name}`);
+      toast.error(`Failed to link ${institution.name}.`);
     }
   }
 };

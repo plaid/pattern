@@ -60,10 +60,10 @@ export function AssetsProvider(props: any) {
       try {
         const { data: payload } = await apiAddAsset(userId, description, value);
         if (payload != null) {
-          toast.success(`Successful addition of ${description}`);
+          toast.success(`Successfully added ${description}`);
           await getAssetsByUser(userId);
         } else {
-          toast.error(`Could not add ${description}`);
+          toast.error(`Failed to add "${description}".`);
         }
       } catch (err) {
         console.log(err);

@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import Button from 'plaid-threads/Button';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import useCurrentUser from '../services/currentUser.tsx';
 import Login from './Login.tsx';
@@ -12,7 +12,7 @@ import useBoolean from '../hooks/useBoolean.ts';
 export default function Landing() {
   const { userState, setCurrentUser } = useCurrentUser();
   const [isAdding, hideForm, toggleForm] = useBoolean(false);
-  const history = useHistory();
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (userState.newUser != null) {
@@ -21,21 +21,24 @@ export default function Landing() {
   }, [setCurrentUser, userState.newUser]);
 
   const returnToCurrentUser = () => {
-    history.push(`/user/${userState.currentUser.id}`);
+    navigate(`/user/${userState.currentUser.id}`);
   };
   return (
     <div>
       <Banner initialSubheading />
-      If you don't have an account, please click "Create Account". Once created,
-      you can add as many example Link items as you like.
-      <div className="btnsContainer">
+      <div style={{ marginBottom: '2rem', textAlign: 'center', maxWidth: '600px', margin: '0 auto 2rem' }}>
+        <p>
+          If you don't have an account, please click "Create Account". Once created,
+          you can add as many example Link items as you like.
+        </p>
+      </div>
+      <div className="btnsContainer" style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
         <Login />
-        <Button className="btnWithMargin" onClick={toggleForm} centered inline>
+        <Button onClick={toggleForm} centered inline>
           Create Account
         </Button>
         {userState.currentUser.username != null && (
           <Button
-            className="btnWithMargin"
             centered
             inline
             onClick={returnToCurrentUser}

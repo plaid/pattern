@@ -86,11 +86,12 @@ const updateTransactions = async (plaidItemId) => {
   };
 
   const {data: {accounts}} = await plaid.accountsGet(request);
-  
+
   // Update the DB.
   await createAccounts(plaidItemId, accounts);
   await createOrUpdateTransactions(added.concat(modified));
-  await deleteTransactions(removed);
+  // Extract transaction IDs from removed objects
+  await deleteTransactions(removed.map(r => r.transaction_id));
   await updateItemTransactionsCursor(plaidItemId, cursor);
   return {
     addedCount: added.length,

@@ -77,17 +77,27 @@ export function TransactionsProvider(props: any) {
 
   /**
    * @desc Requests all Transactions that belong to an individual Item.
+   * Replaces all existing transactions for this item to handle removals.
    */
   const getTransactionsByItem = useCallback(async itemId => {
     const { data: payload } = await apiGetTransactionsByItem(itemId);
+    console.log(`[TRANSACTIONS] Fetched ${payload.length} transactions for item ${itemId}`);
+    console.log('[TRANSACTIONS] Transaction IDs:', payload.map(t => t.id));
+    // First delete existing transactions for this item, then add the fresh ones
+    // This ensures removed transactions are actually removed from the UI
+    dispatch({ type: 'DELETE_BY_ITEM', payload: itemId });
     dispatch({ type: 'SUCCESSFUL_GET', payload: payload });
   }, []);
 
   /**
    * @desc Requests all Transactions that belong to an individual User.
+   * Replaces all existing transactions for this user to handle removals.
    */
   const getTransactionsByUser = useCallback(async userId => {
     const { data: payload } = await apiGetTransactionsByUser(userId);
+    // First delete existing transactions for this user, then add the fresh ones
+    // This ensures removed transactions are actually removed from the UI
+    dispatch({ type: 'DELETE_BY_USER', payload: userId });
     dispatch({ type: 'SUCCESSFUL_GET', payload: payload });
   }, []);
 

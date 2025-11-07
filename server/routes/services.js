@@ -3,7 +3,7 @@
  */
 
 const express = require('express');
-const fetch = require('node-fetch');
+// Using native fetch (Node 18+)
 
 const router = express.Router();
 
@@ -36,6 +36,7 @@ router.get(
 router.post(
   '/webhook',
   asyncWrapper(async (req, res) => {
+    console.log('[WEBHOOK ENDPOINT] Received webhook:', JSON.stringify(req.body, null, 2));
     const { webhook_type: webhookType } = req.body;
     const { io } = req;
     const type = webhookType.toLowerCase();
@@ -46,7 +47,8 @@ router.post(
       item: handleItemWebhook,
     };
     const webhookHandler = webhookHandlerMap[type] || unhandledWebhook;
-    webhookHandler(req.body, io);
+    await webhookHandler(req.body, io);
+    console.log('[WEBHOOK ENDPOINT] Webhook processed successfully');
     res.json({ status: 'ok' });
   })
 );

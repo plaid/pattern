@@ -33,7 +33,7 @@ fi
 
 # Set the authorization token.
 if [ -n "$NGROK_AUTH" ]; then
-  echo "authtoken: $NGROK_AUTH" >> ~/.ngrok2/ngrok.yml
+  echo "  authtoken: $NGROK_AUTH" >> ~/.config/ngrok/ngrok.yml
 fi
 
 # Set the subdomain or hostname, depending on which is set

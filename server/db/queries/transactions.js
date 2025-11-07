@@ -134,12 +134,16 @@ const retrieveTransactionsByUserId = async userId => {
  * @param {string[]} plaidTransactionIds the Plaid IDs of the transactions.
  */
 const deleteTransactions = async plaidTransactionIds => {
+  if (plaidTransactionIds.length > 0) {
+    console.log(`[DB] Deleting ${plaidTransactionIds.length} transactions:`, plaidTransactionIds);
+  }
   const pendingQueries = plaidTransactionIds.map(async transactionId => {
     const query = {
       text: 'DELETE FROM transactions_table WHERE plaid_transaction_id = $1',
       values: [transactionId],
     };
-    await db.query(query);
+    const result = await db.query(query);
+    console.log(`[DB] Deleted transaction ${transactionId}, rows affected: ${result.rowCount}`);
   });
   await Promise.all(pendingQueries);
 };

@@ -10,7 +10,7 @@ volumes:
 
 services:
   db:
-    image: postgres:11.2
+    image: postgres:16
     volumes:
       - ./database/init:/docker-entrypoint-initdb.d
       - "pg_${PLAID_ENV}_data:/var/lib/postgresql/data"

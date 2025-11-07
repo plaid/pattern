@@ -17,12 +17,12 @@ const Login = () => {
   };
 
   return (
-    <div>
+    <>
       <Button centered inline onClick={() => setShow(!show)}>
         Login
       </Button>
-      <Modal isOpen={show} onRequestClose={() => setShow(false)}>
-        <>
+      {show && (
+        <Modal isOpen={show} onRequestClose={() => setShow(false)}>
           <ModalBody
             onClickCancel={() => setShow(false)}
             header="User Login"
@@ -31,16 +31,21 @@ const Login = () => {
             confirmText="Submit"
           >
             <TextInput
-              label=""
-              id="id-6"
+              label="Username"
+              id="username-input"
               placeholder="Enter User Name"
               value={value}
               onChange={e => setValue(e.currentTarget.value)}
+              onKeyPress={e => {
+                if (e.key === 'Enter') {
+                  handleSubmit();
+                }
+              }}
             />
           </ModalBody>
-        </>
-      </Modal>
-    </div>
+        </Modal>
+      )}
+    </>
   );
 };
 

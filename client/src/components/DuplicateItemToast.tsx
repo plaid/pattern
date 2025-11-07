@@ -6,16 +6,20 @@ interface Props {
 
 const DuplicateItemToastMessage = (props: Props) => (
   <>
-    <div>{`${props.institutionName} already linked.`}</div>
-    <a
-      className="toast__link"
-      href="https://github.com/plaid/pattern/tree/master/server#preventing-item-duplication"
-      target="_blank"
-      rel="noopener noreferrer"
-    >
-      Click here
-    </a>{' '}
-    for more info.
+    <div>
+      <strong>{props.institutionName} is already linked to this account.</strong>
+    </div>
+    <div style={{ marginTop: '8px' }}>
+      You cannot link the same institution twice.{' '}
+      <a
+        className="toast__link"
+        href="https://github.com/plaid/pattern/tree/master/server#preventing-item-duplication"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        Learn more
+      </a>
+    </div>
   </>
 );
 

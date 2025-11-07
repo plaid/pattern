@@ -36,7 +36,7 @@ export default function ErrorMessage() {
   return (
     <>
       {show && (
-        <Callout className="errMsgCallout">
+        <Callout className="errMsgCallout" warning>
           <IconButton
             className="closeBtn"
             accessibilityLabel="close"
@@ -46,8 +46,12 @@ export default function ErrorMessage() {
             }}
             icon={<CloseS2 />}
           />
-          Error: {error.code} <br />
-          {message}
+          <div>
+            <strong>Connection Error:</strong> {error.code}
+          </div>
+          <div style={{ marginTop: '8px' }}>
+            {message}
+          </div>
         </Callout>
       )}
     </>

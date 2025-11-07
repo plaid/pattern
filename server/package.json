@@ -8,28 +8,26 @@
     "lint": "eslint **/*.js -c .eslintrc.json"
   },
   "dependencies": {
-    "@hapi/boom": "^7.4.2",
-    "cookie-parser": "~1.4.3",
-    "debug": "~2.6.9",
+    "@hapi/boom": "^10.0.1",
+    "cookie-parser": "~1.4.6",
+    "debug": "~4.4.3",
     "express": "^4.21.1",
-    "express-promise-router": "^3.0.3",
-    "lodash": "^4.17.19",
-    "moment": "^2.24.0",
-    "morgan": "~1.9.0",
-    "node-fetch": "^2.3.0",
-    "pg": "^8.7.1",
-    "plaid": "^30.0.0",
-    "socket.io": "^4.5.4"
+    "express-promise-router": "^4.1.1",
+    "lodash": "^4.17.21",
+    "morgan": "~1.10.0",
+    "pg": "^8.13.1",
+    "plaid": "^39.1.0",
+    "socket.io": "^4.8.1"
   },
 "type": "commonjs",
 
   "devDependencies": {
-    "eslint": "^6.2.1",
-    "eslint-config-airbnb-base": "^14.0.0",
-    "eslint-config-prettier": "^6.1.0",
-    "eslint-plugin-import": "^2.18.0",
-    "eslint-plugin-prettier": "^3.0.1",
-    "nodemon": "^2.0.4",
-    "prettier": "^1.16.4"
+    "eslint": "^8.57.1",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-import": "^2.31.0",
+    "eslint-plugin-prettier": "^5.2.1",
+    "nodemon": "^3.1.7",
+    "prettier": "^3.4.2"
   }
 }

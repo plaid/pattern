@@ -1,4 +1,4 @@
-FROM alpine:3.9
+FROM alpine:3.20
 
 RUN set -x && \
     apk add --no-cache -t .deps ca-certificates && \
@@ -6,9 +6,9 @@ RUN set -x && \
     # https://github.com/sgerrand/alpine-pkg-glibc
     # See also https://github.com/gliderlabs/docker-alpine/issues/11
     wget -q -O /etc/apk/keys/sgerrand.rsa.pub https://alpine-pkgs.sgerrand.com/sgerrand.rsa.pub && \
-    wget https://github.com/sgerrand/alpine-pkg-glibc/releases/download/2.29-r0/glibc-2.29-r0.apk && \
-    apk add glibc-2.29-r0.apk && \
-    rm glibc-2.29-r0.apk && \
+    wget https://github.com/sgerrand/alpine-pkg-glibc/releases/download/2.35-r1/glibc-2.35-r1.apk && \
+    apk add --force-overwrite glibc-2.35-r1.apk && \
+    rm glibc-2.35-r1.apk && \
     apk del --purge .deps
 
 # Install ngrok
@@ -28,7 +28,8 @@ RUN set -x \
 RUN ngrok --version
 
 # Add config script.
-COPY --chown=ngrok ngrok.yml /home/ngrok/.ngrok2/
+RUN mkdir -p /home/ngrok/.config/ngrok
+COPY --chown=ngrok ngrok.yml /home/ngrok/.config/ngrok/ngrok.yml
 COPY entrypoint.sh /
 
 USER ngrok

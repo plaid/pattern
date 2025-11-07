@@ -68,9 +68,9 @@ export function UsersProvider(props: any) {
     } catch (err) {
       const { response } = err;
       if (response && response.status === 409) {
-        toast.error(`Username ${username} already exists`);
+        toast.error(`Username "${username}" already exists. Please choose a different username or login instead.`);
       } else {
-        toast.error('Error adding new user');
+        toast.error(`Failed to create account "${username}".`);
       }
     }
   }, []);

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { HashLink } from 'react-router-hash-link';
-import Button from 'plaid-threads/Button';
-import Touchable from 'plaid-threads/Touchable';
+import { Button } from 'plaid-threads/Button';
+import { Touchable } from 'plaid-threads/Touchable';
 
 import UserDetails from './UserDetails.tsx';
 import LaunchLink from './LaunchLink.tsx';

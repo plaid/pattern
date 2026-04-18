@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import startCase from 'lodash/startCase';
 import toLower from 'lodash/toLower';
-import Button from 'plaid-threads/Button';
+import { Button } from 'plaid-threads/Button';
 
 import { AccountType } from './types';
 import useTransactions from '../services/transactions.tsx';

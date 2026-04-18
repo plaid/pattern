@@ -1,6 +1,6 @@
 import React from 'react';
-import IconButton from 'plaid-threads/IconButton';
-import Trash from 'plaid-threads/Icons/Trash';
+import { IconButton } from 'plaid-threads/IconButton';
+import { Trash } from 'plaid-threads/Icons/Trash';
 
 import { currencyFilter, pluralize } from '../util/index.tsx';
 import Asset from './Asset.tsx';

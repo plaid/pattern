@@ -1,8 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
-import Menu from 'plaid-threads/Icons/MenuS1';
-import Dropdown from 'plaid-threads/Dropdown';
-import IconButton from 'plaid-threads/IconButton';
-import Touchable from 'plaid-threads/Touchable';
+import { MenuS1 as Menu } from 'plaid-threads/Icons/MenuS1';
+import { Dropdown } from 'plaid-threads/Dropdown';
+import { IconButton } from 'plaid-threads/IconButton';
+import { Touchable } from 'plaid-threads/Touchable';
 
 import LaunchLink from './LaunchLink.tsx';
 import useOnClickOutside from '../hooks/useOnClickOutside.ts';

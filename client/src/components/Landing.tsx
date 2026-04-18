@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import Button from 'plaid-threads/Button';
+import { Button } from 'plaid-threads/Button';
 import { useNavigate } from 'react-router-dom';
 
 import useCurrentUser from '../services/currentUser.tsx';

@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import sortBy from 'lodash/sortBy';
-import NavigationLink from 'plaid-threads/NavigationLink';
-import LoadingSpinner from 'plaid-threads/LoadingSpinner';
-import Callout from 'plaid-threads/Callout';
-import Button from 'plaid-threads/Button';
+import { SecondaryLink as NavigationLink } from 'plaid-threads/SecondaryLink';
+import { LoadingSpinner } from 'plaid-threads/LoadingSpinner';
+import { Callout } from 'plaid-threads/Callout';
+import { Button } from 'plaid-threads/Button';
 
 import { RouteInfo, ItemType, AccountType, AssetType } from './types';
 

@@ -80,7 +80,7 @@ The Pattern web client is written in JavaScript using [React]. It presents a bas
 
 ### Communicating with the server
 
-Aside from websocket listeners (see below), all HTTP calls to the Pattern server are defined in `src/services/api.js`.
+Aside from websocket listeners (see below), all HTTP calls to the Pattern server are defined in `src/services/api.tsx`.
 
 ### Webhooks and Websockets
 
@@ -261,19 +261,25 @@ mkcert localhost
 
 This will create a certificate file localhost.pem and a key file localhost-key.pem inside your client folder.
 
-Then in the package.json file in the client folder, replace this line on line 26
+Then in `vite.config.ts` in the client folder, add the `https` option to the `server` config:
 
-```bash
-  "start": "PORT=3001 react-scripts start",
+```ts
+import fs from 'fs';
+
+export default defineConfig({
+  // ...
+  server: {
+    port: 3001,
+    https: {
+      key: fs.readFileSync('localhost-key.pem'),
+      cert: fs.readFileSync('localhost.pem'),
+    },
+    // ...
+  },
+});
 ```
 
-with this line instead:
-
-```bash
-"start": "PORT=3001 HTTPS=true SSL_CRT_FILE=localhost.pem SSL_KEY_FILE=localhost-key.pem react-scripts start",
-```
-
-In the `Dockerfile` in the client folder, add these two lines below line 6:
+In the `Dockerfile` in the client folder, add these two lines before the `CMD` instruction:
 
 ```
 COPY ["localhost-key.pem", "/opt/client"]
@@ -296,17 +302,7 @@ After starting up the Pattern sample app, you can now view it at https://localho
 
 #### Windows instructions for using https with localhost
 
-If you are on a Windows machine, in the package.json file in the client folder, replace this line on line 26
-
-```bash
-  "start": "PORT=3001 react-scripts start",
-```
-
-with this line instead:
-
-```bash
-"start": "PORT=3001 HTTPS=true react-scripts start",
-```
+If you are on a Windows machine, follow the same `vite.config.ts` changes described in the MacOS section above, but skip the mkcert steps. Vite will use a self-signed certificate.
 
 Then, in the wait-for-client.sh file in the main pattern folder, replace this line on line 6
 
@@ -354,7 +350,6 @@ Plaid Pattern is a demo app that is intended to be used only for the purpose of 
 [plaid-new-support-ticket]: https://dashboard.plaid.com/support/new
 [postgres]: https://www.postgresql.org/
 [postgres-docs]: https://www.postgresql.org/docs/
-[cra]: https://github.com/facebook/create-react-app
 [plaid-link]: https://plaid.com/docs/#integrating-with-link
 [plaid-oauth]: https://plaid.com/docs/link/oauth/#introduction-to-oauth
 [plaid-link-update-mode]: https://plaid.com/docs/link/update-mode/

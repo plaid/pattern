@@ -1,11 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { Note } from 'plaid-threads/Note';
-import { Touchable } from 'plaid-threads/Touchable';
-import { InlineLink } from 'plaid-threads/InlineLink';
-import { Callout } from 'plaid-threads/Callout';
-import { Button } from 'plaid-threads/Button';
 import { Institution } from 'plaid/dist/api';
 import { toast } from 'react-toastify';
+
+import { Button } from './ui/Button.tsx';
+import { Callout } from './ui/Callout.tsx';
 
 import { ItemType, AccountType } from './types';
 import AccountCard from './AccountCard.tsx';
@@ -124,8 +122,9 @@ const ItemCard = (props: Props) => {
   return (
     <div className="box">
       <div className={cardClassNames}>
-        <Touchable
-          className="item-card__clickable"
+        <button
+          type="button"
+          className="item-card__clickable cursor-pointer bg-transparent border-none text-left"
           onClick={() => setShowAccounts(current => !current)}
         >
           <div className="item-card__column-1">
@@ -138,13 +137,13 @@ const ItemCard = (props: Props) => {
           </div>
           <div className="item-card__column-2">
             {isGoodState ? (
-              <Note info solid>
+              <span className="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-blue-400 text-blue-900">
                 Updated
-              </Note>
+              </span>
             ) : (
-              <Note error solid>
+              <span className="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-red-200 text-red-900">
                 Login Required
-              </Note>
+              </span>
             )}
             <Button
               small
@@ -162,7 +161,7 @@ const ItemCard = (props: Props) => {
               {diffBetweenCurrentTime(props.item.updated_at)}
             </p>
           </div>
-        </Touchable>
+        </button>
         <MoreDetails // The MoreDetails component allows developer to test the ITEM_LOGIN_REQUIRED webhook and Link update mode
           setBadStateShown={isSandbox && isGoodState}
           handleDelete={handleDeleteItem}
@@ -183,10 +182,13 @@ const ItemCard = (props: Props) => {
       {showAccounts && accounts.length === 0 && (
         <Callout>
           No transactions or accounts have been retrieved for this item. See the{' '}
-          <InlineLink href="https://github.com/plaid/pattern/blob/master/docs/troubleshooting.md">
+          <a
+            className="text-blue-900 underline hover:text-blue-1000"
+            href="https://github.com/plaid/pattern/blob/master/docs/troubleshooting.md"
+          >
             {' '}
             troubleshooting guide{' '}
-          </InlineLink>{' '}
+          </a>{' '}
           to learn about receiving transactions webhooks with this sample app.
         </Callout>
       )}

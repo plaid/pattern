@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { HashLink } from 'react-router-hash-link';
-import { Button } from 'plaid-threads/Button';
-import { Touchable } from 'plaid-threads/Touchable';
+import { Button } from './ui/Button.tsx';
 
 import UserDetails from './UserDetails.tsx';
 import LaunchLink from './LaunchLink.tsx';
@@ -70,9 +69,8 @@ export default function UserCard(props: Props) {
             setHovered(false);
           }}
         >
-          <Touchable
-            className="user-card-clickable"
-            component={HashLink}
+          <HashLink
+            className="user-card-clickable no-underline text-inherit"
             to={`/user/${props.userId}#itemCards`}
           >
             <div className="user-card__detail">
@@ -82,14 +80,13 @@ export default function UserCard(props: Props) {
                 numOfItems={numOfItems}
               />
             </div>
-          </Touchable>
+          </HashLink>
         </div>
         {(props.removeButton || (props.linkButton && numOfItems === 0)) && (
           <div className="user-card__buttons">
             {props.linkButton && numOfItems === 0 && (
               <Button
                 large
-                inline
                 className="add-account__button"
                 onClick={initiateLink}
               >
@@ -107,8 +104,6 @@ export default function UserCard(props: Props) {
                 className="remove"
                 onClick={handleDeleteUser}
                 small
-                inline
-                centered
                 secondary
               >
                 Delete user

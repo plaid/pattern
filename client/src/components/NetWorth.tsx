@@ -1,6 +1,6 @@
 import React from 'react';
-import { IconButton } from 'plaid-threads/IconButton';
-import { Trash } from 'plaid-threads/Icons/Trash';
+import { IconButton } from './ui/IconButton.tsx';
+import { TrashIcon } from './ui/icons.tsx';
 
 import { currencyFilter, pluralize } from '../util/index.tsx';
 import Asset from './Asset.tsx';
@@ -86,8 +86,8 @@ export default function NetWorth(props: Props) {
                       <p className="dataItem">{currencyFilter(asset.value)}</p>
                       <p>
                         <IconButton
-                          accessibilityLabel="Navigation"
-                          icon={<Trash />}
+                          accessibilityLabel="Delete asset"
+                          icon={<TrashIcon />}
                           onClick={() => {
                             handleDelete(asset.id, props.userId);
                           }}
@@ -143,8 +143,8 @@ export default function NetWorth(props: Props) {
                       <p className="dataItem">{currencyFilter(asset.value)}</p>
                       <p>
                         <IconButton
-                          accessibilityLabel="Navigation"
-                          icon={<Trash />}
+                          accessibilityLabel="Delete asset"
+                          icon={<TrashIcon />}
                           onClick={() => {
                             handleDelete(asset.id, props.userId);
                           }}

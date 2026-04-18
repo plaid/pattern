@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
-import { Modal } from 'plaid-threads/Modal';
-import { ModalBody } from 'plaid-threads/ModalBody';
-import { Button } from 'plaid-threads/Button';
-import { TextInput } from 'plaid-threads/TextInput';
-import { NumberInput } from 'plaid-threads/NumberInput';
+import { Modal } from './ui/Modal.tsx';
+import { ModalBody } from './ui/ModalBody.tsx';
+import { Button } from './ui/Button.tsx';
+import { TextInput } from './ui/TextInput.tsx';
 
 import { useAssets } from '../services';
 
@@ -29,39 +28,38 @@ export default function Asset(props: Props) {
 
   return (
     <div className="assetBtnContainer">
-      <Button centered inline small secondary onClick={() => setShow(!show)}>
+      <Button small secondary onClick={() => setShow(!show)}>
         Add An Asset
       </Button>
       <Modal isOpen={show} onRequestClose={() => setShow(false)}>
-        <>
-          <ModalBody
-            header="Enter Your Asset"
-            isLoading={false}
-            onClickCancel={() => setShow(false)}
-          >
-            <form onSubmit={handleSubmit}>
-              <TextInput
-                required
-                label=""
-                id="id-6"
-                placeholder="Enter Asset Description (e.g. house or car)"
-                value={description}
-                onChange={e => setDescription(e.currentTarget.value)}
-              />
-              <NumberInput
-                required
-                label=""
-                id="id-6"
-                placeholder="Enter Asset Value (in dollars $)"
-                value={value}
-                onChange={e => setValue(e.currentTarget.value)}
-              />
-              <Button wide type="submit">
-                Submit
-              </Button>
-            </form>
-          </ModalBody>
-        </>
+        <ModalBody
+          header="Enter Your Asset"
+          isLoading={false}
+          onClickCancel={() => setShow(false)}
+        >
+          <form onSubmit={handleSubmit}>
+            <TextInput
+              required
+              label=""
+              id="asset-description"
+              placeholder="Enter Asset Description (e.g. house or car)"
+              value={description}
+              onChange={e => setDescription(e.currentTarget.value)}
+            />
+            <TextInput
+              required
+              label=""
+              id="asset-value"
+              type="number"
+              placeholder="Enter Asset Value (in dollars $)"
+              value={value}
+              onChange={e => setValue(e.currentTarget.value)}
+            />
+            <Button wide type="submit">
+              Submit
+            </Button>
+          </form>
+        </ModalBody>
       </Modal>
     </div>
   );

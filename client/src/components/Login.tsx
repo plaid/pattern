@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { Modal } from 'plaid-threads/Modal';
-import { ModalBody } from 'plaid-threads/ModalBody';
-import { Button } from 'plaid-threads/Button';
-import { TextInput } from 'plaid-threads/TextInput';
+import { Modal } from './ui/Modal.tsx';
+import { ModalBody } from './ui/ModalBody.tsx';
+import { Button } from './ui/Button.tsx';
+import { TextInput } from './ui/TextInput.tsx';
 
 import { useCurrentUser } from '../services';
 
@@ -18,7 +18,7 @@ const Login = () => {
 
   return (
     <>
-      <Button centered inline onClick={() => setShow(!show)}>
+      <Button onClick={() => setShow(!show)}>
         Login
       </Button>
       {show && (
@@ -36,7 +36,7 @@ const Login = () => {
               placeholder="Enter User Name"
               value={value}
               onChange={e => setValue(e.currentTarget.value)}
-              onKeyPress={e => {
+              onKeyDown={e => {
                 if (e.key === 'Enter') {
                   handleSubmit();
                 }

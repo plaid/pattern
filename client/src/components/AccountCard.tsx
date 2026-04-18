@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import startCase from 'lodash/startCase';
 import toLower from 'lodash/toLower';
-import { Button } from 'plaid-threads/Button';
+import { Button } from './ui/Button.tsx';
 
 import { AccountType } from './types';
 import useTransactions from '../services/transactions.tsx';
@@ -48,7 +48,7 @@ export default function AccountCard(props: Props) {
         </div>
         <div className="account-data-row__right">
           {transactions.length !== 0 && (
-            <Button onClick={toggleShowTransactions} centered small inline>
+            <Button onClick={toggleShowTransactions} small secondary>
               {transactionsShown ? 'Hide Transactions' : 'View Transactions'}
             </Button>
           )}

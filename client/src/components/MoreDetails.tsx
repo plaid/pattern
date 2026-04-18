@@ -1,8 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { MenuS1 as Menu } from 'plaid-threads/Icons/MenuS1';
-import { Dropdown } from 'plaid-threads/Dropdown';
-import { IconButton } from 'plaid-threads/IconButton';
-import { Touchable } from 'plaid-threads/Touchable';
+import { MenuIcon } from './ui/icons.tsx';
+import { IconButton } from './ui/IconButton.tsx';
 
 import LaunchLink from './LaunchLink.tsx';
 import useOnClickOutside from '../hooks/useOnClickOutside.ts';
@@ -45,15 +43,15 @@ export function MoreDetails(props: Props) {
   const linkChoice = props.setBadStateShown ? (
     // handleSetBadState uses sandbox/item/reset_login to send the ITEM_LOGIN_REQUIRED webhook;
     // app responds to this webhook by setting item to "bad" state (server/webhookHandlers/handleItemWebhook.js)
-    <Touchable className="menuOption" onClick={props.handleSetBadState}>
+    <button className="menuOption block w-full text-left px-4 py-2 hover:bg-black-200 cursor-pointer" onClick={props.handleSetBadState}>
       Test Item Login Required Webhook
-    </Touchable>
+    </button>
   ) : (
     // item is in "bad" state;  launch link to login and return to "good" state
     <div>
-      <Touchable className="menuOption" onClick={initiateLink}>
+      <button className="menuOption block w-full text-left px-4 py-2 hover:bg-black-200 cursor-pointer" onClick={initiateLink}>
         Update Login
-      </Touchable>
+      </button>
       {token != null && token.length > 0 && (
         <LaunchLink userId={props.userId} itemId={props.itemId} token={token} />
       )}
@@ -64,7 +62,7 @@ export function MoreDetails(props: Props) {
     <div className="icon-button-container" ref={refToButton}>
       <IconButton
         accessibilityLabel="Navigation"
-        icon={<Menu />}
+        icon={<MenuIcon />}
         onClick={() => setmenuShown(!menuShown)}
       />
     </div>
@@ -72,13 +70,15 @@ export function MoreDetails(props: Props) {
 
   return (
     <div className="more-details" ref={refToMenu}>
-      <Dropdown isOpen={menuShown} target={icon}>
-        {linkChoice}
-
-        <Touchable className="menuOption2" onClick={props.handleDelete}>
-          Remove
-        </Touchable>
-      </Dropdown>
+      {icon}
+      {menuShown && (
+        <div className="absolute right-0 top-full z-10 bg-white border border-black-300 rounded shadow-md min-w-[200px]">
+          {linkChoice}
+          <button className="menuOption2 block w-full text-left px-4 py-2 hover:bg-black-200 cursor-pointer" onClick={props.handleDelete}>
+            Remove
+          </button>
+        </div>
+      )}
     </div>
   );
 }

@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import sortBy from 'lodash/sortBy';
-import { SecondaryLink as NavigationLink } from 'plaid-threads/SecondaryLink';
-import { LoadingSpinner } from 'plaid-threads/LoadingSpinner';
-import { Callout } from 'plaid-threads/Callout';
-import { Button } from 'plaid-threads/Button';
+import { LoadingSpinner } from './ui/LoadingSpinner.tsx';
+import { Callout } from './ui/Callout.tsx';
+import { Button } from './ui/Button.tsx';
 
 import { RouteInfo, ItemType, AccountType, AssetType } from './types';
 
@@ -130,9 +129,9 @@ const UserPage = () => {
   document.getElementsByTagName('body')[0].style.overflow = 'auto'; // to override overflow:hidden from link pane
   return (
     <div>
-      <NavigationLink component={Link} to="/">
+      <Link to="/" className="text-sm text-black-700 uppercase tracking-wider hover:text-black-1000 no-underline">
         BACK TO LOGIN
-      </NavigationLink>
+      </Link>
 
       <Banner />
       {linkTokens.error.error_code != null && (
@@ -156,7 +155,7 @@ const UserPage = () => {
 
       <Callout style={{ marginBottom: '2rem' }}>
         <div>
-          <strong>💡 Testing with Dynamic Transaction Data:</strong>
+          <strong>Testing with Dynamic Transaction Data:</strong>
         </div>
         <div style={{ marginTop: '8px' }}>
           To test with realistic data, link a <strong>non-OAuth institution</strong> like{' '}
@@ -193,7 +192,6 @@ const UserPage = () => {
 
             <Button
               large
-              inline
               className="add-account__button"
               onClick={initiateLink}
             >

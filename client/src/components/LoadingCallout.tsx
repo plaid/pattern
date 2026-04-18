@@ -1,8 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Callout } from 'plaid-threads/Callout';
-import { InlineLink } from 'plaid-threads/InlineLink';
-
-//  Allows user to input their personal assets such as a house or car.
+import { Callout } from './ui/Callout.tsx';
 
 export default function LoadingCallout() {
   const [show, setShow] = useState(false);
@@ -19,10 +16,13 @@ export default function LoadingCallout() {
       {show && (
         <Callout>
           Transactions webhooks not received. See the{' '}
-          <InlineLink href="https://github.com/plaid/pattern/blob/master/docs/troubleshooting.md">
+          <a
+            className="text-blue-900 underline hover:text-blue-1000"
+            href="https://github.com/plaid/pattern/blob/master/docs/troubleshooting.md"
+          >
             {' '}
             troubleshooting guide{' '}
-          </InlineLink>{' '}
+          </a>{' '}
           to learn about receiving transactions webhooks with this sample app.
         </Callout>
       )}

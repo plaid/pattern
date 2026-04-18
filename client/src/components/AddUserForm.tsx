@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Button } from 'plaid-threads/Button';
-import { TextInput } from 'plaid-threads/TextInput';
+import { Button } from './ui/Button.tsx';
+import { TextInput } from './ui/TextInput.tsx';
 
 import { useUsers, useCurrentUser } from '../services';
 
@@ -42,17 +42,16 @@ const AddUserForm = (props: Props) => {
               className="input_field"
               value={username}
               placeholder="New user name"
-              label="User_Name"
+              label=""
               onChange={e => setUsername(e.target.value)}
             />
           </div>
           <div className="add-user__column-3">
-            <Button className="add-user__button" centered small type="submit">
+            <Button className="add-user__button" small type="submit">
               Add User
             </Button>
             <Button
               className="add-user__button"
-              centered
               small
               secondary
               onClick={props.hideForm}

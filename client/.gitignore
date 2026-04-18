@@ -23,6 +23,7 @@ yarn-debug.log*
 yarn-error.log*
 
 # typescript
+*.tsbuildinfo
 
 src/components/dist/
 src/services/dist/

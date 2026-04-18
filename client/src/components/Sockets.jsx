@@ -1,9 +1,10 @@
 import React, { useEffect, useRef } from 'react';
 import { toast } from 'react-toastify';
 
+import { io } from 'socket.io-client';
 import { useAccounts, useItems, useTransactions } from '../services';
-const io = require('socket.io-client');
-const { REACT_APP_SERVER_PORT } = process.env;
+
+const VITE_SERVER_PORT = import.meta.env.VITE_SERVER_PORT;
 
 // Helper function to create webhook toast with ngrok inspector link
 const showWebhookToast = (msg, type = 'default') => {
@@ -38,8 +39,8 @@ export default function Sockets() {
   const { getItemById } = useItems();
 
   useEffect(() => {
-    console.log('Connecting to socket server at port:', REACT_APP_SERVER_PORT);
-    socket.current = io(`http://localhost:${REACT_APP_SERVER_PORT}`);
+    console.log('Connecting to socket server at port:', VITE_SERVER_PORT);
+    socket.current = io(`http://localhost:${VITE_SERVER_PORT}`);
 
     socket.current.on('connect', () => {
       console.log('Socket connected successfully!');

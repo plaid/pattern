@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import Button from 'plaid-threads/Button';
-import TextInput from 'plaid-threads/TextInput';
+import { Button } from 'plaid-threads/Button';
+import { TextInput } from 'plaid-threads/TextInput';
 
 import { useUsers, useCurrentUser } from '../services';
 

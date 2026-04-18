@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import Modal from 'plaid-threads/Modal';
-import ModalBody from 'plaid-threads/ModalBody';
-import Button from 'plaid-threads/Button';
-import TextInput from 'plaid-threads/TextInput';
-import NumberInput from 'plaid-threads/NumberInput';
+import { Modal } from 'plaid-threads/Modal';
+import { ModalBody } from 'plaid-threads/ModalBody';
+import { Button } from 'plaid-threads/Button';
+import { TextInput } from 'plaid-threads/TextInput';
+import { NumberInput } from 'plaid-threads/NumberInput';
 
 import { useAssets } from '../services';
 

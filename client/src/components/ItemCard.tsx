@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import Note from 'plaid-threads/Note';
-import Touchable from 'plaid-threads/Touchable';
+import { Note } from 'plaid-threads/Note';
+import { Touchable } from 'plaid-threads/Touchable';
 import { InlineLink } from 'plaid-threads/InlineLink';
 import { Callout } from 'plaid-threads/Callout';
-import Button from 'plaid-threads/Button';
+import { Button } from 'plaid-threads/Button';
 import { Institution } from 'plaid/dist/api';
 import { toast } from 'react-toastify';
 
@@ -20,7 +20,7 @@ import {
 import { setItemToBadState, refreshTransactionsByItem } from '../services/api.tsx';
 import { diffBetweenCurrentTime } from '../util/index.tsx';
 
-const PLAID_ENV = process.env.REACT_APP_PLAID_ENV || 'sandbox';
+const PLAID_ENV = import.meta.env.VITE_PLAID_ENV || 'sandbox';
 
 interface Props {
   item: ItemType;

@@ -1,7 +1,7 @@
 import React from 'react';
-import Button from 'plaid-threads/Button';
+import { Button } from 'plaid-threads/Button';
 
-const PLAID_ENV = process.env.REACT_APP_PLAID_ENV;
+const PLAID_ENV = import.meta.env.VITE_PLAID_ENV;
 
 interface Props {
   initialSubheading?: boolean;

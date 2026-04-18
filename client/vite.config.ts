@@ -1,0 +1,37 @@
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
+
+export default defineConfig({
+  plugins: [react()],
+  server: {
+    host: true,
+    port: 3001,
+    proxy: {
+      '/': {
+        target: 'http://server:5001',
+        changeOrigin: true,
+        bypass(req) {
+          // Serve SPA for browser navigation requests
+          if (req.headers.accept?.includes('text/html')) {
+            return '/index.html';
+          }
+          // Let Vite handle its own internal routes and source files
+          const path = req.url?.split('?')[0] ?? '';
+          if (path.startsWith('/@') || path.startsWith('/__') || path.startsWith('/src/') || /\.\w+$/.test(path)) {
+            return req.url;
+          }
+        },
+      },
+    },
+  },
+  css: {
+    preprocessorOptions: {
+      scss: {
+        silenceDeprecations: ['import'],
+      },
+    },
+  },
+  build: {
+    outDir: 'build',
+  },
+});

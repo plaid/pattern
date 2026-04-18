@@ -31,4 +31,3 @@ services:
       - client_node_modules:/opt/client/node_modules
     ports:
       - 3001:3001
-      - 35729:35729

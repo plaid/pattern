@@ -1,11 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Callout } from 'plaid-threads/Callout';
-import { IconButton } from 'plaid-threads/IconButton';
-import { CloseS2 } from 'plaid-threads/Icons/CloseS2';
+import { Callout } from './ui/Callout.tsx';
+import { IconButton } from './ui/IconButton.tsx';
+import { CloseIcon } from './ui/icons.tsx';
 
 import useErrors from '../services/errors.tsx';
-
-//  Allows user to input their personal assets such as a house or car.
 
 export default function ErrorMessage() {
   const [show, setShow] = useState(false);
@@ -44,7 +42,7 @@ export default function ErrorMessage() {
               setShow(false);
               resetError();
             }}
-            icon={<CloseS2 />}
+            icon={<CloseIcon />}
           />
           <div>
             <strong>Connection Error:</strong> {error.code}

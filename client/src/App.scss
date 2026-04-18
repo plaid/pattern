@@ -1,8 +1,19 @@
-$threads-font-path: 'plaid-threads/fonts';
-@import 'plaid-threads/scss/typography';
-@import 'plaid-threads/scss/variables';
+$white: #ffffff;
+$black100: #fafafa;
+$black200: #f6f6f6;
+$black400: #dcdcdc;
+$black600: #949494;
+$black1000: #111111;
+$red800: #f44e66;
+$blue600: #63daff;
 
+$unit: 0.8rem;
 $border: 1px solid $black200;
+$border-radius: 0.2rem;
+$shadow-xsmall: 0 0.2rem 0.4rem 0 rgba(17, 17, 17, 0.08);
+$shadow-medium: 0 0.8rem 1.6rem 0 rgba(17, 17, 17, 0.08);
+$font-stack-monospace: Inconsolata, Consolas, Courier, monospace;
+
 /*
 
 
@@ -99,9 +110,9 @@ Content at the top of the view
 }
 
 .everpresent-content__subheading {
-  font-size: 3 * $unit;
+  font-size: 1.1rem;
   font-weight: 300;
-  line-height: 4 * $unit;
+  line-height: 1.6;
   margin-bottom: 0;
 }
 
@@ -128,80 +139,6 @@ Landing overview
 
 .btnWithMargin {
   margin-left: 2 * $unit;
-}
-
-/*
-
-Modal
-
-*/
-
-// Fix modal overlay transparency issues
-// Target both ReactModal default classes and plaid-threads custom classes
-.ReactModal__Overlay,
-[class*="modalPortalOverlay"] {
-  background-color: rgba(0, 0, 0, 0.6) !important;
-  z-index: 1000 !important;
-  position: fixed !important;
-  top: 0 !important;
-  left: 0 !important;
-  right: 0 !important;
-  bottom: 0 !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-}
-
-.ReactModal__Content,
-[class*="modalPortalContent"] {
-  background: $white !important;
-  border: none !important;
-  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.15) !important;
-  border-radius: $border-radius !important;
-  max-width: 500px;
-  width: 90%;
-  max-height: 90vh;
-  overflow: auto;
-  z-index: 1001 !important;
-  position: relative !important;
-  inset: auto !important;
-  transform: none !important;
-  padding: 0 !important;
-}
-
-// Additional override for modal portal container
-[class*="modalPortal"] {
-  z-index: 2000 !important;
-}
-
-// Make input fields visible and styled properly
-input[type="text"],
-input[type="password"],
-input[type="email"],
-textarea {
-  background: $white !important;
-  border: 1px solid $black400 !important;
-  border-radius: 4px !important;
-  padding: 12px !important;
-  font-size: 16px !important;
-  width: 100% !important;
-  box-sizing: border-box !important;
-  transition: border-color 0.2s !important;
-
-  &:focus {
-    outline: none !important;
-    border-color: $blue600 !important;
-    box-shadow: 0 0 0 3px rgba(0, 102, 255, 0.1) !important;
-  }
-
-  &::placeholder {
-    color: $black600 !important;
-    opacity: 0.7 !important;
-  }
-}
-
-input::placeholder {
-  line-height: 1.5;
 }
 
 /*
@@ -344,11 +281,11 @@ Add User Form
 }
 
 .add-user__heading {
-  font-size: 2 * $unit;
+  font-size: 1rem;
 }
 
 .add-user__value {
-  font-size: 1.4rem;
+  font-size: 0.875rem;
 }
 
 .add-user__column-2 {
@@ -448,10 +385,8 @@ net worth
 }
 
 .netWorthText {
-  font-family: $font-stack-monospace;
-  font-size: 2 * $unit;
-  letter-spacing: 1px;
-  text-transform: uppercase;
+  font-size: 1rem;
+  color: $black600;
 }
 
 .netWorthContainer {
@@ -530,10 +465,8 @@ Monthly Spending
 
 .monthlySpendingText {
   margin-bottom: 4 * $unit;
-  font-family: $font-stack-monospace;
-  font-size: 2 * $unit;
-  letter-spacing: 1px;
-  text-transform: uppercase;
+  font-size: 1rem;
+  color: $black600;
 }
 .recharts-wrapper {
   margin: 0 2 * $unit;

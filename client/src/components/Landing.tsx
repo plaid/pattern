@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Button } from 'plaid-threads/Button';
+import { Button } from './ui/Button.tsx';
 import { useNavigate } from 'react-router-dom';
 
 import useCurrentUser from '../services/currentUser.tsx';
@@ -34,13 +34,11 @@ export default function Landing() {
       </div>
       <div className="btnsContainer" style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
         <Login />
-        <Button onClick={toggleForm} centered inline>
+        <Button onClick={toggleForm}>
           Create Account
         </Button>
         {userState.currentUser.username != null && (
           <Button
-            centered
-            inline
             onClick={returnToCurrentUser}
           >
             Return to Current User

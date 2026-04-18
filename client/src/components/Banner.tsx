@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button } from 'plaid-threads/Button';
+import { Button } from './ui/Button.tsx';
 
 const PLAID_ENV = import.meta.env.VITE_PLAID_ENV;
 
@@ -25,8 +25,6 @@ const Banner = (props: Props) => {
           href="https://docs.google.com/forms/d/e/1FAIpQLSfF4Xev5w9RPGr7fNkSHjmtE_dj0ELuHRbDexQ7Tg2xoo6tQg/viewform"
           target="_blank"
           rel="noopener noreferrer"
-          inline
-          centered
           secondary
         >
           Provide feedback on this Plaid Pattern sample app

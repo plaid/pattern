@@ -1,12 +1,7 @@
-mkfile_path := $(abspath $(lastword $(MAKEFILE_LIST)))
-current_dir := $(notdir $(patsubst %/,%,$(dir $(mkfile_path))))
 envfile := ./.env
-clear_db_after_schema_change := database/last-cleared.dummy
-db_schema := database/init/*
 
-.PHONY: help start start-no-webhooks debug sql logs stop clear-db
+.PHONY: help start stop logs db-create db-reset sql server client ngrok
 
-# help target adapted from https://gist.github.com/prwhite/8168133#gistcomment-2278355
 TARGET_MAX_CHAR_NUM=20
 
 ## Show help
@@ -26,50 +21,48 @@ help:
 	} \
 	{ lastLine = $$0 }' $(MAKEFILE_LIST)
 
-## Start the services
-start: $(envfile) $(clear_db_after_schema_change)
-	@echo "Pulling images from Docker Hub (this may take a few minutes)"
-	docker compose pull
-	@echo "Starting Docker services"
-	docker compose up --build --detach
-	./wait-for-client.sh
+## Install dependencies for client and server
+install: $(envfile)
+	cd client && npm install --registry https://registry.npmjs.org
+	cd server && npm install --registry https://registry.npmjs.org
 
-## Start the services without webhooks
-start-no-webhooks: $(envfile) $(clear_db_after_schema_change)
-	@echo "Pulling images from Docker Hub (this may take a few minutes)"
-	docker compose pull
-	@echo "Starting Docker services"
-	docker compose up --detach client
-	./wait-for-client.sh
+## Initialize the database (create tables)
+db-create:
+	psql -U postgres -f database/init/create.sql
 
-## Start the services in debug mode
-debug: $(envfile) $(clear_db_after_schema_change)
-	@echo "Starting services (this may take a few minutes if there are any changes)"
-	docker compose -f docker-compose.yml -f docker-compose.debug.yml up --build --detach
-	./wait-for-client.sh
+## Drop and recreate the database
+db-reset:
+	psql -U postgres -c "DROP SCHEMA public CASCADE; CREATE SCHEMA public;"
+	$(MAKE) db-create
 
-## Start an interactive psql session (services must running)
+## Start an interactive psql session
 sql:
-	docker compose exec db psql -U postgres
+	psql -U postgres
 
-## Show the service logs (services must be running)
-logs:
-	docker compose logs --follow
+## Start the server (port 5001)
+server: $(envfile)
+	cd server && npm start
 
-## Stop the services
+## Start the client (port 3001)
+client: $(envfile)
+	cd client && npm start
+
+## Start ngrok tunnel to expose server for webhooks
+ngrok:
+	ngrok http 5001
+
+## Start client and server (no webhooks)
+start: $(envfile)
+	@echo "Starting server and client..."
+	@cd server && npm start &
+	@cd client && npm start
+
+## Stop background processes
 stop:
-	docker compose down
-	docker volume rm $(current_dir)_{client,server}_node_modules 2>/dev/null || true
-
-## Clear the sandbox and production databases
-clear-db: stop
-	docker volume rm $(current_dir)_pg_{sandbox,production}_data 2>/dev/null || true
+	@-pkill -f "node index.js" 2>/dev/null || true
+	@-pkill -f "vite" 2>/dev/null || true
+	@echo "Stopped."
 
 $(envfile):
-	@echo "Error: .env file does not exist! See the README for instructions."
+	@echo "Error: .env file does not exist! Copy .env.template to .env and fill in your keys."
 	@exit 1
-
-# Remove local DBs if the DB schema has changed
-$(clear_db_after_schema_change): $(db_schema)
-	@$(MAKE) clear-db
-	@touch $(clear_db_after_schema_change)

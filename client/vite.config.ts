@@ -4,12 +4,13 @@ import tailwindcss from '@tailwindcss/vite';
 
 export default defineConfig({
   plugins: [react(), tailwindcss()],
+  envDir: '..',
   server: {
     host: true,
     port: 3001,
     proxy: {
       '/': {
-        target: 'http://server:5001',
+        target: 'http://localhost:5001',
         changeOrigin: true,
         bypass(req) {
           // Serve SPA for browser navigation requests

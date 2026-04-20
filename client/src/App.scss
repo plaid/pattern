@@ -88,14 +88,14 @@ shared styles
   background: $red800;
 }
 
-.toast__body {
+.Toastify__toast-body {
   color: $black1000;
   font-size: 1rem;
   white-space: pre-line;
   padding-left: $unit;
 }
 
-.Toastify__toast--error > .toast__body {
+.Toastify__toast--error > .Toastify__toast-body {
   color: $white;
 }
 

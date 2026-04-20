@@ -1,7 +1,7 @@
 import React from 'react';
 import { Route, Routes } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.min.css';
+import 'react-toastify/dist/ReactToastify.css';
 
 import Sockets from './components/Sockets.jsx';
 import OAuthLink from './components/OAuthLink.tsx';
@@ -27,7 +27,6 @@ function App() {
         autoClose={8000}
         draggable={false}
         toastClassName="box toast__background"
-        bodyClassName="toast__body"
         hideProgressBar={true}
       />
       <InstitutionsProvider>

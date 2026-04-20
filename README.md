@@ -142,7 +142,14 @@ By default, Plaid Link will let a user link to the same institution multiple tim
 
 Plaid uses [webhooks][transactions-webhooks] to notify you whenever there are changes in the transactions associated with an item. This allows you to make a call to Plaid's transactions sync endpoint only when changes have occurred, rather than polling for them. For an example of this, see the [transactions webhook handler][transactions-handler]. This sample app also demonstrates the use of the sandboxItemResetLogin endpoint to test the webhook used to notify you when a user needs to update their login information at their financial institution.
 
-For webhooks to work, the server must be publicly accessible on the internet. For development purposes, this application uses [ngrok](https://ngrok.com/) to accomplish that.
+For webhooks to work, the server must be publicly accessible on the internet. For development purposes, this application uses [ngrok](https://ngrok.com/) to accomplish that. Therefore, if the server is re-started, any items created in this sample app previous to the current session will have a different webhook address attached to it. As a result, webhooks are only valid during the session in which an item is created; for previously created items, no transactions webhooks will be received, and no webhook will be received from the call to sandboxItemResetLogin. In addition, ngrok webhook addresses are only valid for 2 hours. If you are not receiving webhooks in this sample application, restart your server to reset the ngrok webhook address.
+
+**Important:** When your ngrok session expires or when you restart ngrok (which creates a new URL), any Items that were previously linked will stop receiving webhooks because they're still registered with the old ngrok URL. To receive webhooks for these Items, you'll need to:
+
+1. Delete the old Items from the app
+2. Re-link them using Plaid Link
+
+This will register the Items with the new webhook URL. You can check if webhooks are being received by visiting [localhost:4040](http://localhost:4040/inspect/http).
 
 ### Creating and updating transactions to reflect new, modified and removed transactions.
 
@@ -221,6 +228,31 @@ For more information, see the docs page on [storing Plaid API identifiers][plaid
 The `*.sql` scripts in the `database/init` directory define the schema. Run `npm run db:create` to initialize, or `npm run db:reset` to drop and recreate.
 
 See the [create.sql][create-script] initialization script to see some brief notes for and the schemas of the tables used in this application.
+While most of them are fairly self-explanatory, we've added some additional notes for some of the tables below.
+
+### link_events_table
+
+This table stores responses from the Plaid API for client requests to the Plaid Link client.
+
+User flows that this table captures (based on the client implementation, which hooks into the `onExit` and `onSuccess` Link callbacks):
+
+-   User opens Link, closes without trying to connect an account.
+    This will have type `exit` but no `request_id`, `error_type`, or `error_code`.
+-   User tries to connect an account, fails, and closes link.
+    This will have type `exit` and will have a `request_id`, `error_type`, and `error_code`.
+-   User successfully connects an account.
+    This will have type `success` but no `request_id`, error_type, or `error_code`.
+
+### plaid_api_events_table
+
+This table stores responses from the Plaid API for server requests to the Plaid client.
+The server stores the responses for all of the requests it makes to the Plaid API.
+Where applicable, it also maps the response to an item and user.
+If the request returned an error, the `error_type` and `error_code` columns will be populated.
+
+## Learn More
+
+-   [PostgreSQL documentation][postgres-docs]
 
 ### Testing with OAuth redirect URIs (optional)
 
@@ -275,6 +307,12 @@ export default defineConfig({
 ```
 
 After starting the client, you can view it at https://localhost:3001.
+
+#### Windows instructions for using https with localhost
+
+If you are on a Windows machine, follow the same `vite.config.ts` changes described in the MacOS section above, but skip the mkcert steps. Vite will use a self-signed certificate.
+
+After starting the client, you can view it at https://localhost:3001. Your browser will alert you with an invalid certificate warning; click on "advanced" and proceed.
 
 ## Troubleshooting
 

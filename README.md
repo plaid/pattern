@@ -23,7 +23,7 @@ Plaid Pattern apps are provided for illustrative purposes and are not meant to b
 -   [Node.js](https://nodejs.org/) v20 or higher
 -   [PostgreSQL](https://www.postgresql.org/) v16 or higher
 -   [Plaid API keys][plaid-keys] - [sign up][plaid-signup] for a free Sandbox account if you don't already have one
--   (Optional) [ngrok](https://ngrok.com/) for webhook testing
+-   [ngrok](https://ngrok.com/) to expose the server for Plaid webhooks — [sign up](https://dashboard.ngrok.com/signup) for a free account to get an authtoken
 
 ### Installing prerequisites
 
@@ -31,11 +31,13 @@ Plaid Pattern apps are provided for illustrative purposes and are not meant to b
 ```shell
 brew install node postgresql@16
 brew services start postgresql@16
+brew install ngrok/ngrok/ngrok
 ```
 
 **Windows** (with [Chocolatey](https://chocolatey.org/)):
 ```shell
 choco install nodejs postgresql16
+choco install ngrok
 ```
 Or download the installers directly from the links above.
 
@@ -43,6 +45,7 @@ Or download the installers directly from the links above.
 ```shell
 sudo apt update && sudo apt install -y nodejs npm postgresql
 sudo systemctl start postgresql
+snap install ngrok  # or download from https://ngrok.com/download
 ```
 
 ## Getting Started
@@ -64,26 +67,26 @@ sudo systemctl start postgresql
     ```shell
     npm run install:all
     ```
-1. Initialize the database.
+1. Set up the database. Create a `postgres` superuser if one doesn't exist, then initialize the tables.
     ```shell
+    createuser -s postgres  # skip if the postgres role already exists
     npm run db:create
+    ```
+    On Windows/Linux, if your PostgreSQL requires a password, set one for the `postgres` role and update `POSTGRES_PASSWORD` in `.env` to match:
+    ```shell
+    psql -U postgres -c "ALTER USER postgres PASSWORD 'password';"
+    ```
+1. Configure ngrok with your authtoken (one-time setup):
+    ```shell
+    ngrok config add-authtoken <your-authtoken>
     ```
 1. Start the app. Run each command in a separate terminal:
     ```shell
-    npm run server   # starts the backend on port 5001
-    npm run client   # starts the frontend on port 3001
+    ngrok http 5001   # exposes the server for Plaid webhooks
+    npm run server    # starts the backend on port 5001
+    npm run client    # starts the frontend on port 3001
     ```
 1. Open http://localhost:3001 in a web browser.
-
-### Webhooks with ngrok (optional)
-
-To receive Plaid webhooks during development, expose your server with ngrok:
-
-```shell
-ngrok http 5001
-```
-
-Then use the ngrok URL as your webhook endpoint in the Plaid Dashboard.
 
 ## Available Scripts
 
@@ -192,7 +195,7 @@ Then open `chrome://inspect` in Chrome, or use the VS Code debugger to attach to
 
 The database is a [PostgreSQL][postgres] instance running locally.
 
-Connect using `make sql` or any PostgreSQL client. Default credentials are in `.env` (user: `postgres`, password: `password`).
+Connect using `psql -U postgres` or any PostgreSQL client. Default credentials are in `.env` (user: `postgres`, password: `password`).
 
 ## Key Concepts
 
@@ -215,7 +218,7 @@ For more information, see the docs page on [storing Plaid API identifiers][plaid
 
 ## Tables
 
-The `*.sql` scripts in the `database/init` directory define the schema. Run `make db-create` to initialize, or `make db-reset` to drop and recreate.
+The `*.sql` scripts in the `database/init` directory define the schema. Run `npm run db:create` to initialize, or `npm run db:reset` to drop and recreate.
 
 See the [create.sql][create-script] initialization script to see some brief notes for and the schemas of the tables used in this application.
 

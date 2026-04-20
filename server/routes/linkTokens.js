@@ -37,13 +37,13 @@ router.post(
       // Fetch ngrok tunnel URL with better error handling
       let response;
       try {
-        response = await fetch('http://ngrok:4040/api/tunnels');
+        response = await fetch('http://localhost:4040/api/tunnels');
         if (!response.ok) {
           throw new Error(`ngrok API returned status ${response.status}`);
         }
       } catch (fetchError) {
         console.error('Failed to connect to ngrok:', fetchError.message);
-        const errorMsg = 'Unable to connect to ngrok. Please ensure you have added your ngrok authtoken to ngrok/ngrok.yml. Get your authtoken at https://dashboard.ngrok.com/get-started/your-authtoken.\n\nFor more details, check ngrok logs using "make logs" or Docker Desktop.';
+        const errorMsg = 'Unable to connect to ngrok. Make sure ngrok is running (npm run ngrok or ngrok http 5001). Get your authtoken at https://dashboard.ngrok.com/get-started/your-authtoken.';
         return res.status(500).json({
           error: 'ngrok_connection_failed',
           error_message: errorMsg
@@ -51,13 +51,13 @@ router.post(
       }
 
       const { tunnels } = await response.json();
-      const httpsTunnel = tunnels.find(t => t.proto === 'https');
+      const tunnel = tunnels.find(t => t.proto === 'https') || tunnels[0];
 
-      if (!httpsTunnel) {
-        console.error('No HTTPS tunnel found in ngrok');
+      if (!tunnel) {
+        console.error('No ngrok tunnel found');
         return res.status(500).json({
           error: 'ngrok_tunnel_not_found',
-          error_message: 'ngrok is running but no HTTPS tunnel was found.\n\nCheck ngrok logs for more details using "make logs" or Docker Desktop.'
+          error_message: 'ngrok is running but no tunnel was found. Check the ngrok dashboard at http://localhost:4040 for details.'
         });
       }
 
@@ -70,7 +70,7 @@ router.post(
         products,
         country_codes: ['US'],
         language: 'en',
-        webhook: httpsTunnel.public_url + '/services/webhook',
+        webhook: tunnel.public_url + '/services/webhook',
         access_token: accessToken,
       };
       // If user has entered a redirect uri in the .env file

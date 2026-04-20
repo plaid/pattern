@@ -1,6 +1,6 @@
 envfile := ./.env
 
-.PHONY: help start stop logs db-create db-reset sql server client ngrok
+.PHONY: help install db-create db-reset sql server client ngrok
 
 TARGET_MAX_CHAR_NUM=20
 
@@ -23,8 +23,8 @@ help:
 
 ## Install dependencies for client and server
 install: $(envfile)
-	cd client && npm install --registry https://registry.npmjs.org
-	cd server && npm install --registry https://registry.npmjs.org
+	cd client && npm install
+	cd server && npm install
 
 ## Initialize the database (create tables)
 db-create:
@@ -50,18 +50,6 @@ client: $(envfile)
 ## Start ngrok tunnel to expose server for webhooks
 ngrok:
 	ngrok http 5001
-
-## Start client and server (no webhooks)
-start: $(envfile)
-	@echo "Starting server and client..."
-	@cd server && npm start &
-	@cd client && npm start
-
-## Stop background processes
-stop:
-	@-pkill -f "node index.js" 2>/dev/null || true
-	@-pkill -f "vite" 2>/dev/null || true
-	@echo "Stopped."
 
 $(envfile):
 	@echo "Error: .env file does not exist! Copy .env.template to .env and fill in your keys."

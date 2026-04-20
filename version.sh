@@ -2,7 +2,7 @@
 VALID_SEMVER='[0-9]*\.[0-9]*\.[0-9]*'
 
 # get current version
-current_version=$(grep -m 1 -o ${VALID_SEMVER} package.json)
+current_version=$(node -p "require('./package.json').version")
 echo "Current version: ${current_version}"
 
 # get new version from user input

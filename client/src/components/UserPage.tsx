@@ -166,6 +166,13 @@ const UserPage = () => {
           (any password). The "Refresh Transactions" button will trigger simulated transaction updates.
           See the README for more information about testing with realistic transaction data.
         </div>
+        <div style={{ marginTop: '8px' }}>
+          View incoming webhooks at{' '}
+          <a href="http://localhost:4040" target="_blank" rel="noopener noreferrer">
+            localhost:4040
+          </a>
+          .
+        </div>
       </Callout>
 
       {numOfItems === 0 && <ErrorMessage />}

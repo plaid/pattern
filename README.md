@@ -25,6 +25,8 @@ Plaid Pattern apps are provided for illustrative purposes and are not meant to b
 -   [Plaid API keys][plaid-keys] - [sign up][plaid-signup] for a free Sandbox account if you don't already have one
 -   [ngrok](https://ngrok.com/) to expose the server for Plaid webhooks — [sign up](https://dashboard.ngrok.com/signup) for a free account to get an authtoken
 
+**Windows users:** We recommend using [WSL][wsl] (Windows Subsystem for Linux) and following the Linux instructions below.
+
 ### Installing prerequisites
 
 **macOS** (with [Homebrew](https://brew.sh/)):
@@ -34,14 +36,7 @@ brew services start postgresql@16
 brew install ngrok/ngrok/ngrok
 ```
 
-**Windows** (with [Chocolatey](https://chocolatey.org/)):
-```shell
-choco install nodejs postgresql16
-choco install ngrok
-```
-Or download the installers directly from the links above.
-
-**Linux (Debian/Ubuntu)**:
+**Linux / WSL (Debian/Ubuntu)**:
 ```shell
 sudo apt update && sudo apt install -y nodejs npm postgresql
 sudo systemctl start postgresql
@@ -49,6 +44,8 @@ snap install ngrok  # or download from https://ngrok.com/download
 ```
 
 ## Getting Started
+
+Note: We recommend running these commands in a unix terminal. Windows users can use a [WSL][wsl] terminal.
 
 1. Clone the repo.
     ```shell
@@ -59,7 +56,6 @@ snap install ngrok  # or download from https://ngrok.com/download
     ```shell
     cp .env.template .env
     ```
-    On Windows Command Prompt, use `copy .env.template .env` instead.
 
 1. Update the `.env` file with your [Plaid API keys][plaid-keys].
 
@@ -72,7 +68,7 @@ snap install ngrok  # or download from https://ngrok.com/download
     createuser -s postgres  # skip if the postgres role already exists
     npm run db:create
     ```
-    On Windows/Linux, if your PostgreSQL requires a password, set one for the `postgres` role and update `POSTGRES_PASSWORD` in `.env` to match:
+    On Linux/WSL, if your PostgreSQL requires a password, set one for the `postgres` role and update `POSTGRES_PASSWORD` in `.env` to match:
     ```shell
     psql -U postgres -c "ALTER USER postgres PASSWORD 'password';"
     ```
@@ -366,3 +362,4 @@ Plaid Pattern is a demo app that is intended to be used only for the purpose of 
 [react]: http://reactjs.org/
 [server-readme]: #plaid-pattern---server
 [troubleshooting]: docs/troubleshooting.md
+[wsl]: https://learn.microsoft.com/en-us/windows/wsl/install

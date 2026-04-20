@@ -20,13 +20,35 @@ Plaid Pattern apps are provided for illustrative purposes and are not meant to b
 
 ## Requirements
 
--   [Docker][docker] Version 2.0.0.3 (31259) or higher, installed, running, and signed in. If you're on **Windows**, check out [this link][wsl] to get set up in WSL.
+-   [Node.js](https://nodejs.org/) v20 or higher
+-   [PostgreSQL](https://www.postgresql.org/) v16 or higher
 -   [Plaid API keys][plaid-keys] - [sign up][plaid-signup] for a free Sandbox account if you don't already have one
--   [Sign up for a free ngrok account](https://dashboard.ngrok.com/signup) to obtain an authtoken
+-   [ngrok](https://ngrok.com/) to expose the server for Plaid webhooks — [sign up](https://dashboard.ngrok.com/signup) for a free account to get an authtoken
+
+### Installing prerequisites
+
+**macOS** (with [Homebrew](https://brew.sh/)):
+```shell
+brew install node postgresql@16
+brew services start postgresql@16
+brew install ngrok/ngrok/ngrok
+```
+
+**Windows** (with [Chocolatey](https://chocolatey.org/)):
+```shell
+choco install nodejs postgresql16
+choco install ngrok
+```
+Or download the installers directly from the links above.
+
+**Linux (Debian/Ubuntu)**:
+```shell
+sudo apt update && sudo apt install -y nodejs npm postgresql
+sudo systemctl start postgresql
+snap install ngrok  # or download from https://ngrok.com/download
+```
 
 ## Getting Started
-
-Note: We recommend running these commands in a unix terminal. Windows users can use a [WSL][wsl] terminal to access libraries like `make`.
 
 1. Clone the repo.
     ```shell
@@ -37,44 +59,56 @@ Note: We recommend running these commands in a unix terminal. Windows users can 
     ```shell
     cp .env.template .env
     ```
+    On Windows Command Prompt, use `copy .env.template .env` instead.
+
 1. Update the `.env` file with your [Plaid API keys][plaid-keys].
 
-1. Update the `ngrok.yml` file in the ngrok folder with your ngrok authtoken.
-
-1. Start the services. The first run may take a few minutes as Docker images are pulled/built for the first time.
+1. Install dependencies.
     ```shell
-    make start
+    npm run install:all
+    ```
+1. Set up the database. Create a `postgres` superuser if one doesn't exist, then initialize the tables.
+    ```shell
+    createuser -s postgres  # skip if the postgres role already exists
+    npm run db:create
+    ```
+    On Windows/Linux, if your PostgreSQL requires a password, set one for the `postgres` role and update `POSTGRES_PASSWORD` in `.env` to match:
+    ```shell
+    psql -U postgres -c "ALTER USER postgres PASSWORD 'password';"
+    ```
+1. Configure ngrok with your authtoken (one-time setup):
+    ```shell
+    ngrok config add-authtoken <your-authtoken>
+    ```
+1. Start the app. Run each command in a separate terminal:
+    ```shell
+    ngrok http 5001   # exposes the server for Plaid webhooks
+    npm run server    # starts the backend on port 5001
+    npm run client    # starts the frontend on port 3001
     ```
 1. Open http://localhost:3001 in a web browser.
-1. View the logs
-    ```shell
-    make logs
-    ```
-1. When you're finished, stop the services.
-    ```shell
-    make stop
-    ```
 
-## Additional Commands
+## Available Scripts
 
-All available commands can be seen by calling `make help`.
+| Command | Description |
+|---------|-------------|
+| `npm run install:all` | Install client and server dependencies |
+| `npm run server` | Start the backend server |
+| `npm run client` | Start the frontend dev server |
+| `npm run db:create` | Initialize the database tables |
+| `npm run db:reset` | Drop and recreate all tables |
 
 ## Architecture
 
-As a modern full-stack application, Pattern consists of multiple services handling different segments of the stack:
+Pattern consists of multiple components:
 
--   [`client`][client-readme] runs a [React]-based single-page web frontend
+-   [`client`][client-readme] runs a [React]-based single-page web frontend on [Vite](https://vite.dev/)
 -   [`server`][server-readme] runs an application back-end server using [NodeJS] and [Express]
--   [`database`][database-readme] runs a [PostgreSQL][postgres] database
--   [`ngrok`][ngrok-readme] exposes a [ngrok] tunnel from your local machine to the Internet to receive webhooks
-
-We use [Docker Compose][docker-compose] to orchestrate these services. As such, each individual service has its own Dockerfile, which Docker Compose reads when bringing up the services.
-
-More information about the individual services is given below.
+-   [`database`][database-readme] uses a [PostgreSQL][postgres] database
 
 # Plaid Pattern - Client
 
-The Pattern web client is written in JavaScript using [React]. It presents a basic [Link][plaid-link] workflow to the user, including an implementation of [OAuth][plaid-oauth] as well as a demonstration of [Link update mode][plaid-link-update-mode]. The sample app presents a user's net worth, categorized spending as well as a simple dashboard displaying linked accounts and transactions. The app runs on port 3001 by default, although you can modify this in [docker-compose.yml](../docker-compose.yml).
+The Pattern web client is written in JavaScript using [React]. It presents a basic [Link][plaid-link] workflow to the user, including an implementation of [OAuth][plaid-oauth] as well as a demonstration of [Link update mode][plaid-link-update-mode]. The sample app presents a user's net worth, categorized spending as well as a simple dashboard displaying linked accounts and transactions. The app runs on port 3001 by default.
 
 ## Key concepts
 
@@ -108,7 +142,14 @@ By default, Plaid Link will let a user link to the same institution multiple tim
 
 Plaid uses [webhooks][transactions-webhooks] to notify you whenever there are changes in the transactions associated with an item. This allows you to make a call to Plaid's transactions sync endpoint only when changes have occurred, rather than polling for them. For an example of this, see the [transactions webhook handler][transactions-handler]. This sample app also demonstrates the use of the sandboxItemResetLogin endpoint to test the webhook used to notify you when a user needs to update their login information at their financial institution.
 
-For webhooks to work, the server must be publicly accessible on the internet. For development purposes, this application uses [ngrok][ngrok-readme] to accomplish that. Therefore, if the server is re-started, any items created in this sample app previous to the current session will have a different webhook address attached to it. As a result, webhooks are only valid during the session in which an item is created; for previously created items, no transactions webhooks will be received, and no webhook will be received from the call to sandboxItemResetLogin. In addition, ngrok webhook addresses are only valid for 2 hours. If you are not receiving webhooks in this sample application, restart your server to reset the ngrok webhook address.
+For webhooks to work, the server must be publicly accessible on the internet. For development purposes, this application uses [ngrok](https://ngrok.com/) to accomplish that. Therefore, if the server is re-started, any items created in this sample app previous to the current session will have a different webhook address attached to it. As a result, webhooks are only valid during the session in which an item is created; for previously created items, no transactions webhooks will be received, and no webhook will be received from the call to sandboxItemResetLogin. In addition, ngrok webhook addresses are only valid for 2 hours. If you are not receiving webhooks in this sample application, restart your server to reset the ngrok webhook address.
+
+**Important:** When your ngrok session expires or when you restart ngrok (which creates a new URL), any Items that were previously linked will stop receiving webhooks because they're still registered with the old ngrok URL. To receive webhooks for these Items, you'll need to:
+
+1. Delete the old Items from the app
+2. Re-link them using Plaid Link
+
+This will register the Items with the new webhook URL. You can check if webhooks are being received by visiting [localhost:4040](http://localhost:4040/inspect/http).
 
 ### Creating and updating transactions to reflect new, modified and removed transactions.
 
@@ -149,16 +190,19 @@ For more realistic testing, Plaid also provides persona-based test users: **`use
 
 ## Debugging
 
-The node debugging port (9229) is exposed locally on port 9229.
+You can debug the server using Node's built-in inspector:
 
-If you are using Visual Studio Code as your editor, you can use the `Docker: Attach to Server` launch configuration to interactively debug the server while it's running. See the [VS Code docs][vscode-debugging] for more information.
+```shell
+cd server && node --inspect index.js
+```
+
+Then open `chrome://inspect` in Chrome, or use the VS Code debugger to attach to the process.
 
 # Plaid Pattern - Database
 
-The database is a [PostgreSQL][postgres] instance running inside a Docker container.
+The database is a [PostgreSQL][postgres] instance running locally.
 
-Port 5432 is exposed to the Docker host, so you can connect to the DB using the tool of your choice.
-Username and password can be found in [docker-compose.yml][docker-compose].
+Connect using `psql -U postgres` or any PostgreSQL client. Default credentials are in `.env` (user: `postgres`, password: `password`).
 
 ## Key Concepts
 
@@ -181,10 +225,10 @@ For more information, see the docs page on [storing Plaid API identifiers][plaid
 
 ## Tables
 
-The `*.sql` scripts in the `init` directory are used to initialize the database if the data directory is empty (i.e. on first run, after manually clearing the db by running `make clear-db`, or after modifying the scripts in the `init` directory).
+The `*.sql` scripts in the `database/init` directory define the schema. Run `npm run db:create` to initialize, or `npm run db:reset` to drop and recreate.
 
 See the [create.sql][create-script] initialization script to see some brief notes for and the schemas of the tables used in this application.
-While most of them are fairly self-explanitory, we've added some additional notes for some of the tables below.
+While most of them are fairly self-explanatory, we've added some additional notes for some of the tables below.
 
 ### link_events_table
 
@@ -210,23 +254,6 @@ If the request returned an error, the `error_type` and `error_code` columns will
 
 -   [PostgreSQL documentation][postgres-docs]
 
-# Plaid Pattern - ngrok
-
-This demo includes [ngrok](https://ngrok.com/), a utility that creates a secure tunnel between your local machine and the outside world. We're using it here to expose the local webhooks endpoint to the internet.
-
-Browse to [localhost:4040](http://localhost:4040/inspect/http) to see the ngrok dashboard. This will show any traffic that gets routed through the ngrok URL.
-
-**Do NOT use ngrok in production!** It's only included here as a convenience for local development and is not meant to be a production-quality solution.
-
-Don’t want to use ngrok? As long as you serve the app with an endpoint that is publicly exposed, all the Plaid webhooks will work.
-
-**Important:** When your ngrok session expires or when you restart the Docker containers (which creates a new ngrok URL), any Items that were previously linked will stop receiving webhooks because they're still registered with the old ngrok URL. To receive webhooks for these Items, you'll need to:
-
-1. Delete the old Items from the app
-2. Re-link them using Plaid Link
-
-This will register the Items with the new webhook URL. You can check if webhooks are being received by visiting [localhost:4040](http://localhost:4040/inspect/http).
-
 ### Testing with OAuth redirect URIs (optional)
 
 > The sections below are optional: on desktop, OAuth will work without a redirect URI configured. However, using redirect URIs is recommended for best conversion on mobile web, and mandatory when using a Plaid mobile SDK. For more details, see the documentation on [redirect URIs on desktop and mobile web](https://plaid.com/docs/link/oauth/#desktop-web-mobile-web-react-or-webview).
@@ -236,11 +263,11 @@ To test with an OAuth redirect URI, in the .env file, set your `PLAID_SANDBOX_RE
 
 #### In Production
 
-If you want to test OAuth redirect URIs in Production, you need to use https and set `PLAID_PRODUCTION_REDIRECT_URI=https://localhost:3001/oauth-link` in `.env`. In order to run your localhost on https, you will need to create a self-signed certificate and add it to the client root folder. MacOS users can use the following instructions to do this. Note that self-signed certificates should be used for testing purposes only, never for actual deployments. Windows users can use [these instructions below](#windows-instructions-for-using-https-with-localhost).
+If you want to test OAuth redirect URIs in Production, you need to use https and set `PLAID_PRODUCTION_REDIRECT_URI=https://localhost:3001/oauth-link` in `.env`. In order to run your localhost on https, you will need to create a self-signed certificate and add it to the client root folder. MacOS users can use the following instructions to do this. Note that self-signed certificates should be used for testing purposes only, never for actual deployments.
 
 #### MacOS instructions for using https with localhost
 
-If you are using MacOS, in your terminal, change to the client folder:
+In your terminal, change to the client folder:
 
 ```bash
 cd client
@@ -279,55 +306,13 @@ export default defineConfig({
 });
 ```
 
-In the `Dockerfile` in the client folder, add these two lines before the `CMD` instruction:
-
-```
-COPY ["localhost-key.pem", "/opt/client"]
-COPY ["localhost.pem", "/opt/client"]
-```
-
-Finally, in the wait-for-client.sh file in the main pattern folder, replace this line on line 6
-
-```bash
-while [ "$(curl -s -o /dev/null -w "%{http_code}" -m 1 localhost:3001)" != "200" ]
-```
-
-with this line instead:
-
-```bash
-while [ "$(curl -s -o /dev/null -w "%{http_code}" -m 1 https://localhost:3001)" != "200" ]
-```
-
-After starting up the Pattern sample app, you can now view it at https://localhost:3001.
+After starting the client, you can view it at https://localhost:3001.
 
 #### Windows instructions for using https with localhost
 
 If you are on a Windows machine, follow the same `vite.config.ts` changes described in the MacOS section above, but skip the mkcert steps. Vite will use a self-signed certificate.
 
-Then, in the wait-for-client.sh file in the main pattern folder, replace this line on line 6
-
-```bash
-while [ "$(curl -s -o /dev/null -w "%{http_code}" -m 1 localhost:3001)" != "200" ]
-```
-
-with this line instead:
-
-```bash
-while [ "$(curl -s -o /dev/null -w "%{http_code}" -m 1 https://localhost:3001)" != "200" ]
-```
-
-After starting up the Pattern sample app, you can now view it at https://localhost:3001. Your browser will alert you with an invalid certificate warning; click on "advanced" and proceed.
-
-
-
-## Source
-
-This image is a copy of the Docker Hub image [wernight/ngrok](https://hub.docker.com/r/wernight/ngrok/dockerfile). We've copied it here to allow us to more closely version it and to make changes as needed.
-
-## Learn More
-
--   https://hub.docker.com/r/wernight/ngrok/dockerfile
--   https://github.com/wernight/docker-ngrok/tree/202c4692cbf1bbfd5059b6ac56bece42e90bfb82
+After starting the client, you can view it at https://localhost:3001. Your browser will alert you with an invalid certificate warning; click on "advanced" and proceed.
 
 ## Troubleshooting
 
@@ -345,7 +330,6 @@ See [`docs/troubleshooting.md`][troubleshooting].
 Plaid Pattern is a demo app that is intended to be used only for the purpose of demonstrating how you can integrate with Plaid. You are solely responsible for ensuring the correctness, legality, security, privacy, and compliance of your own app and Plaid integration. The Pattern code is licensed under the [MIT License](LICENSE) and is provided as-is and without warranty of any kind. Plaid Pattern is provided for demonstration purposes only and is not intended for use in production environments.
 
 [create-script]: database/init/create.sql
-[docker-compose]: ./docker-compose.yml
 [plaid-docs-api-identifiers]: https://plaid.com/docs/#storing-plaid-api-identifiers
 [plaid-new-support-ticket]: https://dashboard.plaid.com/support/new
 [postgres]: https://www.postgresql.org/
@@ -357,7 +341,6 @@ Plaid Pattern is a demo app that is intended to be used only for the purpose of 
 [database-readme]: #plaid-pattern---database
 [expressjs]: http://expressjs.com/
 [items-routes]: server/routes/items.js
-[ngrok-readme]: #plaid-pattern---ngrok
 [node-pg]: https://github.com/brianc/node-postgres
 [nodejs]: https://nodejs.org/en/
 [plaid-node]: https://github.com/plaid/plaid-node
@@ -368,10 +351,7 @@ Plaid Pattern is a demo app that is intended to be used only for the purpose of 
 [vscode-debugging]: https://code.visualstudio.com/docs/editor/debugging
 [client-img]: docs/pattern_screenshot.jpg
 [client-readme]: #plaid-pattern---client
-[docker]: https://docs.docker.com/
-[docker-compose]: https://docs.docker.com/compose/
 [express]: https://expressjs.com/
-[ngrok]: https://ngrok.com/
 [nodejs]: https://nodejs.org/en/
 [plaid]: https://plaid.com
 [plaid-dashboard]: https://dashboard.plaid.com/team/api
@@ -386,4 +366,3 @@ Plaid Pattern is a demo app that is intended to be used only for the purpose of 
 [react]: http://reactjs.org/
 [server-readme]: #plaid-pattern---server
 [troubleshooting]: docs/troubleshooting.md
-[wsl]: https://nickjanetakis.com/blog/setting-up-docker-for-windows-and-wsl-to-work-flawlessly

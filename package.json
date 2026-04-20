@@ -1,0 +1,13 @@
+{
+  "name": "plaid-pattern",
+  "version": "1.0.7",
+  "private": true,
+  "description": "Plaid Pattern - Personal Finance Manager sample app",
+  "scripts": {
+    "install:all": "npm install --prefix client && npm install --prefix server",
+    "client": "npm start --prefix client",
+    "server": "npm start --prefix server",
+    "db:create": "psql -U postgres -f database/init/create.sql",
+    "db:reset": "psql -U postgres -c \"DROP SCHEMA public CASCADE; CREATE SCHEMA public;\" && npm run db:create"
+  }
+}

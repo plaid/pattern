@@ -1,5 +1,0 @@
-# Fill this in with your authtoken from https://dashboard.ngrok.com/get-started/your-authtoken
-version: 3
-agent:
-  authtoken: 
-  web_addr: 0.0.0.0:4040

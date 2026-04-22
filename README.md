@@ -63,7 +63,7 @@ Note: We recommend running these commands in a unix terminal. Windows users can 
     ```shell
     npm run install:all
     ```
-1. Set up the database. Create a `postgres` superuser if one doesn't exist, then initialize the tables.
+1. Set up the database. Create a `postgres` superuser if one doesn't exist, then create and initialize the `plaid_pattern` database.
     ```shell
     createuser -s postgres  # skip if the postgres role already exists
     npm run db:create
@@ -198,7 +198,7 @@ Then open `chrome://inspect` in Chrome, or use the VS Code debugger to attach to
 
 The database is a [PostgreSQL][postgres] instance running locally.
 
-Connect using `psql -U postgres` or any PostgreSQL client. Default credentials are in `.env` (user: `postgres`, password: `password`).
+Connect using `psql -U postgres -d plaid_pattern` or any PostgreSQL client. Default credentials are in `.env` (user: `postgres`, password: `password`).
 
 ## Key Concepts
 

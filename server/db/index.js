@@ -20,6 +20,7 @@ const {
 const db = new Pool({
   host: DB_HOST_NAME,
   port: DB_PORT,
+  database: 'plaid_pattern',
   user: POSTGRES_USER,
   password: POSTGRES_PASSWORD,
   max: 5,

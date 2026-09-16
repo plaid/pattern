@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from 'react';
 
 interface Props {
   callback: () => void;
-  ignoreRef: React.RefObject<HTMLDivElement>;
+  ignoreRef: React.RefObject<HTMLDivElement | null>;
 }
 
 export default function useOnClickOutside(props: Props) {

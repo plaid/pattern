@@ -5,7 +5,6 @@
     "allowJs": true,
     "allowImportingTsExtensions": true,
     "skipLibCheck": true,
-    "baseUrl": "./",
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "strict": true,

@@ -19,7 +19,7 @@ export function MoreDetails(props: Props) {
   const [menuShown, setmenuShown] = useState(false);
   const [token, setToken] = useState('');
   const refToButton = useRef<HTMLDivElement>(null);
-  const refToMenu: React.RefObject<HTMLDivElement> = useOnClickOutside({
+  const refToMenu: React.RefObject<HTMLDivElement | null> = useOnClickOutside({
     callback: () => {
       setmenuShown(false);
     },

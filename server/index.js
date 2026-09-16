@@ -77,7 +77,7 @@ app.use('/services', serviceRouter);
 app.use('/link-event', linkEventsRouter);
 app.use('/link-token', linkTokensRouter);
 app.use('/assets', assetsRouter);
-app.use('/*splat', unhandledRouter);
+app.use('/{*splat}', unhandledRouter);
 
 // Error handling has to sit at the bottom of the stack.
 // https://github.com/expressjs/express/issues/2718

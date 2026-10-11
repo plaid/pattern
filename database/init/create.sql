@@ -122,14 +122,14 @@ CREATE TABLE accounts_table
   item_id integer REFERENCES items_table(id) ON DELETE CASCADE,
   plaid_account_id text UNIQUE NOT NULL,
   name text NOT NULL,
-  mask text NOT NULL,
+  mask text,
   official_name text,
   current_balance numeric(28,10),
   available_balance numeric(28,10),
   iso_currency_code text,
   unofficial_currency_code text,
   type text NOT NULL,
-  subtype text NOT NULL,
+  subtype text,
   created_at timestamptz default now(),
   updated_at timestamptz default now()
 );

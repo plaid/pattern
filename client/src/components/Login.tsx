@@ -18,9 +18,7 @@ const Login = () => {
 
   return (
     <>
-      <Button onClick={() => setShow(!show)}>
-        Login
-      </Button>
+      <Button onClick={() => setShow(!show)}>Login</Button>
       {show && (
         <Modal isOpen={show} onRequestClose={() => setShow(false)}>
           <ModalBody

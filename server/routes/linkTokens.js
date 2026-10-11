@@ -8,11 +8,8 @@ const express = require('express');
 const plaid = require('../plaid');
 // Using native fetch (Node 18+)
 const { retrieveItemById } = require('../db/queries');
-const {
-  PLAID_SANDBOX_REDIRECT_URI,
-  PLAID_PRODUCTION_REDIRECT_URI,
-  PLAID_ENV,
-} = process.env;
+const { PLAID_SANDBOX_REDIRECT_URI, PLAID_PRODUCTION_REDIRECT_URI, PLAID_ENV } =
+  process.env;
 
 const redirect_uri =
   PLAID_ENV == 'sandbox'
@@ -43,10 +40,11 @@ router.post(
         }
       } catch (fetchError) {
         console.error('Failed to connect to ngrok:', fetchError.message);
-        const errorMsg = 'Unable to connect to ngrok. Make sure ngrok is running (npm run ngrok or ngrok http 5001). Get your authtoken at https://dashboard.ngrok.com/get-started/your-authtoken.';
+        const errorMsg =
+          'Unable to connect to ngrok. Make sure ngrok is running (npm run ngrok or ngrok http 5001). Get your authtoken at https://dashboard.ngrok.com/get-started/your-authtoken.';
         return res.status(500).json({
           error: 'ngrok_connection_failed',
-          error_message: errorMsg
+          error_message: errorMsg,
         });
       }
 
@@ -57,7 +55,8 @@ router.post(
         console.error('No ngrok tunnel found');
         return res.status(500).json({
           error: 'ngrok_tunnel_not_found',
-          error_message: 'ngrok is running but no tunnel was found. Check the ngrok dashboard at http://localhost:4040 for details.'
+          error_message:
+            'ngrok is running but no tunnel was found. Check the ngrok dashboard at http://localhost:4040 for details.',
         });
       }
 
@@ -87,7 +86,7 @@ router.post(
       }
       return res.status(500).json({
         error: 'link_token_creation_failed',
-        error_message: err.message || 'An unknown error occurred'
+        error_message: err.message || 'An unknown error occurred',
       });
     }
   })

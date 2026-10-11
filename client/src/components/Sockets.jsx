@@ -53,14 +53,22 @@ export default function Sockets() {
     socket.current.on('SYNC_UPDATES_AVAILABLE', ({ itemId } = {}) => {
       const msg = `New Webhook Event: Item ${itemId}: Transactions updates`;
       console.log(msg);
-      console.log('[SOCKET EVENT] SYNC_UPDATES_AVAILABLE received, fetching transactions for itemId:', itemId);
+      console.log(
+        '[SOCKET EVENT] SYNC_UPDATES_AVAILABLE received, fetching transactions for itemId:',
+        itemId
+      );
       showWebhookToast(msg);
       getAccountsByItem(itemId);
-      getTransactionsByItem(itemId).then(() => {
-        console.log('[SOCKET EVENT] Transactions fetched successfully for itemId:', itemId);
-      }).catch(err => {
-        console.error('[SOCKET EVENT] Error fetching transactions:', err);
-      });
+      getTransactionsByItem(itemId)
+        .then(() => {
+          console.log(
+            '[SOCKET EVENT] Transactions fetched successfully for itemId:',
+            itemId
+          );
+        })
+        .catch(err => {
+          console.error('[SOCKET EVENT] Error fetching transactions:', err);
+        });
     });
 
     socket.current.on('ERROR', ({ itemId, errorCode } = {}) => {

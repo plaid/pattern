@@ -25,9 +25,8 @@ const createOrUpdateTransactions = async transactions => {
       pending,
       account_owner: accountOwner,
     } = transaction;
-    const { id: accountId } = await retrieveAccountByPlaidAccountId(
-      plaidAccountId
-    );
+    const { id: accountId } =
+      await retrieveAccountByPlaidAccountId(plaidAccountId);
     try {
       const query = {
         text: `
@@ -135,7 +134,10 @@ const retrieveTransactionsByUserId = async userId => {
  */
 const deleteTransactions = async plaidTransactionIds => {
   if (plaidTransactionIds.length > 0) {
-    console.log(`[DB] Deleting ${plaidTransactionIds.length} transactions:`, plaidTransactionIds);
+    console.log(
+      `[DB] Deleting ${plaidTransactionIds.length} transactions:`,
+      plaidTransactionIds
+    );
   }
   const pendingQueries = plaidTransactionIds.map(async transactionId => {
     const query = {
@@ -143,7 +145,9 @@ const deleteTransactions = async plaidTransactionIds => {
       values: [transactionId],
     };
     const result = await db.query(query);
-    console.log(`[DB] Deleted transaction ${transactionId}, rows affected: ${result.rowCount}`);
+    console.log(
+      `[DB] Deleted transaction ${transactionId}, rows affected: ${result.rowCount}`
+    );
   });
   await Promise.all(pendingQueries);
 };

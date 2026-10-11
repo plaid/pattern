@@ -31,7 +31,9 @@ const errorHandler = (err, req, res, next) => {
 
   // handle errors from the Plaid api.
   if (error.name === 'PlaidError')
-    error = new Boom.Boom(error.error_message, { statusCode: error.status_code });
+    error = new Boom.Boom(error.error_message, {
+      statusCode: error.status_code,
+    });
 
   // handle standard javascript errors.
   if (!error.isBoom) error = Boom.boomify(error);

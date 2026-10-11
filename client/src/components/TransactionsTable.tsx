@@ -27,7 +27,11 @@ export default function TransactionsTable(props: Props) {
   const currentTransactionIds = new Set(props.transactions.map(tx => tx.id));
   const newTransactionIds = isInitialLoad.current
     ? new Set()
-    : new Set([...currentTransactionIds].filter(id => !previousTransactionIds.current.has(id)));
+    : new Set(
+        [...currentTransactionIds].filter(
+          id => !previousTransactionIds.current.has(id)
+        )
+      );
 
   // Update the refs after render
   useEffect(() => {

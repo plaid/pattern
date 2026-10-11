@@ -15,7 +15,10 @@ import {
   useItems,
   useTransactions,
 } from '../services';
-import { setItemToBadState, refreshTransactionsByItem } from '../services/api.tsx';
+import {
+  setItemToBadState,
+  refreshTransactionsByItem,
+} from '../services/api.tsx';
 import { diffBetweenCurrentTime } from '../util/index.tsx';
 
 const PLAID_ENV = import.meta.env.VITE_PLAID_ENV || 'sandbox';
@@ -42,12 +45,10 @@ const ItemCard = (props: Props) => {
   const { accountsByItem } = useAccounts();
   const { deleteAccountsByItemId } = useAccounts();
   const { deleteItemById } = useItems();
-  const { deleteTransactionsByItemId, getTransactionsByItem } = useTransactions();
-  const {
-    institutionsById,
-    getInstitutionById,
-    formatLogoSrc,
-  } = useInstitutions();
+  const { deleteTransactionsByItemId, getTransactionsByItem } =
+    useTransactions();
+  const { institutionsById, getInstitutionById, formatLogoSrc } =
+    useInstitutions();
   const { id, plaid_institution_id, status } = props.item;
   const isSandbox = PLAID_ENV === 'sandbox';
   const isGoodState = status === 'good';
@@ -80,7 +81,8 @@ const ItemCard = (props: Props) => {
       const { data } = await refreshTransactionsByItem(id);
 
       // Check if any transactions were immediately available
-      const totalChanges = data.addedCount + data.modifiedCount + data.removedCount;
+      const totalChanges =
+        data.addedCount + data.modifiedCount + data.removedCount;
 
       if (totalChanges > 0) {
         toast.success(

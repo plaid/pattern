@@ -44,9 +44,12 @@ router.post(
       userId
     );
     if (existingItem)
-      throw new Boom.Boom('You have already linked an item at this institution.', {
-        statusCode: 409,
-      });
+      throw new Boom.Boom(
+        'You have already linked an item at this institution.',
+        {
+          statusCode: 409,
+        }
+      );
 
     // exchange the public token for a private access token and store with the item.
     const response = await plaid.itemPublicTokenExchange({
@@ -199,7 +202,8 @@ router.post(
   '/:itemId/transactions/refresh',
   asyncWrapper(async (req, res) => {
     const { itemId } = req.params;
-    const { plaid_access_token: accessToken, plaid_item_id: plaidItemId } = await retrieveItemById(itemId);
+    const { plaid_access_token: accessToken, plaid_item_id: plaidItemId } =
+      await retrieveItemById(itemId);
 
     try {
       // Call /transactions/refresh to trigger on-demand extraction
@@ -229,7 +233,7 @@ router.post(
           type: err.response?.data?.error_type,
           code: err.response?.data?.error_code,
           display_message: err.response?.data?.display_message,
-        }
+        },
       };
       res.status(err.response?.status || 500).json(errorResponse);
     }

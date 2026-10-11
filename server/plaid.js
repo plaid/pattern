@@ -19,7 +19,7 @@ const {
   PLAID_SECRET_SANDBOX,
 } = process.env;
 
-// The Plaid secret is unique per environment. 
+// The Plaid secret is unique per environment.
 const PLAID_SECRET =
   PLAID_ENV === 'production' ? PLAID_SECRET_PRODUCTION : PLAID_SECRET_SANDBOX;
 
@@ -122,7 +122,11 @@ class PlaidClientWrapper {
       } catch (err) {
         // err.response is absent for non-HTTP failures (network errors, timeouts,
         // errors thrown inside the SDK); guard so logging never masks the real error.
-        await log(clientMethod, args, err.response?.data ?? { message: err.message });
+        await log(
+          clientMethod,
+          args,
+          err.response?.data ?? { message: err.message }
+        );
         throw err;
       }
     };

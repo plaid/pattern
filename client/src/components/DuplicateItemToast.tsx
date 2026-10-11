@@ -7,7 +7,9 @@ interface Props {
 const DuplicateItemToastMessage = (props: Props) => (
   <>
     <div>
-      <strong>{props.institutionName} is already linked to this account.</strong>
+      <strong>
+        {props.institutionName} is already linked to this account.
+      </strong>
     </div>
     <div style={{ marginTop: '8px' }}>
       You cannot link the same institution twice.{' '}

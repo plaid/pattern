@@ -79,8 +79,7 @@ const retrieveItemByPlaidAccessToken = async accessToken => {
  */
 const retrieveItemByPlaidInstitutionId = async (plaidInstitutionId, userId) => {
   const query = {
-    text:
-      'SELECT * FROM items WHERE plaid_institution_id = $1 AND user_id = $2',
+    text: 'SELECT * FROM items WHERE plaid_institution_id = $1 AND user_id = $2',
     values: [plaidInstitutionId, userId],
   };
   const { rows: existingItems } = await db.query(query);
@@ -138,7 +137,10 @@ const updateItemStatus = async (itemId, status) => {
  * @param {string} plaidItemId the Plaid item ID of the item.
  * @param {string} transactionsCursor latest observed transactions cursor on this item.
  */
- const updateItemTransactionsCursor = async (plaidItemId, transactionsCursor) => {
+const updateItemTransactionsCursor = async (
+  plaidItemId,
+  transactionsCursor
+) => {
   const query = {
     text: 'UPDATE items SET transactions_cursor = $1 WHERE plaid_item_id = $2',
     values: [transactionsCursor, plaidItemId],

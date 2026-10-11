@@ -4,11 +4,20 @@ interface TextInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   label: string;
 }
 
-export function TextInput({ label, id, type = 'text', className = '', ...rest }: TextInputProps) {
+export function TextInput({
+  label,
+  id,
+  type = 'text',
+  className = '',
+  ...rest
+}: TextInputProps) {
   return (
     <div className={`mb-3 ${className}`}>
       {label && (
-        <label htmlFor={id} className="block text-sm font-medium text-black-800 mb-1">
+        <label
+          htmlFor={id}
+          className="block text-sm font-medium text-black-800 mb-1"
+        >
           {label}
         </label>
       )}

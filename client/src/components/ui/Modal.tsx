@@ -29,11 +29,15 @@ export function Modal({ isOpen, onRequestClose, children }: ModalProps) {
     <div
       ref={overlayRef}
       className="fixed inset-0 z-[1000] flex items-center justify-center bg-black/60"
-      onClick={(e) => {
+      onClick={e => {
         if (e.target === overlayRef.current) onRequestClose();
       }}
     >
-      <div role="dialog" aria-modal="true" className="bg-white rounded shadow-md max-w-[500px] w-[90%] max-h-[90vh] overflow-auto relative z-[1001]">
+      <div
+        role="dialog"
+        aria-modal="true"
+        className="bg-white rounded shadow-md max-w-[500px] w-[90%] max-h-[90vh] overflow-auto relative z-[1001]"
+      >
         {children}
       </div>
     </div>,

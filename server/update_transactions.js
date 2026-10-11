@@ -17,17 +17,13 @@ const {
  * @param {string} plaidItemId the Plaid ID for the item.
  * @returns {Object{}} an object containing transactions and a cursor.
  */
-const fetchTransactionUpdates = async (plaidItemId) => {
+const fetchTransactionUpdates = async plaidItemId => {
   // the transactions endpoint is paginated, so we may need to hit it multiple times to
   // retrieve all available transactions.
 
   // get the access token based on the plaid item id
-  const {
-    plaid_access_token: accessToken,
-    transactions_cursor: lastCursor,
-  } = await retrieveItemByPlaidItemId(
-    plaidItemId
-  );
+  const { plaid_access_token: accessToken, transactions_cursor: lastCursor } =
+    await retrieveItemByPlaidItemId(plaidItemId);
 
   let cursor = lastCursor;
 
@@ -74,22 +70,18 @@ const fetchTransactionUpdates = async (plaidItemId) => {
  *
  * @param {string} plaidItemId the Plaid ID for the item.
  */
-const updateTransactions = async (plaidItemId) => {
+const updateTransactions = async plaidItemId => {
   // Fetch new transactions from plaid api.
-  const {
-    added,
-    modified,
-    removed,
-    cursor,
-    accessToken
-  } = await fetchTransactionUpdates(plaidItemId);
+  const { added, modified, removed, cursor, accessToken } =
+    await fetchTransactionUpdates(plaidItemId);
 
-  
   const request = {
     access_token: accessToken,
   };
 
-  const {data: {accounts}} = await plaid.accountsGet(request);
+  const {
+    data: { accounts },
+  } = await plaid.accountsGet(request);
 
   // Apply the full diff and only then advance the cursor. The cursor must move
   // last so it is never advanced past changes we haven't stored: if any write

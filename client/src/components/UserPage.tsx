@@ -129,7 +129,10 @@ const UserPage = () => {
   document.getElementsByTagName('body')[0].style.overflow = 'auto'; // to override overflow:hidden from link pane
   return (
     <div>
-      <Link to="/" className="text-sm text-black-700 uppercase tracking-wider hover:text-black-1000 no-underline">
+      <Link
+        to="/"
+        className="text-sm text-black-700 uppercase tracking-wider hover:text-black-1000 no-underline"
+      >
         BACK TO LOGIN
       </Link>
 
@@ -137,14 +140,17 @@ const UserPage = () => {
       {linkTokens.error.error_code != null && (
         <Callout warning>
           <div>
-            <strong>Unable to connect to Plaid:</strong> Please make sure your backend server is
-            running and that your .env file has been configured with valid Plaid credentials.
+            <strong>Unable to connect to Plaid:</strong> Please make sure your
+            backend server is running and that your .env file has been
+            configured with valid Plaid credentials.
           </div>
           <div style={{ marginTop: '8px' }}>
-            <strong>Error Code:</strong> <code>{linkTokens.error.error_code}</code>
+            <strong>Error Code:</strong>{' '}
+            <code>{linkTokens.error.error_code}</code>
           </div>
           <div>
-            <strong>Error Type:</strong> <code>{linkTokens.error.error_type}</code>
+            <strong>Error Type:</strong>{' '}
+            <code>{linkTokens.error.error_type}</code>
           </div>
           <div>
             <strong>Error Message:</strong> {linkTokens.error.error_message}
@@ -158,17 +164,30 @@ const UserPage = () => {
           <strong>Testing with Dynamic Transaction Data:</strong>
         </div>
         <div style={{ marginTop: '8px' }}>
-          To test with realistic data, link a <strong>non-OAuth institution</strong> like{' '}
-          <strong>First Platypus Bank</strong> and use these Plaid Link credentials:{' '}
-          <code style={{ background: '#f0f0f0', padding: '2px 6px', borderRadius: '3px' }}>
+          To test with realistic data, link a{' '}
+          <strong>non-OAuth institution</strong> like{' '}
+          <strong>First Platypus Bank</strong> and use these Plaid Link
+          credentials:{' '}
+          <code
+            style={{
+              background: '#f0f0f0',
+              padding: '2px 6px',
+              borderRadius: '3px',
+            }}
+          >
             user_transactions_dynamic
           </code>{' '}
-          (any password). The "Refresh Transactions" button will trigger simulated transaction updates.
-          See the README for more information about testing with realistic transaction data.
+          (any password). The "Refresh Transactions" button will trigger
+          simulated transaction updates. See the README for more information
+          about testing with realistic transaction data.
         </div>
         <div style={{ marginTop: '8px' }}>
           View incoming webhooks at{' '}
-          <a href="http://localhost:4040" target="_blank" rel="noopener noreferrer">
+          <a
+            href="http://localhost:4040"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
             localhost:4040
           </a>
           .

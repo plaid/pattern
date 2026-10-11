@@ -3,7 +3,7 @@
  */
 
 const { retrieveItemByPlaidItemId } = require('./items');
-const db = require('../');
+const db = require('..');
 
 /**
  * Creates multiple accounts related to a single item.

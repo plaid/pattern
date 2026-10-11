@@ -48,11 +48,11 @@ const fetchTransactionUpdates = async plaidItemId => {
   while (hasMore) {
     const request = {
       access_token: accessToken,
-      cursor: cursor,
+      cursor,
       count: batchSize,
     };
     const response = await plaid.transactionsSync(request);
-    const data = response.data;
+    const { data } = response;
     // Add this page of results
     added = added.concat(data.added);
     modified = modified.concat(data.modified);

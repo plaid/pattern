@@ -2,12 +2,13 @@
  * @file Defines the route for link token creation.
  */
 
+const express = require('express');
 const { asyncWrapper } = require('../middleware');
 
-const express = require('express');
 const plaid = require('../plaid');
 // Using native fetch (Node 18+)
 const { retrieveItemById } = require('../db/queries');
+
 const { PLAID_SANDBOX_REDIRECT_URI, PLAID_PRODUCTION_REDIRECT_URI, PLAID_ENV } =
   process.env;
 
@@ -63,13 +64,13 @@ router.post(
       const linkTokenParams = {
         user: {
           // This should correspond to a unique id for the current user.
-          client_user_id: 'uniqueId' + userId,
+          client_user_id: `uniqueId${userId}`,
         },
         client_name: 'Pattern',
         products,
         country_codes: ['US'],
         language: 'en',
-        webhook: tunnel.public_url + '/services/webhook',
+        webhook: `${tunnel.public_url}/services/webhook`,
         access_token: accessToken,
       };
       // If user has entered a redirect uri in the .env file

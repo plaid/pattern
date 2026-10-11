@@ -3,7 +3,7 @@
  */
 
 const { retrieveAccountByPlaidAccountId } = require('./accounts');
-const db = require('../');
+const db = require('..');
 
 /**
  * Creates or updates multiple transactions.

@@ -11,9 +11,8 @@ const Boom = require('@hapi/boom');
  * @param {Function} fn an async callback.
  * @returns {Function} an Express callback that resolves the wrapped async fn.
  */
-const asyncWrapper = fn => (req, res, next) => {
-  return Promise.resolve(fn(req, res, next)).catch(next);
-};
+const asyncWrapper = fn => (req, res, next) =>
+  Promise.resolve(fn(req, res, next)).catch(next);
 
 /**
  * A catch-all error handler that sends a formatted JSON response.

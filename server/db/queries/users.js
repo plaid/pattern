@@ -2,7 +2,7 @@
  * @file Defines the queries for the users table/views.
  */
 
-const db = require('../');
+const db = require('..');
 
 /**
  * Creates a single user.

@@ -2,20 +2,18 @@
  * @file Defines the route for link token creation.
  */
 
+const express = require('express');
 const { asyncWrapper } = require('../middleware');
 
-const express = require('express');
 const plaid = require('../plaid');
 // Using native fetch (Node 18+)
 const { retrieveItemById } = require('../db/queries');
-const {
-  PLAID_SANDBOX_REDIRECT_URI,
-  PLAID_PRODUCTION_REDIRECT_URI,
-  PLAID_ENV,
-} = process.env;
 
-const redirect_uri =
-  PLAID_ENV == 'sandbox'
+const { PLAID_SANDBOX_REDIRECT_URI, PLAID_PRODUCTION_REDIRECT_URI, PLAID_ENV } =
+  process.env;
+
+const redirectUri =
+  PLAID_ENV === 'sandbox'
     ? PLAID_SANDBOX_REDIRECT_URI
     : PLAID_PRODUCTION_REDIRECT_URI;
 const router = express.Router();
@@ -43,10 +41,11 @@ router.post(
         }
       } catch (fetchError) {
         console.error('Failed to connect to ngrok:', fetchError.message);
-        const errorMsg = 'Unable to connect to ngrok. Make sure ngrok is running (npm run ngrok or ngrok http 5001). Get your authtoken at https://dashboard.ngrok.com/get-started/your-authtoken.';
+        const errorMsg =
+          'Unable to connect to ngrok. Make sure ngrok is running (npm run ngrok or ngrok http 5001). Get your authtoken at https://dashboard.ngrok.com/get-started/your-authtoken.';
         return res.status(500).json({
           error: 'ngrok_connection_failed',
-          error_message: errorMsg
+          error_message: errorMsg,
         });
       }
 
@@ -57,28 +56,29 @@ router.post(
         console.error('No ngrok tunnel found');
         return res.status(500).json({
           error: 'ngrok_tunnel_not_found',
-          error_message: 'ngrok is running but no tunnel was found. Check the ngrok dashboard at http://localhost:4040 for details.'
+          error_message:
+            'ngrok is running but no tunnel was found. Check the ngrok dashboard at http://localhost:4040 for details.',
         });
       }
 
       const linkTokenParams = {
         user: {
           // This should correspond to a unique id for the current user.
-          client_user_id: 'uniqueId' + userId,
+          client_user_id: `uniqueId${userId}`,
         },
         client_name: 'Pattern',
         products,
         country_codes: ['US'],
         language: 'en',
-        webhook: tunnel.public_url + '/services/webhook',
+        webhook: `${tunnel.public_url}/services/webhook`,
         access_token: accessToken,
       };
       // If user has entered a redirect uri in the .env file
-      if (redirect_uri.indexOf('http') === 0) {
-        linkTokenParams.redirect_uri = redirect_uri;
+      if (redirectUri.indexOf('http') === 0) {
+        linkTokenParams.redirect_uri = redirectUri;
       }
       const createResponse = await plaid.linkTokenCreate(linkTokenParams);
-      res.json(createResponse.data);
+      return res.json(createResponse.data);
     } catch (err) {
       console.error('Error while creating link token:', err);
       if (err.response && err.response.data) {
@@ -87,7 +87,7 @@ router.post(
       }
       return res.status(500).json({
         error: 'link_token_creation_failed',
-        error_message: err.message || 'An unknown error occurred'
+        error_message: err.message || 'An unknown error occurred',
       });
     }
   })

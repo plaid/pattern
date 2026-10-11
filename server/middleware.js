@@ -11,9 +11,8 @@ const Boom = require('@hapi/boom');
  * @param {Function} fn an async callback.
  * @returns {Function} an Express callback that resolves the wrapped async fn.
  */
-const asyncWrapper = fn => (req, res, next) => {
-  return Promise.resolve(fn(req, res, next)).catch(next);
-};
+const asyncWrapper = fn => (req, res, next) =>
+  Promise.resolve(fn(req, res, next)).catch(next);
 
 /**
  * A catch-all error handler that sends a formatted JSON response.
@@ -26,12 +25,16 @@ const asyncWrapper = fn => (req, res, next) => {
  * @param {Object} res the Express response object.
  * @param {Function} next the Express next callback.
  */
+// Express only treats a middleware as an error handler if it takes four arguments.
+// eslint-disable-next-line no-unused-vars
 const errorHandler = (err, req, res, next) => {
   let error = err;
 
   // handle errors from the Plaid api.
   if (error.name === 'PlaidError')
-    error = new Boom.Boom(error.error_message, { statusCode: error.status_code });
+    error = new Boom.Boom(error.error_message, {
+      statusCode: error.status_code,
+    });
 
   // handle standard javascript errors.
   if (!error.isBoom) error = Boom.boomify(error);

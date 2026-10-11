@@ -22,7 +22,11 @@ export function ModalBody({
     <div className="p-6">
       <h2 className="text-xl font-semibold mb-4">{header}</h2>
       {isLoading ? (
-        <div className="flex justify-center py-8" role="status" aria-label="Loading">
+        <div
+          className="flex justify-center py-8"
+          role="status"
+          aria-label="Loading"
+        >
           <div className="animate-spin h-8 w-8 border-4 border-black-300 border-t-black-1000 rounded-full" />
         </div>
       ) : (

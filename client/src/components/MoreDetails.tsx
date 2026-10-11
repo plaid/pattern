@@ -43,13 +43,19 @@ export function MoreDetails(props: Props) {
   const linkChoice = props.setBadStateShown ? (
     // handleSetBadState uses sandbox/item/reset_login to send the ITEM_LOGIN_REQUIRED webhook;
     // app responds to this webhook by setting item to "bad" state (server/webhookHandlers/handleItemWebhook.js)
-    <button className="menuOption block w-full text-left px-4 py-2 hover:bg-black-200 cursor-pointer" onClick={props.handleSetBadState}>
+    <button
+      className="menuOption block w-full text-left px-4 py-2 hover:bg-black-200 cursor-pointer"
+      onClick={props.handleSetBadState}
+    >
       Test Item Login Required Webhook
     </button>
   ) : (
     // item is in "bad" state;  launch link to login and return to "good" state
     <div>
-      <button className="menuOption block w-full text-left px-4 py-2 hover:bg-black-200 cursor-pointer" onClick={initiateLink}>
+      <button
+        className="menuOption block w-full text-left px-4 py-2 hover:bg-black-200 cursor-pointer"
+        onClick={initiateLink}
+      >
         Update Login
       </button>
       {token != null && token.length > 0 && (
@@ -74,7 +80,10 @@ export function MoreDetails(props: Props) {
       {menuShown && (
         <div className="absolute right-0 top-full z-10 bg-white border border-black-300 rounded shadow-md min-w-[200px]">
           {linkChoice}
-          <button className="menuOption2 block w-full text-left px-4 py-2 hover:bg-black-200 cursor-pointer" onClick={props.handleDelete}>
+          <button
+            className="menuOption2 block w-full text-left px-4 py-2 hover:bg-black-200 cursor-pointer"
+            onClick={props.handleDelete}
+          >
             Remove
           </button>
         </div>

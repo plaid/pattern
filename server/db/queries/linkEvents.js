@@ -23,7 +23,7 @@ const createLinkEvent = async ({
   request_id: requestId,
   error_type: errorType,
   error_code: errorCode,
-  status: status,
+  status,
 }) => {
   const query = {
     text: `

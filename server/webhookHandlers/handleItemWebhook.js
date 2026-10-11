@@ -23,9 +23,7 @@ const itemErrorHandler = async (itemId, error) => {
       await updateItemStatus(itemId, 'bad');
       break;
     default:
-      console.log(
-        `WEBHOOK: ITEMS: item id ${itemId}: unhandled ITEM error`
-      );
+      console.log(`WEBHOOK: ITEMS: item id ${itemId}: unhandled ITEM error`);
   }
 };
 

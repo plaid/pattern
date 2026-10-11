@@ -2,7 +2,7 @@
  * @file Defines the queries for the plaid_api_events table.
  */
 
-const db = require('../');
+const db = require('..');
 
 /**
  * Creates a single Plaid api event log entry.

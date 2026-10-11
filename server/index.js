@@ -2,7 +2,11 @@
  * @file The application root. Defines the Express server configuration.
  */
 
-require('dotenv').config({ path: require('path').resolve(__dirname, '../.env') });
+const path = require('path');
+
+require('dotenv').config({
+  path: path.resolve(__dirname, '../.env'),
+});
 
 const express = require('express');
 const socketIo = require('socket.io');
@@ -34,15 +38,13 @@ const server = app.listen(PORT, () => {
 
 const io = socketIo(server, {
   cors: {
-    origin: "http://localhost:3001",
-    methods: ["*"], 
-    allowedHeaders: ["*"],
-    credentials: true, 
+    origin: 'http://localhost:3001',
+    methods: ['*'],
+    allowedHeaders: ['*'],
+    credentials: true,
   },
-  allowEIO3: true
+  allowEIO3: true,
 });
-
-
 
 app.use(logger('dev'));
 app.use(express.json());

@@ -7,7 +7,12 @@ interface CalloutProps {
   children: React.ReactNode;
 }
 
-export function Callout({ warning, className = '', style, children }: CalloutProps) {
+export function Callout({
+  warning,
+  className = '',
+  style,
+  children,
+}: CalloutProps) {
   const base = 'rounded border p-4 text-sm';
   const variant = warning
     ? 'bg-yellow-200 border-yellow-600 text-black-900'

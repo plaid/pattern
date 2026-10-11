@@ -2,7 +2,7 @@
  * @file Defines the queries for the assets table/view.
  */
 
-const db = require('../');
+const db = require('..');
 
 /**
  * Creates a single property.

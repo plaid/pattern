@@ -42,7 +42,13 @@ export function Button({
 
   if (href) {
     return (
-      <a href={href} target={target} rel={rel} className={classes} aria-disabled={rest.disabled || undefined}>
+      <a
+        href={href}
+        target={target}
+        rel={rel}
+        className={classes}
+        aria-disabled={rest.disabled || undefined}
+      >
         {children}
       </a>
     );

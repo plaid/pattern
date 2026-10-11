@@ -3,7 +3,7 @@
  */
 
 const { retrieveItemByPlaidItemId } = require('./items');
-const db = require('../');
+const db = require('..');
 
 /**
  * Creates multiple accounts related to a single item.
@@ -73,7 +73,7 @@ const createAccounts = async (plaidItemId, accounts) => {
     const { rows } = await db.query(query);
     return rows[0];
   });
-  return await Promise.all(pendingQueries);
+  return Promise.all(pendingQueries);
 };
 
 /**

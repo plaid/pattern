@@ -58,7 +58,9 @@ export function CurrentUserProvider(props: any) {
           dispatch({ type: 'SUCCESSFUL_GET', payload: payload[0] });
           navigate(`/user/${payload[0].id}`);
         } else {
-          toast.error(`Username "${username}" not found. Please create an account first or check your username spelling.`);
+          toast.error(
+            `Username "${username}" not found. Please create an account first or check your username spelling.`
+          );
           dispatch({ type: 'FAILED_GET' });
         }
       } catch (err) {

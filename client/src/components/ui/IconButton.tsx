@@ -7,7 +7,12 @@ interface IconButtonProps {
   className?: string;
 }
 
-export function IconButton({ accessibilityLabel, icon, onClick, className = '' }: IconButtonProps) {
+export function IconButton({
+  accessibilityLabel,
+  icon,
+  onClick,
+  className = '',
+}: IconButtonProps) {
   return (
     <button
       type="button"

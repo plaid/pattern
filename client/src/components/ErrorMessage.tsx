@@ -47,9 +47,7 @@ export default function ErrorMessage() {
           <div>
             <strong>Connection Error:</strong> {error.code}
           </div>
-          <div style={{ marginTop: '8px' }}>
-            {message}
-          </div>
+          <div style={{ marginTop: '8px' }}>{message}</div>
         </Callout>
       )}
     </>

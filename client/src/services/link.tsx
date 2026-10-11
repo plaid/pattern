@@ -84,7 +84,7 @@ export function LinkProvider(props: any) {
     } catch (err: any) {
       const errorData = err.response?.data || {
         error: 'network_error',
-        error_message: err.message || 'An unexpected error occurred'
+        error_message: err.message || 'An unexpected error occurred',
       };
       dispatch({ type: 'LINK_TOKEN_ERROR', error: errorData });
       console.error('Error generating link token:', errorData);

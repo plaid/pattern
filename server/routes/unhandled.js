@@ -10,7 +10,7 @@ const router = express.Router();
 /**
  * Throws a 404 not found error for all requests.
  */
-router.get('/{*splat}', (req, res) => {
+router.get('/{*splat}', () => {
   throw new Boom.Boom('not found', { statusCode: 404 });
 });
 

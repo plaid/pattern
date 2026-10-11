@@ -23,7 +23,7 @@ router.get(
     const radix = 10;
     count = parseInt(count, radix);
     offset = parseInt(offset, radix);
-    const requst = {
+    const request = {
       count,
       offset,
       options: {
@@ -53,11 +53,9 @@ router.get(
         include_optional_metadata: true,
       },
     };
-    try {
-      const response = await plaid.institutionsGetById(request);
-      const { institution } = response.data;
-      res.json(toArray(institution));
-    } catch (error) {}
+    const response = await plaid.institutionsGetById(request);
+    const { institution } = response.data;
+    res.json(toArray(institution));
   })
 );
 

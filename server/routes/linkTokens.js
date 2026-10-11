@@ -12,8 +12,8 @@ const { retrieveItemById } = require('../db/queries');
 const { PLAID_SANDBOX_REDIRECT_URI, PLAID_PRODUCTION_REDIRECT_URI, PLAID_ENV } =
   process.env;
 
-const redirect_uri =
-  PLAID_ENV == 'sandbox'
+const redirectUri =
+  PLAID_ENV === 'sandbox'
     ? PLAID_SANDBOX_REDIRECT_URI
     : PLAID_PRODUCTION_REDIRECT_URI;
 const router = express.Router();
@@ -74,11 +74,11 @@ router.post(
         access_token: accessToken,
       };
       // If user has entered a redirect uri in the .env file
-      if (redirect_uri.indexOf('http') === 0) {
-        linkTokenParams.redirect_uri = redirect_uri;
+      if (redirectUri.indexOf('http') === 0) {
+        linkTokenParams.redirect_uri = redirectUri;
       }
       const createResponse = await plaid.linkTokenCreate(linkTokenParams);
-      res.json(createResponse.data);
+      return res.json(createResponse.data);
     } catch (err) {
       console.error('Error while creating link token:', err);
       if (err.response && err.response.data) {

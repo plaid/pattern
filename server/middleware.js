@@ -25,6 +25,8 @@ const asyncWrapper = fn => (req, res, next) =>
  * @param {Object} res the Express response object.
  * @param {Function} next the Express next callback.
  */
+// Express only treats a middleware as an error handler if it takes four arguments.
+// eslint-disable-next-line no-unused-vars
 const errorHandler = (err, req, res, next) => {
   let error = err;
 

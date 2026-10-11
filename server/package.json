@@ -5,7 +5,7 @@
   "scripts": {
     "start": "node index.js",
     "debug": "nodemon --inspect=0.0.0.0:9229 index.js",
-    "lint": "eslint **/*.js -c .eslintrc.json"
+    "lint": "eslint . -c .eslintrc.json"
   },
   "dependencies": {
     "@hapi/boom": "^10.0.1",

@@ -21,7 +21,7 @@ export interface AccountType {
   user_id: number;
   plaid_account_id: string;
   name: string;
-  mask: string;
+  mask: string | null;
   official_name: string;
   current_balance: number;
   available_balance: number;
@@ -37,7 +37,8 @@ export interface AccountType {
     | '401k'
     | 'student'
     | 'mortgage'
-    | 'credit card';
+    | 'credit card'
+    | null;
   created_at: string;
   updated_at: string;
 }

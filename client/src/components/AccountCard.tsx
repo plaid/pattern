@@ -42,9 +42,14 @@ export default function AccountCard(props: Props) {
       <div className="account-data-row">
         <div className="account-data-row__left">
           <div className="account-data-row__name">{props.account.name}</div>
-          <div className="account-data-row__balance">{`${startCase(
-            toLower(props.account.subtype)
-          )} • Balance ${currencyFilter(props.account.current_balance)}`}</div>
+          <div className="account-data-row__balance">
+            {[
+              startCase(toLower(props.account.subtype ?? '')),
+              `Balance ${currencyFilter(props.account.current_balance)}`,
+            ]
+              .filter(Boolean)
+              .join(' • ')}
+          </div>
         </div>
         <div className="account-data-row__right">
           {transactions.length !== 0 && (

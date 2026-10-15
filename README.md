@@ -20,7 +20,7 @@ Plaid Pattern apps are provided for illustrative purposes and are not meant to b
 
 ## Requirements
 
--   [Node.js](https://nodejs.org/) v20 or higher
+-   [Node.js](https://nodejs.org/) 20.19+ or 22.12+
 -   [PostgreSQL](https://www.postgresql.org/) v16 or higher
 -   [Plaid API keys][plaid-keys] - [sign up][plaid-signup] for a free Sandbox account if you don't already have one
 -   [ngrok](https://ngrok.com/) to expose the server for Plaid webhooks — [sign up](https://dashboard.ngrok.com/signup) for a free account to get an authtoken
@@ -32,13 +32,14 @@ Plaid Pattern apps are provided for illustrative purposes and are not meant to b
 **macOS** (with [Homebrew](https://brew.sh/)):
 ```shell
 brew install node postgresql@16
+brew link --force postgresql@16  # postgresql@16 is keg-only; this puts psql and createuser on your PATH
 brew services start postgresql@16
 brew install ngrok/ngrok/ngrok
 ```
 
-**Linux / WSL (Debian/Ubuntu)**:
+**Linux / WSL (Debian/Ubuntu)**: the `nodejs` package in Ubuntu's default repositories is older than the required version, so install Node.js with [nvm](https://github.com/nvm-sh/nvm) or [NodeSource](https://github.com/nodesource/distributions) instead.
 ```shell
-sudo apt update && sudo apt install -y nodejs npm postgresql
+sudo apt update && sudo apt install -y postgresql
 sudo systemctl start postgresql
 snap install ngrok  # or download from https://ngrok.com/download
 ```
@@ -138,7 +139,7 @@ By default, Plaid Link will let a user link to the same institution multiple tim
 
 Plaid uses [webhooks][transactions-webhooks] to notify you whenever there are changes in the transactions associated with an item. This allows you to make a call to Plaid's transactions sync endpoint only when changes have occurred, rather than polling for them. For an example of this, see the [transactions webhook handler][transactions-handler]. This sample app also demonstrates the use of the sandboxItemResetLogin endpoint to test the webhook used to notify you when a user needs to update their login information at their financial institution.
 
-For webhooks to work, the server must be publicly accessible on the internet. For development purposes, this application uses [ngrok](https://ngrok.com/) to accomplish that. Therefore, if the server is re-started, any items created in this sample app previous to the current session will have a different webhook address attached to it. As a result, webhooks are only valid during the session in which an item is created; for previously created items, no transactions webhooks will be received, and no webhook will be received from the call to sandboxItemResetLogin. In addition, ngrok webhook addresses are only valid for 2 hours. If you are not receiving webhooks in this sample application, restart your server to reset the ngrok webhook address.
+For webhooks to work, the server must be publicly accessible on the internet. For development purposes, this application uses [ngrok](https://ngrok.com/) to accomplish that. Therefore, if ngrok is restarted, any items created in this sample app previous to the current session will have a different webhook address attached to it. As a result, webhooks are only valid during the session in which an item is created; for previously created items, no transactions webhooks will be received, and no webhook will be received from the call to sandboxItemResetLogin. In addition, ngrok webhook addresses are only valid for 2 hours.
 
 **Important:** When your ngrok session expires or when you restart ngrok (which creates a new URL), any Items that were previously linked will stop receiving webhooks because they're still registered with the old ngrok URL. To receive webhooks for these Items, you'll need to:
 
@@ -342,7 +343,7 @@ Plaid Pattern is a demo app that is intended to be used only for the purpose of 
 [plaid-node]: https://github.com/plaid/plaid-node
 [transactions-handler]: /server/webhookHandlers/handleTransactionsWebhook.js
 [update-transactions]: /server/update_transactions.js
-[transactions-webhooks]: https://plaid.com/docs/#transactions-webhooks
+[transactions-webhooks]: https://plaid.com/docs/api/products/transactions/#webhooks
 [users-routes]: server/routes/users.js
 [client-img]: docs/pattern_screenshot.jpg
 [client-readme]: #plaid-pattern---client

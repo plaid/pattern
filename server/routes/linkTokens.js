@@ -42,7 +42,7 @@ router.post(
       } catch (fetchError) {
         console.error('Failed to connect to ngrok:', fetchError.message);
         const errorMsg =
-          'Unable to connect to ngrok. Make sure ngrok is running (npm run ngrok or ngrok http 5001). Get your authtoken at https://dashboard.ngrok.com/get-started/your-authtoken.';
+          'Unable to connect to ngrok. Make sure ngrok is running (make ngrok or ngrok http 5001). Get your authtoken at https://dashboard.ngrok.com/get-started/your-authtoken.';
         return res.status(500).json({
           error: 'ngrok_connection_failed',
           error_message: errorMsg,

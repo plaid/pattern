@@ -69,9 +69,10 @@ Note: We recommend running these commands in a unix terminal. Windows users can 
     createuser -s postgres  # skip if the postgres role already exists
     npm run db:create
     ```
-    On Linux/WSL, if your PostgreSQL requires a password, set one for the `postgres` role and update `POSTGRES_PASSWORD` in `.env` to match:
+    On Linux/WSL, the `postgres` role already exists but only accepts local connections from the `postgres` OS user. Instead of the commands above, set a password for it (matching `POSTGRES_PASSWORD` in `.env`) and create the database over TCP:
     ```shell
-    psql -U postgres -c "ALTER USER postgres PASSWORD 'password';"
+    sudo -u postgres psql -c "ALTER USER postgres PASSWORD 'password';"
+    PGHOST=localhost PGPASSWORD=password npm run db:create
     ```
 1. Configure ngrok with your authtoken (one-time setup):
     ```shell
@@ -139,9 +140,9 @@ By default, Plaid Link will let a user link to the same institution multiple tim
 
 Plaid uses [webhooks][transactions-webhooks] to notify you whenever there are changes in the transactions associated with an item. This allows you to make a call to Plaid's transactions sync endpoint only when changes have occurred, rather than polling for them. For an example of this, see the [transactions webhook handler][transactions-handler]. This sample app also demonstrates the use of the sandboxItemResetLogin endpoint to test the webhook used to notify you when a user needs to update their login information at their financial institution.
 
-For webhooks to work, the server must be publicly accessible on the internet. For development purposes, this application uses [ngrok](https://ngrok.com/) to accomplish that. Therefore, if ngrok is restarted, any items created in this sample app previous to the current session will have a different webhook address attached to it. As a result, webhooks are only valid during the session in which an item is created; for previously created items, no transactions webhooks will be received, and no webhook will be received from the call to sandboxItemResetLogin. In addition, ngrok webhook addresses are only valid for 2 hours.
+For webhooks to work, the server must be publicly accessible on the internet. For development purposes, this application uses [ngrok](https://ngrok.com/) to accomplish that. Each item is registered with the ngrok URL that was active when it was created. ngrok's free plan assigns your account one stable dev domain, so restarting ngrok keeps the same URL. If the URL changes (for example, you switch ngrok accounts), items created before the change will receive no transactions webhooks, and no webhook from the call to sandboxItemResetLogin.
 
-**Important:** When your ngrok session expires or when you restart ngrok (which creates a new URL), any Items that were previously linked will stop receiving webhooks because they're still registered with the old ngrok URL. To receive webhooks for these Items, you'll need to:
+**Important:** If your ngrok URL changes, any Items that were previously linked will stop receiving webhooks because they're still registered with the old ngrok URL. To receive webhooks for these Items, you'll need to:
 
 1. Delete the old Items from the app
 2. Re-link them using Plaid Link
@@ -256,7 +257,7 @@ If the request returned an error, the `error_type` and `error_code` columns will
 > The sections below are optional: on desktop, OAuth will work without a redirect URI configured. However, using redirect URIs is recommended for best conversion on mobile web, and mandatory when using a Plaid mobile SDK. For more details, see the documentation on [redirect URIs on desktop and mobile web](https://plaid.com/docs/link/oauth/#desktop-web-mobile-web-react-or-webview).
 
 #### In Sandbox
-To test with an OAuth redirect URI, in the .env file, set your `PLAID_SANDBOX_REDIRECT_URI` to 'http://localhost:3001/oauth-link' and then register this URI in your Plaid Dashboard at https://dashboard.plaid.com/team/api.
+To test with an OAuth redirect URI, in the .env file, set your `PLAID_SANDBOX_REDIRECT_URI` to 'http://localhost:3001/oauth-link' and then register this URI in your Plaid Dashboard at https://dashboard.plaid.com/developers/api.
 
 #### In Production
 
@@ -307,9 +308,9 @@ After starting the client, you can view it at https://localhost:3001.
 
 #### Windows instructions for using https with localhost
 
-If you are on a Windows machine, follow the same `vite.config.ts` changes described in the MacOS section above, but skip the mkcert steps. Vite will use a self-signed certificate.
+If you are on a Windows machine, follow the same steps described in the MacOS section above, but install mkcert with `choco install mkcert` or `scoop install mkcert` instead of Homebrew.
 
-After starting the client, you can view it at https://localhost:3001. Your browser will alert you with an invalid certificate warning; click on "advanced" and proceed.
+After starting the client, you can view it at https://localhost:3001.
 
 ## Troubleshooting
 
@@ -327,11 +328,11 @@ See [`docs/troubleshooting.md`][troubleshooting].
 Plaid Pattern is a demo app that is intended to be used only for the purpose of demonstrating how you can integrate with Plaid. You are solely responsible for ensuring the correctness, legality, security, privacy, and compliance of your own app and Plaid integration. The Pattern code is licensed under the [MIT License](LICENSE) and is provided as-is and without warranty of any kind. Plaid Pattern is provided for demonstration purposes only and is not intended for use in production environments.
 
 [create-script]: database/init/create.sql
-[plaid-docs-api-identifiers]: https://plaid.com/docs/#storing-plaid-api-identifiers
+[plaid-docs-api-identifiers]: https://plaid.com/docs/launch-checklist/
 [plaid-new-support-ticket]: https://dashboard.plaid.com/support/new
 [postgres]: https://www.postgresql.org/
 [postgres-docs]: https://www.postgresql.org/docs/
-[plaid-link]: https://plaid.com/docs/#integrating-with-link
+[plaid-link]: https://plaid.com/docs/link/
 [plaid-oauth]: https://plaid.com/docs/link/oauth/#introduction-to-oauth
 [plaid-link-update-mode]: https://plaid.com/docs/link/update-mode/
 [react]: https://reactjs.org/
@@ -350,7 +351,7 @@ Plaid Pattern is a demo app that is intended to be used only for the purpose of 
 [express]: https://expressjs.com/
 [nodejs]: https://nodejs.org/en/
 [plaid]: https://plaid.com
-[plaid-dashboard]: https://dashboard.plaid.com/team/api
+[plaid-dashboard]: https://dashboard.plaid.com/developers/api
 [plaid-docs]: https://plaid.com/docs/
 [plaid-help]: https://support.plaid.com/hc/en-us
 [plaid-keys]: https://dashboard.plaid.com/developers/keys

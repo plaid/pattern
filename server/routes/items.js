@@ -9,7 +9,6 @@ const {
   retrieveItemByPlaidInstitutionId,
   retrieveAccountsByItemId,
   retrieveTransactionsByItemId,
-  createItem,
   deleteItem,
   updateItemStatus,
 } = require('../db/queries');
@@ -23,6 +22,7 @@ const {
   validItemStatuses,
 } = require('../util');
 const updateTransactions = require('../update_transactions');
+const exchangePublicToken = require('../exchange_public_token');
 
 const router = express.Router();
 
@@ -51,31 +51,12 @@ router.post(
         }
       );
 
-    // exchange the public token for a private access token and store with the item.
-    const response = await plaid.itemPublicTokenExchange({
-      public_token: publicToken,
-    });
-    const accessToken = response.data.access_token;
-    const itemId = response.data.item_id;
-    const newItem = await createItem(
+    const newItem = await exchangePublicToken({
+      publicToken,
       institutionId,
-      accessToken,
-      itemId,
-      userId
-    );
-
-    // Make an initial call to fetch transactions and enable SYNC_UPDATES_AVAILABLE webhook sending
-    // for this item.
-    updateTransactions(itemId)
-      .then(() => {
-        // Notify frontend to reflect any transactions changes.
-        req.io.emit('NEW_TRANSACTIONS_DATA', { itemId: newItem.id });
-      })
-      .catch(err =>
-        console.error(
-          `Error updating transactions for new item ${itemId}: ${err.message}`
-        )
-      );
+      userId,
+      io: req.io,
+    });
 
     res.json(sanitizeItems(newItem));
   })

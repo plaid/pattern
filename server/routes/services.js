@@ -50,6 +50,9 @@ router.post(
       item: handleItemWebhook,
     };
     const webhookHandler = webhookHandlerMap[type] || unhandledWebhook;
+    // For simplicity, Pattern processes each webhook before responding. In production, write
+    // the webhook to a queue or reliable storage, respond right away, and process it separately.
+    // https://plaid.com/docs/api/webhooks/
     await webhookHandler(req.body, io);
     console.log('[WEBHOOK ENDPOINT] Webhook processed successfully');
     res.json({ status: 'ok' });

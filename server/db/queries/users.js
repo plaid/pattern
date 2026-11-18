@@ -68,6 +68,35 @@ const retrieveUserByUsername = async username => {
 };
 
 /**
+ * Retrieves a single user.
+ *
+ * @param {string} plaidUserId the Plaid user_id returned by /user/create.
+ * @returns {Object} a single user.
+ */
+const retrieveUserByPlaidUserId = async plaidUserId => {
+  const query = {
+    text: 'SELECT * FROM users WHERE plaid_user_id = $1',
+    values: [plaidUserId],
+  };
+  const { rows: users } = await db.query(query);
+  return users[0];
+};
+
+/**
+ * Stores the Plaid user_id returned by /user/create for a single user.
+ *
+ * @param {number} userId the ID of the user.
+ * @param {string} plaidUserId the Plaid user_id.
+ */
+const updateUserPlaidUserId = async (userId, plaidUserId) => {
+  const query = {
+    text: 'UPDATE users_table SET plaid_user_id = $1 WHERE id = $2',
+    values: [plaidUserId, userId],
+  };
+  await db.query(query);
+};
+
+/**
  * Retrieves all users.
  *
  * @returns {Object[]} an array of users.
@@ -84,6 +113,8 @@ module.exports = {
   createUser,
   deleteUsers,
   retrieveUserById,
+  retrieveUserByPlaidUserId,
   retrieveUserByUsername,
   retrieveUsers,
+  updateUserPlaidUserId,
 };

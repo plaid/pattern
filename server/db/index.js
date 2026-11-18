@@ -28,4 +28,14 @@ const db = new Pool({
   connectionTimeoutMillis: 5000, // return an error after 5 seconds if a connection could not be established
 });
 
+// Log a hint with every database error, then rethrow it for the caller to handle.
+const query = db.query.bind(db);
+db.query = (...args) =>
+  query(...args).catch(err => {
+    console.error(
+      'Database error: make sure PostgreSQL is running. If your database was created with an older version of Pattern, `npm run db:reset` may help (this deletes existing data).'
+    );
+    throw err;
+  });
+
 module.exports = db;

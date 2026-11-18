@@ -15,7 +15,7 @@ const updateTransactions = require('./update_transactions');
  * @param {string} params.institutionId the Plaid institution ID of the new Item.
  * @param {number} params.userId the ID of the user who linked the Item.
  * @param {Object} params.io a socket.io server instance.
- * @returns {Object} the new Item.
+ * @returns {Object} the new Item, or undefined if it was already stored.
  */
 const exchangePublicToken = async ({
   publicToken,
@@ -30,6 +30,9 @@ const exchangePublicToken = async ({
   const accessToken = response.data.access_token;
   const itemId = response.data.item_id;
   const newItem = await createItem(institutionId, accessToken, itemId, userId);
+  // The Multi-Item Link webhook and fallback can store the same Item at the same time.
+  // If the other one stored it first, there's nothing left to do.
+  if (newItem == null) return undefined;
 
   // Make an initial call to fetch transactions and enable SYNC_UPDATES_AVAILABLE webhook sending
   // for this item.

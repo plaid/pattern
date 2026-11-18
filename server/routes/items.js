@@ -23,6 +23,7 @@ const {
 } = require('../util');
 const updateTransactions = require('../update_transactions');
 const exchangePublicToken = require('../exchange_public_token');
+const addLinkSessionItems = require('../add_link_session_items');
 
 const router = express.Router();
 
@@ -59,6 +60,22 @@ router.post(
     });
 
     res.json(sanitizeItems(newItem));
+  })
+);
+
+/**
+ * Stores the Items from a Multi-Item Link session. The client calls this when Link
+ * finishes, as a fallback in case the SESSION_FINISHED webhook is missed; see
+ * webhookHandlers/handleLinkWebhook.js for the main path.
+ *
+ * @param {string} linkToken the link token the session used.
+ */
+router.post(
+  '/link-session',
+  asyncWrapper(async (req, res) => {
+    const { linkToken } = req.body;
+    await addLinkSessionItems(linkToken, req.io);
+    res.sendStatus(204);
   })
 );
 

@@ -19,7 +19,8 @@ CREATE TABLE users_table
   id SERIAL PRIMARY KEY,
   username text UNIQUE NOT NULL,
   created_at timestamptz default now(),
-  updated_at timestamptz default now()
+  updated_at timestamptz default now(),
+  plaid_user_id text UNIQUE -- from /user/create; identifies the user in /link/token/create
 );
 
 CREATE TRIGGER users_updated_at_timestamp
@@ -33,7 +34,8 @@ AS
     id,
     username,
     created_at,
-    updated_at
+    updated_at,
+    plaid_user_id
   FROM
     users_table;
 

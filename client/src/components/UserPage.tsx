@@ -17,7 +17,6 @@ import useAccounts from '../services/accounts.tsx';
 import { pluralize } from '../util/index.tsx';
 
 import Banner from './Banner.tsx';
-import LaunchLink from './LaunchLink.tsx';
 import SpendingInsights from './SpendingInsights.tsx';
 import NetWorth from './NetWorth.tsx';
 import ItemCard from './ItemCard.tsx';
@@ -38,7 +37,6 @@ const UserPage = () => {
     updated_at: '',
   });
   const [items, setItems] = useState<ItemType[]>([]);
-  const [token, setToken] = useState('');
   const [numOfItems, setNumOfItems] = useState(0);
   const [transactions, setTransactions] = useState([]);
   const [accounts, setAccounts] = useState<AccountType[]>([]);
@@ -121,10 +119,6 @@ const UserPage = () => {
   useEffect(() => {
     setAccounts(accountsByUser[userId] || []);
   }, [accountsByUser, userId]);
-
-  useEffect(() => {
-    setToken(linkTokens.byUser[userId]);
-  }, [linkTokens, userId, numOfItems]);
 
   document.getElementsByTagName('body')[0].style.overflow = 'auto'; // to override overflow:hidden from link pane
   return (
@@ -216,6 +210,7 @@ const UserPage = () => {
               )}
             </div>
 
+            {/* UserCard renders Link once this creates a link token. */}
             <Button
               large
               className="add-account__button"
@@ -223,11 +218,6 @@ const UserPage = () => {
             >
               Add another bank
             </Button>
-
-            {token != null && token.length > 0 && (
-              // Link will not render unless there is a link token
-              <LaunchLink token={token} userId={userId} itemId={null} />
-            )}
           </div>
 
           <ErrorMessage />

@@ -16,13 +16,18 @@ import useItems from '../services/items.tsx';
 import useLink from '../services/link.tsx';
 import useErrors from '../services/errors.tsx';
 
-import { exchangeToken, setItemState } from '../services/api.tsx';
+import {
+  addLinkSessionItems,
+  exchangeToken,
+  setItemState,
+} from '../services/api.tsx';
 
 interface Props {
   isOauth?: boolean;
   token: string;
   userId: number;
   itemId?: number | null;
+  isMultiItem?: boolean;
   children?: React.ReactNode;
 }
 
@@ -48,8 +53,12 @@ export default function LaunchLink(props: Props) {
       await setItemState(props.itemId, 'good');
       deleteLinkToken(null, props.itemId);
       getItemById(props.itemId, true);
-      // regular link mode: exchange public token for access token
+    } else if (props.isMultiItem) {
+      // Multi-Item Link: publicToken is empty. The server receives a public token for
+      // each linked Item in the SESSION_FINISHED webhook and exchanges them there
+      // (onEvent below adds a fallback in case the webhook is missed).
     } else {
+      // regular link mode: exchange public token for access token
       // call to Plaid api endpoint: /item/public_token/exchange in order to obtain access_token which is then stored with the created item
       await exchangeToken(
         publicToken!,
@@ -71,7 +80,7 @@ export default function LaunchLink(props: Props) {
     // log and save error and metadata
     logExit(error, metadata, props.userId);
     if (error != null && error.error_code === 'INVALID_LINK_TOKEN') {
-      await generateLinkToken(props.userId, props.itemId);
+      await generateLinkToken(props.userId, props.itemId, props.isMultiItem);
     }
     if (error != null) {
       setError(error.error_code, error.display_message || error.error_message);
@@ -88,6 +97,17 @@ export default function LaunchLink(props: Props) {
       setError(metadata.error_code, ' ');
     }
     logEvent(eventName, metadata);
+    if (eventName === 'HANDOFF' && props.isMultiItem) {
+      // Multi-Item Link: the server normally stores the Items when it receives the
+      // SESSION_FINISHED webhook. In case that webhook is missed, also ask the server
+      // to get the session's results from /link/token/get. Items already stored are skipped.
+      try {
+        await addLinkSessionItems(props.token);
+        getItemsByUser(props.userId, true);
+      } catch (err) {
+        console.error('Error adding Multi-Item Link session Items:', err);
+      }
+    }
   };
 
   const config: PlaidLinkOptionsWithLinkToken = {
@@ -116,12 +136,21 @@ export default function LaunchLink(props: Props) {
         JSON.stringify({
           userId: props.userId,
           itemId: props.itemId,
+          isMultiItem: props.isMultiItem,
           token: props.token,
         })
       );
       open();
     }
-  }, [ready, open, props.isOauth, props.userId, props.itemId, props.token]);
+  }, [
+    ready,
+    open,
+    props.isOauth,
+    props.userId,
+    props.itemId,
+    props.isMultiItem,
+    props.token,
+  ]);
 
   return <></>;
 }

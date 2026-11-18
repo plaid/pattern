@@ -36,7 +36,7 @@ export default function Sockets() {
   const socket = useRef();
   const { getAccountsByItem } = useAccounts();
   const { getTransactionsByItem } = useTransactions();
-  const { getItemById } = useItems();
+  const { getItemById, getItemsByUser } = useItems();
 
   useEffect(() => {
     console.log('Connecting to socket server at port:', VITE_SERVER_PORT);
@@ -92,6 +92,13 @@ export default function Sockets() {
       getItemById(itemId, true);
     });
 
+    socket.current.on('SESSION_FINISHED', ({ userId } = {}) => {
+      const msg = 'New Webhook Event: Link session finished';
+      console.log(msg);
+      showWebhookToast(msg);
+      getItemsByUser(userId, true);
+    });
+
     socket.current.on('NEW_TRANSACTIONS_DATA', ({ itemId } = {}) => {
       getAccountsByItem(itemId);
       getTransactionsByItem(itemId);
@@ -101,7 +108,7 @@ export default function Sockets() {
       socket.current.removeAllListeners();
       socket.current.close();
     };
-  }, [getAccountsByItem, getTransactionsByItem, getItemById]);
+  }, [getAccountsByItem, getTransactionsByItem, getItemById, getItemsByUser]);
 
   return <div />;
 }

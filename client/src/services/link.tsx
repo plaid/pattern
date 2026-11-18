@@ -18,12 +18,14 @@ interface LinkToken {
 interface LinkState {
   byUser: LinkToken;
   byItem: LinkToken;
+  multiItemByUser: { [key: string]: boolean };
   error: PlaidLinkError;
 }
 
 const initialState = {
   byUser: {}, // normal case
   byItem: {}, // update mode
+  multiItemByUser: {}, // whether the byUser token is for Multi-Item Link
   error: {},
 };
 type LinkAction =
@@ -31,6 +33,7 @@ type LinkAction =
       type: 'LINK_TOKEN_CREATED';
       id: number;
       token: string;
+      multiItem: boolean;
     }
   | { type: 'LINK_TOKEN_UPDATE_MODE_CREATED'; id: number; token: string }
   | { type: 'LINK_TOKEN_ERROR'; error: PlaidLinkError }
@@ -41,7 +44,8 @@ interface LinkContextShape extends LinkState {
   dispatch: Dispatch<LinkAction>;
   generateLinkToken: (
     userId: number,
-    itemId: number | null | undefined
+    itemId: number | null | undefined,
+    multiItem?: boolean
   ) => void;
   deleteLinkToken: (userId: number | null, itemId: number | null) => void;
   linkTokens: LinkState;
@@ -60,10 +64,10 @@ export function LinkProvider(props: any) {
    * @desc Creates a new link token for a given User or Item.
    */
 
-  const generateLinkToken = useCallback(async (userId, itemId) => {
+  const generateLinkToken = useCallback(async (userId, itemId, multiItem) => {
     // if itemId is not null, update mode is triggered
     try {
-      const linkTokenResponse = await getLinkToken(userId, itemId);
+      const linkTokenResponse = await getLinkToken(userId, itemId, multiItem);
       if (linkTokenResponse.data.link_token) {
         const token = await linkTokenResponse.data.link_token;
         console.log('success', linkTokenResponse.data);
@@ -75,7 +79,12 @@ export function LinkProvider(props: any) {
             token: token,
           });
         } else {
-          dispatch({ type: 'LINK_TOKEN_CREATED', id: userId, token: token });
+          dispatch({
+            type: 'LINK_TOKEN_CREATED',
+            id: userId,
+            token: token,
+            multiItem: multiItem === true,
+          });
         }
       } else {
         dispatch({ type: 'LINK_TOKEN_ERROR', error: linkTokenResponse.data });
@@ -130,6 +139,9 @@ function reducer(state: any, action: LinkAction) {
         ...state,
         byUser: {
           [action.id]: action.token,
+        },
+        multiItemByUser: {
+          [action.id]: action.multiItem,
         },
         error: {},
       };

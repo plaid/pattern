@@ -29,7 +29,8 @@ export default function UserCard(props: Props) {
   const initiateLink = async () => {
     // only generate a link token upon a click from enduser to add a bank;
     // if done earlier, it may expire before enduser actually activates Link to add a bank.
-    await generateLinkToken(props.userId, null);
+    // Users adding their first bank often want to connect several, so enable Multi-Item Link.
+    await generateLinkToken(props.userId, null, true);
   };
 
   // update data store with the user's items
@@ -93,12 +94,6 @@ export default function UserCard(props: Props) {
                 Add a bank
               </Button>
             )}
-            {token != null &&
-              token.length > 0 &&
-              props.linkButton &&
-              numOfItems === 0 && (
-                <LaunchLink userId={props.userId} token={token} itemId={null} />
-              )}
             {props.removeButton && (
               <Button
                 className="remove"
@@ -110,6 +105,17 @@ export default function UserCard(props: Props) {
               </Button>
             )}
           </div>
+        )}
+        {/* This renders Link for every new bank, including "Add another bank" on the user
+            page. It doesn't depend on numOfItems, so Link stays open if the server adds
+            the user's first banks (from the SESSION_FINISHED webhook) before Link closes. */}
+        {token != null && token.length > 0 && props.linkButton && (
+          <LaunchLink
+            userId={props.userId}
+            token={token}
+            itemId={null}
+            isMultiItem={linkTokens.multiItemByUser[props.userId]}
+          />
         )}
       </div>
     </div>

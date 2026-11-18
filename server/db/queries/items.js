@@ -11,7 +11,7 @@ const db = require('..');
  * @param {string} plaidAccessToken the Plaid access token of the item.
  * @param {string} plaidItemId the Plaid ID of the item.
  * @param {number} userId the ID of the user.
- * @returns {Object} the new item.
+ * @returns {Object} the new item, or undefined if the item was already stored.
  */
 const createItem = async (
   plaidInstitutionId,
@@ -29,6 +29,7 @@ const createItem = async (
         (user_id, plaid_access_token, plaid_item_id, plaid_institution_id, status)
       VALUES
         ($1, $2, $3, $4, $5)
+      ON CONFLICT DO NOTHING
       RETURNING
         *;
     `,

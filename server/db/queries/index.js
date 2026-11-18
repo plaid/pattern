@@ -32,7 +32,9 @@ const {
   deleteUsers,
   retrieveUsers,
   retrieveUserById,
+  retrieveUserByPlaidUserId,
   retrieveUserByUsername,
+  updateUserPlaidUserId,
 } = require('./users');
 const { createLinkEvent } = require('./linkEvents');
 
@@ -70,8 +72,10 @@ module.exports = {
   createUser,
   deleteUsers,
   retrieveUserById,
+  retrieveUserByPlaidUserId,
   retrieveUserByUsername,
   retrieveUsers,
+  updateUserPlaidUserId,
   // assets
   createAsset,
   retrieveAssetsByUser,

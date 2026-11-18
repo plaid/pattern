@@ -7,7 +7,11 @@ const { asyncWrapper } = require('../middleware');
 
 const plaid = require('../plaid');
 // Using native fetch (Node 18+)
-const { retrieveItemById } = require('../db/queries');
+const {
+  retrieveItemById,
+  retrieveUserById,
+  updateUserPlaidUserId,
+} = require('../db/queries');
 
 const { PLAID_SANDBOX_REDIRECT_URI, PLAID_PRODUCTION_REDIRECT_URI, PLAID_ENV } =
   process.env;
@@ -18,11 +22,26 @@ const redirectUri =
     : PLAID_PRODUCTION_REDIRECT_URI;
 const router = express.Router();
 
+/**
+ * Returns the user's Plaid user_id, creating it with /user/create the first time.
+ *
+ * @param {number} userId the ID of the user.
+ * @param {string} clientUserId the client_user_id for the user.
+ * @returns {string} the Plaid user_id.
+ */
+const getPlaidUserId = async (userId, clientUserId) => {
+  const { plaid_user_id: plaidUserId } = await retrieveUserById(userId);
+  if (plaidUserId != null) return plaidUserId;
+  const { data } = await plaid.userCreate({ client_user_id: clientUserId });
+  await updateUserPlaidUserId(userId, data.user_id);
+  return data.user_id;
+};
+
 router.post(
   '/',
   asyncWrapper(async (req, res) => {
     try {
-      const { userId, itemId } = req.body;
+      const { userId, itemId, multiItem } = req.body;
       let accessToken = null;
       let products = ['transactions']; // must include transactions in order to receive transactions webhooks
       if (itemId != null) {
@@ -61,11 +80,12 @@ router.post(
         });
       }
 
+      // This should correspond to a unique id for the current user.
+      const clientUserId = `uniqueId${userId}`;
       const linkTokenParams = {
-        user: {
-          // This should correspond to a unique id for the current user.
-          client_user_id: `uniqueId${userId}`,
-        },
+        // Identify the user with a Plaid user_id from /user/create, so all of the user's
+        // Items belong to the same Plaid user. Multi-Item Link requires it.
+        user_id: await getPlaidUserId(userId, clientUserId),
         client_name: 'Pattern',
         products,
         country_codes: ['US'],
@@ -73,6 +93,11 @@ router.post(
         webhook: `${tunnel.public_url}/services/webhook`,
         access_token: accessToken,
       };
+      if (multiItem) {
+        // Multi-Item Link lets the user link several banks in one session.
+        // https://plaid.com/docs/link/multi-item-link/
+        linkTokenParams.enable_multi_item_link = true;
+      }
       // If user has entered a redirect uri in the .env file
       if (redirectUri.indexOf('http') === 0) {
         linkTokenParams.redirect_uri = redirectUri;

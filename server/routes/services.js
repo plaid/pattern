@@ -11,6 +11,7 @@ const { asyncWrapper } = require('../middleware');
 const {
   handleTransactionsWebhook,
   handleItemWebhook,
+  handleLinkWebhook,
   unhandledWebhook,
 } = require('../webhookHandlers');
 
@@ -48,6 +49,7 @@ router.post(
     const webhookHandlerMap = {
       transactions: handleTransactionsWebhook,
       item: handleItemWebhook,
+      link: handleLinkWebhook,
     };
     const webhookHandler = webhookHandlerMap[type] || unhandledWebhook;
     // For simplicity, Pattern processes each webhook before responding. In production, write

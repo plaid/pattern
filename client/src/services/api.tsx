@@ -47,10 +47,20 @@ export const setItemState = (itemId: number, status: string) =>
 export const setItemToBadState = (itemId: number) =>
   api.post('/items/sandbox/item/reset_login', { itemId });
 
-export const getLinkToken = (userId: number, itemId: number) =>
+// Multi-Item Link fallback: asks the server to store the session's Items from
+// /link/token/get, in case the SESSION_FINISHED webhook is missed.
+export const addLinkSessionItems = (linkToken: string) =>
+  api.post('/items/link-session', { linkToken });
+
+export const getLinkToken = (
+  userId: number,
+  itemId: number | null | undefined,
+  multiItem = false
+) =>
   api.post(`/link-token`, {
     userId,
     itemId,
+    multiItem,
   });
 
 // accounts

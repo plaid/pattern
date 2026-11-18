@@ -130,11 +130,15 @@ The application server is written in JavaScript using [Node.js][nodejs] and [Exp
 
 ### Associating users with Plaid items and access tokens
 
-Plaid does not have a user data object for tying multiple items together, so it is up to application developers to define that relationship. For an example of this, see the [root items route][items-routes] (used to store new items) and the [users routes][users-routes].
+Your app needs to keep track of which items belong to which of its users. For an example of this, see the [root items route][items-routes] (used to store new items) and the [users routes][users-routes]. Pattern also creates a Plaid user for each of its users with `/user/create` and passes its `user_id` to `/link/token/create`, so all of a user's items belong to the same Plaid user. Some flows, such as [Multi-Item Link](#linking-multiple-banks-at-once), require this.
 
 ### Preventing item duplication
 
 By default, Plaid Link will let a user link to the same institution multiple times. Some developers prefer disallowing duplicate account linkages because duplicate connections still come at an additional cost. It is entirely possible for a user to create multiple items linked to the same financial institution. In practice, you probably want to prevent this. The easiest way to do this is to check the institution id of a newly created item before performing the token exchange and storing the item. For an example of this, see the [root items route][items-routes].
+
+### Linking multiple banks at once
+
+When a user adds their first bank, Pattern opens Link with [Multi-Item Link][plaid-multi-item-link] enabled so they can connect several banks in one session. In this mode Link doesn't return public tokens to `onSuccess`; instead, the server exchanges them when it receives the `SESSION_FINISHED` webhook. In case that webhook is missed, the client also asks the server to get the session's results from `/link/token/get` when Link finishes. See [`add_link_session_items.js`][link-session-items].
 
 ### Using webhooks to update transaction data and test update mode in Link.
 
@@ -335,6 +339,8 @@ Plaid Pattern is a demo app that is intended to be used only for the purpose of 
 [plaid-link]: https://plaid.com/docs/link/
 [plaid-oauth]: https://plaid.com/docs/link/oauth/#introduction-to-oauth
 [plaid-link-update-mode]: https://plaid.com/docs/link/update-mode/
+[plaid-multi-item-link]: https://plaid.com/docs/link/multi-item-link/
+[link-session-items]: server/add_link_session_items.js
 [react]: https://reactjs.org/
 [database-readme]: #plaid-pattern---database
 [expressjs]: http://expressjs.com/

@@ -9,6 +9,7 @@ const OAuthLink = () => {
   const [token, setToken] = useState<string>();
   const [userId, setUserId] = useState<number>(-100); // set for typescript
   const [itemId, setItemId] = useState<number>();
+  const [isMultiItem, setIsMultiItem] = useState<boolean>(false);
 
   const oauthObject = localStorage.getItem('oauthConfig');
 
@@ -16,6 +17,7 @@ const OAuthLink = () => {
     if (oauthObject != null) {
       setUserId(JSON.parse(oauthObject).userId);
       setItemId(JSON.parse(oauthObject).itemId);
+      setIsMultiItem(JSON.parse(oauthObject).isMultiItem === true);
       setToken(JSON.parse(oauthObject).token);
     }
   }, [oauthObject]);
@@ -27,6 +29,7 @@ const OAuthLink = () => {
           isOauth // this will initiate link immediately
           userId={userId}
           itemId={itemId}
+          isMultiItem={isMultiItem}
           token={token}
         />
       )}
